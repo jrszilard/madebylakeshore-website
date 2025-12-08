@@ -10,21 +10,21 @@ const services = [
     title: 'Design Consulting',
     description: 'Strategic graphic and product design that elevates brands and creates meaningful connections with audiences.',
     href: '/services/design',
-    icon: 'design',
+    icon: 'design'  as const,
     consultant: 'Sarah', // Replace with actual name
   },
   {
     title: 'Data & Analytics',
     description: 'Transform raw data into actionable insights with SQL, Power BI dashboards, and custom reporting solutions.',
     href: '/services/data',
-    icon: 'data',
+    icon: 'data' as const,
     consultant: 'Michael', // Replace with actual name
   },
   {
     title: 'AI Solutions',
     description: 'Leverage artificial intelligence to automate workflows, enhance decision-making, and unlock new possibilities.',
     href: '/services/ai',
-    icon: 'ai',
+    icon: 'ai' as const,
     consultant: 'Michael', // Replace with actual name
   },
 ];
@@ -59,14 +59,14 @@ const brands = [
     description: 'Handcrafted art, paintings, drawings, and written works. Original pieces for collectors and art enthusiasts.',
     href: 'https://designandotherstories.com',
     external: true,
-    color: 'warm',
+    color: 'warm' as const,
   },
   {
     title: 'Incubator at Lakeshore',
     description: 'Our digital product lab. Apps, tools, and experiments pushing the boundaries of what\'s possible.',
     href: '/incubator',
     external: false,
-    color: 'accent',
+    color: 'accent' as const,
   },
 ];
 ---
