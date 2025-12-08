@@ -1,0 +1,88 @@
+---
+const currentPath = Astro.url.pathname;
+
+const navLinks = [
+  { href: '/shop', label: 'Shop' },
+  { href: '/paintings', label: 'Paintings' },
+  { href: '/drawings', label: 'Drawings' },
+  { href: '/writing', label: 'Writing' },
+  { href: '/about', label: 'About' },
+];
+---
+
+<header class="sticky top-0 z-50 bg-daos-cream/95 backdrop-blur-sm border-b border-daos-warm">
+  <nav class="container-art">
+    <div class="flex items-center justify-between h-20">
+      <!-- Logo -->
+      <a href="/" class="group">
+        <span class="font-display text-xl md:text-2xl text-daos-ink italic">
+          Design & Other Stories
+        </span>
+      </a>
+      
+      <!-- Desktop Navigation -->
+      <div class="hidden lg:flex items-center gap-8">
+        {navLinks.map((link) => (
+          <a 
+            href={link.href}
+            class:list={[
+              "font-sans text-sm tracking-wide transition-colors duration-200",
+              currentPath === link.href || currentPath.startsWith(link.href + '/') 
+                ? "text-daos-terracotta" 
+                : "text-daos-charcoal hover:text-daos-ink"
+            ]}
+          >
+            {link.label}
+          </a>
+        ))}
+      </div>
+      
+      <!-- Cart Button -->
+      <div class="flex items-center gap-4">
+        <button 
+          class="snipcart-checkout relative p-2 text-daos-charcoal hover:text-daos-ink transition-colors"
+          aria-label="Shopping cart"
+        >
+          <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+          </svg>
+          <span class="snipcart-items-count absolute -top-1 -right-1 w-5 h-5 bg-daos-terracotta text-white text-xs rounded-full flex items-center justify-center"></span>
+        </button>
+        
+        <!-- Mobile Menu Button -->
+        <button 
+          id="mobile-menu-btn"
+          class="lg:hidden p-2 text-daos-ink"
+          aria-label="Toggle menu"
+        >
+          <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </nav>
+  
+  <!-- Mobile Menu -->
+  <div id="mobile-menu" class="lg:hidden hidden border-t border-daos-warm bg-daos-cream">
+    <div class="container-art py-6 space-y-4">
+      {navLinks.map((link) => (
+        <a 
+          href={link.href}
+          class="block py-2 font-sans text-daos-charcoal hover:text-daos-ink transition-colors"
+        >
+          {link.label}
+        </a>
+      ))}
+    </div>
+  </div>
+</header>
+
+<script>
+  const btn = document.getElementById('mobile-menu-btn');
+  const menu = document.getElementById('mobile-menu');
+  
+  btn?.addEventListener('click', () => {
+    menu?.classList.toggle('hidden');
+  });
+</script>

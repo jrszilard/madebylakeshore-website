@@ -1,0 +1,147 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const services = [
+  {
+    title: 'Design Consulting',
+    slug: 'design',
+    consultant: 'Sarah', // Replace with actual name
+    description: 'Strategic graphic and product design that elevates brands and creates meaningful connections.',
+    offerings: [
+      'Brand Identity & Strategy',
+      'Product Design',
+      'Visual Systems',
+      'Marketing Collateral',
+      'Packaging Design',
+      'UI/UX Consultation',
+    ],
+    color: 'warm',
+  },
+  {
+    title: 'Data & Analytics',
+    slug: 'data',
+    consultant: 'Michael', // Replace with actual name
+    description: 'Transform raw data into actionable insights with custom reporting and dashboard solutions.',
+    offerings: [
+      'SQL Database Design',
+      'Power BI Dashboards',
+      'Data Pipeline Architecture',
+      'KPI Development',
+      'Automated Reporting',
+      'Data Visualization',
+    ],
+    color: 'accent',
+  },
+  {
+    title: 'AI Solutions',
+    slug: 'ai',
+    consultant: 'Michael', // Replace with actual name
+    description: 'Leverage artificial intelligence to automate workflows and enhance decision-making.',
+    offerings: [
+      'AI Strategy Consulting',
+      'Process Automation',
+      'Custom AI Integrations',
+      'Prompt Engineering',
+      'AI-Powered Analytics',
+      'Training & Workshops',
+    ],
+    color: 'accent',
+  },
+];
+---
+
+<BaseLayout 
+  title="Services" 
+  description="Strategic consulting in design, data analytics, and AI solutions. Explore our expertise and how we can help transform your business."
+>
+  <!-- Hero -->
+  <section class="section-spacing">
+    <div class="container-wide">
+      <div class="max-w-3xl">
+        <p class="font-heading text-mbl-accent font-medium tracking-wide mb-4 animate-slide-up opacity-0" style="animation-delay: 0.1s;">
+          Our Services
+        </p>
+        <h1 class="text-display-lg mb-6 animate-slide-up opacity-0" style="animation-delay: 0.2s;">
+          Expertise that drives results
+        </h1>
+        <p class="text-xl text-mbl-stone leading-relaxed animate-slide-up opacity-0" style="animation-delay: 0.3s;">
+          We bring together creative and technical disciplines to solve complex 
+          business challenges. Each engagement is tailored to your specific needs 
+          and goals.
+        </p>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Services List -->
+  <section class="pb-20">
+    <div class="container-wide">
+      <div class="space-y-16">
+        {services.map((service, index) => (
+          <a 
+            href={`/services/${service.slug}`}
+            class="group block"
+          >
+            <div class="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center p-8 lg:p-12 rounded-2xl bg-white border border-mbl-mist/50 hover:border-mbl-accent/30 hover:shadow-lg transition-all duration-300">
+              <div>
+                <div class="flex items-center gap-3 mb-4">
+                  <span class={`px-3 py-1 rounded-full text-xs font-heading font-medium ${service.color === 'warm' ? 'bg-mbl-warm/10 text-mbl-warm' : 'bg-mbl-accent/10 text-mbl-accent'}`}>
+                    with {service.consultant}
+                  </span>
+                </div>
+                
+                <h2 class="font-display text-3xl mb-4 group-hover:text-mbl-accent transition-colors duration-300">
+                  {service.title}
+                </h2>
+                
+                <p class="text-lg text-mbl-stone mb-6">
+                  {service.description}
+                </p>
+                
+                <span class="inline-flex items-center gap-2 font-heading font-medium text-mbl-accent">
+                  Learn more & book consultation
+                  <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  </svg>
+                </span>
+              </div>
+              
+              <div>
+                <p class="text-sm font-heading font-medium text-mbl-stone/70 uppercase tracking-wider mb-4">
+                  What we offer
+                </p>
+                <ul class="grid grid-cols-2 gap-3">
+                  {service.offerings.map((offering) => (
+                    <li class="flex items-start gap-2 text-mbl-stone">
+                      <svg class={`w-5 h-5 mt-0.5 flex-shrink-0 ${service.color === 'warm' ? 'text-mbl-warm' : 'text-mbl-accent'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                      </svg>
+                      {offering}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+  
+  <!-- CTA -->
+  <section class="section-spacing bg-mbl-ink">
+    <div class="container-narrow text-center">
+      <h2 class="text-display text-white mb-6">Not sure which service you need?</h2>
+      <p class="text-lg text-mbl-mist/80 mb-10 max-w-xl mx-auto">
+        Book a free discovery call and we'll help you identify the best approach 
+        for your specific challenges and goals.
+      </p>
+      <a href="/contact" class="inline-flex items-center gap-2 px-6 py-3 bg-white text-mbl-ink font-heading font-medium rounded-md hover:bg-mbl-mist transition-colors duration-200">
+        Schedule a Call
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+        </svg>
+      </a>
+    </div>
+  </section>
+</BaseLayout>

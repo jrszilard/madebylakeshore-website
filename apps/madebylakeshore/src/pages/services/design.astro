@@ -1,0 +1,158 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import CalendlyEmbed from '../../components/CalendlyEmbed.astro';
+
+const service = {
+  title: 'Design Consulting',
+  consultant: 'Sarah', // Replace with actual name
+  calendlyUrl: 'https://calendly.com/your-wife-calendly', // Replace with actual Calendly URL
+  tagline: 'Strategic design that elevates brands and creates meaningful connections',
+  description: `Great design is more than aesthetics—it's strategic thinking made visible. 
+    I help businesses develop visual identities and product designs that resonate with 
+    their audiences and stand out in crowded markets.`,
+  approach: `Every project starts with understanding your business goals, target audience, 
+    and competitive landscape. From there, I develop design solutions that are not only 
+    beautiful but strategically aligned with your objectives.`,
+  offerings: [
+    {
+      title: 'Brand Identity & Strategy',
+      description: 'Complete brand systems including logos, color palettes, typography, and comprehensive brand guidelines.',
+    },
+    {
+      title: 'Product Design',
+      description: 'Physical and digital product design from concept through production-ready deliverables.',
+    },
+    {
+      title: 'Visual Systems',
+      description: 'Scalable design systems that maintain consistency across all touchpoints.',
+    },
+    {
+      title: 'Marketing Collateral',
+      description: 'Print and digital marketing materials that communicate your brand effectively.',
+    },
+    {
+      title: 'Packaging Design',
+      description: 'Product packaging that stands out on shelves and creates memorable unboxing experiences.',
+    },
+    {
+      title: 'UI/UX Consultation',
+      description: 'User interface and experience guidance for digital products and websites.',
+    },
+  ],
+  process: [
+    { step: '01', title: 'Discovery', description: 'We dive deep into your business, audience, and goals.' },
+    { step: '02', title: 'Strategy', description: 'I develop a creative strategy aligned with your objectives.' },
+    { step: '03', title: 'Design', description: 'Concepts come to life through iterative design exploration.' },
+    { step: '04', title: 'Refine', description: 'We refine the chosen direction based on your feedback.' },
+    { step: '05', title: 'Deliver', description: 'Final assets delivered with guidelines for implementation.' },
+  ],
+};
+---
+
+<BaseLayout 
+  title={service.title}
+  description={service.tagline}
+>
+  <!-- Hero -->
+  <section class="section-spacing">
+    <div class="container-wide">
+      <div class="grid lg:grid-cols-2 gap-12 lg:gap-20 items-start">
+        <div>
+          <a href="/services" class="inline-flex items-center gap-2 text-sm text-mbl-stone hover:text-mbl-ink mb-8 transition-colors">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+            All Services
+          </a>
+          
+          <p class="font-heading text-mbl-warm font-medium tracking-wide mb-4">
+            with {service.consultant}
+          </p>
+          
+          <h1 class="text-display-lg mb-6">{service.title}</h1>
+          
+          <p class="text-xl text-mbl-stone leading-relaxed mb-8">
+            {service.tagline}
+          </p>
+          
+          <p class="text-mbl-stone leading-relaxed mb-6">
+            {service.description}
+          </p>
+          
+          <p class="text-mbl-stone leading-relaxed">
+            {service.approach}
+          </p>
+        </div>
+        
+        <div class="lg:sticky lg:top-24">
+          <div class="bg-white rounded-xl border border-mbl-mist/50 shadow-sm p-6">
+            <h3 class="font-display text-xl mb-4">Book a Consultation</h3>
+            <p class="text-mbl-stone text-sm mb-6">
+              Schedule a free 30-minute discovery call to discuss your project and see if we're a good fit.
+            </p>
+            <CalendlyEmbed url={service.calendlyUrl} />
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Offerings -->
+  <section class="section-spacing bg-white">
+    <div class="container-wide">
+      <div class="max-w-2xl mb-16">
+        <p class="font-heading text-mbl-warm font-medium tracking-wide mb-4">What I Offer</p>
+        <h2 class="text-display">Design services tailored to your needs</h2>
+      </div>
+      
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {service.offerings.map((offering) => (
+          <div class="p-6 rounded-lg border border-mbl-mist/50 hover:border-mbl-warm/30 transition-colors duration-300">
+            <h3 class="font-display text-lg mb-3">{offering.title}</h3>
+            <p class="text-mbl-stone text-sm">{offering.description}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+  
+  <!-- Process -->
+  <section class="section-spacing">
+    <div class="container-wide">
+      <div class="max-w-2xl mb-16">
+        <p class="font-heading text-mbl-warm font-medium tracking-wide mb-4">The Process</p>
+        <h2 class="text-display">How we'll work together</h2>
+      </div>
+      
+      <div class="grid md:grid-cols-5 gap-8">
+        {service.process.map((step, index) => (
+          <div class="relative">
+            <div class="text-5xl font-display text-mbl-mist mb-4">{step.step}</div>
+            <h3 class="font-heading font-semibold mb-2">{step.title}</h3>
+            <p class="text-sm text-mbl-stone">{step.description}</p>
+            
+            {index < service.process.length - 1 && (
+              <div class="hidden md:block absolute top-8 left-full w-full h-px bg-mbl-mist -translate-x-4"></div>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+  
+  <!-- CTA -->
+  <section class="section-spacing bg-mbl-warm/10">
+    <div class="container-narrow text-center">
+      <h2 class="text-display mb-6">Ready to elevate your brand?</h2>
+      <p class="text-lg text-mbl-stone mb-10 max-w-xl mx-auto">
+        Let's discuss your project and explore how strategic design can help you achieve your goals.
+      </p>
+      <a href="#" class="btn-primary" onclick="Calendly.initPopupWidget({url: '{service.calendlyUrl}'});return false;">
+        Schedule Your Free Consultation
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+        </svg>
+      </a>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,199 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ServiceCard from '../components/ServiceCard.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import BrandCard from '../components/BrandCard.astro';
+
+// These would come from Sanity in production
+const services = [
+  {
+    title: 'Design Consulting',
+    description: 'Strategic graphic and product design that elevates brands and creates meaningful connections with audiences.',
+    href: '/services/design',
+    icon: 'design',
+    consultant: 'Sarah', // Replace with actual name
+  },
+  {
+    title: 'Data & Analytics',
+    description: 'Transform raw data into actionable insights with SQL, Power BI dashboards, and custom reporting solutions.',
+    href: '/services/data',
+    icon: 'data',
+    consultant: 'Michael', // Replace with actual name
+  },
+  {
+    title: 'AI Solutions',
+    description: 'Leverage artificial intelligence to automate workflows, enhance decision-making, and unlock new possibilities.',
+    href: '/services/ai',
+    icon: 'ai',
+    consultant: 'Michael', // Replace with actual name
+  },
+];
+
+const featuredProjects = [
+  {
+    title: 'Brand Identity System',
+    client: 'TechStart Inc.',
+    category: 'Design',
+    image: '/images/project-1.jpg',
+    href: '/work/techstart-brand',
+  },
+  {
+    title: 'Executive Dashboard',
+    client: 'Global Logistics Co.',
+    category: 'Data',
+    image: '/images/project-2.jpg',
+    href: '/work/logistics-dashboard',
+  },
+  {
+    title: 'AI-Powered Reports',
+    client: 'FinanceFirst',
+    category: 'AI',
+    image: '/images/project-3.jpg',
+    href: '/work/finance-ai',
+  },
+];
+
+const brands = [
+  {
+    title: 'Design & Other Stories',
+    description: 'Handcrafted art, paintings, drawings, and written works. Original pieces for collectors and art enthusiasts.',
+    href: 'https://designandotherstories.com',
+    external: true,
+    color: 'warm',
+  },
+  {
+    title: 'Incubator at Lakeshore',
+    description: 'Our digital product lab. Apps, tools, and experiments pushing the boundaries of what\'s possible.',
+    href: '/incubator',
+    external: false,
+    color: 'accent',
+  },
+];
+---
+
+<BaseLayout title="Home">
+  <!-- Hero Section -->
+  <section class="relative min-h-[90vh] flex items-center overflow-hidden">
+    <!-- Background Pattern -->
+    <div class="absolute inset-0 opacity-[0.03]">
+      <div class="absolute inset-0" style="background-image: url('data:image/svg+xml,%3Csvg width=\"60\" height=\"60\" viewBox=\"0 0 60 60\" xmlns=\"http://www.w3.org/2000/svg\"%3E%3Cg fill=\"none\" fill-rule=\"evenodd\"%3E%3Cg fill=\"%231a1a2e\" fill-opacity=\"1\"%3E%3Cpath d=\"M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');"></div>
+    </div>
+    
+    <div class="container-wide relative z-10">
+      <div class="max-w-4xl">
+        <div class="overflow-hidden mb-6">
+          <p class="font-heading text-mbl-accent font-medium tracking-wide animate-slide-up opacity-0" style="animation-delay: 0.1s;">
+            Design · Data · AI
+          </p>
+        </div>
+        
+        <div class="overflow-hidden mb-8">
+          <h1 class="text-display-lg md:text-display-xl animate-slide-up opacity-0" style="animation-delay: 0.2s;">
+            We craft solutions that 
+            <span class="text-gradient">transform businesses</span>
+          </h1>
+        </div>
+        
+        <div class="overflow-hidden mb-12">
+          <p class="text-xl md:text-2xl text-mbl-stone leading-relaxed max-w-2xl animate-slide-up opacity-0" style="animation-delay: 0.3s;">
+            MadeByLakeshore is a consulting studio specializing in strategic design, 
+            data analytics, and AI solutions. We help organizations see clearer and move smarter.
+          </p>
+        </div>
+        
+        <div class="flex flex-wrap gap-4 animate-slide-up opacity-0" style="animation-delay: 0.4s;">
+          <a href="/contact" class="btn-primary">
+            Start a Project
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
+          </a>
+          <a href="/work" class="btn-secondary">
+            View Our Work
+          </a>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Decorative Element -->
+    <div class="absolute bottom-0 right-0 w-1/3 h-1/2 bg-gradient-to-tl from-mbl-accent/5 to-transparent pointer-events-none"></div>
+  </section>
+  
+  <!-- Services Section -->
+  <section class="section-spacing bg-white">
+    <div class="container-wide">
+      <div class="max-w-2xl mb-16">
+        <p class="font-heading text-mbl-accent font-medium tracking-wide mb-4">What We Do</p>
+        <h2 class="text-display mb-6">Expertise across design, data, and technology</h2>
+        <p class="text-lg text-mbl-stone">
+          Our consulting services span creative and technical disciplines, 
+          delivered by specialists who understand both strategy and execution.
+        </p>
+      </div>
+      
+      <div class="grid md:grid-cols-3 gap-8">
+        {services.map((service, index) => (
+          <ServiceCard {...service} index={index} />
+        ))}
+      </div>
+    </div>
+  </section>
+  
+  <!-- Featured Work Section -->
+  <section class="section-spacing">
+    <div class="container-wide">
+      <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-16">
+        <div class="max-w-2xl">
+          <p class="font-heading text-mbl-accent font-medium tracking-wide mb-4">Selected Work</p>
+          <h2 class="text-display">Projects that made an impact</h2>
+        </div>
+        <a href="/work" class="link-underline font-heading font-medium text-mbl-ink">
+          View all projects
+        </a>
+      </div>
+      
+      <div class="grid md:grid-cols-3 gap-8">
+        {featuredProjects.map((project, index) => (
+          <ProjectCard {...project} index={index} />
+        ))}
+      </div>
+    </div>
+  </section>
+  
+  <!-- Our Brands Section -->
+  <section class="section-spacing bg-mbl-ink">
+    <div class="container-wide">
+      <div class="max-w-2xl mb-16">
+        <p class="font-heading text-mbl-accent font-medium tracking-wide mb-4">Beyond Consulting</p>
+        <h2 class="text-display text-white mb-6">The Lakeshore family</h2>
+        <p class="text-lg text-mbl-mist/80">
+          MadeByLakeshore is part of a creative ecosystem. Explore our other ventures 
+          in art, handmade goods, and digital innovation.
+        </p>
+      </div>
+      
+      <div class="grid md:grid-cols-2 gap-8">
+        {brands.map((brand) => (
+          <BrandCard {...brand} />
+        ))}
+      </div>
+    </div>
+  </section>
+  
+  <!-- CTA Section -->
+  <section class="section-spacing">
+    <div class="container-narrow text-center">
+      <h2 class="text-display mb-6">Ready to start something great?</h2>
+      <p class="text-lg text-mbl-stone mb-10 max-w-xl mx-auto">
+        Whether you need strategic design, data insights, or AI solutions, 
+        we're here to help you transform your vision into reality.
+      </p>
+      <a href="/contact" class="btn-primary">
+        Let's Talk
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+        </svg>
+      </a>
+    </div>
+  </section>
+</BaseLayout>

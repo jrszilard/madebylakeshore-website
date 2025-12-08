@@ -1,0 +1,18 @@
+{
+  "name": "@lakeshore/shared-ui",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./sanity": "./src/sanity.ts"
+  },
+  "dependencies": {
+    "@sanity/client": "^6.15.0",
+    "@sanity/image-url": "^1.0.2"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.0"
+  }
+}

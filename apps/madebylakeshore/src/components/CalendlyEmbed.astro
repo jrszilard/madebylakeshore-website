@@ -1,0 +1,19 @@
+---
+interface Props {
+  url: string;
+  height?: string;
+}
+
+const { url, height = '630px' } = Astro.props;
+---
+
+<!-- Calendly inline widget -->
+<div 
+  class="calendly-inline-widget" 
+  data-url={url}
+  style={`min-width:320px;height:${height};`}
+></div>
+
+<!-- Calendly badge widget (for popup) -->
+<link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
+<script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript" async></script>

@@ -1,0 +1,126 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+
+// Sample data - would come from Sanity
+const projects = [
+  {
+    title: 'DataPipe',
+    slug: 'datapipe',
+    tagline: 'Automated data pipeline builder',
+    status: 'launched',
+    type: 'SaaS Tool',
+    techStack: ['Python', 'FastAPI', 'React', 'PostgreSQL'],
+    liveUrl: 'https://datapipe.app',
+  },
+  {
+    title: 'PromptForge',
+    slug: 'promptforge',
+    tagline: 'AI prompt testing and optimization',
+    status: 'beta',
+    type: 'Web App',
+    techStack: ['Next.js', 'OpenAI', 'Supabase'],
+    liveUrl: null,
+  },
+  {
+    title: 'ReportBot',
+    slug: 'reportbot',
+    tagline: 'Automated business reporting',
+    status: 'in-development',
+    type: 'SaaS Tool',
+    techStack: ['Python', 'Power BI API', 'Azure'],
+    liveUrl: null,
+  },
+];
+---
+
+<BaseLayout title="Home">
+  <!-- Hero -->
+  <section class="section-spacing">
+    <div class="container-inc">
+      <div class="max-w-3xl">
+        <div class="inline-flex items-center gap-2 px-3 py-1 bg-inc-lime/10 border border-inc-lime/30 rounded-full mb-6">
+          <span class="w-2 h-2 bg-inc-lime rounded-full animate-pulse"></span>
+          <span class="text-inc-lime text-sm font-mono">Building in public</span>
+        </div>
+        
+        <h1 class="text-display-xl mb-6">
+          Where ideas become <span class="text-inc-lime">products</span>
+        </h1>
+        
+        <p class="text-xl text-inc-silver leading-relaxed mb-10">
+          The Incubator is our digital workshop—a place where we experiment with 
+          new technologies, build useful tools, and share our journey along the way.
+        </p>
+        
+        <div class="flex flex-wrap gap-4">
+          <a href="/projects" class="btn-glow">
+            Explore Projects
+          </a>
+          <a href="/builds" class="btn-ghost">
+            Read Build Logs
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Projects -->
+  <section class="section-spacing bg-inc-night">
+    <div class="container-inc">
+      <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-12">
+        <div>
+          <p class="text-inc-lime font-mono text-sm mb-2">// projects</p>
+          <h2 class="text-display">What we're building</h2>
+        </div>
+        <a href="/projects" class="text-inc-silver hover:text-inc-lime transition-colors text-sm">
+          View all →
+        </a>
+      </div>
+      
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {projects.map((project) => (
+          <ProjectCard {...project} />
+        ))}
+      </div>
+    </div>
+  </section>
+  
+  <!-- Stats -->
+  <section class="section-spacing">
+    <div class="container-inc">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+        <div class="text-center">
+          <div class="text-4xl font-display font-bold text-inc-lime mb-2">3</div>
+          <div class="text-inc-silver text-sm">Active Projects</div>
+        </div>
+        <div class="text-center">
+          <div class="text-4xl font-display font-bold text-inc-cyan mb-2">1</div>
+          <div class="text-inc-silver text-sm">Launched</div>
+        </div>
+        <div class="text-center">
+          <div class="text-4xl font-display font-bold text-inc-violet mb-2">12</div>
+          <div class="text-inc-silver text-sm">Build Logs</div>
+        </div>
+        <div class="text-center">
+          <div class="text-4xl font-display font-bold text-inc-white mb-2">∞</div>
+          <div class="text-inc-silver text-sm">Ideas</div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- CTA -->
+  <section class="section-spacing bg-inc-night">
+    <div class="container-inc text-center">
+      <h2 class="text-display mb-6">Want to collaborate?</h2>
+      <p class="text-inc-silver max-w-xl mx-auto mb-8">
+        We're always looking for interesting problems to solve. If you have an idea 
+        or want to work together on something, let's talk.
+      </p>
+      <a href="https://madebylakeshore.com/contact" class="btn-glow">
+        Get in Touch
+      </a>
+    </div>
+  </section>
+</BaseLayout>

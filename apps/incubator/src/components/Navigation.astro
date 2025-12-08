@@ -1,0 +1,46 @@
+---
+const navLinks = [
+  { href: '/projects', label: 'Projects' },
+  { href: '/builds', label: 'Build Log' },
+  { href: '/about', label: 'About' },
+];
+---
+
+<header class="sticky top-0 z-50 bg-inc-void/90 backdrop-blur-md border-b border-inc-steel">
+  <nav class="container-inc">
+    <div class="flex items-center justify-between h-16">
+      <!-- Logo -->
+      <a href="/" class="flex items-center gap-3 group">
+        <div class="w-8 h-8 bg-inc-lime rounded flex items-center justify-center group-hover:animate-glow transition-all">
+          <span class="text-inc-void font-mono font-bold text-sm">⚡</span>
+        </div>
+        <span class="font-display font-semibold text-inc-white">
+          Incubator
+        </span>
+      </a>
+      
+      <!-- Desktop Navigation -->
+      <div class="hidden md:flex items-center gap-8">
+        {navLinks.map((link) => (
+          <a 
+            href={link.href}
+            class="font-body text-sm text-inc-silver hover:text-inc-white transition-colors"
+          >
+            {link.label}
+          </a>
+        ))}
+      </div>
+      
+      <!-- Back to Main -->
+      <a 
+        href="https://madebylakeshore.com" 
+        class="text-sm text-inc-silver hover:text-inc-lime transition-colors flex items-center gap-1"
+      >
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+        </svg>
+        MadeByLakeshore
+      </a>
+    </div>
+  </nav>
+</header>

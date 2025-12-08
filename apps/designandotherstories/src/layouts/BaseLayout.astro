@@ -1,0 +1,60 @@
+---
+import '../styles/global.css';
+import Navigation from '../components/Navigation.astro';
+import Footer from '../components/Footer.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { 
+  title, 
+  description = 'Original artwork, paintings, drawings, and written works by a passionate artist. Handcrafted pieces for collectors and art enthusiasts.'
+} = Astro.props;
+
+const siteTitle = title === 'Home' ? 'Design & Other Stories' : `${title} | Design & Other Stories`;
+
+// Replace with your actual Snipcart API key
+const snipcartApiKey = import.meta.env.PUBLIC_SNIPCART_API_KEY || 'your-snipcart-api-key';
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    
+    <meta property="og:title" content={siteTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    
+    <!-- Snipcart -->
+    <link rel="preconnect" href="https://app.snipcart.com">
+    <link rel="preconnect" href="https://cdn.snipcart.com">
+    <link rel="stylesheet" href="https://cdn.snipcart.com/themes/v3.2.0/default/snipcart.css" />
+    
+    <title>{siteTitle}</title>
+  </head>
+  <body class="min-h-screen flex flex-col paper-texture">
+    <Navigation />
+    
+    <main class="flex-1">
+      <slot />
+    </main>
+    
+    <Footer />
+    
+    <!-- Snipcart container -->
+    <div 
+      id="snipcart" 
+      data-api-key={snipcartApiKey}
+      data-config-modal-style="side"
+      hidden
+    ></div>
+    <script src="https://cdn.snipcart.com/themes/v3.2.0/default/snipcart.js" async></script>
+  </body>
+</html>

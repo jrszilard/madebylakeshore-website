@@ -1,0 +1,175 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import CalendlyEmbed from '../../components/CalendlyEmbed.astro';
+
+const service = {
+  title: 'Data & Analytics',
+  consultant: 'Michael', // Replace with actual name
+  calendlyUrl: 'https://calendly.com/your-calendly', // Replace with actual Calendly URL
+  tagline: 'Transform raw data into actionable insights that drive decisions',
+  description: `Data is only valuable when it tells a story. I help businesses cut through 
+    the noise to find meaningful insights, build robust reporting systems, and make 
+    data-driven decisions with confidence.`,
+  approach: `I believe in building sustainable solutions—not just dashboards that look good 
+    in demos. Every engagement focuses on understanding your actual decision-making needs 
+    and building systems that deliver the right information to the right people at the right time.`,
+  offerings: [
+    {
+      title: 'SQL Database Design',
+      description: 'Efficient database structures that scale with your business and support complex queries.',
+    },
+    {
+      title: 'Power BI Dashboards',
+      description: 'Interactive dashboards that make complex data accessible and actionable for stakeholders.',
+    },
+    {
+      title: 'Data Pipeline Architecture',
+      description: 'Automated data flows that ensure accuracy and timeliness across your organization.',
+    },
+    {
+      title: 'KPI Development',
+      description: 'Define and implement the metrics that actually matter for your business objectives.',
+    },
+    {
+      title: 'Automated Reporting',
+      description: 'Scheduled reports that deliver insights without manual intervention.',
+    },
+    {
+      title: 'Data Visualization',
+      description: 'Clear, compelling visualizations that communicate insights effectively.',
+    },
+  ],
+  tools: [
+    'SQL Server', 'PostgreSQL', 'Power BI', 'Excel', 'Python', 'Azure Data Factory', 'Snowflake', 'dbt'
+  ],
+  process: [
+    { step: '01', title: 'Audit', description: 'We assess your current data landscape and identify gaps.' },
+    { step: '02', title: 'Define', description: 'Together we clarify what questions need answering.' },
+    { step: '03', title: 'Build', description: 'I develop the queries, pipelines, and visualizations.' },
+    { step: '04', title: 'Validate', description: 'We verify accuracy and refine based on feedback.' },
+    { step: '05', title: 'Train', description: 'Your team learns to use and maintain the solutions.' },
+  ],
+};
+---
+
+<BaseLayout 
+  title={service.title}
+  description={service.tagline}
+>
+  <!-- Hero -->
+  <section class="section-spacing">
+    <div class="container-wide">
+      <div class="grid lg:grid-cols-2 gap-12 lg:gap-20 items-start">
+        <div>
+          <a href="/services" class="inline-flex items-center gap-2 text-sm text-mbl-stone hover:text-mbl-ink mb-8 transition-colors">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+            All Services
+          </a>
+          
+          <p class="font-heading text-mbl-accent font-medium tracking-wide mb-4">
+            with {service.consultant}
+          </p>
+          
+          <h1 class="text-display-lg mb-6">{service.title}</h1>
+          
+          <p class="text-xl text-mbl-stone leading-relaxed mb-8">
+            {service.tagline}
+          </p>
+          
+          <p class="text-mbl-stone leading-relaxed mb-6">
+            {service.description}
+          </p>
+          
+          <p class="text-mbl-stone leading-relaxed mb-8">
+            {service.approach}
+          </p>
+          
+          <!-- Tools -->
+          <div>
+            <p class="text-sm font-heading font-medium text-mbl-stone/70 uppercase tracking-wider mb-3">
+              Tools & Technologies
+            </p>
+            <div class="flex flex-wrap gap-2">
+              {service.tools.map((tool) => (
+                <span class="px-3 py-1 bg-mbl-accent/10 text-mbl-accent text-sm rounded-full font-mono">
+                  {tool}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+        
+        <div class="lg:sticky lg:top-24">
+          <div class="bg-white rounded-xl border border-mbl-mist/50 shadow-sm p-6">
+            <h3 class="font-display text-xl mb-4">Book a Consultation</h3>
+            <p class="text-mbl-stone text-sm mb-6">
+              Schedule a free 30-minute discovery call to discuss your data challenges and goals.
+            </p>
+            <CalendlyEmbed url={service.calendlyUrl} />
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Offerings -->
+  <section class="section-spacing bg-white">
+    <div class="container-wide">
+      <div class="max-w-2xl mb-16">
+        <p class="font-heading text-mbl-accent font-medium tracking-wide mb-4">What I Offer</p>
+        <h2 class="text-display">Data solutions that scale</h2>
+      </div>
+      
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {service.offerings.map((offering) => (
+          <div class="p-6 rounded-lg border border-mbl-mist/50 hover:border-mbl-accent/30 transition-colors duration-300">
+            <h3 class="font-display text-lg mb-3">{offering.title}</h3>
+            <p class="text-mbl-stone text-sm">{offering.description}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+  
+  <!-- Process -->
+  <section class="section-spacing">
+    <div class="container-wide">
+      <div class="max-w-2xl mb-16">
+        <p class="font-heading text-mbl-accent font-medium tracking-wide mb-4">The Process</p>
+        <h2 class="text-display">From chaos to clarity</h2>
+      </div>
+      
+      <div class="grid md:grid-cols-5 gap-8">
+        {service.process.map((step, index) => (
+          <div class="relative">
+            <div class="text-5xl font-display text-mbl-mist mb-4">{step.step}</div>
+            <h3 class="font-heading font-semibold mb-2">{step.title}</h3>
+            <p class="text-sm text-mbl-stone">{step.description}</p>
+            
+            {index < service.process.length - 1 && (
+              <div class="hidden md:block absolute top-8 left-full w-full h-px bg-mbl-mist -translate-x-4"></div>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+  
+  <!-- CTA -->
+  <section class="section-spacing bg-mbl-accent/10">
+    <div class="container-narrow text-center">
+      <h2 class="text-display mb-6">Ready to unlock your data's potential?</h2>
+      <p class="text-lg text-mbl-stone mb-10 max-w-xl mx-auto">
+        Let's discuss your data challenges and explore how better analytics can drive better decisions.
+      </p>
+      <a href="#" class="btn-primary" onclick="Calendly.initPopupWidget({url: '{service.calendlyUrl}'});return false;">
+        Schedule Your Free Consultation
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+        </svg>
+      </a>
+    </div>
+  </section>
+</BaseLayout>

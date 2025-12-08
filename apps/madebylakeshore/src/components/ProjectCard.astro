@@ -1,0 +1,53 @@
+---
+interface Props {
+  title: string;
+  client: string;
+  category: string;
+  image: string;
+  href: string;
+  index: number;
+}
+
+const { title, client, category, image, href, index } = Astro.props;
+---
+
+<a 
+  href={href}
+  class="group block animate-slide-up opacity-0"
+  style={`animation-delay: ${0.1 + index * 0.1}s;`}
+>
+  <div class="relative aspect-[4/3] rounded-lg overflow-hidden mb-4 bg-mbl-mist">
+    <!-- Placeholder gradient when no image -->
+    <div class="absolute inset-0 bg-gradient-to-br from-mbl-slate to-mbl-ink opacity-80"></div>
+    
+    <!-- Image would go here -->
+    <!-- <img src={image} alt={title} class="w-full h-full object-cover" /> -->
+    
+    <!-- Hover overlay -->
+    <div class="absolute inset-0 bg-mbl-accent/0 group-hover:bg-mbl-accent/20 transition-colors duration-300"></div>
+    
+    <!-- Category badge -->
+    <div class="absolute top-4 left-4">
+      <span class="px-3 py-1 bg-white/90 backdrop-blur-sm rounded-full text-xs font-heading font-medium text-mbl-ink">
+        {category}
+      </span>
+    </div>
+    
+    <!-- View project indicator -->
+    <div class="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+      <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-lg">
+        <svg class="w-5 h-5 text-mbl-ink" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+        </svg>
+      </div>
+    </div>
+  </div>
+  
+  <h3 class="font-display text-lg mb-1 group-hover:text-mbl-accent transition-colors duration-300">
+    {title}
+  </h3>
+  
+  <p class="text-sm text-mbl-stone">
+    {client}
+  </p>
+</a>

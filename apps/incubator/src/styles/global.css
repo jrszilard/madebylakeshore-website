@@ -1,0 +1,62 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    @apply font-body text-inc-white bg-inc-void antialiased;
+  }
+  
+  h1, h2, h3, h4 {
+    @apply font-display text-inc-white;
+  }
+  
+  ::selection {
+    @apply bg-inc-lime/30 text-inc-white;
+  }
+}
+
+@layer components {
+  .container-inc {
+    @apply max-w-6xl mx-auto px-6;
+  }
+  
+  .section-spacing {
+    @apply py-20 md:py-28;
+  }
+  
+  .btn-glow {
+    @apply inline-flex items-center gap-2 px-6 py-3 bg-inc-lime text-inc-void font-display font-semibold rounded-md hover:shadow-lg hover:shadow-inc-lime/30 transition-all duration-300;
+  }
+  
+  .btn-ghost {
+    @apply inline-flex items-center gap-2 px-6 py-3 border border-inc-zinc text-inc-white font-display font-medium rounded-md hover:border-inc-silver hover:bg-inc-steel transition-all duration-300;
+  }
+  
+  .card-dark {
+    @apply bg-inc-night border border-inc-steel rounded-lg hover:border-inc-zinc transition-colors duration-300;
+  }
+  
+  .status-badge {
+    @apply px-2 py-1 text-xs font-mono uppercase tracking-wider rounded;
+  }
+  
+  .status-launched { @apply bg-inc-lime/20 text-inc-lime; }
+  .status-beta { @apply bg-inc-cyan/20 text-inc-cyan; }
+  .status-dev { @apply bg-inc-violet/20 text-inc-violet; }
+  .status-concept { @apply bg-inc-zinc text-inc-silver; }
+}
+
+/* Grid background */
+.grid-bg {
+  background-image: 
+    linear-gradient(rgba(132, 204, 22, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(132, 204, 22, 0.03) 1px, transparent 1px);
+  background-size: 50px 50px;
+}

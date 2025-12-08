@@ -1,0 +1,56 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  href: string;
+  external: boolean;
+  color: 'warm' | 'accent';
+}
+
+const { title, description, href, external, color } = Astro.props;
+
+const colorClasses = {
+  warm: 'from-mbl-warm/20 to-mbl-warm/5 hover:from-mbl-warm/30 hover:to-mbl-warm/10',
+  accent: 'from-mbl-accent/20 to-mbl-accent/5 hover:from-mbl-accent/30 hover:to-mbl-accent/10',
+};
+
+const accentColor = {
+  warm: 'text-mbl-warm',
+  accent: 'text-mbl-accent',
+};
+---
+
+<a 
+  href={href}
+  target={external ? "_blank" : undefined}
+  rel={external ? "noopener noreferrer" : undefined}
+  class={`group block p-8 rounded-xl bg-gradient-to-br ${colorClasses[color]} transition-all duration-300`}
+>
+  <div class="flex items-start justify-between mb-4">
+    <h3 class="font-display text-2xl text-white group-hover:translate-x-1 transition-transform duration-300">
+      {title}
+    </h3>
+    <div class={`w-10 h-10 rounded-full bg-white/10 flex items-center justify-center ${accentColor[color]}`}>
+      {external ? (
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+        </svg>
+      ) : (
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+        </svg>
+      )}
+    </div>
+  </div>
+  
+  <p class="text-mbl-mist/80 leading-relaxed">
+    {description}
+  </p>
+  
+  <div class={`mt-6 font-heading font-medium ${accentColor[color]} flex items-center gap-2`}>
+    {external ? 'Visit site' : 'Explore'}
+    <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+    </svg>
+  </div>
+</a>

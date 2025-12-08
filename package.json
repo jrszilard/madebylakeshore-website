@@ -1,0 +1,29 @@
+{
+  "name": "lakeshore-studios",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Monorepo for MadeByLakeshore, DesignAndOtherStories, and Incubator sites",
+  "workspaces": [
+    "apps/*",
+    "packages/*",
+    "studio"
+  ],
+  "scripts": {
+    "dev:mbl": "npm run dev --workspace=apps/madebylakeshore",
+    "dev:daos": "npm run dev --workspace=apps/designandotherstories",
+    "dev:incubator": "npm run dev --workspace=apps/incubator",
+    "dev:studio": "npm run dev --workspace=studio",
+    "build:mbl": "npm run build --workspace=apps/madebylakeshore",
+    "build:daos": "npm run build --workspace=apps/designandotherstories",
+    "build:incubator": "npm run build --workspace=apps/incubator",
+    "build:all": "npm run build:mbl && npm run build:daos && npm run build:incubator",
+    "lint": "eslint .",
+    "format": "prettier --write ."
+  },
+  "devDependencies": {
+    "prettier": "^3.2.5"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

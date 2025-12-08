@@ -1,0 +1,66 @@
+---
+interface Props {
+  title: string;
+  slug: string;
+  category: string;
+  medium: string;
+  price: number;
+  image: string;
+  available: boolean;
+}
+
+const { title, slug, category, medium, price, image, available } = Astro.props;
+const productUrl = `https://designandotherstories.com/shop/${slug}`;
+---
+
+<article class="group">
+  <a href={`/shop/${slug}`} class="block">
+    <div class="relative aspect-[3/4] mb-4 overflow-hidden bg-daos-warm">
+      <!-- Placeholder - would be actual image -->
+      <div class="absolute inset-0 bg-gradient-to-br from-daos-paper to-daos-warm"></div>
+      
+      {!available && (
+        <div class="absolute top-4 left-4">
+          <span class="px-3 py-1 bg-daos-ink text-daos-cream text-xs font-sans uppercase tracking-wider">
+            Sold
+          </span>
+        </div>
+      )}
+      
+      <!-- Quick view overlay -->
+      <div class="absolute inset-0 bg-daos-ink/0 group-hover:bg-daos-ink/10 transition-colors duration-300 flex items-center justify-center">
+        <span class="opacity-0 group-hover:opacity-100 transition-opacity duration-300 px-4 py-2 bg-daos-cream text-daos-ink text-sm font-sans">
+          View Details
+        </span>
+      </div>
+    </div>
+  </a>
+  
+  <div class="space-y-1">
+    <p class="text-xs font-sans uppercase tracking-wider text-daos-charcoal">
+      {category}
+    </p>
+    <h3 class="font-display text-lg">
+      <a href={`/shop/${slug}`} class="hover:text-daos-terracotta transition-colors">
+        {title}
+      </a>
+    </h3>
+    <p class="text-sm text-daos-charcoal">{medium}</p>
+    <p class="font-sans font-medium text-daos-ink">
+      {available ? `$${price.toLocaleString()}` : 'Sold'}
+    </p>
+  </div>
+  
+  {available && (
+    <button
+      class="snipcart-add-item mt-4 w-full py-2 border border-daos-ink text-daos-ink text-sm font-sans hover:bg-daos-ink hover:text-daos-cream transition-colors"
+      data-item-id={slug}
+      data-item-price={price}
+      data-item-url={productUrl}
+      data-item-name={title}
+      data-item-description={`${category} • ${medium}`}
+    >
+      Add to Cart
+    </button>
+  )}
+</article>

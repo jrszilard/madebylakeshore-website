@@ -1,0 +1,160 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ArtworkCard from '../components/ArtworkCard.astro';
+
+// Sample data - would come from Sanity in production
+const featuredArtwork = [
+  {
+    title: 'Morning Light',
+    slug: 'morning-light',
+    category: 'Painting',
+    medium: 'Oil on canvas',
+    price: 850,
+    image: '/images/artwork-1.jpg',
+    available: true,
+  },
+  {
+    title: 'Quiet Moments',
+    slug: 'quiet-moments',
+    category: 'Drawing',
+    medium: 'Graphite on paper',
+    price: 350,
+    image: '/images/artwork-2.jpg',
+    available: true,
+  },
+  {
+    title: 'The Garden',
+    slug: 'the-garden',
+    category: 'Painting',
+    medium: 'Acrylic on canvas',
+    price: 1200,
+    image: '/images/artwork-3.jpg',
+    available: false,
+  },
+];
+---
+
+<BaseLayout title="Home">
+  <!-- Hero -->
+  <section class="section-spacing">
+    <div class="container-art">
+      <div class="max-w-3xl mx-auto text-center">
+        <h1 class="text-display-lg md:text-display-xl mb-6 animate-fade-in">
+          Art that tells <em>stories</em>
+        </h1>
+        <p class="text-xl text-daos-charcoal leading-relaxed mb-10 animate-slide-up" style="animation-delay: 0.2s;">
+          Original paintings, drawings, and written works—each piece crafted with 
+          intention and care. Find something that speaks to you.
+        </p>
+        <div class="flex flex-wrap justify-center gap-4 animate-slide-up" style="animation-delay: 0.3s;">
+          <a href="/shop" class="btn-warm">
+            Explore the Collection
+          </a>
+          <a href="/about" class="btn-outline">
+            Meet the Artist
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Featured Work -->
+  <section class="section-spacing bg-daos-paper">
+    <div class="container-art">
+      <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-12">
+        <div>
+          <p class="font-sans text-sm uppercase tracking-wider text-daos-terracotta mb-2">Featured</p>
+          <h2 class="text-display">Recent Work</h2>
+        </div>
+        <a href="/shop" class="font-sans text-sm text-daos-charcoal hover:text-daos-terracotta transition-colors">
+          View all →
+        </a>
+      </div>
+      
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {featuredArtwork.map((artwork) => (
+          <ArtworkCard {...artwork} />
+        ))}
+      </div>
+    </div>
+  </section>
+  
+  <!-- Categories -->
+  <section class="section-spacing">
+    <div class="container-art">
+      <h2 class="text-display text-center mb-12">Browse by Category</h2>
+      
+      <div class="grid md:grid-cols-3 gap-6">
+        <a href="/paintings" class="group relative aspect-[4/5] overflow-hidden">
+          <div class="absolute inset-0 bg-gradient-to-br from-daos-terracotta/80 to-daos-clay/80"></div>
+          <div class="absolute inset-0 flex items-center justify-center">
+            <div class="text-center">
+              <h3 class="font-display text-3xl text-white mb-2">Paintings</h3>
+              <span class="font-sans text-sm text-white/80 group-hover:underline">Explore →</span>
+            </div>
+          </div>
+        </a>
+        
+        <a href="/drawings" class="group relative aspect-[4/5] overflow-hidden">
+          <div class="absolute inset-0 bg-gradient-to-br from-daos-charcoal/80 to-daos-ink/80"></div>
+          <div class="absolute inset-0 flex items-center justify-center">
+            <div class="text-center">
+              <h3 class="font-display text-3xl text-white mb-2">Drawings</h3>
+              <span class="font-sans text-sm text-white/80 group-hover:underline">Explore →</span>
+            </div>
+          </div>
+        </a>
+        
+        <a href="/writing" class="group relative aspect-[4/5] overflow-hidden">
+          <div class="absolute inset-0 bg-gradient-to-br from-daos-sage/80 to-daos-charcoal/80"></div>
+          <div class="absolute inset-0 flex items-center justify-center">
+            <div class="text-center">
+              <h3 class="font-display text-3xl text-white mb-2">Writing</h3>
+              <span class="font-sans text-sm text-white/80 group-hover:underline">Explore →</span>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Artist Statement -->
+  <section class="section-spacing bg-daos-ink text-daos-cream">
+    <div class="container-art">
+      <div class="max-w-3xl mx-auto text-center">
+        <blockquote class="text-2xl md:text-3xl font-display italic leading-relaxed mb-8">
+          "Every piece I create is an invitation to pause, to feel, to remember 
+          that beauty exists in the quiet moments."
+        </blockquote>
+        <a href="/about" class="inline-flex items-center gap-2 font-sans text-daos-clay hover:text-daos-cream transition-colors">
+          Read my story
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+          </svg>
+        </a>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Newsletter -->
+  <section class="section-spacing">
+    <div class="container-art">
+      <div class="max-w-xl mx-auto text-center">
+        <h2 class="text-display mb-4">Stay in Touch</h2>
+        <p class="text-daos-charcoal mb-8">
+          Be the first to know about new artwork, upcoming art fairs, and studio news.
+        </p>
+        <form class="flex flex-col sm:flex-row gap-3">
+          <input 
+            type="email" 
+            placeholder="Your email address"
+            class="flex-1 px-4 py-3 border border-daos-warm rounded-sm bg-transparent focus:outline-none focus:border-daos-terracotta"
+          />
+          <button type="submit" class="btn-warm">
+            Subscribe
+          </button>
+        </form>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

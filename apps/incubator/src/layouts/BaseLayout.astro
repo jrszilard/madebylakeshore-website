@@ -1,0 +1,43 @@
+---
+import '../styles/global.css';
+import Navigation from '../components/Navigation.astro';
+import Footer from '../components/Footer.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { 
+  title, 
+  description = 'Digital experiments, tools, and products from Lakeshore Studios. Building the future, one project at a time.'
+} = Astro.props;
+
+const siteTitle = title === 'Home' ? 'Incubator at Lakeshore Studios' : `${title} | Incubator`;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    
+    <meta property="og:title" content={siteTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    
+    <title>{siteTitle}</title>
+  </head>
+  <body class="min-h-screen flex flex-col grid-bg">
+    <Navigation />
+    
+    <main class="flex-1">
+      <slot />
+    </main>
+    
+    <Footer />
+  </body>
+</html>
