@@ -1,60 +1,6 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-
-// Sample case studies - replace with your actual case studies
-const caseStudies = [
-  {
-    title: 'Transforming Brand Identity for a Tech Startup',
-    client: 'TechStart Inc.',
-    category: 'design' as const,
-    author: 'Sarah',
-    excerpt: 'How we helped a growing tech company evolve from a generic look to a distinctive brand that attracts top talent and enterprise clients.',
-    results: [
-      { value: '340%', label: 'Increase in job applications' },
-      { value: '85%', label: 'Brand recognition improvement' },
-      { value: '2.5x', label: 'Website engagement' },
-    ],
-    image: '/images/case-1.jpg',
-    href: '/case-studies/techstart-brand',
-    duration: '8 weeks',
-  },
-  {
-    title: 'Building a Real-Time Operations Dashboard',
-    client: 'Global Logistics Co.',
-    category: 'data' as const,
-    author: 'Michael',
-    excerpt: 'Creating a Power BI dashboard that gave leadership instant visibility into operations across 12 regions, replacing 15 different spreadsheets.',
-    results: [
-      { value: '90%', label: 'Reduction in reporting time' },
-      { value: '15→1', label: 'Data sources consolidated' },
-      { value: '$2.1M', label: 'Annual savings identified' },
-    ],
-    image: '/images/case-2.jpg',
-    href: '/case-studies/logistics-dashboard',
-    duration: '6 weeks',
-  },
-  {
-    title: 'Automating Financial Reports with AI',
-    client: 'FinanceFirst',
-    category: 'ai' as const,
-    author: 'Michael',
-    excerpt: 'Implementing an AI-powered system that automated monthly report generation, freeing the finance team to focus on analysis instead of compilation.',
-    results: [
-      { value: '40→4', label: 'Hours per month saved' },
-      { value: '99.9%', label: 'Accuracy rate' },
-      { value: '3 days', label: 'Faster delivery' },
-    ],
-    image: '/images/case-3.jpg',
-    href: '/case-studies/finance-ai',
-    duration: '10 weeks',
-  },
-];
-
-const categoryColors = {
-  design: 'bg-mbl-warm/10 text-mbl-warm',
-  data: 'bg-mbl-accent/10 text-mbl-accent',
-  ai: 'bg-purple-100 text-purple-600',
-};
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { caseStudies, categoryColors } from '../../data/caseStudies';
 ---
 
 <BaseLayout 
@@ -85,7 +31,7 @@ const categoryColors = {
       <div class="space-y-16">
         {caseStudies.map((study, index) => (
           <a 
-            href={study.href}
+            href={`/case-studies/${study.slug}`}
             class="group block"
           >
             <article class="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
