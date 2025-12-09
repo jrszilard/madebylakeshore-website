@@ -1,0 +1,169 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+// Replace with your actual information
+const team = [
+  {
+    name: 'Wilma',
+    role: 'Design Consultant',
+    bio: 'With over a decade of experience in graphic and product design, Wilma helps brands find their visual voice. She believes great design is equal parts strategy and soul.',
+    specialties: ['Brand Identity', 'Product Design', 'Visual Systems'],
+    image: '/images/sarah.jpg',
+  },
+  {
+    name: 'Justin',
+    role: 'Data & AI Consultant',
+    bio: 'Justin transforms complex data into clear insights. With a background in SQL, Power BI, and AI integration, he helps organizations make smarter decisions faster.',
+    specialties: ['SQL & Databases', 'Power BI Dashboards', 'AI Solutions', 'Process Automation'],
+    image: '/images/michael.jpg',
+  },
+];
+
+const values = [
+  {
+    title: 'Clarity Over Complexity',
+    description: 'We distill complex problems into clear solutions. Whether it\'s a brand system or a data pipeline, simplicity is the ultimate sophistication.',
+  },
+  {
+    title: 'Strategy First',
+    description: 'Beautiful dashboards and stunning designs mean nothing without purpose. We start with your goals and work backward.',
+  },
+  {
+    title: 'Partnership, Not Projects',
+    description: 'We invest in relationships. Our best work comes from truly understanding your business, not just your brief project',
+  },
+  {
+    title: 'Honest Counsel',
+    description: 'We\'ll tell you what you need to hear, not just what you want to hear. That\'s how trust is built.',
+  },
+];
+---
+
+<BaseLayout 
+  title="About" 
+  description="Meet the team behind MadeByLakeshore. We're a husband-and-wife consulting studio specializing in design, data, and AI."
+>
+  <!-- Hero -->
+  <section class="section-spacing">
+    <div class="container-wide">
+      <div class="max-w-3xl">
+        <p class="font-heading text-mbl-accent font-medium tracking-wide mb-4 animate-slide-up opacity-0" style="animation-delay: 0.1s;">
+          About Us
+        </p>
+        <h1 class="text-display-lg mb-6 animate-slide-up opacity-0" style="animation-delay: 0.2s;">
+          A studio built on <span class="text-gradient">partnership</span>
+        </h1>
+        <p class="text-xl text-mbl-stone leading-relaxed animate-slide-up opacity-0" style="animation-delay: 0.3s;">
+          MadeByLakeshore is a husband-and-wife consulting studio. We bring together 
+          creative vision and technical expertise to help businesses transform how 
+          they look, think, and operate.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Our Story -->
+  <section class="pb-20">
+    <div class="container-wide">
+      <div class="grid lg:grid-cols-2 gap-16 items-center">
+        <div>
+          <h2 class="text-display mb-6">Our Story</h2>
+          <div class="space-y-4 text-mbl-stone">
+            <p>
+              We started MadeByLakeshore with a simple belief: the best solutions come 
+              from combining different perspectives. Wilma sees the world through design—
+              color, form, and feeling. Justin sees it through data—patterns, systems, 
+              and logic.
+            </p>
+            <p>
+              Together, we've helped businesses ranging from startups to established 
+              enterprises. Whether a client needs a complete brand overhaul, a dashboard 
+              that actually gets used, or an AI strategy that makes sense, we bring 
+              complementary skills to every challenge.
+            </p>
+            <p>
+              Based by the lake or the sea, we work with clients everywhere. Our studio is where 
+              creativity meets analysis, and where your vision becomes reality.
+            </p>
+          </div>
+        </div>
+        <div class="relative">
+          <div class="aspect-[4/3] bg-gradient-to-br from-mbl-mist to-mbl-cloud rounded-lg"></div>
+          <!-- Replace with actual image -->
+          <div class="absolute -bottom-6 -right-6 w-32 h-32 bg-mbl-accent/10 rounded-lg -z-10"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Team -->
+  <section class="section-spacing bg-white">
+    <div class="container-wide">
+      <div class="max-w-2xl mb-16">
+        <p class="font-heading text-mbl-accent font-medium tracking-wide mb-4">The Team</p>
+        <h2 class="text-display">Two perspectives, one vision</h2>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-12">
+        {team.map((member) => (
+          <div class="group">
+            <div class="aspect-[3/4] bg-gradient-to-br from-mbl-slate to-mbl-ink rounded-lg mb-6 overflow-hidden">
+              <!-- Replace with actual image -->
+              <div class="w-full h-full flex items-center justify-center text-white/20">
+                <svg class="w-24 h-24" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                </svg>
+              </div>
+            </div>
+            <h3 class="font-display text-2xl mb-1">{member.name}</h3>
+            <p class="text-mbl-accent font-heading font-medium mb-4">{member.role}</p>
+            <p class="text-mbl-stone mb-6">{member.bio}</p>
+            <div class="flex flex-wrap gap-2">
+              {member.specialties.map((specialty) => (
+                <span class="px-3 py-1 bg-mbl-mist/50 text-mbl-stone text-sm rounded-full">
+                  {specialty}
+                </span>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Values -->
+  <section class="section-spacing">
+    <div class="container-wide">
+      <div class="max-w-2xl mb-16">
+        <p class="font-heading text-mbl-accent font-medium tracking-wide mb-4">Our Values</p>
+        <h2 class="text-display">What guides our work</h2>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-8">
+        {values.map((value) => (
+          <div class="p-8 rounded-lg border border-mbl-mist/50 hover:border-mbl-accent/30 transition-colors duration-300">
+            <h3 class="font-display text-xl mb-3">{value.title}</h3>
+            <p class="text-mbl-stone">{value.description}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section-spacing bg-mbl-ink">
+    <div class="container-narrow text-center">
+      <h2 class="text-display text-white mb-6">Let's work together</h2>
+      <p class="text-lg text-mbl-mist/80 mb-10 max-w-xl mx-auto">
+        Whether you need design, data, or both—we'd love to hear about your project 
+        and explore how we can help.
+      </p>
+      <a href="/contact" class="inline-flex items-center gap-2 px-6 py-3 bg-white text-mbl-ink font-heading font-medium rounded-md hover:bg-mbl-mist transition-colors duration-200">
+        Get in Touch
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+        </svg>
+      </a>
+    </div>
+  </section>
+</BaseLayout>

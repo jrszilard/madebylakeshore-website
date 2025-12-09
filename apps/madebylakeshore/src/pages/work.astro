@@ -1,0 +1,196 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+// Sample portfolio projects - replace with your actual work
+const projects = [
+  {
+    title: 'Brand Identity System',
+    client: 'TechStart Inc.',
+    category: 'design' as const,
+    year: '2024',
+    description: 'Complete brand overhaul including logo, color system, typography, and comprehensive brand guidelines.',
+    image: '/images/project-1.jpg',
+    href: '/work/techstart-brand',
+    featured: true,
+  },
+  {
+    title: 'Executive Dashboard',
+    client: 'Global Logistics Co.',
+    category: 'data' as const,
+    year: '2024',
+    description: 'Real-time Power BI dashboard giving leadership instant visibility into operations across 12 regions.',
+    image: '/images/project-2.jpg',
+    href: '/work/logistics-dashboard',
+    featured: true,
+  },
+  {
+    title: 'AI-Powered Reporting',
+    client: 'FinanceFirst',
+    category: 'ai' as const,
+    year: '2024',
+    description: 'Automated report generation system that reduced monthly reporting time from 40 hours to 4.',
+    image: '/images/project-3.jpg',
+    href: '/work/finance-ai',
+    featured: true,
+  },
+  {
+    title: 'Product Packaging',
+    client: 'Artisan Foods Co.',
+    category: 'design' as const,
+    year: '2023',
+    description: 'Packaging design for a premium food product line, from concept through production.',
+    image: '/images/project-4.jpg',
+    href: '/work/artisan-packaging',
+    featured: false,
+  },
+  {
+    title: 'Sales Analytics Platform',
+    client: 'RetailMax',
+    category: 'data' as const,
+    year: '2023',
+    description: 'Custom analytics solution tracking sales performance, inventory, and customer behavior.',
+    image: '/images/project-5.jpg',
+    href: '/work/retailmax-analytics',
+    featured: false,
+  },
+  {
+    title: 'Marketing Collateral',
+    client: 'Wellness Studio',
+    category: 'design' as const,
+    year: '2023',
+    description: 'Print and digital marketing materials including brochures, social templates, and signage.',
+    image: '/images/project-6.jpg',
+    href: '/work/wellness-marketing',
+    featured: false,
+  },
+];
+
+const categories = [
+  { value: 'all', label: 'All Work' },
+  { value: 'design', label: 'Design' },
+  { value: 'data', label: 'Data' },
+  { value: 'ai', label: 'AI' },
+];
+
+const categoryColors = {
+  design: 'bg-mbl-warm/10 text-mbl-warm',
+  data: 'bg-mbl-accent/10 text-mbl-accent',
+  ai: 'bg-purple-100 text-purple-600',
+};
+---
+
+<BaseLayout 
+  title="Work" 
+  description="Explore our portfolio of design, data, and AI projects. See how we've helped businesses transform."
+>
+  <!-- Hero -->
+  <section class="section-spacing">
+    <div class="container-wide">
+      <div class="max-w-3xl">
+        <p class="font-heading text-mbl-accent font-medium tracking-wide mb-4 animate-slide-up opacity-0" style="animation-delay: 0.1s;">
+          Our Work
+        </p>
+        <h1 class="text-display-lg mb-6 animate-slide-up opacity-0" style="animation-delay: 0.2s;">
+          Projects that made a <span class="text-gradient">difference</span>
+        </h1>
+        <p class="text-xl text-mbl-stone leading-relaxed animate-slide-up opacity-0" style="animation-delay: 0.3s;">
+          From brand identities to data platforms, here's a selection of work 
+          we're proud of. Each project represents a unique challenge solved.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Filter (visual only - would need JS for functionality) -->
+  <section class="pb-12">
+    <div class="container-wide">
+      <div class="flex flex-wrap gap-3">
+        {categories.map((cat, index) => (
+          <button 
+            class={`px-4 py-2 rounded-full font-heading text-sm transition-colors ${index === 0 ? 'bg-mbl-ink text-white' : 'bg-mbl-mist/50 text-mbl-stone hover:bg-mbl-mist'}`}
+            data-filter={cat.value}
+          >
+            {cat.label}
+          </button>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Projects Grid -->
+  <section class="pb-20">
+    <div class="container-wide">
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {projects.map((project, index) => (
+          <a 
+            href={project.href}
+            class="group block"
+            data-category={project.category}
+          >
+            <div class="relative aspect-[4/3] rounded-lg overflow-hidden mb-4 bg-mbl-mist">
+              <!-- Placeholder gradient -->
+              <div class="absolute inset-0 bg-gradient-to-br from-mbl-slate to-mbl-ink opacity-80"></div>
+              
+              {/* Replace with actual image */}
+              {/* <img src={project.image} alt={project.title} class="w-full h-full object-cover" /> */}
+              
+              <!-- Hover overlay -->
+              <div class="absolute inset-0 bg-mbl-accent/0 group-hover:bg-mbl-accent/20 transition-colors duration-300"></div>
+              
+              <!-- Category badge -->
+              <div class="absolute top-4 left-4">
+                <span class={`px-3 py-1 rounded-full text-xs font-heading font-medium ${categoryColors[project.category]}`}>
+                  {project.category.charAt(0).toUpperCase() + project.category.slice(1)}
+                </span>
+              </div>
+              
+              {project.featured && (
+                <div class="absolute top-4 right-4">
+                  <span class="px-3 py-1 bg-white/90 backdrop-blur-sm rounded-full text-xs font-heading font-medium text-mbl-ink">
+                    Featured
+                  </span>
+                </div>
+              )}
+              
+              <!-- View indicator -->
+              <div class="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-lg">
+                  <svg class="w-5 h-5 text-mbl-ink" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+            
+            <div class="flex items-start justify-between gap-4">
+              <div>
+                <h3 class="font-display text-lg mb-1 group-hover:text-mbl-accent transition-colors duration-300">
+                  {project.title}
+                </h3>
+                <p class="text-sm text-mbl-stone mb-2">{project.client}</p>
+                <p class="text-sm text-mbl-stone/70 line-clamp-2">{project.description}</p>
+              </div>
+              <span class="text-sm text-mbl-stone/50 font-mono flex-shrink-0">{project.year}</span>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section-spacing bg-mbl-ink">
+    <div class="container-narrow text-center">
+      <h2 class="text-display text-white mb-6">Have a project in mind?</h2>
+      <p class="text-lg text-mbl-mist/80 mb-10 max-w-xl mx-auto">
+        We'd love to hear about it. Let's discuss how we can help bring your vision to life.
+      </p>
+      <a href="/contact" class="inline-flex items-center gap-2 px-6 py-3 bg-white text-mbl-ink font-heading font-medium rounded-md hover:bg-mbl-mist transition-colors duration-200">
+        Start a Conversation
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+        </svg>
+      </a>
+    </div>
+  </section>
+</BaseLayout>

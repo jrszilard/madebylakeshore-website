@@ -1,0 +1,258 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import CalendlyEmbed from '../components/CalendlyEmbed.astro';
+
+// Replace with your actual information
+const contactInfo = {
+  email: 'hello@madebylakeshore.com',
+  location: 'Based by the lake, working everywhere',
+  response: 'We typically respond within 24 hours',
+};
+
+const consultants = [
+  {
+    name: 'Wilma',
+    role: 'Design Consulting',
+    calendlyUrl: 'https://calendly.com/your-wife-calendly',
+    description: 'Brand identity, product design, visual systems',
+  },
+  {
+    name: 'Justin',
+    role: 'Data & AI Consulting',
+    calendlyUrl: 'https://calendly.com/your-calendly',
+    description: 'SQL, Power BI, AI solutions, reporting',
+  },
+];
+---
+
+<BaseLayout 
+  title="Contact" 
+  description="Get in touch with MadeByLakeshore. Book a consultation or send us a message about your project."
+>
+  <!-- Hero -->
+  <section class="section-spacing">
+    <div class="container-wide">
+      <div class="max-w-3xl">
+        <p class="font-heading text-mbl-accent font-medium tracking-wide mb-4 animate-slide-up opacity-0" style="animation-delay: 0.1s;">
+          Contact Us
+        </p>
+        <h1 class="text-display-lg mb-6 animate-slide-up opacity-0" style="animation-delay: 0.2s;">
+          Let's start a <span class="text-gradient">conversation</span>
+        </h1>
+        <p class="text-xl text-mbl-stone leading-relaxed animate-slide-up opacity-0" style="animation-delay: 0.3s;">
+          Have a project in mind? Book a free discovery call or send us a message. 
+          We're here to help you figure out the best path forward.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Options -->
+  <section class="pb-20">
+    <div class="container-wide">
+      <div class="grid lg:grid-cols-2 gap-16">
+        <!-- Contact Form -->
+        <div>
+          <h2 class="text-display mb-8">Send a Message</h2>
+          
+          <form class="space-y-6" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+            <div class="grid md:grid-cols-2 gap-6">
+              <div>
+                <label for="name" class="block text-sm font-heading font-medium text-mbl-ink mb-2">
+                  Name
+                </label>
+                <input 
+                  type="text" 
+                  id="name" 
+                  name="name" 
+                  required
+                  class="w-full px-4 py-3 border border-mbl-mist rounded-md bg-white focus:outline-none focus:border-mbl-accent transition-colors"
+                  placeholder="Your name"
+                />
+              </div>
+              <div>
+                <label for="email" class="block text-sm font-heading font-medium text-mbl-ink mb-2">
+                  Email
+                </label>
+                <input 
+                  type="email" 
+                  id="email" 
+                  name="email" 
+                  required
+                  class="w-full px-4 py-3 border border-mbl-mist rounded-md bg-white focus:outline-none focus:border-mbl-accent transition-colors"
+                  placeholder="you@company.com"
+                />
+              </div>
+            </div>
+            
+            <div>
+              <label for="service" class="block text-sm font-heading font-medium text-mbl-ink mb-2">
+                What can we help with?
+              </label>
+              <select 
+                id="service" 
+                name="service"
+                class="w-full px-4 py-3 border border-mbl-mist rounded-md bg-white focus:outline-none focus:border-mbl-accent transition-colors"
+              >
+                <option value="">Select a service...</option>
+                <option value="design">Design Consulting</option>
+                <option value="data">Data & Analytics</option>
+                <option value="ai">AI Solutions</option>
+                <option value="multiple">Multiple Services</option>
+                <option value="other">Something Else</option>
+              </select>
+            </div>
+            
+            <div>
+              <label for="message" class="block text-sm font-heading font-medium text-mbl-ink mb-2">
+                Tell us about your project
+              </label>
+              <textarea 
+                id="message" 
+                name="message" 
+                rows="5"
+                required
+                class="w-full px-4 py-3 border border-mbl-mist rounded-md bg-white focus:outline-none focus:border-mbl-accent transition-colors resize-none"
+                placeholder="What are you working on? What challenges are you facing?"
+              ></textarea>
+            </div>
+            
+            <div>
+              <label for="budget" class="block text-sm font-heading font-medium text-mbl-ink mb-2">
+                Budget Range (Optional)
+              </label>
+              <select 
+                id="budget" 
+                name="budget"
+                class="w-full px-4 py-3 border border-mbl-mist rounded-md bg-white focus:outline-none focus:border-mbl-accent transition-colors"
+              >
+                <option value="">Select a range...</option>
+                <option value="under-5k">Under $5,000</option>
+                <option value="5k-10k">$5,000 - $10,000</option>
+                <option value="10k-25k">$10,000 - $25,000</option>
+                <option value="25k-50k">$25,000 - $50,000</option>
+                <option value="50k+">$50,000+</option>
+              </select>
+            </div>
+            
+            <button type="submit" class="btn-primary w-full justify-center">
+              Send Message
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+              </svg>
+            </button>
+          </form>
+          
+          <p class="text-sm text-mbl-stone mt-4">{contactInfo.response}</p>
+        </div>
+        
+        <!-- Contact Info & Booking -->
+        <div>
+          <div class="bg-mbl-cloud rounded-lg p-8 mb-8">
+            <h3 class="font-display text-xl mb-6">Quick Info</h3>
+            
+            <div class="space-y-4">
+              <div class="flex items-start gap-4">
+        we work with clients everywhere. Our studio is where 
+              creativity meets a         <div class="w-10 h-10 bg-mbl-accent/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <svg class="w-5 h-5 text-mbl-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                </div>
+                <div>
+                  <p class="text-sm text-mbl-stone">Email</p>
+                  <a href={`mailto:${contactInfo.email}`} class="font-heading font-medium text-mbl-ink hover:text-mbl-accent transition-colors">
+                    {contactInfo.email}
+                  </a>
+                </div>
+              </div>
+              
+              <div class="flex items-start gap-4">
+                <div class="w-10 h-10 bg-mbl-accent/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <svg class="w-5 h-5 text-mbl-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                </div>
+                <div>
+                  <p class="text-sm text-mbl-stone">Location</p>
+                  <p class="font-heading font-medium text-mbl-ink">{contactInfo.location}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <h3 class="font-display text-xl mb-6">Book a Discovery Call</h3>
+          <p class="text-mbl-stone mb-6">
+            Prefer to talk it through? Schedule a free 30-minute call with one of us.
+          </p>
+          
+          <div class="space-y-4">
+            {consultants.map((consultant) => (
+              <a 
+                href={consultant.calendlyUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="block p-6 border border-mbl-mist rounded-lg hover:border-mbl-accent/30 hover:shadow-md transition-all duration-300 group"
+              >
+                <div class="flex items-center justify-between">
+                  <div>
+                    <h4 class="font-heading font-semibold text-mbl-ink group-hover:text-mbl-accent transition-colors">
+                      {consultant.name}
+                    </h4>
+                    <p class="text-sm text-mbl-accent">{consultant.role}</p>
+                    <p class="text-sm text-mbl-stone mt-1">{consultant.description}</p>
+                  </div>
+                  <svg class="w-5 h-5 text-mbl-stone group-hover:text-mbl-accent group-hover:translate-x-1 transition-all" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                  </svg>
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section-spacing bg-white">
+    <div class="container-wide">
+      <div class="max-w-2xl mb-16">
+        <p class="font-heading text-mbl-accent font-medium tracking-wide mb-4">FAQ</p>
+        <h2 class="text-display">Common questions</h2>
+      </div>
+      
+      <div class="grid md:grid-cols-2 gap-8 max-w-4xl">
+        <div>
+          <h3 class="font-heading font-semibold text-mbl-ink mb-2">How much do your services cost?</h3>
+          <p class="text-mbl-stone">
+            Every project is different. We'll discuss scope and budget on our discovery call 
+            and provide a clear proposal before any work begins.
+          </p>
+        </div>
+        <div>
+          <h3 class="font-heading font-semibold text-mbl-ink mb-2">How long does a typical project take?</h3>
+          <p class="text-mbl-stone">
+            It depends on scope. A dashboard might take 2-4 weeks, while a full brand 
+            identity could be 6-8 weeks. We'll give you a timeline upfront.
+          </p>
+        </div>
+        <div>
+          <h3 class="font-heading font-semibold text-mbl-ink mb-2">Do you work with clients remotely?</h3>
+          <p class="text-mbl-stone">
+            Absolutely. Most of our clients are remote. We use video calls, shared 
+            documents, and async communication to stay aligned.
+          </p>
+        </div>
+        <div>
+          <h3 class="font-heading font-semibold text-mbl-ink mb-2">What if I need both design and data help?</h3>
+          <p class="text-mbl-stone">
+            That's our sweet spot. Many clients work with both of us on integrated 
+            projects. We'll coordinate everything seamlessly.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
