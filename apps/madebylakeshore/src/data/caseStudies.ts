@@ -2,47 +2,45 @@
 
 export const caseStudies = [
   {
-    slug: 'techstart-brand',
-    title: 'Transforming Brand Identity for a Tech Startup',
-    client: 'TechStart Inc.',
-    category: 'design' as const,
-    author: 'Sarah',
-    duration: '8 weeks',
-    year: '2024',
+    slug: 'Real Property Management',
+    title: 'Sales Leaderboad',
+    client: 'Real Property Management',
+    category: 'KPI Dashboard' as const,
+    author: 'Justin',
+    duration: '4 weeks',
+    year: '2025',
     heroImage: '/images/case-1.jpg',
-    excerpt: 'How we helped a growing tech company evolve from a generic look to a distinctive brand that attracts top talent and enterprise clients.',
+    excerpt: 'A franchisee facing accountability of doors gained each month and within the year',
     results: [
-      { value: '340%', label: 'Increase in job applications' },
-      { value: '85%', label: 'Brand recognition improvement' },
-      { value: '2.5x', label: 'Website engagement' },
+      { value: '100%', label: 'Increase in new door visibility' },
+      { value: '30%', label: 'Net New Door Growth' },
+      { value: '2x', label: 'Franchise Engagement' },
     ],
     challenge: `
-TechStart had grown rapidly from a 5-person startup to a 50-person company, but their brand hadn't kept pace. They were losing enterprise deals to competitors who "looked more established" and struggling to attract senior talent who perceived them as too scrappy.
+Real Property Management corporate was looking for a way to hold franshices accountable for the number of new doors they gained each month. With over 300 franchises across North America, tracking and motivating growth was a challenge
 
-Their existing brand was a DIY logo from their founding days, inconsistent colors across materials, and no clear visual language. They needed to look like the serious player they had become—without losing the innovative spirit that made them successful.
+The project was already underway with another vendor but had stalled due to lack of progress and communication. They needed a fresh approach to get the dashboard built and deployed quickly.
+
     `.trim(),
     approach: `
-We started with a deep discovery phase, interviewing leadership, employees, customers, and even prospects who had chosen competitors. This revealed that TechStart's real differentiator wasn't their technology—it was their collaborative approach to client relationships.
+We started with a lean discovery phase, interviewing leadership, and a quick mockup of the desired dashboard. With clear requirements, we moved into a rapid development cycle.
 
-Armed with this insight, we developed a brand strategy centered on "Partnership Through Innovation." The visual identity needed to feel approachable yet sophisticated, technical yet human.
+Regular check-ins with stakeholders ensured alignment and allowed for quick feedback. We focused on key metrics that drove behavior rather than overwhelming users with data
 
-We explored multiple creative directions before landing on a system that used geometric shapes (representing their technical foundation) arranged in organic, flowing patterns (representing their collaborative nature).
     `.trim(),
     solution: `
 The final deliverables included:
 
-• A new logomark and wordmark with flexible usage guidelines
-• A comprehensive color system with primary, secondary, and accent palettes
-• Custom typography pairing a modern sans-serif with a friendly geometric font
-• An illustration style using the geometric/organic pattern system
-• Templates for presentations, documents, and social media
-• Brand guidelines documentation for internal teams and vendors
-• Website design direction and key page mockups
+• Month-to-Date and Year-to-Date new door tracking
+• Previous Month's Doo Count Winner
+• Total New Doors this Year
+• Doors Remaining to Reach Year End Goal
+• Franchise Ranking and Leaderboard
     `.trim(),
     testimonial: {
-      quote: "The new brand has completely changed how prospects perceive us. We went from explaining who we are to having people already trust us before the first meeting.",
-      author: 'Jessica Chen',
-      title: 'CEO, TechStart Inc.',
+    quote: "QUOTE GOES HERE",
+      author: 'FIRST NAME LAST NAME',
+      title: 'TITLE GOES HERE',
     },
   },
   {
