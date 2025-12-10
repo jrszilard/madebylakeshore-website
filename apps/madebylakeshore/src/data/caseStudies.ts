@@ -5,7 +5,7 @@ export const caseStudies = [
     slug: 'Real Property Management',
     title: 'Sales Leaderboad',
     client: 'Real Property Management',
-    category: 'KPI Dashboard' as const,
+    category: 'data' as const,
     author: 'Justin',
     duration: '4 weeks',
     year: '2025',
