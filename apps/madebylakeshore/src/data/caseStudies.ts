@@ -2,7 +2,49 @@
 
 export const caseStudies = [
   {
-    slug: 'Real Property Management',
+    slug: 'product-design',
+    title: 'Sales HBR Spark',
+    client: 'Harvard Business Publishing',
+    category: 'design' as const,
+    author: 'Wilma',
+    duration: '12 weeks',
+    year: '2025',
+    heroImage: '/images/case-1.jpg',
+    excerpt: 'Branding and product design for a new leadership learning platform aimed at modern leadership teams.',
+    results: [
+      { value: '100%', label: 'Increase in new door visibility' },
+      { value: '30%', label: 'Net New Door Growth' },
+      { value: '2x', label: 'Franchise Engagement' },
+    ],
+    challenge: `
+Real Property Management corporate was looking for a way to hold franshices accountable for the number of new doors they gained each month. With over 300 franchises across North America, tracking and motivating growth was a challenge
+
+The project was already underway with another vendor but had stalled due to lack of progress and communication. They needed a fresh approach to get the dashboard built and deployed quickly.
+
+    `.trim(),
+    approach: `
+We started with a lean discovery phase, interviewing leadership, and a quick mockup of the desired dashboard. With clear requirements, we moved into a rapid development cycle.
+
+Regular check-ins with stakeholders ensured alignment and allowed for quick feedback. We focused on key metrics that drove behavior rather than overwhelming users with data
+
+    `.trim(),
+    solution: `
+The final deliverables included:
+
+• Month-to-Date and Year-to-Date new door tracking
+• Previous Month's Doo Count Winner
+• Total New Doors this Year
+• Doors Remaining to Reach Year End Goal
+• Franchise Ranking and Leaderboard
+    `.trim(),
+    testimonial: {
+    quote: "QUOTE GOES HERE",
+      author: 'FIRST NAME LAST NAME',
+      title: 'TITLE GOES HERE',
+    },
+  },    
+  {
+    slug: 'KPI-dashboard',
     title: 'Sales Leaderboad',
     client: 'Real Property Management',
     category: 'data' as const,
@@ -87,46 +129,44 @@ We also created a data dictionary and trained the team on self-service analytics
     },
   },
   {
-    slug: 'finance-ai',
-    title: 'Automating Financial Reports with AI',
-    client: 'FinanceFirst',
-    category: 'ai' as const,
-    author: 'Michael',
-    duration: '10 weeks',
-    year: '2024',
+    slug: 'ETL-orgnanization-reporting',
+    title: 'Linking Multiple Datasources to Deliever In Depth Financial Reporting',
+    client: 'Fortune Brands',
+    category: 'data' as const,
+    author: 'Justin',
+    duration: '12 weeks',
+    year: '2025',
     heroImage: '/images/case-3.jpg',
-    excerpt: 'Implementing an AI-powered system that automated monthly report generation, freeing the finance team to focus on analysis instead of compilation.',
+    excerpt: 'Utilizing Tableau Prep as an ETL tool to quickly organize and clean data from multiple sources to create in depth financial reports for leadership.',
     results: [
       { value: '40→4', label: 'Hours per month saved' },
       { value: '99.9%', label: 'Accuracy rate' },
       { value: '3 days', label: 'Faster delivery' },
     ],
     challenge: `
-FinanceFirst's monthly reporting process was a marathon. The finance team spent 40+ hours compiling data from multiple systems, formatting reports, writing commentary, and checking for errors. It was tedious, error-prone, and kept talented analysts doing data entry instead of analysis.
+Fortune Brands has multiple business units with each of those having a unique data storage system forcing leaders to need to referce multiple reports to get the full picture.
 
-The reports themselves were valuable—board members and executives relied on them—but the process of creating them was unsustainable as the company grew.
+The organization was working on a modern data platform that compines these sources but while that system was being built they asked for me to create a faster solution using Tableau Prep
     `.trim(),
     approach: `
-We analyzed the existing reporting workflow step by step, identifying which tasks were rule-based (and thus automatable) versus which required human judgment. Surprisingly, about 80% of the work was mechanical.
+We analyze what sources were available, what common fields existed across the sources, and what the ETL process would look like to be quick to make and stable.
 
-We designed an AI-assisted system that would handle data extraction, transformation, initial commentary drafting, and formatting—while keeping humans in the loop for validation and strategic insights.
+We worked with the owners of each data source to create a connection, bring the data into Tableau Prep, and then clean, organize, and union the data into a single source for reporting.
     `.trim(),
     solution: `
 The solution combined several technologies:
 
-• Automated data pipelines pulling from accounting, CRM, and operational systems
-• SQL-based transformations ensuring data consistency and accuracy
-• AI-generated first drafts of commentary sections based on variance analysis
-• Templated report generation with consistent formatting
-• Human review workflow with easy editing and approval
-• Audit trail tracking all automated and manual changes
+• Automated data pipelines pulling from four different sources
+• Handled data cleaning from tens of millions of rows down to a few hundred thousand relevant records to maintain performance 
+• Unifed product and sales number categories across business units
+• Created a suite of financial reports in Tableau that refreshed daily with the latest data
 
-The finance team now reviews and refines reports instead of building them from scratch.
+The finance team now reviews and refines reports instead of referencing multiple sources and manually combining data.
     `.trim(),
     testimonial: {
-      quote: "Our team went from dreading month-end to actually having time for strategic analysis. The AI drafts are surprisingly good—we usually just tweak them rather than rewrite.",
-      author: 'Amanda Foster',
-      title: 'CFO, FinanceFirst',
+    quote: "QUOTE GOES HERE",
+      author: 'FIRST NAME LAST NAME',
+      title: 'TITLE GOES HERE',
     },
   },
 ];
