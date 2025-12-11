@@ -10,7 +10,9 @@ export default defineConfig({
     react()
   ],
   output: 'hybrid',
-  adapter: vercel(),
+  adapter: vercel({
+  runtime: 'nodejs20.x'
+  }),
   build: {
     assets: 'assets'
   }
