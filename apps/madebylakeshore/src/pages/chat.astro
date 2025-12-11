@@ -7,9 +7,9 @@ import ChatBot from '../components/ChatBot';
   title="Design & Data Companion" 
   description="Get instant help with design and data questions from our AI assistant. Ask about dashboards, visualizations, brand identity, and more."
 >
-  <div class="min-h-[calc(100vh-4.5rem)] flex flex-col bg-mbl-cloud">
+  <div class="h-[calc(100vh-4.5rem)] flex flex-col bg-mbl-cloud overflow-hidden">
     <!-- Header -->
-    <div class="border-b border-mbl-mist bg-white px-4 md:px-6 py-4">
+    <div class="flex-shrink-0 border-b border-mbl-mist bg-white px-4 md:px-6 py-4">
       <div class="max-w-3xl mx-auto flex items-center justify-between">
         <div>
           <h1 class="font-display text-xl text-mbl-ink">Design & Data Companion</h1>
@@ -25,7 +25,7 @@ import ChatBot from '../components/ChatBot';
     </div>
 
     <!-- Chat Container -->
-    <div class="flex-1 max-w-3xl mx-auto w-full flex flex-col">
+    <div class="flex-1 max-w-3xl mx-auto w-full flex flex-col overflow-hidden">
       <ChatBot client:load />
     </div>
   </div>

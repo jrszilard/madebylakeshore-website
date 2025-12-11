@@ -29,11 +29,16 @@ export default function ChatBot() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    }
   };
 
   useEffect(() => {
-    scrollToBottom();
+    // Only scroll if there's more than the initial message
+    if (messages.length > 1) {
+      scrollToBottom();
+    }
   }, [messages]);
 
   const handleSend = async () => {
@@ -90,8 +95,8 @@ export default function ChatBot() {
   };
 
   return (
-    <div className="flex flex-col h-full">
-      {/* Messages Area */}
+    <div className="flex flex-col h-full overflow-hidden">
+      {/* Messages Area - scrolls independently */}
       <div className="flex-1 overflow-y-auto px-4 md:px-6 py-8 space-y-6">
         {messages.map((message, index) => (
           <div
