@@ -1,5 +1,7 @@
 import type { APIRoute } from 'astro';
 
+export const prerender = false;
+
 const SYSTEM_PROMPT = `You are the Design & Data Companion on the MadeByLakeshore website—a chatbot that helps visitors think through design and data/reporting questions.
 
 ## Your Personality
@@ -66,7 +68,7 @@ export const POST: APIRoute = async ({ request }) => {
       );
     }
 
-    const apiKey = import.meta.env.ANTHROPIC_API_KEY;
+    const apiKey = import.meta.env.ANTHROPI/_renderC_API_KEY;
     
     if (!apiKey) {
       console.error('ANTHROPIC_API_KEY is not configured');
