@@ -1,7 +1,7 @@
 import { defineConfig } from 'astro/config';
 import tailwind from '@astrojs/tailwind';
 import react from '@astrojs/react';
-import vercel from '@astrojs/vercel';
+import vercel from '@astrojs/vercel/serverless';
 
 export default defineConfig({
   site: 'https://madebylakeshore.com',
@@ -10,7 +10,9 @@ export default defineConfig({
     react()
   ],
   output: 'hybrid',
-  adapter: vercel(),
+  adapter: vercel({
+    maxDuration: 30
+  }),
   build: {
     assets: 'assets'
   }
