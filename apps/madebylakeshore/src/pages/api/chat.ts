@@ -68,7 +68,7 @@ export const POST: APIRoute = async ({ request }) => {
       );
     }
 
-    const apiKey = import.meta.env.ANTHROPI/_renderC_API_KEY;
+    const apiKey = import.meta.env.ANTHROPIC_API_KEY as string;
     
     if (!apiKey) {
       console.error('ANTHROPIC_API_KEY is not configured');
