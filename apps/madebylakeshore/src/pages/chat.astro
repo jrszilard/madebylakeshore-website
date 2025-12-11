@@ -1,0 +1,32 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ChatBot from '../components/ChatBot';
+---
+
+<BaseLayout 
+  title="Design & Data Companion" 
+  description="Get instant help with design and data questions from our AI assistant. Ask about dashboards, visualizations, brand identity, and more."
+>
+  <div class="min-h-[calc(100vh-4.5rem)] flex flex-col bg-mbl-cloud">
+    <!-- Header -->
+    <div class="border-b border-mbl-mist bg-white px-4 md:px-6 py-4">
+      <div class="max-w-3xl mx-auto flex items-center justify-between">
+        <div>
+          <h1 class="font-display text-xl text-mbl-ink">Design & Data Companion</h1>
+          <p class="text-sm text-mbl-stone">Powered by dry wit and mild judgment</p>
+        </div>
+        <a 
+          href="/contact" 
+          class="text-sm px-4 py-2 bg-mbl-warm hover:bg-mbl-warm/90 text-white rounded-lg transition-colors font-heading font-medium"
+        >
+          Talk to a human
+        </a>
+      </div>
+    </div>
+
+    <!-- Chat Container -->
+    <div class="flex-1 max-w-3xl mx-auto w-full flex flex-col">
+      <ChatBot client:load />
+    </div>
+  </div>
+</BaseLayout>

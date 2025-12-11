@@ -1,11 +1,13 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
+export const prerender = true;
+
 const services = [
   {
     title: 'Design Consulting',
     slug: 'design',
-    consultant: 'Wilma', // Replace with actual name
+    consultant: 'Wilma',
     description: 'Strategic graphic and product design that elevates brands and creates meaningful connections.',
     offerings: [
       'Brand Identity & Strategy',
@@ -20,7 +22,7 @@ const services = [
   {
     title: 'Data & Analytics',
     slug: 'data',
-    consultant: 'Justin', // Replace with actual name
+    consultant: 'Justin',
     description: 'Transform raw data into actionable insights with custom reporting and dashboard solutions.',
     offerings: [
       'SQL Database Design',
@@ -35,7 +37,7 @@ const services = [
   {
     title: 'AI Solutions',
     slug: 'ai',
-    consultant: 'Justin', // Replace with actual name
+    consultant: 'Justin',
     description: 'Leverage artificial intelligence to automate workflows and enhance decision-making.',
     offerings: [
       'AI Strategy Consulting',
@@ -70,6 +72,44 @@ const services = [
           and goals.
         </p>
       </div>
+    </div>
+  </section>
+
+  <!-- AI Companion CTA -->
+  <section class="pb-12">
+    <div class="container-wide">
+      <a 
+        href="/chat"
+        class="group block p-6 md:p-8 rounded-2xl bg-gradient-to-br from-mbl-ink to-mbl-slate border border-mbl-slate hover:border-mbl-accent/50 transition-all duration-300"
+      >
+        <div class="flex flex-col md:flex-row md:items-center gap-6">
+          <div class="flex-shrink-0">
+            <div class="w-16 h-16 rounded-xl bg-mbl-accent/20 flex items-center justify-center group-hover:bg-mbl-accent/30 transition-colors">
+              <svg class="w-8 h-8 text-mbl-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+              </svg>
+            </div>
+          </div>
+          <div class="flex-1">
+            <div class="flex items-center gap-2 mb-2">
+              <h2 class="font-display text-xl text-white">Design & Data Companion</h2>
+              <span class="px-2 py-0.5 bg-mbl-accent/20 text-mbl-accent text-xs font-heading font-medium rounded-full">
+                AI-Powered
+              </span>
+            </div>
+            <p class="text-mbl-mist/80 mb-4">
+              Not sure where to start? Chat with our AI assistant about your design or data challenges. 
+              Get instant insights, helpful frameworks, and a taste of how we think about problems.
+            </p>
+            <span class="inline-flex items-center gap-2 text-mbl-accent font-heading font-medium group-hover:gap-3 transition-all">
+              Try it now
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
+            </span>
+          </div>
+        </div>
+      </a>
     </div>
   </section>
   
@@ -136,12 +176,20 @@ const services = [
         Book a free discovery call and we'll help you identify the best approach 
         for your specific challenges and goals.
       </p>
-      <a href="/contact" class="inline-flex items-center gap-2 px-6 py-3 bg-white text-mbl-ink font-heading font-medium rounded-md hover:bg-mbl-mist transition-colors duration-200">
-        Schedule a Call
-        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-        </svg>
-      </a>
+      <div class="flex flex-wrap justify-center gap-4">
+        <a href="/contact" class="inline-flex items-center gap-2 px-6 py-3 bg-white text-mbl-ink font-heading font-medium rounded-md hover:bg-mbl-mist transition-colors duration-200">
+          Schedule a Call
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+          </svg>
+        </a>
+        <a href="/chat" class="inline-flex items-center gap-2 px-6 py-3 border border-white/30 text-white font-heading font-medium rounded-md hover:bg-white/10 transition-colors duration-200">
+          Chat with AI first
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+          </svg>
+        </a>
+      </div>
     </div>
   </section>
 </BaseLayout>
