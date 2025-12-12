@@ -17,7 +17,7 @@ export const caseStudies = [
       { value: '2x', label: 'Franchise Engagement' },
     ],
     challenge: `
-Real Property Management corporate was looking for a way to hold franshices accountable for the number of new doors they gained each month. With over 300 franchises across North America, tracking and motivating growth was a challenge
+Company corporate was looking for a way to hold franshices accountable for the number of new doors they gained each month. With over 300 franchises across North America, tracking and motivating growth was a challenge
 
 The project was already underway with another vendor but had stalled due to lack of progress and communication. They needed a fresh approach to get the dashboard built and deployed quickly.
 
@@ -42,7 +42,8 @@ The final deliverables included:
       author: 'FIRST NAME LAST NAME',
       title: 'TITLE GOES HERE',
     },
-  },    
+  },
+  /*    
   {
     slug: 'KPI-dashboard',
     title: 'Sales Leaderboad',
@@ -85,6 +86,7 @@ The final deliverables included:
       title: 'TITLE GOES HERE',
     },
   },
+  */
   {
     slug: 'logistics-dashboard',
     title: 'Building a Real-Time Operations Dashboard',
