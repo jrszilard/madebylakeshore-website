@@ -88,46 +88,48 @@ The final deliverables included:
   },
   */
   {
-    slug: 'logistics-dashboard',
-    title: 'Building a Real-Time Operations Dashboard',
-    client: 'Global Logistics Co.',
+    slug: 'Drop-Ship-Report',
+    title: 'Balancing Efficiency and Partnership Through Data Collaboration',
+    client: 'Wire Belt Company of America',
     category: 'data' as const,
-    author: 'Michael',
-    duration: '6 weeks',
-    year: '2024',
+    author: 'Justin',
+    duration: '8 weeks',
+    year: '2023',
     heroImage: '/images/case-2.jpg',
-    excerpt: 'Creating a Power BI dashboard that gave leadership instant visibility into operations across 12 regions, replacing 15 different spreadsheets.',
+    excerpt: 'Developing a Power BI solution that visualized drop ship trends, enabling Wire Belt and its distribution partner to find a cost-efficient balance between inventory and responsiveness.',
     results: [
-      { value: '90%', label: 'Reduction in reporting time' },
-      { value: '15→1', label: 'Data sources consolidated' },
-      { value: '$2.1M', label: 'Annual savings identified' },
+      { value: '38%', label: 'Reduction in total drop ships' },
+      { value: '3', label: 'Key customers identified as primary cost drivers' },
+      { value: '12', label: 'Repetitive part SKUs optimized' }
     ],
     challenge: `
-Global Logistics operated across 12 regions, each with their own reporting spreadsheets, formats, and update schedules. Leadership spent the first week of every month just trying to compile a coherent picture of operations.
+Wire Belt manufactures stainless steel conveyor belts for food processing customers and relies on distribution partners to keep local replacement stock. While the partner preferred drop shipping to reduce inventory costs, Wire Belt faced mounting shipping expenses from numerous small orders.
 
-By the time reports were ready, the data was already stale. Decisions were made on gut feel rather than current information. Regional managers spent hours on reporting instead of managing.
+
+Both sides agreed that drop ships were necessary for emergencies, but neither had visibility into who requested them or how often they occurred. Without this transparency, they struggled to align operational priorities and control costs.
     `.trim(),
     approach: `
-We began by mapping all existing data sources—15 spreadsheets, 3 legacy systems, and 2 cloud applications. We identified the key metrics that actually drove decisions versus the "nice to have" data that cluttered existing reports.
+We started by facilitating open data sharing between Wire Belt and the distribution partner’s business data owners, ensuring both teams understood the shared goal: balancing service quality with financial efficiency.
 
-Working closely with regional managers and executives, we designed a dashboard hierarchy: executive overview, regional deep-dives, and operational details. Each level answered different questions at different frequencies.
+
+Through stakeholder interviews and data exploration, we merged ERP data with the partner’s internal requests to map drop ship frequency, customers involved, and part-level details. This discovery phase revealed opportunities for focused cost reduction rather than broad restrictions.
     `.trim(),
     solution: `
-We built a Power BI solution that:
+Using Power BI and Excel, we built a modular dashboard that could pivot between high-level insights and specific customer or part details. The report enabled both Wire Belt and the partner to:
 
-• Automatically pulls data from all 15 sources via scheduled refreshes
-• Provides real-time visibility with data no more than 4 hours old
-• Offers drill-down from company-wide KPIs to individual shipment details
-• Includes anomaly detection that flags issues before they become problems
-• Works on desktop and mobile for on-the-go access
-• Features role-based views so each user sees relevant information
 
-We also created a data dictionary and trained the team on self-service analytics.
+• Visualize drop ship trends by customer, branch, and part type  
+• Identify repeat shipments and high-cost customers  
+• Quantify the financial impact of excessive small-order drop ships  
+• Model scenarios for adjusting stocking levels or consolidating shipments
+
+
+These insights pinpointed a handful of customers driving most of the extra cost, allowing leaders to establish targeted stocking agreements instead of company-wide limits.
     `.trim(),
     testimonial: {
-      quote: "For the first time in our company's history, I can see exactly what's happening across all regions in real-time. We've already caught issues that would have cost us hundreds of thousands.",
-      author: 'Robert Martinez',
-      title: 'COO, Global Logistics Co.',
+      quote: "INSERT QUOTE HERE.",
+      author: 'FIRST NAME LAST NAME',
+      title: 'WIRE BELT COMPANY OF AMERICA',
     },
   },
   {
