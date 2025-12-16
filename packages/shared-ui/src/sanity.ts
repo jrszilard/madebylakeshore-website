@@ -38,8 +38,21 @@ export const queries = {
     title,
     slug,
     tagline,
+    description,
     icon,
-    "consultant": consultant->{ name, slug, image }
+    offerings,
+    "consultant": consultant->{ name, slug, image, calendlyUrl }
+  }`,
+
+  serviceBySlug: `*[_type == "service" && slug.current == $slug][0] {
+    _id,
+    title,
+    slug,
+    tagline,
+    description,
+    icon,
+    offerings,
+    "consultant": consultant->{ name, slug, image, calendlyUrl, shortBio }
   }`,
   
   allCaseStudies: `*[_type == "caseStudy"] | order(publishedAt desc) {
@@ -50,6 +63,7 @@ export const queries = {
     category,
     excerpt,
     featuredImage,
+    metrics,
     "author": author->{ name, slug, image }
   }`,
   
@@ -61,6 +75,7 @@ export const queries = {
     category,
     excerpt,
     featuredImage,
+    metrics,
     "author": author->{ name, slug, image }
   }`,
   

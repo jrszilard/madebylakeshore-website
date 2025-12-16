@@ -17,12 +17,12 @@ const { title, client, category, image, href, index } = Astro.props;
   style={`animation-delay: ${0.1 + index * 0.1}s;`}
 >
   <div class="relative aspect-[4/3] rounded-lg overflow-hidden mb-4 bg-mbl-mist">
-    <!-- Placeholder gradient when no image -->
-    <div class="absolute inset-0 bg-gradient-to-br from-mbl-slate to-mbl-ink opacity-80"></div>
-    
-    <!-- Image would go here -->
-    <!-- <img src={image} alt={title} class="w-full h-full object-cover" /> -->
-    
+    {image && !image.includes('placeholder') ? (
+      <img src={image} alt={title} class="w-full h-full object-cover" />
+    ) : (
+      <div class="absolute inset-0 bg-gradient-to-br from-mbl-slate to-mbl-ink opacity-80"></div>
+    )}
+
     <!-- Hover overlay -->
     <div class="absolute inset-0 bg-mbl-accent/0 group-hover:bg-mbl-accent/20 transition-colors duration-300"></div>
     

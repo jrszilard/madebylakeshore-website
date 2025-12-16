@@ -1,37 +1,30 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ArtworkCard from '../components/ArtworkCard.astro';
+import { sanityClient, urlFor, queries } from '@lakeshore/shared-ui/sanity';
 
-// Sample data - would come from Sanity in production
-const featuredArtwork = [
-  {
-    title: 'Morning Light',
-    slug: 'morning-light',
-    category: 'Painting',
-    medium: 'Oil on canvas',
-    price: 850,
-    image: '/images/artwork-1.jpg',
-    available: true,
-  },
-  {
-    title: 'Quiet Moments',
-    slug: 'quiet-moments',
-    category: 'Drawing',
-    medium: 'Graphite on paper',
-    price: 350,
-    image: '/images/artwork-2.jpg',
-    available: true,
-  },
-  {
-    title: 'The Garden',
-    slug: 'the-garden',
-    category: 'Painting',
-    medium: 'Acrylic on canvas',
-    price: 1200,
-    image: '/images/artwork-3.jpg',
-    available: false,
-  },
-];
+// Fetch featured artwork from Sanity
+const sanityArtwork = await sanityClient.fetch(`*[_type == "artwork" && featured == true] | order(year desc)[0...6] {
+  _id,
+  title,
+  slug,
+  category,
+  images,
+  medium,
+  price,
+  originalAvailable
+}`);
+
+// Map Sanity data to component props
+const featuredArtwork = sanityArtwork.map((artwork: any) => ({
+  title: artwork.title,
+  slug: artwork.slug?.current || '',
+  category: artwork.category ? artwork.category.charAt(0).toUpperCase() + artwork.category.slice(1) : '',
+  medium: artwork.medium || '',
+  price: artwork.price || 0,
+  image: artwork.images?.[0]?.asset ? urlFor(artwork.images[0]).width(600).height(800).url() : null,
+  available: artwork.originalAvailable !== false,
+}));
 ---
 
 <BaseLayout title="Home">

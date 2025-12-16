@@ -5,7 +5,7 @@ interface Props {
   category: string;
   medium: string;
   price: number;
-  image: string;
+  image: string | null;
   available: boolean;
 }
 
@@ -16,9 +16,12 @@ const productUrl = `https://designandotherstories.com/shop/${slug}`;
 <article class="group">
   <a href={`/shop/${slug}`} class="block">
     <div class="relative aspect-[3/4] mb-4 overflow-hidden bg-daos-warm">
-      <!-- Placeholder - would be actual image -->
-      <div class="absolute inset-0 bg-gradient-to-br from-daos-paper to-daos-warm"></div>
-      
+      {image ? (
+        <img src={image} alt={title} class="w-full h-full object-cover" />
+      ) : (
+        <div class="absolute inset-0 bg-gradient-to-br from-daos-paper to-daos-warm"></div>
+      )}
+
       {!available && (
         <div class="absolute top-4 left-4">
           <span class="px-3 py-1 bg-daos-ink text-daos-cream text-xs font-sans uppercase tracking-wider">
@@ -26,7 +29,7 @@ const productUrl = `https://designandotherstories.com/shop/${slug}`;
           </span>
         </div>
       )}
-      
+
       <!-- Quick view overlay -->
       <div class="absolute inset-0 bg-daos-ink/0 group-hover:bg-daos-ink/10 transition-colors duration-300 flex items-center justify-center">
         <span class="opacity-0 group-hover:opacity-100 transition-opacity duration-300 px-4 py-2 bg-daos-cream text-daos-ink text-sm font-sans">

@@ -1,23 +1,17 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { sanityClient, urlFor, queries } from '@lakeshore/shared-ui/sanity';
 
-// Replace with your actual information
-const team = [
-  {
-    name: 'Wilma',
-    role: 'Design Consultant',
-    bio: 'With over a decade of experience in graphic and product design, Wilma helps brands find their visual voice. She believes great design is equal parts strategy and soul.',
-    specialties: ['Brand Identity', 'Product Design', 'Visual Systems'],
-    image: '/images/sarah.jpg',
-  },
-  {
-    name: 'Justin',
-    role: 'Data & AI Consultant',
-    bio: 'Justin transforms complex data into clear insights. With a background in SQL, Power BI, and AI integration, he helps organizations make smarter decisions faster.',
-    specialties: ['SQL & Databases', 'Power BI Dashboards', 'AI Solutions', 'Process Automation'],
-    image: '/images/michael.jpg',
-  },
-];
+// Fetch team members from Sanity
+const sanityPeople = await sanityClient.fetch(queries.allPeople);
+const team = sanityPeople.map((person: any) => ({
+  name: person.name,
+  role: person.role || '',
+  bio: person.shortBio || '',
+  specialties: [], // Specialties are not in the schema, could be added later
+  image: person.image?.asset ? urlFor(person.image).width(600).height(800).url() : null,
+  calendlyUrl: person.calendlyUrl || null,
+}));
 
 const values = [
   {
@@ -105,26 +99,31 @@ const values = [
       </div>
 
       <div class="grid md:grid-cols-2 gap-12">
-        {team.map((member) => (
+        {team.map((member: any) => (
           <div class="group">
             <div class="aspect-[3/4] bg-gradient-to-br from-mbl-slate to-mbl-ink rounded-lg mb-6 overflow-hidden">
-              <!-- Replace with actual image -->
-              <div class="w-full h-full flex items-center justify-center text-white/20">
-                <svg class="w-24 h-24" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-                </svg>
-              </div>
+              {member.image ? (
+                <img src={member.image} alt={member.name} class="w-full h-full object-cover" />
+              ) : (
+                <div class="w-full h-full flex items-center justify-center text-white/20">
+                  <svg class="w-24 h-24" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                  </svg>
+                </div>
+              )}
             </div>
             <h3 class="font-display text-2xl mb-1">{member.name}</h3>
             <p class="text-mbl-accent font-heading font-medium mb-4">{member.role}</p>
             <p class="text-mbl-stone mb-6">{member.bio}</p>
-            <div class="flex flex-wrap gap-2">
-              {member.specialties.map((specialty) => (
-                <span class="px-3 py-1 bg-mbl-mist/50 text-mbl-stone text-sm rounded-full">
-                  {specialty}
-                </span>
-              ))}
-            </div>
+            {member.specialties.length > 0 && (
+              <div class="flex flex-wrap gap-2">
+                {member.specialties.map((specialty: string) => (
+                  <span class="px-3 py-1 bg-mbl-mist/50 text-mbl-stone text-sm rounded-full">
+                    {specialty}
+                  </span>
+                ))}
+              </div>
+            )}
           </div>
         ))}
       </div>

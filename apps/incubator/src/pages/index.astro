@@ -1,37 +1,23 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ProjectCard from '../components/ProjectCard.astro';
+import { sanityClient, queries } from '@lakeshore/shared-ui/sanity';
 
-// Sample data - would come from Sanity
-const projects = [
-  {
-    title: 'DataPipe',
-    slug: 'datapipe',
-    tagline: 'Automated data pipeline builder',
-    status: 'launched',
-    type: 'SaaS Tool',
-    techStack: ['Python', 'FastAPI', 'React', 'PostgreSQL'],
-    liveUrl: 'https://datapipe.app',
-  },
-  {
-    title: 'PromptForge',
-    slug: 'promptforge',
-    tagline: 'AI prompt testing and optimization',
-    status: 'beta',
-    type: 'Web App',
-    techStack: ['Next.js', 'OpenAI', 'Supabase'],
-    liveUrl: null,
-  },
-  {
-    title: 'ReportBot',
-    slug: 'reportbot',
-    tagline: 'Automated business reporting',
-    status: 'in-development',
-    type: 'SaaS Tool',
-    techStack: ['Python', 'Power BI API', 'Azure'],
-    liveUrl: null,
-  },
-];
+// Fetch projects from Sanity
+const sanityProjects = await sanityClient.fetch(queries.allProjects);
+const projects = sanityProjects.map((project: any) => ({
+  title: project.title,
+  slug: project.slug?.current || '',
+  tagline: project.tagline || '',
+  status: project.status || 'concept',
+  type: project.projectType || '',
+  techStack: project.techStack || [],
+  liveUrl: project.liveUrl || null,
+}));
+
+// Calculate stats from projects
+const launchedCount = projects.filter((p: any) => p.status === 'launched').length;
+const activeCount = projects.length;
 ---
 
 <BaseLayout title="Home">
@@ -91,15 +77,15 @@ const projects = [
     <div class="container-inc">
       <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
         <div class="text-center">
-          <div class="text-4xl font-display font-bold text-inc-lime mb-2">3</div>
+          <div class="text-4xl font-display font-bold text-inc-lime mb-2">{activeCount || 0}</div>
           <div class="text-inc-silver text-sm">Active Projects</div>
         </div>
         <div class="text-center">
-          <div class="text-4xl font-display font-bold text-inc-cyan mb-2">1</div>
+          <div class="text-4xl font-display font-bold text-inc-cyan mb-2">{launchedCount || 0}</div>
           <div class="text-inc-silver text-sm">Launched</div>
         </div>
         <div class="text-center">
-          <div class="text-4xl font-display font-bold text-inc-violet mb-2">12</div>
+          <div class="text-4xl font-display font-bold text-inc-violet mb-2">—</div>
           <div class="text-inc-silver text-sm">Build Logs</div>
         </div>
         <div class="text-center">

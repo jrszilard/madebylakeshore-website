@@ -3,55 +3,27 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import ServiceCard from '../components/ServiceCard.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import BrandCard from '../components/BrandCard.astro';
+import { sanityClient, urlFor, queries } from '@lakeshore/shared-ui/sanity';
 
-// These would come from Sanity in production
-const services = [
-  {
-    title: 'Design Consulting',
-    description: 'Strategic graphic and product design that elevates brands and creates meaningful connections with audiences.',
-    href: '/services/design',
-    icon: 'design'  as const,
-    consultant: 'Wilma', // Name on card on main page. Replace with actual name
-  },
-  {
-    title: 'Data & Analytics',
-    description: 'Transform raw data into actionable insights with SQL, Power BI dashboards, and custom reporting solutions.',
-    href: '/services/data',
-    icon: 'data' as const,
-    consultant: 'Justin', // Name on card on main page. Replace with actual name
-  },
-  {
-    title: 'AI Solutions',
-    description: 'Leverage artificial intelligence to automate workflows, enhance decision-making, and unlock new possibilities.',
-    href: '/services/ai',
-    icon: 'ai' as const,
-    consultant: 'Justin', // Name on card on main page. Replace with actual name
-  },
-];
+// Fetch services from Sanity
+const sanityServices = await sanityClient.fetch(queries.allServices);
+const services = sanityServices.map((service: any) => ({
+  title: service.title,
+  description: service.tagline || '',
+  href: `/services/${service.slug?.current || service.icon}`,
+  icon: service.icon as 'design' | 'data' | 'ai',
+  consultant: service.consultant?.name || '',
+}));
 
-const featuredProjects = [
-  {
-    title: 'Brand Identity System',
-    client: 'TechStart Inc.',
-    category: 'Design',
-    image: '/images/project-1.jpg',
-    href: '/work/techstart-brand',
-  },
-  {
-    title: 'Executive Dashboard',
-    client: 'Global Logistics Co.',
-    category: 'Data',
-    image: '/images/project-2.jpg',
-    href: '/work/logistics-dashboard',
-  },
-  {
-    title: 'AI-Powered Reports',
-    client: 'FinanceFirst',
-    category: 'AI',
-    image: '/images/project-3.jpg',
-    href: '/work/finance-ai',
-  },
-];
+// Fetch featured case studies from Sanity
+const sanityCaseStudies = await sanityClient.fetch(queries.featuredCaseStudies);
+const featuredProjects = sanityCaseStudies.map((study: any) => ({
+  title: study.title,
+  client: study.client || '',
+  category: study.category ? study.category.charAt(0).toUpperCase() + study.category.slice(1) : '',
+  image: study.featuredImage?.asset ? urlFor(study.featuredImage).width(800).url() : '/images/project-placeholder.jpg',
+  href: `/case-studies/${study.slug?.current}`,
+}));
 
 const brands = [
   {
@@ -132,7 +104,7 @@ const brands = [
       </div>
       
       <div class="grid md:grid-cols-3 gap-8">
-        {services.map((service, index) => (
+        {services.map((service: any, index: number) => (
           <ServiceCard {...service} index={index} />
         ))}
       </div>
@@ -153,7 +125,7 @@ const brands = [
       </div>
       
       <div class="grid md:grid-cols-3 gap-8">
-        {featuredProjects.map((project, index) => (
+        {featuredProjects.map((project: any, index: number) => (
           <ProjectCard {...project} index={index} />
         ))}
       </div>

@@ -1,22 +1,56 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { caseStudies, categoryColors } from '../../data/caseStudies';
+import { sanityClient, urlFor, queries } from '@lakeshore/shared-ui/sanity';
 
-export function getStaticPaths() {
-  return caseStudies.map((study) => ({
-    params: { slug: study.slug },
-    props: { study },
+export const prerender = true;
+
+export async function getStaticPaths() {
+  const caseStudies = await sanityClient.fetch(queries.allCaseStudies);
+  return caseStudies.map((study: any) => ({
+    params: { slug: study.slug?.current },
   }));
 }
 
-const { study } = Astro.props;
+const { slug } = Astro.params;
 
-// Find next case study for navigation
-const currentIndex = caseStudies.findIndex(s => s.slug === study.slug);
-const nextStudy = caseStudies[(currentIndex + 1) % caseStudies.length];
+// Fetch case study from Sanity
+const study = await sanityClient.fetch(queries.caseStudyBySlug, { slug });
+
+// If no study found, redirect
+if (!study) {
+  return Astro.redirect('/case-studies');
+}
+
+// Get all case studies for next navigation
+const allStudies = await sanityClient.fetch(queries.allCaseStudies);
+const currentIndex = allStudies.findIndex((s: any) => s.slug?.current === slug);
+const nextStudy = allStudies[(currentIndex + 1) % allStudies.length];
+
+const categoryColors: Record<string, string> = {
+  design: 'bg-mbl-warm/10 text-mbl-warm',
+  data: 'bg-mbl-accent/10 text-mbl-accent',
+  ai: 'bg-purple-100 text-purple-600',
+};
+
+// Helper to convert block content to plain text for display
+function blocksToText(blocks: any[] | null | undefined): string {
+  if (!blocks) return '';
+  return blocks
+    .filter((block: any) => block._type === 'block')
+    .map((block: any) => {
+      if (block.children) {
+        return block.children.map((child: any) => child.text).join('');
+      }
+      return '';
+    })
+    .join('\n\n');
+}
+
+const heroImage = study.featuredImage?.asset ? urlFor(study.featuredImage).width(1400).url() : null;
+const authorName = study.author?.name || '';
 ---
 
-<BaseLayout 
+<BaseLayout
   title={study.title}
   description={study.excerpt}
 >
@@ -30,20 +64,22 @@ const nextStudy = caseStudies[(currentIndex + 1) % caseStudies.length];
           </svg>
           All Case Studies
         </a>
-        
+
         <div class="flex flex-wrap items-center gap-4 mb-6">
           <span class={`px-3 py-1 rounded-full text-sm font-heading font-medium ${categoryColors[study.category]}`}>
             {study.category.charAt(0).toUpperCase() + study.category.slice(1)}
           </span>
-          <span class="text-mbl-stone">{study.client}</span>
-          <span class="text-mbl-mist">•</span>
-          <span class="text-mbl-stone">{study.duration}</span>
-          <span class="text-mbl-mist">•</span>
-          <span class="text-mbl-stone">with {study.author}</span>
+          {study.client && <span class="text-mbl-stone">{study.client}</span>}
+          {authorName && (
+            <>
+              <span class="text-mbl-mist">•</span>
+              <span class="text-mbl-stone">with {authorName}</span>
+            </>
+          )}
         </div>
-        
+
         <h1 class="text-display-lg mb-6">{study.title}</h1>
-        
+
         <p class="text-xl text-mbl-stone leading-relaxed">
           {study.excerpt}
         </p>
@@ -55,32 +91,35 @@ const nextStudy = caseStudies[(currentIndex + 1) % caseStudies.length];
   <section class="pb-20">
     <div class="container-wide">
       <div class="aspect-[21/9] bg-gradient-to-br from-mbl-slate to-mbl-ink rounded-lg overflow-hidden">
-        <!-- Replace with actual image -->
-        <!-- <img src={study.heroImage} alt={study.title} class="w-full h-full object-cover" /> -->
+        {heroImage && (
+          <img src={heroImage} alt={study.title} class="w-full h-full object-cover" />
+        )}
       </div>
     </div>
   </section>
 
-  <!-- Results -->
-  <section class="pb-20">
-    <div class="container-wide">
-      <div class="bg-mbl-cloud rounded-lg p-8 md:p-12">
-        <h2 class="font-heading text-sm uppercase tracking-wider text-mbl-stone mb-8">Key Results</h2>
-        <div class="grid md:grid-cols-3 gap-8">
-          {study.results.map((result) => (
-            <div class="text-center md:text-left">
-              <div class="text-4xl md:text-5xl font-display text-mbl-accent mb-2">
-                {result.value}
+  <!-- Results/Metrics -->
+  {study.metrics && study.metrics.length > 0 && (
+    <section class="pb-20">
+      <div class="container-wide">
+        <div class="bg-mbl-cloud rounded-lg p-8 md:p-12">
+          <h2 class="font-heading text-sm uppercase tracking-wider text-mbl-stone mb-8">Key Results</h2>
+          <div class="grid md:grid-cols-3 gap-8">
+            {study.metrics.map((metric: any) => (
+              <div class="text-center md:text-left">
+                <div class="text-4xl md:text-5xl font-display text-mbl-accent mb-2">
+                  {metric.value}
+                </div>
+                <div class="text-mbl-stone">
+                  {metric.label}
+                </div>
               </div>
-              <div class="text-mbl-stone">
-                {result.label}
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
+  )}
 
   <!-- Content -->
   <section class="pb-20">
@@ -89,23 +128,35 @@ const nextStudy = caseStudies[(currentIndex + 1) % caseStudies.length];
         <!-- Main Content -->
         <div class="lg:col-span-8">
           <div class="prose prose-lg max-w-none">
-            <h2 class="text-display text-2xl mb-6">The Challenge</h2>
-            <div class="text-mbl-stone leading-relaxed whitespace-pre-line mb-12">
-              {study.challenge}
-            </div>
-            
-            <h2 class="text-display text-2xl mb-6">Our Approach</h2>
-            <div class="text-mbl-stone leading-relaxed whitespace-pre-line mb-12">
-              {study.approach}
-            </div>
-            
-            <h2 class="text-display text-2xl mb-6">The Solution</h2>
-            <div class="text-mbl-stone leading-relaxed whitespace-pre-line mb-12">
-              {study.solution}
-            </div>
+            {study.challenge && (
+              <>
+                <h2 class="text-display text-2xl mb-6">The Challenge</h2>
+                <div class="text-mbl-stone leading-relaxed whitespace-pre-line mb-12">
+                  {blocksToText(study.challenge)}
+                </div>
+              </>
+            )}
+
+            {study.solution && (
+              <>
+                <h2 class="text-display text-2xl mb-6">The Solution</h2>
+                <div class="text-mbl-stone leading-relaxed whitespace-pre-line mb-12">
+                  {blocksToText(study.solution)}
+                </div>
+              </>
+            )}
+
+            {study.results && (
+              <>
+                <h2 class="text-display text-2xl mb-6">Results & Impact</h2>
+                <div class="text-mbl-stone leading-relaxed whitespace-pre-line mb-12">
+                  {blocksToText(study.results)}
+                </div>
+              </>
+            )}
           </div>
         </div>
-        
+
         <!-- Sidebar -->
         <div class="lg:col-span-4">
           <div class="sticky top-24 space-y-8">
@@ -113,22 +164,18 @@ const nextStudy = caseStudies[(currentIndex + 1) % caseStudies.length];
             <div class="bg-white border border-mbl-mist/50 rounded-lg p-6">
               <h3 class="font-heading font-semibold text-sm uppercase tracking-wider text-mbl-stone mb-4">Project Details</h3>
               <dl class="space-y-4">
-                <div>
-                  <dt class="text-sm text-mbl-stone/70">Client</dt>
-                  <dd class="font-heading font-medium">{study.client}</dd>
-                </div>
-                <div>
-                  <dt class="text-sm text-mbl-stone/70">Timeline</dt>
-                  <dd class="font-heading font-medium">{study.duration}</dd>
-                </div>
-                <div>
-                  <dt class="text-sm text-mbl-stone/70">Year</dt>
-                  <dd class="font-heading font-medium">{study.year}</dd>
-                </div>
-                <div>
-                  <dt class="text-sm text-mbl-stone/70">Lead</dt>
-                  <dd class="font-heading font-medium">{study.author}</dd>
-                </div>
+                {study.client && (
+                  <div>
+                    <dt class="text-sm text-mbl-stone/70">Client</dt>
+                    <dd class="font-heading font-medium">{study.client}</dd>
+                  </div>
+                )}
+                {authorName && (
+                  <div>
+                    <dt class="text-sm text-mbl-stone/70">Lead</dt>
+                    <dd class="font-heading font-medium">{authorName}</dd>
+                  </div>
+                )}
                 <div>
                   <dt class="text-sm text-mbl-stone/70">Service</dt>
                   <dd>
@@ -139,7 +186,7 @@ const nextStudy = caseStudies[(currentIndex + 1) % caseStudies.length];
                 </div>
               </dl>
             </div>
-            
+
             <!-- CTA -->
             <div class="bg-mbl-ink rounded-lg p-6 text-white">
               <h3 class="font-display text-lg mb-2">Need similar results?</h3>
@@ -158,7 +205,7 @@ const nextStudy = caseStudies[(currentIndex + 1) % caseStudies.length];
   </section>
 
   <!-- Testimonial -->
-  {study.testimonial && (
+  {study.testimonial && study.testimonial.quote && (
     <section class="section-spacing bg-white">
       <div class="container-narrow text-center">
         <svg class="w-12 h-12 text-mbl-mist mx-auto mb-8" fill="currentColor" viewBox="0 0 24 24">
@@ -168,29 +215,33 @@ const nextStudy = caseStudies[(currentIndex + 1) % caseStudies.length];
           "{study.testimonial.quote}"
         </blockquote>
         <div>
-          <p class="font-heading font-semibold text-mbl-ink">{study.testimonial.author}</p>
-          <p class="text-mbl-stone">{study.testimonial.title}</p>
+          <p class="font-heading font-semibold text-mbl-ink">{study.testimonial.authorName}</p>
+          {study.testimonial.authorTitle && (
+            <p class="text-mbl-stone">{study.testimonial.authorTitle}{study.testimonial.company ? `, ${study.testimonial.company}` : ''}</p>
+          )}
         </div>
       </div>
     </section>
   )}
 
   <!-- Next Case Study -->
-  <section class="section-spacing bg-mbl-cloud">
-    <div class="container-wide">
-      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-        <div>
-          <p class="text-sm text-mbl-stone mb-2">Next Case Study</p>
-          <h3 class="font-display text-2xl">{nextStudy.title}</h3>
-          <p class="text-mbl-stone">{nextStudy.client}</p>
+  {nextStudy && (
+    <section class="section-spacing bg-mbl-cloud">
+      <div class="container-wide">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+          <div>
+            <p class="text-sm text-mbl-stone mb-2">Next Case Study</p>
+            <h3 class="font-display text-2xl">{nextStudy.title}</h3>
+            {nextStudy.client && <p class="text-mbl-stone">{nextStudy.client}</p>}
+          </div>
+          <a href={`/case-studies/${nextStudy.slug?.current}`} class="btn-primary">
+            Read Case Study
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
+          </a>
         </div>
-        <a href={`/case-studies/${nextStudy.slug}`} class="btn-primary">
-          Read Case Study
-          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-          </svg>
-        </a>
       </div>
-    </div>
-  </section>
+    </section>
+  )}
 </BaseLayout>
