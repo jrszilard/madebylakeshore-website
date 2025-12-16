@@ -18,8 +18,18 @@ let _client: ReturnType<typeof createSanityClientWithConfig> | null = null;
 
 function getClient() {
   if (!_client) {
-    const projectId = getEnvVar('PUBLIC_SANITY_PROJECT_ID') || getEnvVar('SANITY_PROJECT_ID');
-    const dataset = getEnvVar('PUBLIC_SANITY_DATASET') || getEnvVar('SANITY_DATASET', 'production');
+    // Check multiple possible env var names
+    const projectId =
+      getEnvVar('PUBLIC_SANITY_PROJECT_ID') ||
+      getEnvVar('SANITY_PROJECT_ID') ||
+      getEnvVar('SANITY_STUDIO_PROJECT_ID');
+
+    const dataset =
+      getEnvVar('PUBLIC_SANITY_DATASET') ||
+      getEnvVar('SANITY_DATASET') ||
+      getEnvVar('SANITY_STUDIO_DATASET') ||
+      'production';
+
     const token = getEnvVar('SANITY_API_TOKEN');
 
     _client = createSanityClientWithConfig({
