@@ -4,8 +4,7 @@ import { visionTool } from '@sanity/vision';
 import { schemaTypes } from './schemas';
 import { structure } from './structure';
 
-// You'll need to create a project at sanity.io and get these values
-const projectId = process.env.SANITY_STUDIO_PROJECT_ID || 'your-project-id';
+const projectId = process.env.SANITY_STUDIO_PROJECT_ID || 'YOUR_PROJECT_ID_HERE';
 const dataset = process.env.SANITY_STUDIO_DATASET || 'production';
 
 export default defineConfig({
