@@ -65,7 +65,7 @@ const featuredArtwork = sanityArtwork.map((artwork: any) => ({
       </div>
       
       <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {featuredArtwork.map((artwork) => (
+        {featuredArtwork.map((artwork: any) => (
           <ArtworkCard {...artwork} />
         ))}
       </div>
