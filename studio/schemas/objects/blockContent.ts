@@ -54,11 +54,5 @@ export default defineType({
     defineArrayMember({
       type: 'figure',
     }),
-    defineArrayMember({
-      type: 'code',
-      options: {
-        withFilename: true,
-      },
-    }),
   ],
 });
