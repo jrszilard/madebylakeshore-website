@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ArtworkCard from '../components/ArtworkCard.astro';
-import { sanityClient, urlFor, queries } from '@lakeshore/shared-ui/sanity';
+import { sanityClient, urlFor, queries } from '../lib/sanity';
 
 // Fetch featured artwork from Sanity
 const sanityArtwork = await sanityClient.fetch(`*[_type == "artwork" && featured == true] | order(year desc)[0...6] {

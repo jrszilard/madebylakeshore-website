@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { sanityClient, urlFor, queries } from '@lakeshore/shared-ui/sanity';
+import { sanityClient, urlFor, queries } from '../../lib/sanity';
 
 // Fetch case studies from Sanity
 const sanityCaseStudies = await sanityClient.fetch(queries.allCaseStudies);

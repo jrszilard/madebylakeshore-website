@@ -2,108 +2,54 @@ import { createClient, type SanityClient } from '@sanity/client';
 import imageUrlBuilder from '@sanity/image-url';
 import type { SanityImageSource } from '@sanity/image-url/lib/types/types';
 
-// Get environment variables - supports multiple patterns for different build systems
-function getProjectId(): string {
-  // Check various env var locations
-  const projectId =
-    (typeof import.meta !== 'undefined' && import.meta.env?.PUBLIC_SANITY_PROJECT_ID) ||
-    (typeof process !== 'undefined' && process.env?.PUBLIC_SANITY_PROJECT_ID) ||
-    (typeof process !== 'undefined' && process.env?.SANITY_PROJECT_ID) ||
-    '';
-
-  return projectId;
+export interface SanityConfig {
+  projectId: string;
+  dataset?: string;
+  apiVersion?: string;
+  token?: string;
 }
 
-function getDataset(): string {
-  const dataset =
-    (typeof import.meta !== 'undefined' && import.meta.env?.PUBLIC_SANITY_DATASET) ||
-    (typeof process !== 'undefined' && process.env?.PUBLIC_SANITY_DATASET) ||
-    (typeof process !== 'undefined' && process.env?.SANITY_DATASET) ||
-    'production';
+const DEFAULT_API_VERSION = '2024-01-01';
 
-  return dataset;
-}
-
-const apiVersion = '2024-01-01';
-
-// Lazy-initialized clients
-let _sanityClient: SanityClient | null = null;
-let _sanityWriteClient: SanityClient | null = null;
-let _imageBuilder: ReturnType<typeof imageUrlBuilder> | null = null;
-
-// Get or create the read client
-export function getSanityClient(): SanityClient {
-  if (!_sanityClient) {
-    const projectId = getProjectId();
-    const dataset = getDataset();
-
-    if (!projectId) {
-      throw new Error(
-        'Sanity projectId is required. Please set PUBLIC_SANITY_PROJECT_ID environment variable.'
-      );
-    }
-
-    _sanityClient = createClient({
-      projectId,
-      dataset,
-      apiVersion,
-      useCdn: true,
-    });
+// Factory function to create a Sanity client with explicit config
+export function createSanityClientWithConfig(config: SanityConfig) {
+  if (!config.projectId) {
+    throw new Error(
+      'Sanity projectId is required. Please set PUBLIC_SANITY_PROJECT_ID environment variable.'
+    );
   }
-  return _sanityClient;
-}
 
-// Legacy export for backwards compatibility - creates client on first access
-export const sanityClient: SanityClient = new Proxy({} as SanityClient, {
-  get(_, prop) {
-    return (getSanityClient() as any)[prop];
-  },
-});
+  const client = createClient({
+    projectId: config.projectId,
+    dataset: config.dataset || 'production',
+    apiVersion: config.apiVersion || DEFAULT_API_VERSION,
+    useCdn: true,
+  });
 
-// Get or create the write client
-export function getSanityWriteClient(): SanityClient {
-  if (!_sanityWriteClient) {
-    const projectId = getProjectId();
-    const dataset = getDataset();
-    const token =
-      (typeof import.meta !== 'undefined' && import.meta.env?.SANITY_API_TOKEN) ||
-      (typeof process !== 'undefined' && process.env?.SANITY_API_TOKEN) ||
-      '';
+  const writeClient = createClient({
+    projectId: config.projectId,
+    dataset: config.dataset || 'production',
+    apiVersion: config.apiVersion || DEFAULT_API_VERSION,
+    useCdn: false,
+    token: config.token,
+  });
 
-    if (!projectId) {
-      throw new Error(
-        'Sanity projectId is required. Please set PUBLIC_SANITY_PROJECT_ID environment variable.'
-      );
-    }
+  const builder = imageUrlBuilder(client);
 
-    _sanityWriteClient = createClient({
-      projectId,
-      dataset,
-      apiVersion,
-      useCdn: false,
-      token,
-    });
+  function urlFor(source: SanityImageSource) {
+    return builder.image(source);
   }
-  return _sanityWriteClient;
-}
 
-// Legacy export for backwards compatibility
-export const sanityWriteClient: SanityClient = new Proxy({} as SanityClient, {
-  get(_, prop) {
-    return (getSanityWriteClient() as any)[prop];
-  },
-});
-
-// Image URL builder - lazy initialized
-function getImageBuilder() {
-  if (!_imageBuilder) {
-    _imageBuilder = imageUrlBuilder(getSanityClient());
+  async function fetchSanity<T>(query: string, params = {}): Promise<T> {
+    return client.fetch<T>(query, params);
   }
-  return _imageBuilder;
-}
 
-export function urlFor(source: SanityImageSource) {
-  return getImageBuilder().image(source);
+  return {
+    client,
+    writeClient,
+    urlFor,
+    fetchSanity,
+  };
 }
 
 // Common GROQ queries
@@ -290,7 +236,5 @@ export const queries = {
   }`,
 };
 
-// Helper to fetch data
-export async function fetchSanity<T>(query: string, params = {}): Promise<T> {
-  return getSanityClient().fetch<T>(query, params);
-}
+// Re-export types for convenience
+export type { SanityImageSource };

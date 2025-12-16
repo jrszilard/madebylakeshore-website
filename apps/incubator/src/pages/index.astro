@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ProjectCard from '../components/ProjectCard.astro';
-import { sanityClient, queries } from '@lakeshore/shared-ui/sanity';
+import { sanityClient, queries } from '../lib/sanity';
 
 // Fetch projects from Sanity
 const sanityProjects = await sanityClient.fetch(queries.allProjects);
