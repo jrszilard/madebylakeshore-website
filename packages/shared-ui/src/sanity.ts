@@ -3,8 +3,17 @@ import imageUrlBuilder from '@sanity/image-url';
 import type { SanityImageSource } from '@sanity/image-url/lib/types/types';
 
 // These should be set via environment variables
-const projectId = import.meta.env.PUBLIC_SANITY_PROJECT_ID || process.env.SANITY_PROJECT_ID || '';
-const dataset = import.meta.env.PUBLIC_SANITY_DATASET || process.env.SANITY_DATASET || 'production';
+// Check multiple possible env var locations for compatibility with different build systems
+const projectId =
+  import.meta.env.PUBLIC_SANITY_PROJECT_ID ||
+  process.env.PUBLIC_SANITY_PROJECT_ID ||
+  process.env.SANITY_PROJECT_ID ||
+  '';
+const dataset =
+  import.meta.env.PUBLIC_SANITY_DATASET ||
+  process.env.PUBLIC_SANITY_DATASET ||
+  process.env.SANITY_DATASET ||
+  'production';
 const apiVersion = '2024-01-01';
 
 export const sanityClient = createClient({
