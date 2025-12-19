@@ -77,7 +77,7 @@ export const queries = {
     "consultant": consultant->{ name, slug, image, calendlyUrl, shortBio }
   }`,
 
-  allCaseStudies: `*[_type == "caseStudy"] | order(publishedAt desc) {
+  allCaseStudies: `*[_type == "caseStudy"] | order(coalesce(order, 100) asc, publishedAt desc) {
     _id,
     title,
     slug,
@@ -89,7 +89,7 @@ export const queries = {
     "author": author->{ name, slug, image }
   }`,
 
-  featuredCaseStudies: `*[_type == "caseStudy" && featured == true] | order(publishedAt desc)[0...3] {
+  featuredCaseStudies: `*[_type == "caseStudy" && featured == true] | order(coalesce(order, 100) asc, publishedAt desc)[0...3] {
     _id,
     title,
     slug,
