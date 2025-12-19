@@ -1,55 +1,19 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import { sanityClient, queries } from '../../lib/sanity';
 
 export const prerender = true;
 
-const services = [
-  {
-    title: 'Design Consulting',
-    slug: 'design',
-    consultant: 'Wilma',
-    description: 'Strategic graphic and product design that elevates brands and creates meaningful connections.',
-    offerings: [
-      'Brand Identity & Strategy',
-      'Product Design',
-      'Visual Systems',
-      'Marketing Collateral',
-      'Packaging Design',
-      'UI/UX Consultation',
-    ],
-    color: 'warm',
-  },
-  {
-    title: 'Data & Analytics',
-    slug: 'data',
-    consultant: 'Justin',
-    description: 'Transform raw data into actionable insights with custom reporting and dashboard solutions.',
-    offerings: [
-      'SQL Database Design',
-      'Power BI Dashboards',
-      'Data Pipeline Architecture',
-      'KPI Development',
-      'Automated Reporting',
-      'Data Visualization',
-    ],
-    color: 'accent',
-  },
-  {
-    title: 'AI Solutions',
-    slug: 'ai',
-    consultant: 'Justin',
-    description: 'Leverage artificial intelligence to automate workflows and enhance decision-making.',
-    offerings: [
-      'AI Strategy Consulting',
-      'Process Automation',
-      'Custom AI Integrations',
-      'Prompt Engineering',
-      'AI-Powered Analytics',
-      'Training & Workshops',
-    ],
-    color: 'accent',
-  },
-];
+// Fetch services from Sanity
+const sanityServices = await sanityClient.fetch(queries.allServices);
+const services = sanityServices.map((service: any) => ({
+  title: service.title,
+  slug: service.slug?.current || service.icon,
+  consultant: service.consultant?.name || '',
+  description: service.tagline || '',
+  offerings: service.offerings?.map((o: any) => o.title) || [],
+  color: service.icon === 'design' ? 'warm' : 'accent',
+}));
 ---
 
 <BaseLayout 
@@ -117,7 +81,7 @@ const services = [
   <section class="pb-20">
     <div class="container-wide">
       <div class="space-y-16">
-        {services.map((service) => (
+        {services.map((service: any) => (
           <a 
             href={`/services/${service.slug}`}
             class="group block"
@@ -151,7 +115,7 @@ const services = [
                   What we offer
                 </p>
                 <ul class="grid grid-cols-2 gap-3">
-                  {service.offerings.map((offering) => (
+                  {service.offerings.map((offering: string) => (
                     <li class="flex items-start gap-2 text-mbl-stone">
                       <svg class={`w-5 h-5 mt-0.5 flex-shrink-0 ${service.color === 'warm' ? 'text-mbl-warm' : 'text-mbl-accent'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />

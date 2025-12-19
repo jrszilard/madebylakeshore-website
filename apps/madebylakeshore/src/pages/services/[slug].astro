@@ -1,0 +1,183 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import CalendlyEmbed from '../../components/CalendlyEmbed.astro';
+import { sanityClient, queries } from '../../lib/sanity';
+
+export const prerender = true;
+
+// Get all services for static paths
+export async function getStaticPaths() {
+  const services = await sanityClient.fetch(queries.allServices);
+  return services.map((service: any) => ({
+    params: { slug: service.slug?.current || service.icon },
+  }));
+}
+
+const { slug } = Astro.params;
+
+// Fetch service from Sanity
+const service = await sanityClient.fetch(queries.serviceBySlug, { slug });
+
+// If no service found, redirect to services page
+if (!service) {
+  return Astro.redirect('/services');
+}
+
+// Default process steps based on service type
+const processSteps: Record<string, { step: string; title: string; description: string }[]> = {
+  design: [
+    { step: '01', title: 'Discovery', description: 'We dive deep into your business, audience, and goals.' },
+    { step: '02', title: 'Strategy', description: 'I develop a creative strategy aligned with your objectives.' },
+    { step: '03', title: 'Design', description: 'Concepts come to life through iterative design exploration.' },
+    { step: '04', title: 'Refine', description: 'We refine the chosen direction based on your feedback.' },
+    { step: '05', title: 'Deliver', description: 'Final assets delivered with guidelines for implementation.' },
+  ],
+  data: [
+    { step: '01', title: 'Audit', description: 'We assess your current data landscape and identify gaps.' },
+    { step: '02', title: 'Define', description: 'Together we clarify what questions need answering.' },
+    { step: '03', title: 'Build', description: 'I develop the queries, pipelines, and visualizations.' },
+    { step: '04', title: 'Validate', description: 'We verify accuracy and refine based on feedback.' },
+    { step: '05', title: 'Train', description: 'Your team learns to use and maintain the solutions.' },
+  ],
+  ai: [
+    { step: '01', title: 'Assess', description: 'We identify AI opportunities in your workflows.' },
+    { step: '02', title: 'Design', description: 'We architect solutions that fit your needs.' },
+    { step: '03', title: 'Develop', description: 'I build and integrate AI capabilities.' },
+    { step: '04', title: 'Test', description: 'Rigorous testing ensures reliability and accuracy.' },
+    { step: '05', title: 'Deploy', description: 'Launch with monitoring and ongoing support.' },
+  ],
+};
+
+const process = processSteps[service.icon] || processSteps.design;
+const accentColor = service.icon === 'design' ? 'warm' : 'accent';
+const calendlyUrl = service.consultant?.calendlyUrl || 'https://calendly.com';
+
+// Section titles based on service type
+const sectionTitles: Record<string, { offerings: string; process: string; cta: string }> = {
+  design: {
+    offerings: 'Design services tailored to your needs',
+    process: 'How we\'ll work together',
+    cta: 'Ready to elevate your brand?',
+  },
+  data: {
+    offerings: 'Data solutions that scale',
+    process: 'From chaos to clarity',
+    cta: 'Ready to unlock your data\'s potential?',
+  },
+  ai: {
+    offerings: 'AI solutions that deliver',
+    process: 'From concept to reality',
+    cta: 'Ready to harness AI?',
+  },
+};
+
+const titles = sectionTitles[service.icon] || sectionTitles.design;
+---
+
+<BaseLayout
+  title={service.title}
+  description={service.tagline}
+>
+  <!-- Hero -->
+  <section class="section-spacing">
+    <div class="container-wide">
+      <div class="grid lg:grid-cols-2 gap-12 lg:gap-20 items-start">
+        <div>
+          <a href="/services" class="inline-flex items-center gap-2 text-sm text-mbl-stone hover:text-mbl-ink mb-8 transition-colors">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+            All Services
+          </a>
+
+          <p class={`font-heading text-mbl-${accentColor} font-medium tracking-wide mb-4`}>
+            with {service.consultant?.name || 'Our Team'}
+          </p>
+
+          <h1 class="text-display-lg mb-6">{service.title}</h1>
+
+          <p class="text-xl text-mbl-stone leading-relaxed mb-8">
+            {service.tagline}
+          </p>
+
+          {service.consultant?.shortBio && (
+            <p class="text-mbl-stone leading-relaxed">
+              {service.consultant.shortBio}
+            </p>
+          )}
+        </div>
+
+        <div class="lg:sticky lg:top-24">
+          <div class="bg-white rounded-xl border border-mbl-mist/50 shadow-sm p-6">
+            <h3 class="font-display text-xl mb-4">Book a Consultation</h3>
+            <p class="text-mbl-stone text-sm mb-6">
+              Schedule a free 30-minute discovery call to discuss your project and see if we're a good fit.
+            </p>
+            <CalendlyEmbed url={calendlyUrl} />
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Offerings -->
+  {service.offerings && service.offerings.length > 0 && (
+    <section class="section-spacing bg-white">
+      <div class="container-wide">
+        <div class="max-w-2xl mb-16">
+          <p class={`font-heading text-mbl-${accentColor} font-medium tracking-wide mb-4`}>What I Offer</p>
+          <h2 class="text-display">{titles.offerings}</h2>
+        </div>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {service.offerings.map((offering: any) => (
+            <div class={`p-6 rounded-lg border border-mbl-mist/50 hover:border-mbl-${accentColor}/30 transition-colors duration-300`}>
+              <h3 class="font-display text-lg mb-3">{offering.title}</h3>
+              <p class="text-mbl-stone text-sm">{offering.description}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- Process -->
+  <section class="section-spacing">
+    <div class="container-wide">
+      <div class="max-w-2xl mb-16">
+        <p class={`font-heading text-mbl-${accentColor} font-medium tracking-wide mb-4`}>The Process</p>
+        <h2 class="text-display">{titles.process}</h2>
+      </div>
+
+      <div class="grid md:grid-cols-5 gap-8">
+        {process.map((step, index) => (
+          <div class="relative">
+            <div class="text-5xl font-display text-mbl-mist mb-4">{step.step}</div>
+            <h3 class="font-heading font-semibold mb-2">{step.title}</h3>
+            <p class="text-sm text-mbl-stone">{step.description}</p>
+
+            {index < process.length - 1 && (
+              <div class="hidden md:block absolute top-8 left-full w-full h-px bg-mbl-mist -translate-x-4"></div>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class={`section-spacing bg-mbl-${accentColor}/10`}>
+    <div class="container-narrow text-center">
+      <h2 class="text-display mb-6">{titles.cta}</h2>
+      <p class="text-lg text-mbl-stone mb-10 max-w-xl mx-auto">
+        Let's discuss your project and explore how we can help you achieve your goals.
+      </p>
+      <a href={calendlyUrl} target="_blank" rel="noopener noreferrer" class="btn-primary">
+        Schedule Your Free Consultation
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+        </svg>
+      </a>
+    </div>
+  </section>
+</BaseLayout>

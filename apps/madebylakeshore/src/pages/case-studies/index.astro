@@ -1,6 +1,26 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { caseStudies, categoryColors } from '../../data/caseStudies';
+import { sanityClient, urlFor, queries } from '../../lib/sanity';
+
+// Fetch case studies from Sanity
+const sanityCaseStudies = await sanityClient.fetch(queries.allCaseStudies);
+const caseStudies = sanityCaseStudies.map((study: any) => ({
+  slug: study.slug?.current,
+  title: study.title,
+  client: study.client || '',
+  category: study.category || 'design',
+  author: study.author?.name || '',
+  duration: '', // Not in schema, optional
+  heroImage: study.featuredImage?.asset ? urlFor(study.featuredImage).width(800).url() : null,
+  excerpt: study.excerpt || '',
+  results: study.metrics?.slice(0, 3) || [], // Use metrics for results display
+}));
+
+const categoryColors: Record<string, string> = {
+  design: 'bg-mbl-warm/10 text-mbl-warm',
+  data: 'bg-mbl-accent/10 text-mbl-accent',
+  ai: 'bg-purple-100 text-purple-600',
+};
 ---
 
 <BaseLayout 
@@ -29,7 +49,7 @@ import { caseStudies, categoryColors } from '../../data/caseStudies';
   <section class="pb-20">
     <div class="container-wide">
       <div class="space-y-16">
-        {caseStudies.map((study, index) => (
+        {caseStudies.map((study: any, index: number) => (
           <a 
             href={`/case-studies/${study.slug}`}
             class="group block"
@@ -37,13 +57,14 @@ import { caseStudies, categoryColors } from '../../data/caseStudies';
             <article class="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
               <!-- Image -->
               <div class={`relative aspect-[4/3] rounded-lg overflow-hidden bg-mbl-mist ${index % 2 === 1 ? 'lg:order-2' : ''}`}>
-                <div class="absolute inset-0 bg-gradient-to-br from-mbl-slate to-mbl-ink opacity-80"></div>
-                
-                {/* Replace with actual image */}
-                {/* <img src={study.image} alt={study.title} class="w-full h-full object-cover" /> */}
-                
+                {study.heroImage ? (
+                  <img src={study.heroImage} alt={study.title} class="w-full h-full object-cover" />
+                ) : (
+                  <div class="absolute inset-0 bg-gradient-to-br from-mbl-slate to-mbl-ink opacity-80"></div>
+                )}
+
                 <div class="absolute inset-0 bg-mbl-accent/0 group-hover:bg-mbl-accent/10 transition-colors duration-300"></div>
-                
+
                 <!-- Category badge -->
                 <div class="absolute top-4 left-4">
                   <span class={`px-3 py-1 rounded-full text-xs font-heading font-medium ${categoryColors[study.category]}`}>
@@ -54,12 +75,10 @@ import { caseStudies, categoryColors } from '../../data/caseStudies';
               
               <!-- Content -->
               <div class={index % 2 === 1 ? 'lg:order-1' : ''}>
-                <div class="flex items-center gap-4 mb-4">
-                  <span class="text-sm text-mbl-stone">{study.client}</span>
-                  <span class="text-mbl-mist">•</span>
-                  <span class="text-sm text-mbl-stone">{study.duration}</span>
-                  <span class="text-mbl-mist">•</span>
-                  <span class="text-sm text-mbl-stone">with {study.author}</span>
+                <div class="flex items-center gap-4 mb-4 flex-wrap">
+                  {study.client && <span class="text-sm text-mbl-stone">{study.client}</span>}
+                  {study.client && study.author && <span class="text-mbl-mist">•</span>}
+                  {study.author && <span class="text-sm text-mbl-stone">with {study.author}</span>}
                 </div>
                 
                 <h2 class="font-display text-2xl lg:text-3xl mb-4 group-hover:text-mbl-accent transition-colors duration-300">
@@ -71,18 +90,20 @@ import { caseStudies, categoryColors } from '../../data/caseStudies';
                 </p>
                 
                 <!-- Results -->
-                <div class="grid grid-cols-3 gap-6 mb-8">
-                  {study.results.map((result) => (
-                    <div>
-                      <div class="text-2xl lg:text-3xl font-display text-mbl-accent mb-1">
-                        {result.value}
+                {study.results && study.results.length > 0 && (
+                  <div class="grid grid-cols-3 gap-6 mb-8">
+                    {study.results.map((result: any) => (
+                      <div>
+                        <div class="text-2xl lg:text-3xl font-display text-mbl-accent mb-1">
+                          {result.value}
+                        </div>
+                        <div class="text-sm text-mbl-stone">
+                          {result.label}
+                        </div>
                       </div>
-                      <div class="text-sm text-mbl-stone">
-                        {result.label}
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                    ))}
+                  </div>
+                )}
                 
                 <span class="inline-flex items-center gap-2 font-heading font-medium text-mbl-ink group-hover:text-mbl-accent transition-colors">
                   Read full case study

@@ -60,6 +60,13 @@ export default defineType({
       initialValue: false,
     }),
     defineField({
+      name: 'order',
+      title: 'Display Order',
+      type: 'number',
+      description: 'Lower numbers appear first. Leave empty to sort by date.',
+      initialValue: 100,
+    }),
+    defineField({
       name: 'featuredImage',
       title: 'Featured Image',
       type: 'figure',
@@ -87,15 +94,15 @@ export default defineType({
     }),
     defineField({
       name: 'solution',
-      title: 'The Solution',
+      title: 'Our Approach',
       type: 'blockContent',
-      description: 'How did you approach and solve the problem?',
+      description: 'How did you approach the problem?',
     }),
     defineField({
       name: 'results',
-      title: 'Results & Impact',
+      title: 'The Solution',
       type: 'blockContent',
-      description: 'What were the outcomes?',
+      description: 'What was the solution and its outcomes?',
     }),
     defineField({
       name: 'metrics',
@@ -129,6 +136,11 @@ export default defineType({
     }),
   ],
   orderings: [
+    {
+      title: 'Display Order',
+      name: 'orderAsc',
+      by: [{ field: 'order', direction: 'asc' }, { field: 'publishedAt', direction: 'desc' }],
+    },
     {
       title: 'Published Date, New',
       name: 'publishedAtDesc',
