@@ -1,28 +1,11 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import CalendlyEmbed from '../components/CalendlyEmbed.astro';
 
-// Replace with your actual information
 const contactInfo = {
   email: 'hello@madebylakeshore.com',
   location: 'Based by the lake, working everywhere',
   response: 'We typically respond within 24 hours',
 };
-
-const consultants = [
-  {
-    name: 'Wilma',
-    role: 'Design Consulting',
-    calendlyUrl: 'https://calendly.com/your-wife-calendly',
-    description: 'Brand identity, product design, visual systems',
-  },
-  {
-    name: 'Justin',
-    role: 'Data & AI Consulting',
-    calendlyUrl: 'https://calendly.com/your-calendly',
-    description: 'SQL, Power BI, AI solutions, reporting',
-  },
-];
 ---
 
 <BaseLayout 
@@ -40,7 +23,7 @@ const consultants = [
           Let's start a <span class="text-gradient">conversation</span>
         </h1>
         <p class="text-xl text-mbl-stone leading-relaxed animate-slide-up opacity-0" style="animation-delay: 0.3s;">
-          Have a project in mind? Book a free discovery call or send us a message. 
+          Have a project in mind? Send us a message and we'll get back to you.
           We're here to help you figure out the best path forward.
         </p>
       </div>
@@ -54,8 +37,8 @@ const consultants = [
         <!-- Contact Form -->
         <div>
           <h2 class="text-display mb-8">Send a Message</h2>
-          
-          <form class="space-y-6" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+
+          <form class="space-y-6" action="https://formspree.io/f/mkooadkb" method="POST" id="contact-form">
             <div class="grid md:grid-cols-2 gap-6">
               <div>
                 <label for="name" class="block text-sm font-heading font-medium text-mbl-ink mb-2">
@@ -146,15 +129,14 @@ const consultants = [
           <p class="text-sm text-mbl-stone mt-4">{contactInfo.response}</p>
         </div>
         
-        <!-- Contact Info & Booking -->
+        <!-- Contact Info -->
         <div>
-          <div class="bg-mbl-cloud rounded-lg p-8 mb-8">
+          <div class="bg-mbl-cloud rounded-lg p-8">
             <h3 class="font-display text-xl mb-6">Quick Info</h3>
-            
+
             <div class="space-y-4">
               <div class="flex items-start gap-4">
-        we work with clients everywhere. Our studio is where 
-              creativity meets a         <div class="w-10 h-10 bg-mbl-accent/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                <div class="w-10 h-10 bg-mbl-accent/10 rounded-lg flex items-center justify-center flex-shrink-0">
                   <svg class="w-5 h-5 text-mbl-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                   </svg>
@@ -166,7 +148,7 @@ const consultants = [
                   </a>
                 </div>
               </div>
-              
+
               <div class="flex items-start gap-4">
                 <div class="w-10 h-10 bg-mbl-accent/10 rounded-lg flex items-center justify-center flex-shrink-0">
                   <svg class="w-5 h-5 text-mbl-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -180,35 +162,6 @@ const consultants = [
                 </div>
               </div>
             </div>
-          </div>
-          
-          <h3 class="font-display text-xl mb-6">Book a Discovery Call</h3>
-          <p class="text-mbl-stone mb-6">
-            Prefer to talk it through? Schedule a free 30-minute call with one of us.
-          </p>
-          
-          <div class="space-y-4">
-            {consultants.map((consultant) => (
-              <a 
-                href={consultant.calendlyUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                class="block p-6 border border-mbl-mist rounded-lg hover:border-mbl-accent/30 hover:shadow-md transition-all duration-300 group"
-              >
-                <div class="flex items-center justify-between">
-                  <div>
-                    <h4 class="font-heading font-semibold text-mbl-ink group-hover:text-mbl-accent transition-colors">
-                      {consultant.name}
-                    </h4>
-                    <p class="text-sm text-mbl-accent">{consultant.role}</p>
-                    <p class="text-sm text-mbl-stone mt-1">{consultant.description}</p>
-                  </div>
-                  <svg class="w-5 h-5 text-mbl-stone group-hover:text-mbl-accent group-hover:translate-x-1 transition-all" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                  </svg>
-                </div>
-              </a>
-            ))}
           </div>
         </div>
       </div>
@@ -227,7 +180,7 @@ const consultants = [
         <div>
           <h3 class="font-heading font-semibold text-mbl-ink mb-2">How much do your services cost?</h3>
           <p class="text-mbl-stone">
-            Every project is different. We'll discuss scope and budget on our discovery call 
+            Every project is different. We'll discuss scope and budget with you
             and provide a clear proposal before any work begins.
           </p>
         </div>
