@@ -1,0 +1,71 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { sanityClient } from '../../lib/sanity';
+
+export async function getStaticPaths() {
+  const logs = await sanityClient.fetch(
+    `*[_type == "buildLog"]{ "slug": slug.current }`
+  );
+  return logs.map((l: any) => ({ params: { slug: l.slug } }));
+}
+
+const { slug } = Astro.params;
+const log = await sanityClient.fetch(
+  `*[_type == "buildLog" && slug.current == $slug][0]{
+    _id,
+    title,
+    slug,
+    publishedAt,
+    body,
+    "project": project->{ title, "slug": slug.current }
+  }`,
+  { slug }
+);
+
+if (!log) {
+  return Astro.redirect('/builds');
+}
+---
+
+<BaseLayout title={log.title}>
+  <section class="section-spacing">
+    <div class="container-inc">
+      <a href="/builds" class="inline-flex items-center gap-2 text-sm text-inc-silver hover:text-inc-lime transition-colors mb-8">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+        </svg>
+        Build Log
+      </a>
+
+      <article class="max-w-3xl">
+        <div class="mb-8">
+          {log.project && (
+            <a href={`/projects/${log.project.slug}`} class="text-xs font-mono text-inc-cyan hover:underline mb-3 inline-block">
+              {log.project.title}
+            </a>
+          )}
+          <h1 class="text-display-xl mb-4">{log.title}</h1>
+          {log.publishedAt && (
+            <time class="text-sm text-inc-silver font-mono">
+              {new Date(log.publishedAt).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}
+            </time>
+          )}
+        </div>
+
+        {log.body && (
+          <div class="space-y-4">
+            {log.body.map((block: any) => {
+              if (block._type === 'block') {
+                const text = block.children?.map((child: any) => child.text).join('') || '';
+                if (block.style === 'h2') return <h2 class="font-display text-xl text-inc-white mt-8 mb-3">{text}</h2>;
+                if (block.style === 'h3') return <h3 class="font-display text-lg text-inc-white mt-6 mb-2">{text}</h3>;
+                return <p class="text-inc-silver leading-relaxed">{text}</p>;
+              }
+              return null;
+            })}
+          </div>
+        )}
+      </article>
+    </div>
+  </section>
+</BaseLayout>

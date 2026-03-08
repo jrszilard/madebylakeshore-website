@@ -1,0 +1,59 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { sanityClient, queries } from '../../lib/sanity';
+
+const buildLogs = await sanityClient.fetch(queries.allBuildLogs);
+---
+
+<BaseLayout title="Build Log" description="Follow along as we build in public. Updates, learnings, and progress from Incubator projects.">
+  <section class="section-spacing">
+    <div class="container-inc">
+      <div class="max-w-2xl mb-12">
+        <p class="text-inc-lime font-mono text-sm mb-2">// build log</p>
+        <h1 class="text-display-xl mb-4">Build Log</h1>
+        <p class="text-inc-silver text-lg">
+          Building in public means sharing the journey — the wins, the setbacks, and the lessons along the way.
+        </p>
+      </div>
+
+      {buildLogs.length > 0 ? (
+        <div class="space-y-6 max-w-3xl">
+          {buildLogs.map((log: any) => (
+            <a href={`/builds/${log.slug?.current || ''}`} class="block card-dark p-6 group hover:border-inc-lime/30 transition-colors">
+              <div class="flex items-start justify-between gap-4">
+                <div>
+                  <h2 class="font-display text-lg text-inc-white group-hover:text-inc-lime transition-colors mb-2">
+                    {log.title}
+                  </h2>
+                  {log.project && (
+                    <span class="text-xs font-mono text-inc-cyan">
+                      {log.project.title}
+                    </span>
+                  )}
+                </div>
+                {log.publishedAt && (
+                  <time class="text-xs text-inc-silver font-mono whitespace-nowrap">
+                    {new Date(log.publishedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                  </time>
+                )}
+              </div>
+            </a>
+          ))}
+        </div>
+      ) : (
+        <div class="max-w-xl">
+          <div class="card-dark p-8 text-center">
+            <div class="text-4xl mb-4">📝</div>
+            <h2 class="font-display text-lg text-inc-white mb-3">Build logs coming soon</h2>
+            <p class="text-inc-silver text-sm mb-6">
+              We're heads-down building right now. Check back soon for updates on our projects, or explore what we're working on.
+            </p>
+            <a href="/projects" class="btn-ghost text-sm">
+              View Projects
+            </a>
+          </div>
+        </div>
+      )}
+    </div>
+  </section>
+</BaseLayout>

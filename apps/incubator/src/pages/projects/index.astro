@@ -1,0 +1,58 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import { sanityClient, queries } from '../../lib/sanity';
+
+const sanityProjects = await sanityClient.fetch(queries.allProjects);
+const projects = sanityProjects.map((project: any) => ({
+  title: project.title,
+  slug: project.slug?.current || '',
+  tagline: project.tagline || '',
+  status: project.status || 'concept',
+  category: project.category || '',
+  type: project.projectType || '',
+  techStack: project.techStack || [],
+  highlights: project.highlights || [],
+  liveUrl: project.liveUrl || null,
+  demoUrl: project.demoUrl || null,
+  githubUrl: project.githubUrl || null,
+}));
+
+const statusOrder: Record<string, number> = {
+  'launched': 0,
+  'beta': 1,
+  'in-development': 2,
+  'concept': 3,
+  'archived': 4,
+};
+
+const sorted = projects.sort((a: any, b: any) =>
+  (statusOrder[a.status] ?? 99) - (statusOrder[b.status] ?? 99)
+);
+---
+
+<BaseLayout title="Projects" description="All projects from the Incubator at Lakeshore Studios.">
+  <section class="section-spacing">
+    <div class="container-inc">
+      <div class="max-w-2xl mb-12">
+        <p class="text-inc-lime font-mono text-sm mb-2">// all projects</p>
+        <h1 class="text-display-xl mb-4">Projects</h1>
+        <p class="text-inc-silver text-lg">
+          Everything we're building, testing, and shipping. From early concepts to launched products.
+        </p>
+      </div>
+
+      {sorted.length > 0 ? (
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {sorted.map((project: any) => (
+            <ProjectCard {...project} />
+          ))}
+        </div>
+      ) : (
+        <div class="text-center py-20">
+          <p class="text-inc-silver text-lg">Projects coming soon. Stay tuned.</p>
+        </div>
+      )}
+    </div>
+  </section>
+</BaseLayout>
