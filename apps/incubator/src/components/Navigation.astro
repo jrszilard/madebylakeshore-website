@@ -7,7 +7,7 @@ const navLinks = [
 ---
 
 <header class="sticky top-0 z-50 bg-inc-void/90 backdrop-blur-md border-b border-inc-steel">
-  <nav class="container-inc">
+  <nav class="container-inc" aria-label="Main navigation">
     <div class="flex items-center justify-between h-16">
       <!-- Logo -->
       <a href="/" class="flex items-center gap-3 group">
@@ -18,11 +18,11 @@ const navLinks = [
           Incubator
         </span>
       </a>
-      
+
       <!-- Desktop Navigation -->
       <div class="hidden md:flex items-center gap-8">
         {navLinks.map((link) => (
-          <a 
+          <a
             href={link.href}
             class="font-body text-sm text-inc-silver hover:text-inc-white transition-colors"
           >
@@ -30,11 +30,48 @@ const navLinks = [
           </a>
         ))}
       </div>
-      
-      <!-- Back to Main -->
-      <a 
-        href="https://madebylakeshore.com" 
-        class="text-sm text-inc-silver hover:text-inc-lime transition-colors flex items-center gap-1"
+
+      <div class="flex items-center gap-4">
+        <!-- Back to Main -->
+        <a
+          href="https://madebylakeshore.com"
+          class="text-sm text-inc-silver hover:text-inc-lime transition-colors hidden sm:flex items-center gap-1"
+        >
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+          </svg>
+          MadeByLakeshore
+        </a>
+
+        <!-- Mobile Menu Button -->
+        <button
+          id="mobile-menu-btn"
+          class="md:hidden p-2 text-inc-silver hover:text-inc-white"
+          aria-label="Toggle menu"
+        >
+          <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div id="mobile-menu" class="md:hidden hidden border-t border-inc-steel bg-inc-night">
+    <div class="container-inc py-4 space-y-2">
+      {navLinks.map((link) => (
+        <a
+          href={link.href}
+          class="block py-2 font-body text-sm text-inc-silver hover:text-inc-white transition-colors"
+        >
+          {link.label}
+        </a>
+      ))}
+      <hr class="border-inc-steel" />
+      <a
+        href="https://madebylakeshore.com"
+        class="block py-2 text-sm text-inc-silver hover:text-inc-lime transition-colors flex items-center gap-1"
       >
         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
@@ -42,5 +79,14 @@ const navLinks = [
         MadeByLakeshore
       </a>
     </div>
-  </nav>
+  </div>
 </header>
+
+<script>
+  const btn = document.getElementById('mobile-menu-btn');
+  const menu = document.getElementById('mobile-menu');
+
+  btn?.addEventListener('click', () => {
+    menu?.classList.toggle('hidden');
+  });
+</script>

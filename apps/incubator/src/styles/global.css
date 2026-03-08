@@ -51,6 +51,25 @@
   .status-beta { @apply bg-inc-cyan/20 text-inc-cyan; }
   .status-dev { @apply bg-inc-violet/20 text-inc-violet; }
   .status-concept { @apply bg-inc-zinc text-inc-silver; }
+
+  .btn-glow:focus-visible,
+  .btn-ghost:focus-visible {
+    @apply outline-2 outline-offset-2 outline-inc-lime;
+  }
+}
+
+@layer base {
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-inc-lime;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 /* Grid background */

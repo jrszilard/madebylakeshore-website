@@ -30,12 +30,9 @@ function getClient() {
       getEnvVar('SANITY_STUDIO_DATASET') ||
       'production';
 
-    const token = getEnvVar('SANITY_API_TOKEN');
-
     _client = createSanityClientWithConfig({
       projectId,
       dataset,
-      token,
     });
   }
   return _client;

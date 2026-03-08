@@ -57,26 +57,96 @@ MadeByLakeshore is a husband-and-wife consulting enterprise offering design and 
 
 The design consultant is Wilma. The data & AI consultant is Justin.`;
 
+const MAX_MESSAGES = 20;
+const MAX_MESSAGE_LENGTH = 4000;
+const ALLOWED_ROLES = new Set(['user', 'assistant']);
+
+const corsHeaders = {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': import.meta.env.PROD ? 'https://madebylakeshore.com' : '*',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type',
+};
+
+// Simple in-memory rate limiter (per serverless instance)
+const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
+const RATE_LIMIT_WINDOW_MS = 60_000; // 1 minute
+const RATE_LIMIT_MAX = 10; // 10 requests per minute per IP
+
+function isRateLimited(ip: string): boolean {
+  const now = Date.now();
+  const entry = rateLimitMap.get(ip);
+  if (!entry || now > entry.resetAt) {
+    rateLimitMap.set(ip, { count: 1, resetAt: now + RATE_LIMIT_WINDOW_MS });
+    return false;
+  }
+  entry.count++;
+  return entry.count > RATE_LIMIT_MAX;
+}
+
+export const OPTIONS: APIRoute = async () => {
+  return new Response(null, { status: 204, headers: corsHeaders });
+};
+
 export const POST: APIRoute = async ({ request }) => {
   try {
+    // Rate limiting
+    const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
+    if (isRateLimited(ip)) {
+      return new Response(
+        JSON.stringify({ error: 'Too many requests. Please try again in a minute.' }),
+        { status: 429, headers: corsHeaders }
+      );
+    }
+
     const { messages } = await request.json();
 
     if (!messages || !Array.isArray(messages)) {
       return new Response(
         JSON.stringify({ error: 'Messages array is required' }),
-        { status: 400, headers: { 'Content-Type': 'application/json' } }
+        { status: 400, headers: corsHeaders }
       );
     }
 
+    // Validate message count
+    if (messages.length > MAX_MESSAGES) {
+      return new Response(
+        JSON.stringify({ error: 'Too many messages' }),
+        { status: 400, headers: corsHeaders }
+      );
+    }
+
+    // Validate each message
+    for (const msg of messages) {
+      if (!msg.role || !ALLOWED_ROLES.has(msg.role)) {
+        return new Response(
+          JSON.stringify({ error: 'Invalid message role' }),
+          { status: 400, headers: corsHeaders }
+        );
+      }
+      if (typeof msg.content !== 'string' || msg.content.length > MAX_MESSAGE_LENGTH) {
+        return new Response(
+          JSON.stringify({ error: 'Invalid message content' }),
+          { status: 400, headers: corsHeaders }
+        );
+      }
+    }
+
     const apiKey = import.meta.env.ANTHROPIC_API_KEY as string;
-    
+
     if (!apiKey) {
       console.error('ANTHROPIC_API_KEY is not configured');
       return new Response(
         JSON.stringify({ error: 'API not configured' }),
-        { status: 500, headers: { 'Content-Type': 'application/json' } }
+        { status: 500, headers: corsHeaders }
       );
     }
+
+    // Only pass sanitized role + content to the API
+    const sanitizedMessages = messages.map((msg: any) => ({
+      role: msg.role,
+      content: msg.content,
+    }));
 
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -89,7 +159,7 @@ export const POST: APIRoute = async ({ request }) => {
         model: 'claude-sonnet-4-20250514',
         max_tokens: 1024,
         system: SYSTEM_PROMPT,
-        messages: messages
+        messages: sanitizedMessages
       })
     });
 
@@ -98,12 +168,12 @@ export const POST: APIRoute = async ({ request }) => {
       console.error('Anthropic API error:', errorData);
       return new Response(
         JSON.stringify({ error: 'Failed to get response from AI' }),
-        { status: 500, headers: { 'Content-Type': 'application/json' } }
+        { status: 500, headers: corsHeaders }
       );
     }
 
     const data = await response.json();
-    
+
     const assistantMessage = data.content
       .filter((block: any) => block.type === 'text')
       .map((block: any) => block.text)
@@ -111,14 +181,14 @@ export const POST: APIRoute = async ({ request }) => {
 
     return new Response(
       JSON.stringify({ message: assistantMessage }),
-      { status: 200, headers: { 'Content-Type': 'application/json' } }
+      { status: 200, headers: corsHeaders }
     );
 
   } catch (error) {
     console.error('Chat API error:', error);
     return new Response(
       JSON.stringify({ error: 'Internal server error' }),
-      { status: 500, headers: { 'Content-Type': 'application/json' } }
+      { status: 500, headers: corsHeaders }
     );
   }
 };

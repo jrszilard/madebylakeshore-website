@@ -64,6 +64,31 @@
   .text-gradient {
     @apply bg-clip-text text-transparent bg-gradient-to-r from-mbl-accent to-mbl-warm;
   }
+
+  .btn-primary:focus-visible,
+  .btn-secondary:focus-visible,
+  .link-underline:focus-visible {
+    @apply outline-2 outline-offset-2 outline-mbl-accent;
+  }
+}
+
+@layer base {
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-mbl-accent;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .animate-slide-up {
+    opacity: 1 !important;
+    transform: none !important;
+  }
 }
 
 @layer utilities {

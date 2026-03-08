@@ -6,7 +6,6 @@ export interface SanityConfig {
   projectId: string;
   dataset?: string;
   apiVersion?: string;
-  token?: string;
 }
 
 const DEFAULT_API_VERSION = '2024-01-01';
@@ -26,14 +25,6 @@ export function createSanityClientWithConfig(config: SanityConfig) {
     useCdn: true,
   });
 
-  const writeClient = createClient({
-    projectId: config.projectId,
-    dataset: config.dataset || 'production',
-    apiVersion: config.apiVersion || DEFAULT_API_VERSION,
-    useCdn: false,
-    token: config.token,
-  });
-
   const builder = imageUrlBuilder(client);
 
   function urlFor(source: SanityImageSource) {
@@ -46,7 +37,6 @@ export function createSanityClientWithConfig(config: SanityConfig) {
 
   return {
     client,
-    writeClient,
     urlFor,
     fetchSanity,
   };
@@ -191,11 +181,29 @@ export const queries = {
     slug,
     tagline,
     status,
+    category,
     projectType,
     icon,
     featuredImage,
     techStack,
+    highlights,
     liveUrl,
+    demoUrl,
+    githubUrl
+  }`,
+
+  featuredProjects: `*[_type == "digitalProject" && featured == true] | order(launchDate desc)[0...3] {
+    _id,
+    title,
+    slug,
+    tagline,
+    status,
+    category,
+    icon,
+    techStack,
+    highlights,
+    liveUrl,
+    demoUrl,
     githubUrl
   }`,
 
@@ -205,6 +213,7 @@ export const queries = {
     slug,
     tagline,
     status,
+    category,
     techStack,
     liveUrl
   }`,
@@ -215,13 +224,16 @@ export const queries = {
     slug,
     tagline,
     status,
+    category,
     projectType,
     icon,
     featuredImage,
     screenshots,
     description,
     techStack,
+    highlights,
     liveUrl,
+    demoUrl,
     githubUrl,
     launchDate,
     seo

@@ -17,7 +17,7 @@ export const caseStudies = [
       { value: '2x', label: 'Franchise Engagement' },
     ],
     challenge: `
-Company corporate was looking for a way to hold franshices accountable for the number of new doors they gained each month. With over 300 franchises across North America, tracking and motivating growth was a challenge
+Company corporate was looking for a way to hold franchises accountable for the number of new doors they gained each month. With over 300 franchises across North America, tracking and motivating growth was a challenge
 
 The project was already underway with another vendor but had stalled due to lack of progress and communication. They needed a fresh approach to get the dashboard built and deployed quickly.
 
@@ -32,61 +32,12 @@ Regular check-ins with stakeholders ensured alignment and allowed for quick feed
 The final deliverables included:
 
 • Month-to-Date and Year-to-Date new door tracking
-• Previous Month's Doo Count Winner
+• Previous Month's Door Count Winner
 • Total New Doors this Year
 • Doors Remaining to Reach Year End Goal
 • Franchise Ranking and Leaderboard
     `.trim(),
-    testimonial: {
-    quote: "QUOTE GOES HERE",
-      author: 'FIRST NAME LAST NAME',
-      title: 'TITLE GOES HERE',
-    },
   },
-  /*    
-  {
-    slug: 'KPI-dashboard',
-    title: 'Sales Leaderboad',
-    client: 'Real Property Management',
-    category: 'data' as const,
-    author: 'Justin',
-    duration: '4 weeks',
-    year: '2025',
-    heroImage: '/images/case-1.jpg',
-    excerpt: 'A franchisee facing accountability of doors gained each month and within the year',
-    results: [
-      { value: '100%', label: 'Increase in new door visibility' },
-      { value: '30%', label: 'Net New Door Growth' },
-      { value: '2x', label: 'Franchise Engagement' },
-    ],
-    challenge: `
-Real Property Management corporate was looking for a way to hold franshices accountable for the number of new doors they gained each month. With over 300 franchises across North America, tracking and motivating growth was a challenge
-
-The project was already underway with another vendor but had stalled due to lack of progress and communication. They needed a fresh approach to get the dashboard built and deployed quickly.
-
-    `.trim(),
-    approach: `
-We started with a lean discovery phase, interviewing leadership, and a quick mockup of the desired dashboard. With clear requirements, we moved into a rapid development cycle.
-
-Regular check-ins with stakeholders ensured alignment and allowed for quick feedback. We focused on key metrics that drove behavior rather than overwhelming users with data
-
-    `.trim(),
-    solution: `
-The final deliverables included:
-
-• Month-to-Date and Year-to-Date new door tracking
-• Previous Month's Doo Count Winner
-• Total New Doors this Year
-• Doors Remaining to Reach Year End Goal
-• Franchise Ranking and Leaderboard
-    `.trim(),
-    testimonial: {
-    quote: "QUOTE GOES HERE",
-      author: 'FIRST NAME LAST NAME',
-      title: 'TITLE GOES HERE',
-    },
-  },
-  */
   {
     slug: 'Drop-Ship-Report',
     title: 'Balancing Efficiency and Partnership Through Data Collaboration',
@@ -126,15 +77,10 @@ Using Power BI and Excel, we built a modular dashboard that could pivot between 
 
 These insights pinpointed a handful of customers driving most of the extra cost, allowing leaders to establish targeted stocking agreements instead of company-wide limits.
     `.trim(),
-    testimonial: {
-      quote: "INSERT QUOTE HERE.",
-      author: 'FIRST NAME LAST NAME',
-      title: 'WIRE BELT COMPANY OF AMERICA',
-    },
   },
   {
-    slug: 'ETL-orgnanization-reporting',
-    title: 'Linking Multiple Datasources to Deliever In Depth Financial Reporting',
+    slug: 'ETL-organization-reporting',
+    title: 'Linking Multiple Datasources to Deliver In Depth Financial Reporting',
     client: 'Fortune Brands',
     category: 'data' as const,
     author: 'Justin',
@@ -148,9 +94,9 @@ These insights pinpointed a handful of customers driving most of the extra cost,
       { value: '3 days', label: 'Faster delivery' },
     ],
     challenge: `
-Fortune Brands has multiple business units with each of those having a unique data storage system forcing leaders to need to referce multiple reports to get the full picture.
+Fortune Brands has multiple business units with each of those having a unique data storage system forcing leaders to need to reference multiple reports to get the full picture.
 
-The organization was working on a modern data platform that compines these sources but while that system was being built they asked for me to create a faster solution using Tableau Prep
+The organization was working on a modern data platform that combines these sources but while that system was being built they asked for me to create a faster solution using Tableau Prep
     `.trim(),
     approach: `
 We analyze what sources were available, what common fields existed across the sources, and what the ETL process would look like to be quick to make and stable.
@@ -167,11 +113,6 @@ The solution combined several technologies:
 
 The finance team now reviews and refines reports instead of referencing multiple sources and manually combining data.
     `.trim(),
-    testimonial: {
-    quote: "QUOTE GOES HERE",
-      author: 'FIRST NAME LAST NAME',
-      title: 'TITLE GOES HERE',
-    },
   },
 ];
 
