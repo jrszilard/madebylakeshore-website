@@ -1,6 +1,5 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import CalendlyEmbed from '../../components/CalendlyEmbed.astro';
 import { sanityClient, queries } from '../../lib/sanity';
 
 export const prerender = true;
@@ -50,7 +49,6 @@ const processSteps: Record<string, { step: string; title: string; description: s
 
 const process = processSteps[service.icon] || processSteps.design;
 const accentColor = service.icon === 'design' ? 'warm' : 'accent';
-const calendlyUrl = service.consultant?.calendlyUrl || 'https://calendly.com';
 
 // Section titles based on service type
 const sectionTitles: Record<string, { offerings: string; process: string; cta: string }> = {
@@ -107,14 +105,34 @@ const titles = sectionTitles[service.icon] || sectionTitles.design;
           )}
         </div>
 
-        <div class="lg:sticky lg:top-24">
+        <div class="lg:sticky lg:top-24 space-y-6">
           <div class="bg-white rounded-xl border border-mbl-mist/50 shadow-sm p-6">
-            <h3 class="font-display text-xl mb-4">Book a Consultation</h3>
+            <h3 class="font-display text-xl mb-4">Start a conversation</h3>
             <p class="text-mbl-stone text-sm mb-6">
-              Schedule a free 30-minute discovery call to discuss your project and see if we're a good fit.
+              Tell us about your project and we'll get back to you within 24 hours with our thoughts on how we can help.
             </p>
-            <CalendlyEmbed url={calendlyUrl} />
+            <a href="/contact" class="btn-primary w-full justify-center mb-3">
+              Send us a message
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+            </a>
+            <p class="text-center text-xs text-mbl-stone">
+              or email us directly at <a href="mailto:hello@madebylakeshore.com" class="text-mbl-accent hover:underline">hello@madebylakeshore.com</a>
+            </p>
           </div>
+
+          <a href="/chat" class="block p-5 rounded-xl border border-mbl-mist/50 hover:border-mbl-accent/30 transition-colors group">
+            <div class="flex items-center gap-3 mb-2">
+              <div class="w-8 h-8 rounded-lg bg-mbl-accent/10 flex items-center justify-center">
+                <svg class="w-4 h-4 text-mbl-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                </svg>
+              </div>
+              <span class="font-heading font-medium text-sm group-hover:text-mbl-accent transition-colors">Not sure yet?</span>
+            </div>
+            <p class="text-xs text-mbl-stone">Chat with our AI companion about your design or data challenge first.</p>
+          </a>
         </div>
       </div>
     </div>
@@ -170,14 +188,19 @@ const titles = sectionTitles[service.icon] || sectionTitles.design;
     <div class="container-narrow text-center">
       <h2 class="text-display mb-6">{titles.cta}</h2>
       <p class="text-lg text-mbl-stone mb-10 max-w-xl mx-auto">
-        Let's discuss your project and explore how we can help you achieve your goals.
+        Tell us about your project and we'll share our honest take on how we can help — no pressure, no sales pitch.
       </p>
-      <a href={calendlyUrl} target="_blank" rel="noopener noreferrer" class="btn-primary">
-        Schedule Your Free Consultation
-        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-        </svg>
-      </a>
+      <div class="flex flex-wrap justify-center gap-4">
+        <a href="/contact" class="btn-primary">
+          Send us a message
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+          </svg>
+        </a>
+        <a href="mailto:hello@madebylakeshore.com" class="btn-secondary">
+          Email us directly
+        </a>
+      </div>
     </div>
   </section>
 </BaseLayout>
