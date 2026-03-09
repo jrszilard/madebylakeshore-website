@@ -3,23 +3,29 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import ChatBot from '../components/ChatBot';
 ---
 
-<BaseLayout 
-  title="Design & Data Companion" 
+<BaseLayout
+  title="Design & Data Companion"
   description="Get instant help with design and data questions from our AI assistant. Ask about dashboards, visualizations, brand identity, and more."
 >
-  <div class="h-[calc(100vh-4.5rem)] flex flex-col bg-mbl-cloud overflow-hidden">
+  <div class="h-[calc(100dvh-4.5rem)] flex flex-col bg-mbl-cloud overflow-hidden">
     <!-- Header -->
-    <div class="flex-shrink-0 border-b border-mbl-mist bg-white px-4 md:px-6 py-4">
+    <div class="flex-shrink-0 border-b border-mbl-mist bg-white px-4 md:px-6 py-3 md:py-4">
       <div class="max-w-3xl mx-auto flex items-center justify-between">
         <div>
-          <h1 class="font-display text-xl text-mbl-ink">Design & Data Companion</h1>
-          <p class="text-sm text-mbl-stone">Powered by dry wit and mild judgment</p>
+          <h1 class="font-display text-lg md:text-xl text-mbl-ink">Design & Data Companion</h1>
+          <p class="text-sm text-mbl-stone hidden md:block">Powered by dry wit and mild judgment</p>
         </div>
-        <a 
-          href="/contact" 
+        <a
+          href="/contact"
           class="text-sm px-4 py-2 bg-mbl-warm hover:bg-mbl-warm/90 text-white rounded-lg transition-colors font-heading font-medium"
+          aria-label="Talk to a human — go to contact page"
         >
-          Talk to a human
+          <span class="hidden sm:inline">Talk to a human</span>
+          <span class="sm:hidden" aria-hidden="true">
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+          </span>
         </a>
       </div>
     </div>

@@ -122,7 +122,7 @@ const titles = sectionTitles[service.icon] || sectionTitles.design;
             </p>
           </div>
 
-          <a href="/chat" class="block p-5 rounded-xl border border-mbl-mist/50 hover:border-mbl-accent/30 transition-colors group">
+          <a href={`/chat?from=${service.icon}`} class="block p-5 rounded-xl border border-mbl-mist/50 hover:border-mbl-accent/30 transition-colors group">
             <div class="flex items-center gap-3 mb-2">
               <div class="w-8 h-8 rounded-lg bg-mbl-accent/10 flex items-center justify-center">
                 <svg class="w-4 h-4 text-mbl-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">

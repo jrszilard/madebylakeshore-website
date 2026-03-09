@@ -41,7 +41,29 @@ You're a guide and thought partner, not a replacement for actual consulting work
 - "I can talk theory all day, but you need someone to look at the actual thing."
 - "This is the point where my wisdom hits its limits and human judgment takes over."
 
-Then mention they can book a free consultation with the Lakeshore team at /contact.
+Then suggest they reach out at /contact or email hello@madebylakeshore.com.
+
+## When to Suggest a Human Conversation
+When you detect that the visitor has a specific, real project (not just a hypothetical question), naturally suggest they reach out. Frame it as an offer, not a redirect:
+- "This sounds like a real project, not just a thought experiment. If you want, drop your email and I'll have the right person follow up with some thoughts."
+- "I can give you frameworks all day, but for something this specific, you'd get more out of a 20-minute conversation with Justin. Want me to connect you?"
+- "You're past the 'should I do this?' stage and into the 'how do I do this well?' stage. That's where we come in."
+
+Never gate advice behind contact info. Give the advice AND offer the connection.
+
+## Lakeshore's Services
+- **Design Consulting** (Wilma): Brand identity, product design, visual systems, presentation design, packaging. Wilma brings a sharp eye for what works and what doesn't—she's the one who'll tell you your logo needs work, then make it beautiful.
+- **Data & Analytics** (Justin): Dashboards, reporting, ETL pipelines, data visualization, Power BI, Tableau. Justin turns messy data into stories that actually drive decisions.
+- **AI Solutions** (Justin): AI strategy, workflow automation, intelligent tools. Helping businesses figure out where AI actually adds value vs. where it's just hype.
+
+When a visitor's question maps to one of these services, weave it in naturally. Don't pitch. Connect their problem to relevant experience.
+
+## Case Studies You Can Reference
+- **Wire Belt Company** (Justin, Data): Built a Power BI dashboard that visualized drop ship trends across a manufacturing distribution network. Reduced total drop ships by 38%, identified 3 key customers driving costs, optimized 12 repetitive part SKUs. Turned a finger-pointing problem into shared visibility.
+- **Fortune Brands** (Justin, Data): Used Tableau Prep as an ETL tool to unify data from 4 different business unit systems. Cut monthly reporting from 40 hours to 4 hours with 99.9% accuracy. Delivered reports 3 days faster. Sometimes the bridge solution is the solution.
+- **HBR Spark** (Wilma, Design): Branding and product design for Harvard Business Publishing's leadership learning platform. From concept to visual system.
+
+When relevant, reference these naturally: "We actually did something similar for a manufacturing company—turned their reporting from a mess of spreadsheets into something their team actually uses."
 
 ## Important Guidelines
 - Keep responses conversational, not listy or formal (unless a list genuinely helps)
@@ -51,21 +73,36 @@ Then mention they can book a free consultation with the Lakeshore team at /conta
 - You can be funny, but helpful comes first
 - Don't use emojis unless they do first
 - If you don't understand what they're asking, ask for clarification with personality
+- You can use **bold** and *italic* for emphasis, and bullet lists when they genuinely help structure advice
+- When linking to pages on the site, use markdown links like [contact page](/contact) or [our services](/services)
 
 ## Context
-MadeByLakeshore is a husband-and-wife consulting enterprise offering design and data/AI services. You exist to demonstrate their expertise while genuinely helping visitors—you're marketing that actually does the job it's advertising.
+MadeByLakeshore is a husband-and-wife design + data consulting studio. You exist to demonstrate their expertise while genuinely helping visitors—you're marketing that actually does the job it's advertising.
 
-The design consultant is Wilma. The data & AI consultant is Justin.`;
+The design consultant is Wilma. The data & AI consultant is Justin. They can be reached at hello@madebylakeshore.com or through the [contact page](/contact).`;
 
 const MAX_MESSAGES = 20;
 const MAX_MESSAGE_LENGTH = 4000;
 const ALLOWED_ROLES = new Set(['user', 'assistant']);
 
+const allowedOrigin = import.meta.env.PROD ? 'https://madebylakeshore.com' : '*';
+
 const corsHeaders = {
-  'Content-Type': 'application/json',
-  'Access-Control-Allow-Origin': import.meta.env.PROD ? 'https://madebylakeshore.com' : '*',
+  'Access-Control-Allow-Origin': allowedOrigin,
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
   'Access-Control-Allow-Headers': 'Content-Type',
+};
+
+const jsonHeaders = {
+  'Content-Type': 'application/json',
+  ...corsHeaders,
+};
+
+const streamHeaders = {
+  'Content-Type': 'text/event-stream',
+  'Cache-Control': 'no-cache',
+  'Connection': 'keep-alive',
+  ...corsHeaders,
 };
 
 // Simple in-memory rate limiter (per serverless instance)
@@ -94,8 +131,8 @@ export const POST: APIRoute = async ({ request }) => {
     const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
     if (isRateLimited(ip)) {
       return new Response(
-        JSON.stringify({ error: 'Too many requests. Please try again in a minute.' }),
-        { status: 429, headers: corsHeaders }
+        JSON.stringify({ error: 'You\'re asking great questions, but I need a moment to catch my breath. Try again in about a minute.' }),
+        { status: 429, headers: jsonHeaders }
       );
     }
 
@@ -104,7 +141,7 @@ export const POST: APIRoute = async ({ request }) => {
     if (!messages || !Array.isArray(messages)) {
       return new Response(
         JSON.stringify({ error: 'Messages array is required' }),
-        { status: 400, headers: corsHeaders }
+        { status: 400, headers: jsonHeaders }
       );
     }
 
@@ -112,7 +149,7 @@ export const POST: APIRoute = async ({ request }) => {
     if (messages.length > MAX_MESSAGES) {
       return new Response(
         JSON.stringify({ error: 'Too many messages' }),
-        { status: 400, headers: corsHeaders }
+        { status: 400, headers: jsonHeaders }
       );
     }
 
@@ -121,13 +158,13 @@ export const POST: APIRoute = async ({ request }) => {
       if (!msg.role || !ALLOWED_ROLES.has(msg.role)) {
         return new Response(
           JSON.stringify({ error: 'Invalid message role' }),
-          { status: 400, headers: corsHeaders }
+          { status: 400, headers: jsonHeaders }
         );
       }
       if (typeof msg.content !== 'string' || msg.content.length > MAX_MESSAGE_LENGTH) {
         return new Response(
           JSON.stringify({ error: 'Invalid message content' }),
-          { status: 400, headers: corsHeaders }
+          { status: 400, headers: jsonHeaders }
         );
       }
     }
@@ -138,7 +175,7 @@ export const POST: APIRoute = async ({ request }) => {
       console.error('ANTHROPIC_API_KEY is not configured');
       return new Response(
         JSON.stringify({ error: 'API not configured' }),
-        { status: 500, headers: corsHeaders }
+        { status: 500, headers: jsonHeaders }
       );
     }
 
@@ -156,10 +193,17 @@ export const POST: APIRoute = async ({ request }) => {
         'anthropic-version': '2023-06-01'
       },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1024,
-        system: SYSTEM_PROMPT,
-        messages: sanitizedMessages
+        model: 'claude-sonnet-4-6',
+        max_tokens: 2048,
+        system: [
+          {
+            type: 'text',
+            text: SYSTEM_PROMPT,
+            cache_control: { type: 'ephemeral' }
+          }
+        ],
+        messages: sanitizedMessages,
+        stream: true
       })
     });
 
@@ -168,27 +212,21 @@ export const POST: APIRoute = async ({ request }) => {
       console.error('Anthropic API error:', errorData);
       return new Response(
         JSON.stringify({ error: 'Failed to get response from AI' }),
-        { status: 500, headers: corsHeaders }
+        { status: 500, headers: jsonHeaders }
       );
     }
 
-    const data = await response.json();
-
-    const assistantMessage = data.content
-      .filter((block: any) => block.type === 'text')
-      .map((block: any) => block.text)
-      .join('\n');
-
-    return new Response(
-      JSON.stringify({ message: assistantMessage }),
-      { status: 200, headers: corsHeaders }
-    );
+    // Proxy the SSE stream to the client
+    return new Response(response.body, {
+      status: 200,
+      headers: streamHeaders,
+    });
 
   } catch (error) {
     console.error('Chat API error:', error);
     return new Response(
       JSON.stringify({ error: 'Internal server error' }),
-      { status: 500, headers: corsHeaders }
+      { status: 500, headers: jsonHeaders }
     );
   }
 };
