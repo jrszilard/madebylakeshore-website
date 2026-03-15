@@ -42,6 +42,32 @@ export function createSanityClientWithConfig(config: SanityConfig) {
   };
 }
 
+export interface ServerSanityConfig extends SanityConfig {
+  token: string;
+}
+
+// Server-side client: token-authenticated, no CDN, for reading protected fields
+export function createServerSanityClient(config: ServerSanityConfig) {
+  if (!config.token) {
+    throw new Error('Sanity API token is required for server client.');
+  }
+
+  const client = createClient({
+    projectId: config.projectId,
+    dataset: config.dataset || 'production',
+    apiVersion: config.apiVersion || DEFAULT_API_VERSION,
+    useCdn: false,
+    token: config.token,
+  });
+
+  return {
+    client,
+    fetch: <T = any>(query: string, params?: Record<string, any>): Promise<T> => {
+      return client.fetch<T>(query, params);
+    },
+  };
+}
+
 // Common GROQ queries
 export const queries = {
   // MadeByLakeshore queries
@@ -79,7 +105,7 @@ export const queries = {
     "author": author->{ name, slug, image }
   }`,
 
-  featuredCaseStudies: `*[_type == "caseStudy" && featured == true] | order(coalesce(order, 100) asc, publishedAt desc)[0...3] {
+  featuredCaseStudies: `*[_type == "caseStudy" && featured == true && isProtected != true] | order(coalesce(order, 100) asc, publishedAt desc)[0...3] {
     _id,
     title,
     slug,
@@ -108,6 +134,36 @@ export const queries = {
     "author": author->{ name, slug, image, bio },
     "testimonial": testimonial->{ quote, authorName, authorTitle, company },
     seo
+  }`,
+
+  // Password-protected case study queries
+  caseStudyAuthCheck: `*[_type == "caseStudy" && slug.current == $slug][0]{
+    isProtected,
+    title,
+    slug,
+    password
+  }`,
+
+  allCaseStudiesWithVisibility: `*[_type == "caseStudy"] | order(coalesce(order, 100) asc, publishedAt desc) {
+    _id,
+    title,
+    slug,
+    client,
+    category,
+    excerpt,
+    featuredImage,
+    metrics,
+    isProtected,
+    listingVisibility,
+    "author": author->{ name, slug, image }
+  }`,
+
+  // Navigation query: excludes hidden protected studies
+  caseStudiesForNavigation: `*[_type == "caseStudy" && !(isProtected == true && listingVisibility == "hidden")] | order(coalesce(order, 100) asc, publishedAt desc) {
+    _id,
+    title,
+    slug,
+    client
   }`,
 
   allPeople: `*[_type == "person"] {
