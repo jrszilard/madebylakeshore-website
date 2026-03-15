@@ -28,6 +28,7 @@ Add three fields to the `caseStudy` document type, grouped under an "Access Cont
 
 - `password` and `listingVisibility` fields are conditionally hidden in Studio when `isProtected` is false.
 - `password` field uses `readOnly: false` — no special encryption. These are simple access codes, not user account credentials.
+- When `isProtected` is toggled off, `password` and `listingVisibility` values are preserved (not cleared). Toggling back on reactivates the previous settings. This is intentional — editors should clear the password manually if they want to fully revoke.
 
 ## 2. GROQ Queries & Data Flow
 
@@ -38,6 +39,11 @@ Add three fields to the `caseStudy` document type, grouped under an "Access Cont
 - For protected studies where `listingVisibility == "teaser"`, return only: `title`, `slug`, `category`, `excerpt`, `featuredImage`, `isProtected`, `author`, `order`. Exclude `challenge`, `solution`, `results`, and `metrics`.
 - Public studies return all listing fields as they do today.
 
+### Homepage featured case studies
+
+- The homepage fetches `featuredCaseStudies`. Protected studies must be filtered out of this query regardless of `listingVisibility`. A protected study with `featured: true` should **not** appear on the homepage.
+- GROQ filter: `&& (isProtected != true)` added to the `featuredCaseStudies` query.
+
 ### Detail page (`/case-studies/[slug].astro`)
 
 - **First fetch (lightweight):** `*[_type == "caseStudy" && slug.current == $slug][0]{isProtected, title, slug}` — just enough to decide whether to show the password gate.
@@ -47,6 +53,12 @@ Add three fields to the `caseStudy` document type, grouped under an "Access Cont
 ### API route password query
 
 - `*[_type == "caseStudy" && slug.current == $slug][0]{password, isProtected}` — used exclusively server-side in the auth endpoint.
+- **This query must use a token-authenticated, non-CDN Sanity client** (`useCdn: false` with `SANITY_API_TOKEN`). This prevents two problems: (1) the public CDN API being used to query password fields directly, and (2) CDN caching causing stale passwords after edits. A dedicated server-side client will be created in `lib/sanity.ts` for this purpose.
+
+### "Next Case Study" navigation
+
+- The detail page fetches all case studies for "Next Case Study" navigation at the bottom. Protected studies with `listingVisibility == "hidden"` must be filtered out of this list to avoid leaking their titles and links on public study pages.
+- Protected teaser studies may appear in navigation (they link to the password gate).
 
 ## 3. API Endpoint
 
@@ -75,7 +87,7 @@ Add three fields to the `caseStudy` document type, grouped under an "Access Cont
 | Property   | Value                                             |
 | ---------- | ------------------------------------------------- |
 | Name       | `cs_access_{slug}`                                |
-| Value      | HMAC-SHA256 of the slug using `CASE_STUDY_SECRET` |
+| Value      | HMAC-SHA256 of `slug:password` using `CASE_STUDY_SECRET` |
 | HttpOnly   | `true`                                            |
 | Secure     | `true`                                            |
 | SameSite   | `Strict`                                          |
@@ -85,19 +97,22 @@ One cookie per study. Unlocking one study does not unlock others.
 
 The HMAC value prevents cookie forgery — a user cannot simply set `cs_access_slug=true` manually.
 
+The password is included in the HMAC input so that **changing the password in Sanity automatically invalidates all existing cookies**. When validating a cookie, the server recomputes the HMAC using the current password from Sanity and compares.
+
 ### Rate Limiting
 
-Reuse the in-memory rate limiting pattern from `api/chat.ts`. Limit: 5 attempts per IP per minute per slug.
+Reuse the in-memory rate limiting pattern from `api/chat.ts`. Limit: 10 attempts per IP per minute globally (across all slugs). This prevents enumeration attacks where an attacker rotates through slugs to bypass per-slug limits.
 
 ### New Environment Variable
 
 - `CASE_STUDY_SECRET`: Random secret string for HMAC signing. Add to Vercel environment variables.
+- `SANITY_API_TOKEN`: Already exists in the project. Used by the auth endpoint's server-side Sanity client to bypass CDN and access the `password` field securely.
 
 ## 4. Detail Page (`[slug].astro`)
 
 ### Changes from current implementation
 
-- Remove `export const prerender = true` and `getStaticPaths()`. Page becomes fully SSR.
+- Remove `export const prerender = true` and `getStaticPaths()`. Page becomes fully SSR (`export const prerender = false`).
 - Add authentication check logic in the frontmatter.
 
 ### Page flow
@@ -107,7 +122,7 @@ Reuse the in-memory rate limiting pattern from `api/chat.ts`. Limit: 5 attempts 
 3. If study not found, redirect to `/case-studies`.
 4. If `isProtected`:
    a. Read `cs_access_{slug}` cookie from `Astro.cookies`.
-   b. Validate cookie value matches expected HMAC-SHA256 of the slug.
+   b. Fetch the stored password from Sanity (server-side client). Validate cookie value matches expected HMAC-SHA256 of `slug:password`.
    c. If invalid/missing: render `PasswordGate` component within `BaseLayout`. Do **not** fetch or render case study content.
    d. If valid: proceed to full content fetch and render.
 5. If not protected: fetch full content and render as normal.
@@ -134,6 +149,7 @@ interface PasswordGateProps {
 - On submit: `fetch('/api/case-study-auth', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ slug, password }) })`.
 - On success: `window.location.reload()` — forces a fresh SSR where the server finds the valid cookie and renders full content.
 - On failure: inline error message "Incorrect password, please try again" — no page reload.
+- Submit button shows a loading/disabled state while the fetch is in-flight to prevent spam submissions.
 - Styled with existing `mbl-*` design tokens to match the site aesthetic.
 
 ### Why reload instead of client-side state swap
@@ -141,6 +157,8 @@ interface PasswordGateProps {
 The case study content is never sent to the browser until the cookie is validated server-side. There is nothing to "reveal" client-side. The reload triggers a new SSR request where the server sees the cookie and returns the real content.
 
 ## 6. Listing Page Changes (`/case-studies/index.astro`)
+
+Add `export const prerender = false` so protection changes in Sanity are reflected without redeployment.
 
 ### Filtering
 
@@ -153,7 +171,7 @@ After fetching all case studies:
 ### Teaser card modifications
 
 - Same card layout as public studies (title, category badge, excerpt, featured image).
-- Lock icon displayed next to the title.
+- Lock icon displayed next to the title with `aria-label="Password protected"` for screen reader accessibility.
 - "Read full case study" link text changes to "Request access".
 - Card links to `/case-studies/{slug}` where the password gate is displayed.
 - Metrics/results are **not shown** on teaser cards.
@@ -167,11 +185,14 @@ Protected teaser cards are mixed in with public cards using the existing `order`
 | File | Change |
 | ---- | ------ |
 | `studio/schemas/documents/caseStudy.ts` | Add `isProtected`, `password`, `listingVisibility` fields with Access Control fieldset |
-| `packages/shared-ui/src/sanity.ts` | Add/update GROQ queries for protected study handling |
+| `packages/shared-ui/src/sanity.ts` | Add/update GROQ queries for protected study handling; add server-side client export |
+| `apps/madebylakeshore/src/lib/sanity.ts` | Add server-side Sanity client (token-authenticated, no CDN) for auth endpoint |
 | `apps/madebylakeshore/src/pages/api/case-study-auth.ts` | New API endpoint |
 | `apps/madebylakeshore/src/pages/case-studies/[slug].astro` | Switch to SSR, add cookie validation, render PasswordGate |
-| `apps/madebylakeshore/src/pages/case-studies/index.astro` | Filter by visibility, teaser card treatment |
+| `apps/madebylakeshore/src/pages/case-studies/index.astro` | Switch to SSR, filter by visibility, teaser card treatment |
+| `apps/madebylakeshore/src/pages/index.astro` | Filter protected studies from homepage featured case studies |
 | `apps/madebylakeshore/src/components/PasswordGate.tsx` | New React component |
+| `apps/madebylakeshore/.env.example` | Add `CASE_STUDY_SECRET` |
 
 ## 8. Security Properties
 
@@ -181,3 +202,11 @@ Protected teaser cards are mixed in with public cards using the existing `order`
 - Rate limiting prevents brute-force attempts.
 - Session cookies expire on browser close.
 - Per-slug cookies prevent one unlock from granting access to other studies.
+- Password is included in HMAC input — changing the password in Sanity automatically invalidates all existing cookies.
+- Auth endpoint uses token-authenticated, non-CDN Sanity client — password field is not queryable through the public Sanity CDN API.
+- Protected studies are excluded from homepage featured query and "Next Case Study" navigation (if hidden).
+
+## 9. Out of Scope
+
+- **Chatbot system prompt:** The chatbot at `api/chat.ts` has case study details hardcoded in its system prompt. If any of those studies become NDA-protected, the chatbot prompt should be updated separately. This is noted as a manual step, not automated by this feature.
+- **Sanity field-level permissions:** Sanity's dataset-level permissions could further restrict `password` field access, but this requires a Sanity enterprise plan and is not part of this implementation.
