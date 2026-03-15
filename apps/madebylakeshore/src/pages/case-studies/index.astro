@@ -2,18 +2,29 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { sanityClient, urlFor, queries } from '../../lib/sanity';
 
-// Fetch case studies from Sanity
-const sanityCaseStudies = await sanityClient.fetch(queries.allCaseStudies);
+export const prerender = false;
+
+// Fetch all case studies including protection metadata
+const allSanityCaseStudies = await sanityClient.fetch(queries.allCaseStudiesWithVisibility);
+
+// Filter: exclude hidden protected studies
+const sanityCaseStudies = allSanityCaseStudies.filter((study: any) => {
+  if (study.isProtected && study.listingVisibility === 'hidden') return false;
+  return true;
+});
+
 const caseStudies = sanityCaseStudies.map((study: any) => ({
   slug: study.slug?.current,
   title: study.title,
   client: study.client || '',
   category: study.category || 'design',
   author: study.author?.name || '',
-  duration: '', // Not in schema, optional
+  duration: '',
   heroImage: study.featuredImage?.asset ? urlFor(study.featuredImage).width(800).url() : null,
   excerpt: study.excerpt || '',
-  results: study.metrics?.slice(0, 3) || [], // Use metrics for results display
+  isProtected: study.isProtected === true,
+  // Strip metrics from protected teaser cards
+  results: study.isProtected ? [] : (study.metrics?.slice(0, 3) || []),
 }));
 
 const categoryColors: Record<string, string> = {
@@ -81,8 +92,13 @@ const categoryColors: Record<string, string> = {
                   {study.author && <span class="text-sm text-mbl-stone">with {study.author}</span>}
                 </div>
                 
-                <h2 class="font-display text-2xl lg:text-3xl mb-4 group-hover:text-mbl-accent transition-colors duration-300">
+                <h2 class="font-display text-2xl lg:text-3xl mb-4 group-hover:text-mbl-accent transition-colors duration-300 flex items-center gap-3">
                   {study.title}
+                  {study.isProtected && (
+                    <svg class="w-5 h-5 text-mbl-stone/50 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" aria-label="Password protected" role="img">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+                    </svg>
+                  )}
                 </h2>
                 
                 <p class="text-lg text-mbl-stone mb-8">
@@ -106,7 +122,7 @@ const categoryColors: Record<string, string> = {
                 )}
                 
                 <span class="inline-flex items-center gap-2 font-heading font-medium text-mbl-ink group-hover:text-mbl-accent transition-colors">
-                  Read full case study
+                  {study.isProtected ? 'Request access' : 'Read full case study'}
                   <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
                   </svg>
