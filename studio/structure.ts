@@ -48,6 +48,31 @@ export const structure: StructureResolver = (S) =>
             .title('Design & Other Stories')
             .items([
               S.listItem()
+                .title('Books')
+                .schemaType('book')
+                .child(
+                  S.documentTypeList('book')
+                    .title('Books')
+                    .defaultOrdering([{ field: 'order', direction: 'asc' }])
+                ),
+              S.listItem()
+                .title('Writing Pieces')
+                .schemaType('writingPiece')
+                .child(
+                  S.documentTypeList('writingPiece')
+                    .title('Writing Pieces')
+                    .defaultOrdering([{ field: 'publishedDate', direction: 'desc' }])
+                ),
+              S.listItem()
+                .title('Events')
+                .schemaType('event')
+                .child(
+                  S.documentTypeList('event')
+                    .title('Events')
+                    .defaultOrdering([{ field: 'startDate', direction: 'desc' }])
+                ),
+              S.divider(),
+              S.listItem()
                 .title('Artwork')
                 .schemaType('artwork')
                 .child(
@@ -76,18 +101,18 @@ export const structure: StructureResolver = (S) =>
                             .filter('_type == "artwork" && category == "drawing"')
                         ),
                       S.listItem()
-                        .title('Writing')
-                        .child(
-                          S.documentList()
-                            .title('Writing')
-                            .filter('_type == "artwork" && category == "writing"')
-                        ),
-                      S.listItem()
                         .title('Mixed Media')
                         .child(
                           S.documentList()
                             .title('Mixed Media')
                             .filter('_type == "artwork" && category == "mixed-media"')
+                        ),
+                      S.listItem()
+                        .title('Prints')
+                        .child(
+                          S.documentList()
+                            .title('Prints')
+                            .filter('_type == "artwork" && category == "print"')
                         ),
                     ])
                 ),
@@ -95,6 +120,11 @@ export const structure: StructureResolver = (S) =>
                 .title('Collections')
                 .schemaType('artCollection')
                 .child(S.documentTypeList('artCollection').title('Collections')),
+              S.divider(),
+              S.document()
+                .schemaType('artistProfile')
+                .documentId('artistProfile')
+                .title('Artist Profile'),
             ])
         ),
 
