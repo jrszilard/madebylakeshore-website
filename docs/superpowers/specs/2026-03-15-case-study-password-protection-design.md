@@ -36,7 +36,7 @@ Add three fields to the `caseStudy` document type, grouped under an "Access Cont
 
 - Fetch all case studies.
 - Filter out protected studies where `listingVisibility == "hidden"`.
-- For protected studies where `listingVisibility == "teaser"`, return only: `title`, `slug`, `category`, `excerpt`, `featuredImage`, `isProtected`, `author`, `order`. Exclude `challenge`, `solution`, `results`, and `metrics`.
+- For protected studies where `listingVisibility == "teaser"`, return only: `title`, `slug`, `category`, `excerpt`, `featuredImage`, `isProtected`, `author`, `client`, `order`. Exclude `challenge`, `solution`, `results`, and `metrics`.
 - Public studies return all listing fields as they do today.
 
 ### Homepage featured case studies
@@ -46,9 +46,9 @@ Add three fields to the `caseStudy` document type, grouped under an "Access Cont
 
 ### Detail page (`/case-studies/[slug].astro`)
 
-- **First fetch (lightweight):** `*[_type == "caseStudy" && slug.current == $slug][0]{isProtected, title, slug}` — just enough to decide whether to show the password gate.
-- **Full fetch (after cookie validation or if not protected):** Returns all fields for rendering.
-- The `password` field is **never** included in any frontend GROQ query.
+- **Auth check fetch (server-side client, token-authenticated):** `*[_type == "caseStudy" && slug.current == $slug][0]{isProtected, title, slug, password}` — returns protection status and password in one query. This runs server-side only; the password is used for HMAC validation and never sent to the browser.
+- **Full content fetch (after cookie validation or if not protected):** Returns all display fields for rendering (no password).
+- This means 2 Sanity fetches for protected studies (auth check + content), and 1 for public studies (the auth check reveals `isProtected == false`, so the full fetch can proceed directly — or the two can be combined into one query for public studies).
 
 ### API route password query
 
@@ -78,7 +78,7 @@ Add three fields to the `caseStudy` document type, grouped under an "Access Cont
 1. Validate `slug` and `password` are present strings (400 if not).
 2. Fetch stored password and `isProtected` from Sanity.
 3. If the study doesn't exist or isn't protected, return 404 (don't reveal which case).
-4. Compare submitted password to stored password.
+4. Compare submitted password to stored password using timing-safe comparison (`crypto.timingSafeEqual` on HMAC digests of both values) to prevent timing attacks.
 5. **Success:** Set session cookie, return `{ success: true }` with 200.
 6. **Failure:** Return `{ success: false, error: "Incorrect password" }` with 401.
 
@@ -91,6 +91,7 @@ Add three fields to the `caseStudy` document type, grouped under an "Access Cont
 | HttpOnly   | `true`                                            |
 | Secure     | `true`                                            |
 | SameSite   | `Strict`                                          |
+| Path       | `/`                                               |
 | Max-Age    | Not set (session cookie — dies on browser close)  |
 
 One cookie per study. Unlocking one study does not unlock others.
@@ -101,11 +102,11 @@ The password is included in the HMAC input so that **changing the password in Sa
 
 ### Rate Limiting
 
-Reuse the in-memory rate limiting pattern from `api/chat.ts`. Limit: 10 attempts per IP per minute globally (across all slugs). This prevents enumeration attacks where an attacker rotates through slugs to bypass per-slug limits.
+Reuse the in-memory rate limiting pattern from `api/chat.ts`. Limit: 10 attempts per IP per minute globally (across all slugs). This prevents enumeration attacks where an attacker rotates through slugs to bypass per-slug limits. Note: in-memory rate limiting resets on serverless cold starts and is not shared across instances — this is a known limitation consistent with the existing chatbot endpoint. Upstash Redis is recommended for stricter enforcement in the future.
 
 ### New Environment Variable
 
-- `CASE_STUDY_SECRET`: Random secret string for HMAC signing. Add to Vercel environment variables.
+- `CASE_STUDY_SECRET`: Random string (minimum 32 characters) for HMAC signing. Generate with `openssl rand -hex 32`. Add to Vercel environment variables. The auth endpoint must return 500 if this variable is unset at runtime.
 - `SANITY_API_TOKEN`: Already exists in the project. Used by the auth endpoint's server-side Sanity client to bypass CDN and access the `password` field securely.
 
 ## 4. Detail Page (`[slug].astro`)
@@ -118,11 +119,11 @@ Reuse the in-memory rate limiting pattern from `api/chat.ts`. Limit: 10 attempts
 ### Page flow
 
 1. Read `slug` from `Astro.params`.
-2. Lightweight Sanity fetch: get `isProtected` and `title` for this slug.
+2. Auth check fetch (server-side client): get `isProtected`, `title`, `slug`, and `password`.
 3. If study not found, redirect to `/case-studies`.
 4. If `isProtected`:
    a. Read `cs_access_{slug}` cookie from `Astro.cookies`.
-   b. Fetch the stored password from Sanity (server-side client). Validate cookie value matches expected HMAC-SHA256 of `slug:password`.
+   b. Validate cookie value matches expected HMAC-SHA256 of `slug:password` (using the password from step 2).
    c. If invalid/missing: render `PasswordGate` component within `BaseLayout`. Do **not** fetch or render case study content.
    d. If valid: proceed to full content fetch and render.
 5. If not protected: fetch full content and render as normal.
@@ -205,6 +206,7 @@ Protected teaser cards are mixed in with public cards using the existing `order`
 - Password is included in HMAC input — changing the password in Sanity automatically invalidates all existing cookies.
 - Auth endpoint uses token-authenticated, non-CDN Sanity client — password field is not queryable through the public Sanity CDN API.
 - Protected studies are excluded from homepage featured query and "Next Case Study" navigation (if hidden).
+- Protected study pages emit `<meta name="robots" content="noindex">` to prevent search engines from indexing the password gate page.
 
 ## 9. Out of Scope
 
