@@ -4,6 +4,13 @@ export default defineType({
   name: 'caseStudy',
   title: 'Case Study',
   type: 'document',
+  fieldsets: [
+    {
+      name: 'accessControl',
+      title: 'Access Control',
+      options: { collapsible: true, collapsed: true },
+    },
+  ],
   fields: [
     defineField({
       name: 'title',
@@ -133,6 +140,46 @@ export default defineType({
       name: 'seo',
       title: 'SEO',
       type: 'seo',
+    }),
+    defineField({
+      name: 'isProtected',
+      title: 'Password Protected',
+      type: 'boolean',
+      description: 'Require a password to view this case study?',
+      initialValue: false,
+      fieldset: 'accessControl',
+    }),
+    defineField({
+      name: 'password',
+      title: 'Access Password',
+      type: 'string',
+      description: 'The password to share with prospects. Not encrypted — treat as a simple access code.',
+      fieldset: 'accessControl',
+      hidden: ({ parent }) => !parent?.isProtected,
+      validation: (Rule) =>
+        Rule.custom((value, context) => {
+          const parent = context.parent as any;
+          if (parent?.isProtected && !value) {
+            return 'Password is required when protection is enabled';
+          }
+          return true;
+        }),
+    }),
+    defineField({
+      name: 'listingVisibility',
+      title: 'Listing Visibility',
+      type: 'string',
+      description: 'How this study appears on the public case studies page.',
+      fieldset: 'accessControl',
+      options: {
+        list: [
+          { title: 'Teaser (show card with lock icon)', value: 'teaser' },
+          { title: 'Hidden (not shown at all)', value: 'hidden' },
+        ],
+        layout: 'radio',
+      },
+      initialValue: 'teaser',
+      hidden: ({ parent }) => !parent?.isProtected,
     }),
   ],
   orderings: [
