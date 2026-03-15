@@ -1,4 +1,4 @@
-import { createSanityClientWithConfig, queries } from '@lakeshore/shared-ui/sanity';
+import { createSanityClientWithConfig, createServerSanityClient, queries } from '@lakeshore/shared-ui/sanity';
 
 // Get env var from either import.meta.env (Astro) or process.env (Vercel build)
 function getEnvVar(name: string, fallback = ''): string {
@@ -50,3 +50,33 @@ export function urlFor(source: any) {
 }
 
 export { queries };
+
+// Server-side Sanity client: token-authenticated, no CDN
+// Used exclusively by API routes and SSR pages that need to read protected fields (e.g., password)
+let _serverClient: ReturnType<typeof createServerSanityClient> | null = null;
+
+export function getServerSanityClient() {
+  if (!_serverClient) {
+    const projectId =
+      getEnvVar('PUBLIC_SANITY_PROJECT_ID') ||
+      getEnvVar('SANITY_PROJECT_ID') ||
+      getEnvVar('SANITY_STUDIO_PROJECT_ID');
+
+    const dataset =
+      getEnvVar('PUBLIC_SANITY_DATASET') ||
+      getEnvVar('SANITY_DATASET') ||
+      getEnvVar('SANITY_STUDIO_DATASET') ||
+      'production';
+
+    const token =
+      getEnvVar('SANITY_API_TOKEN') ||
+      getEnvVar('SANITY_DEV_API_TOKEN') ||
+      getEnvVar('SANITY_EDITOR_API_TOKEN');
+    if (!token) {
+      throw new Error('SANITY_API_TOKEN (or SANITY_DEV_API_TOKEN) is required for server-side Sanity client.');
+    }
+
+    _serverClient = createServerSanityClient({ projectId, dataset, token });
+  }
+  return _serverClient;
+}

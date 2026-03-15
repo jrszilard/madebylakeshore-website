@@ -1,30 +1,55 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { sanityClient, urlFor, queries } from '../../lib/sanity';
+import { sanityClient, urlFor, queries, getServerSanityClient } from '../../lib/sanity';
+import { getCookieName, verifyCookie } from '../../lib/case-study-auth';
+import PasswordGate from '../../components/PasswordGate.tsx';
 
-export const prerender = true;
-
-export async function getStaticPaths() {
-  const caseStudies = await sanityClient.fetch(queries.allCaseStudies);
-  return caseStudies.map((study: any) => ({
-    params: { slug: study.slug?.current },
-  }));
-}
+export const prerender = false;
 
 const { slug } = Astro.params;
 
-// Fetch case study from Sanity
-const study = await sanityClient.fetch(queries.caseStudyBySlug, { slug });
-
-// If no study found, redirect
-if (!study) {
+if (!slug) {
   return Astro.redirect('/case-studies');
 }
 
-// Get all case studies for next navigation
-const allStudies = await sanityClient.fetch(queries.allCaseStudies);
-const currentIndex = allStudies.findIndex((s: any) => s.slug?.current === slug);
-const nextStudy = allStudies[(currentIndex + 1) % allStudies.length];
+// Auth check: fetch protection status and password (server-side only)
+const serverClient = getServerSanityClient();
+const authCheck = await serverClient.fetch<{
+  isProtected: boolean | null;
+  title: string;
+  slug: { current: string };
+  password: string | null;
+}>(queries.caseStudyAuthCheck, { slug });
+
+if (!authCheck) {
+  return Astro.redirect('/case-studies');
+}
+
+// Check if access is granted
+let isAuthenticated = false;
+const isProtected = authCheck.isProtected === true;
+
+if (isProtected) {
+  const cookieName = getCookieName(slug);
+  const cookieValue = Astro.cookies.get(cookieName)?.value;
+  if (cookieValue && authCheck.password) {
+    isAuthenticated = verifyCookie(slug, authCheck.password, cookieValue);
+  }
+}
+
+// Only fetch full content if not protected or authenticated
+let study: any = null;
+let allStudies: any[] = [];
+let nextStudy: any = null;
+
+if (!isProtected || isAuthenticated) {
+  study = await sanityClient.fetch(queries.caseStudyBySlug, { slug });
+  allStudies = await sanityClient.fetch(queries.caseStudiesForNavigation);
+  const currentIndex = allStudies.findIndex((s: any) => s.slug?.current === slug);
+  nextStudy = allStudies[(currentIndex + 1) % allStudies.length];
+  // Don't link to self as "next"
+  if (nextStudy?.slug?.current === slug) nextStudy = null;
+}
 
 const categoryColors: Record<string, string> = {
   design: 'bg-mbl-warm/10 text-mbl-warm',
@@ -32,7 +57,6 @@ const categoryColors: Record<string, string> = {
   ai: 'bg-purple-100 text-purple-600',
 };
 
-// Helper to convert block content to plain text for display
 function blocksToText(blocks: any[] | null | undefined): string {
   if (!blocks) return '';
   return blocks
@@ -46,14 +70,31 @@ function blocksToText(blocks: any[] | null | undefined): string {
     .join('\n\n');
 }
 
-const heroImage = study.featuredImage?.asset ? urlFor(study.featuredImage).width(1400).url() : null;
-const authorName = study.author?.name || '';
+const heroImage = study?.featuredImage?.asset ? urlFor(study.featuredImage).width(1400).url() : null;
+const authorName = study?.author?.name || '';
 ---
 
 <BaseLayout
-  title={study.title}
-  description={study.excerpt}
+  title={isProtected && !isAuthenticated ? `Protected: ${authCheck.title}` : study?.title || authCheck.title}
+  description={isProtected && !isAuthenticated ? 'This case study is password protected.' : study?.excerpt}
+  noindex={isProtected && !isAuthenticated}
 >
+  {isProtected && !isAuthenticated ? (
+    <Fragment>
+      <section class="section-spacing">
+        <div class="container-wide">
+          <a href="/case-studies" class="inline-flex items-center gap-2 text-sm text-mbl-stone hover:text-mbl-ink mb-8 transition-colors">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+            All Case Studies
+          </a>
+        </div>
+      </section>
+      <PasswordGate client:load slug={slug} title={authCheck.title} />
+    </Fragment>
+  ) : (
+    <Fragment>
   <!-- Hero -->
   <section class="section-spacing">
     <div class="container-wide">
@@ -243,5 +284,7 @@ const authorName = study.author?.name || '';
         </div>
       </div>
     </section>
+  )}
+    </Fragment>
   )}
 </BaseLayout>
