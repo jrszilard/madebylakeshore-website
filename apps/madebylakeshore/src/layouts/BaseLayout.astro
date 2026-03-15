@@ -7,12 +7,14 @@ interface Props {
   title: string;
   description?: string;
   ogImage?: string;
+  noindex?: boolean;
 }
 
-const { 
-  title, 
+const {
+  title,
   description = 'Strategic consulting in design, data, and AI. We help businesses transform through thoughtful design and intelligent systems.',
-  ogImage = '/og-image.jpg'
+  ogImage = '/og-image.jpg',
+  noindex = false,
 } = Astro.props;
 
 const siteTitle = title === 'Home' ? 'MadeByLakeshore' : `${title} | MadeByLakeshore`;
@@ -35,7 +37,8 @@ const siteTitle = title === 'Home' ? 'MadeByLakeshore' : `${title} | MadeByLakes
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={siteTitle} />
     <meta name="twitter:description" content={description} />
-    
+    {noindex && <meta name="robots" content="noindex" />}
+
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="sitemap" href="/sitemap-index.xml" />
     
