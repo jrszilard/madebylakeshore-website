@@ -216,6 +216,7 @@ export const queries = {
     price,
     originalAvailable,
     printsAvailable,
+    forSale,
     printOptions,
     "collection": collection->{ title, slug },
     seo
@@ -229,6 +230,72 @@ export const queries = {
     coverImage,
     "artworkCount": count(*[_type == "artwork" && references(^._id)])
   }`,
+
+  // DesignAndOtherStories — Books
+  allBooks: `*[_type == "book"] | order(order asc) {
+  _id, title, slug, coverImage, blurb, type, status, publishedDate, featured, order
+}`,
+
+  bookBySlug: `*[_type == "book" && slug.current == $slug][0] {
+  _id, title, slug, coverImage, blurb, description, type, status, publishedDate,
+  fromThisWorld[]->{ _id, _type, title, slug, coverImage, type, status, substackUrl },
+  purchaseLinks, substackTag, seo
+}`,
+
+  featuredBooks: `*[_type == "book" && featured == true] | order(order asc)[0...3] {
+  _id, title, slug, coverImage, blurb, type, status
+}`,
+
+  // DesignAndOtherStories — Writing Pieces
+  allWritingPieces: `*[_type == "writingPiece"] | order(publishedDate desc) {
+  _id, title, coverImage, excerpt, type, book->{ _id, title, slug }, substackUrl, publishedDate, tags
+}`,
+
+  writingByBook: `*[_type == "writingPiece" && book._ref == $bookId] | order(publishedDate desc) {
+  _id, title, coverImage, excerpt, type, substackUrl, publishedDate
+}`,
+
+  // DesignAndOtherStories — Events
+  upcomingEvents: `*[_type == "event" && startDate >= now()] | order(startDate asc) {
+  _id, title, slug, eventType, startDate, endDate, location, coverImage, featured
+}`,
+
+  pastEvents: `*[_type == "event" && startDate < now()] | order(startDate desc) {
+  _id, title, slug, eventType, startDate, endDate, location
+}`,
+
+  nextEvent: `*[_type == "event" && startDate >= now()] | order(startDate asc)[0] {
+  _id, title, slug, eventType, startDate, endDate, location
+}`,
+
+  eventBySlug: `*[_type == "event" && slug.current == $slug][0] {
+  _id, title, slug, eventType, startDate, endDate, location, description, coverImage,
+  bringingArtwork[]->{ _id, title, slug, images, category, medium },
+  bringingBooks[]->{ _id, title, slug, coverImage, type },
+  externalUrl, seo
+}`,
+
+  // DesignAndOtherStories — Artist Profile
+  artistProfile: `*[_type == "artistProfile"][0] {
+  name, portrait, bio, shortBio, socialLinks, substackUrl
+}`,
+
+  // DesignAndOtherStories — Artwork (new queries for redesign)
+  featuredArtwork: `*[_type == "artwork" && featured == true] | order(year desc)[0...4] {
+  _id, title, slug, category, images, medium
+}`,
+
+  artworkForSale: `*[_type == "artwork" && forSale == true] | order(year desc) {
+  _id, title, slug, category, images, medium, price, originalAvailable, printsAvailable, printOptions
+}`,
+
+  artworkByCollectionSlug: `*[_type == "artwork" && collection->slug.current == $slug] | order(year desc) {
+  _id, title, slug, category, images, medium, price, originalAvailable, forSale
+}`,
+
+  collectionBySlug: `*[_type == "artCollection" && slug.current == $slug][0] {
+  _id, title, slug, description, coverImage
+}`,
 
   // Incubator queries
   allProjects: `*[_type == "digitalProject"] | order(launchDate desc) {
