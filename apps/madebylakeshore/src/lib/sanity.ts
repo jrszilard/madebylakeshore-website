@@ -68,9 +68,12 @@ export function getServerSanityClient() {
       getEnvVar('SANITY_STUDIO_DATASET') ||
       'production';
 
-    const token = getEnvVar('SANITY_API_TOKEN');
+    const token =
+      getEnvVar('SANITY_API_TOKEN') ||
+      getEnvVar('SANITY_DEV_API_TOKEN') ||
+      getEnvVar('SANITY_EDITOR_API_TOKEN');
     if (!token) {
-      throw new Error('SANITY_API_TOKEN is required for server-side Sanity client.');
+      throw new Error('SANITY_API_TOKEN (or SANITY_DEV_API_TOKEN) is required for server-side Sanity client.');
     }
 
     _serverClient = createServerSanityClient({ projectId, dataset, token });
