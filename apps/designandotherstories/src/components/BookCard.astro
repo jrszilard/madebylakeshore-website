@@ -1,0 +1,62 @@
+---
+import { urlFor } from '../lib/sanity';
+
+interface Props {
+  title: string;
+  slug: { current: string };
+  coverImage: any;
+  blurb: string;
+  type: string;
+  status?: string;
+}
+
+const { title, slug, coverImage, blurb, type, status } = Astro.props;
+
+const imageUrl = coverImage
+  ? urlFor(coverImage).width(400).height(600).fit('crop').crop('focalpoint').url()
+  : null;
+
+const showStatusBadge = status && status !== 'published';
+const badgeLabel = status === 'coming_soon' ? 'Coming Soon' : status === 'in_progress' ? 'In Progress' : status;
+---
+
+<a
+  href={`/writing/${slug.current}`}
+  class="group block bg-daos-paper rounded-sm overflow-hidden hover:shadow-lg transition-shadow duration-300"
+>
+  <!-- Cover Image 2:3 aspect ratio -->
+  <div class="relative aspect-[2/3] overflow-hidden bg-daos-warm">
+    {imageUrl ? (
+      <img
+        src={imageUrl}
+        alt={title}
+        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+      />
+    ) : (
+      <div class="absolute inset-0 bg-gradient-to-br from-daos-warm to-daos-clay flex items-center justify-center">
+        <span class="font-display text-daos-ink/30 text-lg text-center px-4">{title}</span>
+      </div>
+    )}
+
+    {showStatusBadge && (
+      <div class="absolute top-3 right-3">
+        <span class="px-2 py-1 bg-daos-terracotta text-white text-xs font-sans font-medium rounded-sm">
+          {badgeLabel}
+        </span>
+      </div>
+    )}
+  </div>
+
+  <!-- Card body -->
+  <div class="p-5 space-y-2">
+    <p class="font-sans text-xs uppercase tracking-wider text-daos-clay">
+      {type}
+    </p>
+    <h3 class="font-display text-xl text-daos-ink group-hover:text-daos-terracotta transition-colors leading-snug">
+      {title}
+    </h3>
+    <p class="font-body text-sm text-daos-charcoal leading-relaxed line-clamp-3">
+      {blurb}
+    </p>
+  </div>
+</a>

@@ -1,0 +1,27 @@
+---
+interface PurchaseLink {
+  platform: string;
+  url: string;
+}
+
+interface Props {
+  links: PurchaseLink[];
+}
+
+const { links } = Astro.props;
+---
+
+{links && links.length > 0 && (
+  <div class="flex flex-wrap gap-3">
+    {links.map((link, index) => (
+      <a
+        href={link.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        class={index === 0 ? 'btn-warm' : 'inline-flex items-center gap-2 px-6 py-3 border border-daos-warm text-daos-ink font-sans font-medium rounded-sm hover:bg-daos-warm transition-colors duration-200'}
+      >
+        {link.platform}
+      </a>
+    ))}
+  </div>
+)}

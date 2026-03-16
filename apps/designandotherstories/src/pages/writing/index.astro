@@ -1,0 +1,61 @@
+---
+export const prerender = false;
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import BookCard from '../../components/BookCard.astro';
+import SubstackFeed from '../../components/SubstackFeed.astro';
+import { sanityClient, queries } from '../../lib/sanity';
+
+const allBooks = await sanityClient.fetch(queries.allBooks);
+---
+
+<BaseLayout
+  title="Writing"
+  description="Books, essays, and stories by Design & Other Stories—exploring design, everyday life, and the things that make us human."
+>
+  <!-- Page Header -->
+  <section class="section-spacing">
+    <div class="container-art">
+      <div class="max-w-2xl">
+        <p class="font-sans text-xs uppercase tracking-widest text-daos-terracotta mb-4">Writing</p>
+        <h1 class="font-display italic text-display-lg md:text-display-xl text-daos-ink mb-6 leading-tight">
+          Words on paper
+        </h1>
+        <p class="font-body text-daos-charcoal text-lg leading-relaxed">
+          Books, essays, and dispatches from the studio—on design, beauty, and the art of paying attention.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Books Grid -->
+  {allBooks && allBooks.length > 0 && (
+    <section class="section-spacing bg-daos-paper">
+      <div class="container-art">
+        <p class="font-sans text-xs uppercase tracking-widest text-daos-clay mb-8">Books</p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {allBooks.map((book: any) => (
+            <BookCard
+              title={book.title}
+              slug={book.slug}
+              coverImage={book.coverImage}
+              blurb={book.blurb}
+              type={book.type}
+              status={book.status}
+            />
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- Substack Feed -->
+  <section class="section-spacing">
+    <div class="container-art">
+      <div class="max-w-2xl mx-auto">
+        <SubstackFeed limit={5} />
+      </div>
+    </div>
+  </section>
+</BaseLayout>
