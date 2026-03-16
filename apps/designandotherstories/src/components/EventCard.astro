@@ -1,0 +1,99 @@
+---
+interface Location {
+  venueName?: string;
+  city: string;
+  state?: string;
+}
+
+interface Props {
+  title: string;
+  slug: { current: string };
+  startDate: string;
+  endDate?: string;
+  location: Location;
+  eventType?: string;
+  isPast?: boolean;
+}
+
+const { title, slug, startDate, endDate, location, eventType, isPast = false } = Astro.props;
+
+const start = new Date(startDate);
+const dayNumber = start.getUTCDate();
+const monthAbbr = start.toLocaleDateString('en-US', { month: 'short', timeZone: 'UTC' });
+
+function formatDateRange(start: Date, endStr?: string): string {
+  const startFormatted = start.toLocaleDateString('en-US', {
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric',
+    timeZone: 'UTC',
+  });
+  if (!endStr) return startFormatted;
+  const end = new Date(endStr);
+  const endFormatted = end.toLocaleDateString('en-US', {
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric',
+    timeZone: 'UTC',
+  });
+  return `${startFormatted} – ${endFormatted}`;
+}
+
+const dateDisplay = formatDateRange(start, endDate);
+
+const locationDisplay = [location.venueName, location.city, location.state]
+  .filter(Boolean)
+  .join(', ');
+---
+
+<a
+  href={`/events/${slug.current}`}
+  class:list={[
+    'group flex items-stretch gap-0 rounded-sm border transition-all duration-300',
+    isPast
+      ? 'border-daos-warm bg-daos-paper opacity-60 hover:opacity-80'
+      : 'border-daos-warm bg-daos-paper hover:shadow-md hover:border-daos-clay',
+  ]}
+>
+  <!-- Date block -->
+  <div
+    class:list={[
+      'flex-shrink-0 flex flex-col items-center justify-center w-20 py-4 px-3 text-center',
+      isPast ? 'text-daos-sage' : 'text-daos-terracotta',
+    ]}
+  >
+    <span class="font-display text-3xl leading-none font-bold">{dayNumber}</span>
+    <span class="font-sans text-xs uppercase tracking-widest mt-1">{monthAbbr}</span>
+  </div>
+
+  <!-- Vertical separator -->
+  <div class="w-px bg-daos-warm self-stretch my-4"></div>
+
+  <!-- Content -->
+  <div class="flex-1 py-4 px-5 flex items-center justify-between gap-4 min-w-0">
+    <div class="space-y-1 min-w-0">
+      <h3
+        class:list={[
+          'font-display text-lg leading-snug truncate',
+          isPast
+            ? 'text-daos-charcoal'
+            : 'text-daos-ink group-hover:text-daos-terracotta transition-colors',
+        ]}
+      >
+        {title}
+      </h3>
+      <p class="font-sans text-xs text-daos-charcoal truncate">{locationDisplay}</p>
+      {eventType && (
+        <span class="inline-block px-2 py-0.5 border border-daos-warm text-daos-charcoal text-xs font-sans uppercase tracking-wider rounded-sm">
+          {eventType}
+        </span>
+      )}
+    </div>
+
+    {!isPast && (
+      <span class="flex-shrink-0 font-sans text-sm text-daos-terracotta group-hover:underline whitespace-nowrap">
+        Details &rarr;
+      </span>
+    )}
+  </div>
+</a>

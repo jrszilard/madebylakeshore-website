@@ -1,0 +1,90 @@
+---
+import SectionHeader from './SectionHeader.astro';
+import { urlFor } from '../lib/sanity';
+
+interface Props {
+  artwork?: any[];
+  books?: any[];
+}
+
+const { artwork = [], books = [] } = Astro.props;
+
+const hasContent = (artwork && artwork.length > 0) || (books && books.length > 0);
+---
+
+{hasContent && (
+  <div>
+    <SectionHeader title="What I'm Bringing" />
+
+    <div class="grid grid-cols-2 gap-4">
+      {artwork && artwork.map((piece: any) => {
+        const thumbUrl = piece.images?.[0]?.asset
+          ? urlFor(piece.images[0]).width(200).height(150).fit('crop').crop('focalpoint').url()
+          : null;
+        const categoryLabel = piece.category
+          ? piece.category.charAt(0).toUpperCase() + piece.category.slice(1)
+          : 'Artwork';
+        return (
+          <a
+            href={`/gallery/${piece.slug?.current}`}
+            class="group block bg-daos-paper rounded-sm overflow-hidden hover:shadow-md transition-shadow duration-300"
+          >
+            <div class="aspect-[4/3] overflow-hidden bg-daos-warm">
+              {thumbUrl ? (
+                <img
+                  src={thumbUrl}
+                  alt={piece.title}
+                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  loading="lazy"
+                />
+              ) : (
+                <div class="w-full h-full bg-gradient-to-br from-daos-warm to-daos-clay flex items-center justify-center">
+                  <span class="font-display text-daos-ink/30 text-sm text-center px-2">{piece.title}</span>
+                </div>
+              )}
+            </div>
+            <div class="p-3 space-y-1">
+              <p class="font-sans text-xs uppercase tracking-wider text-daos-clay">{categoryLabel}</p>
+              <p class="font-display text-sm text-daos-ink leading-snug group-hover:text-daos-terracotta transition-colors line-clamp-2">
+                {piece.title}
+              </p>
+            </div>
+          </a>
+        );
+      })}
+
+      {books && books.map((book: any) => {
+        const thumbUrl = book.coverImage?.asset
+          ? urlFor(book.coverImage).width(200).height(150).fit('crop').crop('focalpoint').url()
+          : null;
+        return (
+          <a
+            href={`/writing/${book.slug?.current}`}
+            class="group block bg-daos-paper rounded-sm overflow-hidden hover:shadow-md transition-shadow duration-300"
+          >
+            <div class="aspect-[4/3] overflow-hidden bg-daos-warm">
+              {thumbUrl ? (
+                <img
+                  src={thumbUrl}
+                  alt={book.title}
+                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  loading="lazy"
+                />
+              ) : (
+                <div class="w-full h-full bg-gradient-to-br from-daos-warm to-daos-clay flex items-center justify-center">
+                  <span class="font-display text-daos-ink/30 text-sm text-center px-2">{book.title}</span>
+                </div>
+              )}
+            </div>
+            <div class="p-3 space-y-1">
+              <p class="font-sans text-xs uppercase tracking-wider text-daos-clay">Book</p>
+              <p class="font-display text-sm text-daos-ink leading-snug group-hover:text-daos-terracotta transition-colors line-clamp-2">
+                {book.title}
+              </p>
+            </div>
+          </a>
+        );
+      })}
+    </div>
+  </div>
+)}

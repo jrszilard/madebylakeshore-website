@@ -1,0 +1,90 @@
+---
+export const prerender = false;
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import EventCard from '../../components/EventCard.astro';
+import SectionHeader from '../../components/SectionHeader.astro';
+import { sanityClient, queries } from '../../lib/sanity';
+
+const upcomingEvents = await sanityClient.fetch(queries.upcomingEvents);
+const pastEvents = await sanityClient.fetch(queries.pastEvents);
+---
+
+<BaseLayout
+  title="Events"
+  description="Art fairs, exhibitions, and events featuring Design & Other Stories. Come find us."
+>
+  <!-- Page Header -->
+  <section class="section-spacing">
+    <div class="container-art">
+      <div class="max-w-2xl">
+        <p class="font-sans text-xs uppercase tracking-widest text-daos-terracotta mb-4">Events</p>
+        <h1 class="font-display italic text-display-lg md:text-display-xl text-daos-ink mb-6 leading-tight">
+          Find me out in the world
+        </h1>
+        <p class="font-body text-daos-charcoal text-lg leading-relaxed">
+          Art fairs, exhibitions, and live events. Come say hello and see the work in person.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Upcoming Events -->
+  <section class="section-spacing bg-daos-paper">
+    <div class="container-art">
+      <SectionHeader title="Upcoming" />
+
+      {upcomingEvents && upcomingEvents.length > 0 ? (
+        <div class="space-y-4">
+          {upcomingEvents.map((event: any) => (
+            <EventCard
+              title={event.title}
+              slug={event.slug}
+              startDate={event.startDate}
+              endDate={event.endDate}
+              location={event.location}
+              eventType={event.eventType}
+              isPast={false}
+            />
+          ))}
+        </div>
+      ) : (
+        <div class="py-12 text-center">
+          <p class="font-body text-daos-charcoal text-lg">
+            No upcoming events scheduled right now.
+          </p>
+          <p class="font-sans text-sm text-daos-charcoal mt-2">
+            Check back soon, or{' '}
+            <a href="/#newsletter" class="text-daos-terracotta hover:underline">
+              subscribe to the newsletter
+            </a>{' '}
+            to be the first to know.
+          </p>
+        </div>
+      )}
+    </div>
+  </section>
+
+  <!-- Past Events -->
+  {pastEvents && pastEvents.length > 0 && (
+    <section class="section-spacing">
+      <div class="container-art">
+        <SectionHeader title="Past Events" />
+
+        <div class="space-y-4">
+          {pastEvents.map((event: any) => (
+            <EventCard
+              title={event.title}
+              slug={event.slug}
+              startDate={event.startDate}
+              endDate={event.endDate}
+              location={event.location}
+              eventType={event.eventType}
+              isPast={true}
+            />
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+</BaseLayout>

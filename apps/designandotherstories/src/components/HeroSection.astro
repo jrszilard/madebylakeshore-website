@@ -1,0 +1,29 @@
+---
+interface Props {
+  label?: string;
+  headline?: string;
+  subtitle?: string;
+}
+
+const {
+  label = 'Design & Other Stories',
+  headline = 'Art. Words. Worlds.',
+  subtitle = 'Original paintings, drawings, and written works—each piece crafted with intention and care.',
+} = Astro.props;
+---
+
+<section class="py-20 md:py-28">
+  <div class="container-art">
+    <div class="max-w-3xl mx-auto text-center space-y-6">
+      <p class="font-sans text-xs uppercase tracking-widest text-daos-terracotta">
+        {label}
+      </p>
+      <h1 class="font-display italic text-display-lg md:text-display-xl text-daos-ink leading-tight">
+        {headline}
+      </h1>
+      <p class="font-body text-lg text-daos-charcoal leading-relaxed max-w-xl mx-auto">
+        {subtitle}
+      </p>
+    </div>
+  </div>
+</section>
