@@ -1,0 +1,31 @@
+---
+interface Props {
+  title: string;
+  subtitle?: string;
+  viewAllHref?: string;
+  viewAllText?: string;
+}
+
+const { title, subtitle, viewAllHref, viewAllText = 'View all' } = Astro.props;
+---
+
+<div class="mb-8">
+  <div class="flex items-center justify-between">
+    <h2 class="font-sans text-xs uppercase tracking-widest text-daos-clay">
+      {title}
+    </h2>
+    {viewAllHref && (
+      <a
+        href={viewAllHref}
+        class="font-sans text-sm text-daos-terracotta hover:underline transition-colors"
+      >
+        {viewAllText} &rarr;
+      </a>
+    )}
+  </div>
+  {subtitle && (
+    <p class="mt-2 font-body text-daos-charcoal text-sm leading-relaxed">
+      {subtitle}
+    </p>
+  )}
+</div>

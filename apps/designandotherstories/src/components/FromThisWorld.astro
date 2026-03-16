@@ -1,0 +1,77 @@
+---
+import SectionHeader from './SectionHeader.astro';
+import { urlFor } from '../lib/sanity';
+
+interface WorldItem {
+  _id: string;
+  _type: string;
+  title: string;
+  slug?: { current: string };
+  coverImage?: any;
+  type?: string;
+  status?: string;
+  substackUrl?: string;
+}
+
+interface Props {
+  items: WorldItem[];
+}
+
+const { items } = Astro.props;
+
+if (!items || items.length === 0) {
+  return;
+}
+---
+
+<section>
+  <SectionHeader title="From This World" />
+
+  <div class="grid grid-cols-2 gap-4">
+    {items.map((item) => {
+      const isBook = item._type === 'book';
+      const href = isBook && item.slug
+        ? `/writing/${item.slug.current}`
+        : item.substackUrl || '#';
+      const isExternal = !isBook;
+
+      const thumbUrl = item.coverImage
+        ? urlFor(item.coverImage).width(120).height(180).fit('crop').crop('focalpoint').url()
+        : null;
+
+      return (
+        <a
+          href={href}
+          target={isExternal ? '_blank' : undefined}
+          rel={isExternal ? 'noopener noreferrer' : undefined}
+          class="group flex gap-3 bg-daos-paper rounded-sm p-3 hover:shadow-md transition-shadow duration-300"
+        >
+          <!-- Small cover thumbnail -->
+          <div class="flex-shrink-0 w-10 h-[60px] rounded-sm overflow-hidden bg-daos-warm">
+            {thumbUrl ? (
+              <img
+                src={thumbUrl}
+                alt={item.title}
+                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+              />
+            ) : (
+              <div class="w-full h-full bg-gradient-to-br from-daos-warm to-daos-clay"></div>
+            )}
+          </div>
+
+          <!-- Info -->
+          <div class="flex-1 min-w-0 space-y-0.5">
+            <h4 class="font-sans text-xs font-medium text-daos-ink group-hover:text-daos-terracotta transition-colors leading-snug line-clamp-2">
+              {item.title}
+            </h4>
+            {item.type && (
+              <p class="font-sans text-xs text-daos-charcoal uppercase tracking-wider">
+                {item.type}
+              </p>
+            )}
+          </div>
+        </a>
+      );
+    })}
+  </div>
+</section>

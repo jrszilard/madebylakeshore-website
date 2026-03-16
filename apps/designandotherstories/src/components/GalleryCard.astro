@@ -1,0 +1,71 @@
+---
+import { urlFor } from '../lib/sanity';
+
+interface Props {
+  title: string;
+  slug: { current: string };
+  images: any[];
+  medium?: string;
+  category?: string;
+  collectionTitle?: string;
+  collectionSlug?: { current: string };
+}
+
+const { title, slug, images, medium, category, collectionTitle, collectionSlug } = Astro.props;
+
+const imageUrl =
+  images && images.length > 0
+    ? urlFor(images[0]).width(400).height(533).fit('crop').crop('focalpoint').url()
+    : null;
+---
+
+<article class="group bg-daos-paper rounded-sm overflow-hidden hover:shadow-lg transition-shadow duration-300">
+  <a href={`/gallery/${slug.current}`} class="block">
+    <!-- Uniform 3:4 aspect ratio image container -->
+    <div class="relative aspect-[3/4] overflow-hidden bg-daos-warm">
+      {imageUrl ? (
+        <img
+          src={imageUrl}
+          alt={title}
+          class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+          loading="lazy"
+        />
+      ) : (
+        <div class="absolute inset-0 bg-gradient-to-br from-daos-warm to-daos-clay flex items-center justify-center">
+          <span class="font-display text-daos-ink/30 text-lg text-center px-4">{title}</span>
+        </div>
+      )}
+
+      <!-- Hover overlay -->
+      <div class="absolute inset-0 bg-daos-ink/0 group-hover:bg-daos-ink/50 transition-colors duration-300 flex items-center justify-center">
+        <span class="opacity-0 group-hover:opacity-100 transition-opacity duration-300 px-5 py-2 bg-daos-cream text-daos-ink text-sm font-sans tracking-wide">
+          View Details
+        </span>
+      </div>
+    </div>
+  </a>
+
+  <!-- Card body -->
+  <div class="p-4 space-y-1">
+    <h3 class="font-display text-lg text-daos-ink leading-snug">
+      <a href={`/gallery/${slug.current}`} class="hover:text-daos-terracotta transition-colors">
+        {title}
+      </a>
+    </h3>
+
+    {medium && (
+      <p class="font-sans text-sm text-daos-charcoal">{medium}</p>
+    )}
+
+    {collectionTitle && collectionSlug && (
+      <p class="font-sans text-xs">
+        <a
+          href={`/gallery/collections/${collectionSlug.current}`}
+          class="text-daos-sage underline underline-offset-2 hover:text-daos-terracotta transition-colors"
+        >
+          {collectionTitle}
+        </a>
+      </p>
+    )}
+  </div>
+</article>

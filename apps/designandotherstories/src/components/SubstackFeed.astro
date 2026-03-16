@@ -1,0 +1,51 @@
+---
+import SectionHeader from './SectionHeader.astro';
+import SubstackFeedCard from './SubstackFeedCard.astro';
+import { fetchSubstackFeed, SUBSTACK_FALLBACK_URL } from '../lib/substack';
+
+interface Props {
+  tag?: string;
+  limit?: number;
+}
+
+const { tag, limit = 5 } = Astro.props;
+
+const posts = await fetchSubstackFeed(tag);
+const visiblePosts = posts.slice(0, limit);
+---
+
+<div>
+  <SectionHeader
+    title="Latest from Substack"
+    viewAllHref={SUBSTACK_FALLBACK_URL}
+    viewAllText="Subscribe"
+  />
+
+  {visiblePosts.length > 0 ? (
+    <div class="space-y-3">
+      {visiblePosts.map((post) => (
+        <SubstackFeedCard
+          title={post.title}
+          link={post.link}
+          excerpt={post.excerpt}
+          coverImage={post.coverImage}
+          type={post.categories[0]}
+        />
+      ))}
+    </div>
+  ) : (
+    <div class="py-8 text-center">
+      <p class="font-body text-daos-charcoal text-sm mb-4">
+        Stories and essays published regularly.
+      </p>
+      <a
+        href={SUBSTACK_FALLBACK_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="btn-outline"
+      >
+        Visit us on Substack
+      </a>
+    </div>
+  )}
+</div>

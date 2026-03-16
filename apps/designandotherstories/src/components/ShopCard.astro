@@ -1,0 +1,89 @@
+---
+import { urlFor } from '../lib/sanity';
+import CheckoutButton from './CheckoutButton.astro';
+
+interface Props {
+  title: string;
+  slug: { current: string };
+  images: any[];
+  medium?: string;
+  price?: number;
+  originalAvailable?: boolean;
+  printsAvailable?: boolean;
+}
+
+const { title, slug, images, medium, price, originalAvailable = true, printsAvailable = false } = Astro.props;
+
+const imageUrl =
+  images && images.length > 0
+    ? urlFor(images[0]).width(400).height(533).fit('crop').crop('focalpoint').url()
+    : null;
+
+const isSold = !originalAvailable;
+const hasPrints = isSold && printsAvailable;
+const isDimmed = isSold && !printsAvailable;
+---
+
+<article class:list={['group bg-daos-paper rounded-sm overflow-hidden hover:shadow-lg transition-shadow duration-300', isDimmed && 'opacity-60']}>
+  <a href={`/gallery/${slug.current}`} class="block">
+    <!-- Uniform 3:4 image container -->
+    <div class="relative aspect-[3/4] overflow-hidden bg-daos-warm">
+      {imageUrl ? (
+        <img
+          src={imageUrl}
+          alt={title}
+          class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+          loading="lazy"
+        />
+      ) : (
+        <div class="absolute inset-0 bg-gradient-to-br from-daos-warm to-daos-clay flex items-center justify-center">
+          <span class="font-display text-daos-ink/30 text-lg text-center px-4">{title}</span>
+        </div>
+      )}
+
+      {/* Sold badge */}
+      {isSold && (
+        <div class="absolute top-3 left-3">
+          <span class="px-3 py-1 bg-daos-ink text-daos-cream text-xs font-sans uppercase tracking-wider">
+            Sold
+          </span>
+        </div>
+      )}
+    </div>
+  </a>
+
+  <!-- Card body -->
+  <div class="p-4 space-y-3">
+    <div class="space-y-1">
+      <h3 class="font-display text-lg text-daos-ink leading-snug">
+        <a href={`/gallery/${slug.current}`} class="hover:text-daos-terracotta transition-colors">
+          {title}
+        </a>
+      </h3>
+      {medium && (
+        <p class="font-sans text-sm text-daos-charcoal">{medium}</p>
+      )}
+    </div>
+
+    {/* Price + CTA area */}
+    {!isSold && price != null && (
+      <div class="space-y-2">
+        <p class="font-sans font-medium text-daos-ink">${price.toLocaleString()}</p>
+        <CheckoutButton title={title} price={price} slug={slug.current} />
+      </div>
+    )}
+
+    {hasPrints && (
+      <a
+        href={`/gallery/${slug.current}#prints`}
+        class="inline-block font-sans text-sm text-daos-terracotta hover:underline transition-colors"
+      >
+        Prints available &rarr;
+      </a>
+    )}
+
+    {isSold && !hasPrints && (
+      <p class="font-sans text-sm text-daos-charcoal">Sold</p>
+    )}
+  </div>
+</article>

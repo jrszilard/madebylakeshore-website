@@ -1,0 +1,46 @@
+---
+interface Props {
+  title: string;
+  link: string;
+  excerpt: string;
+  coverImage: string | null;
+  type?: string;
+}
+
+const { title, link, excerpt, coverImage, type } = Astro.props;
+---
+
+<a
+  href={link}
+  target="_blank"
+  rel="noopener noreferrer"
+  class="group flex gap-4 bg-daos-paper rounded-sm p-4 hover:shadow-md transition-shadow duration-300"
+>
+  <!-- Thumbnail -->
+  <div class="flex-shrink-0 w-20 h-[60px] rounded-sm overflow-hidden bg-daos-warm">
+    {coverImage ? (
+      <img
+        src={coverImage}
+        alt={title}
+        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+      />
+    ) : (
+      <div class="w-full h-full bg-gradient-to-br from-daos-warm to-daos-clay"></div>
+    )}
+  </div>
+
+  <!-- Content -->
+  <div class="flex-1 min-w-0 space-y-1">
+    <h3 class="font-sans text-sm font-medium text-daos-ink group-hover:text-daos-terracotta transition-colors leading-snug line-clamp-2">
+      {title}
+    </h3>
+    <p class="font-body text-xs text-daos-charcoal leading-relaxed line-clamp-2">
+      {excerpt}
+    </p>
+    {type && (
+      <span class="inline-block px-2 py-0.5 border border-daos-sage text-daos-sage text-xs font-sans rounded-sm">
+        {type}
+      </span>
+    )}
+  </div>
+</a>

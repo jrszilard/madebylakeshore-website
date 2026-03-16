@@ -29,10 +29,8 @@ export default defineType({
         list: [
           { title: 'Painting', value: 'painting' },
           { title: 'Drawing', value: 'drawing' },
-          { title: 'Writing', value: 'writing' },
           { title: 'Mixed Media', value: 'mixed-media' },
           { title: 'Print', value: 'print' },
-          { title: 'Other', value: 'other' },
         ],
       },
       validation: (Rule) => Rule.required(),
@@ -128,6 +126,13 @@ export default defineType({
         },
       ],
       hidden: ({ parent }) => !parent?.printsAvailable,
+    }),
+    defineField({
+      name: 'forSale',
+      title: 'Listed for Sale',
+      type: 'boolean',
+      description: 'When true, this piece appears in the Shop. Can be true even if original is sold (if prints are available).',
+      initialValue: false,
     }),
     defineField({
       name: 'featured',

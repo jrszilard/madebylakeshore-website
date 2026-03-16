@@ -1,0 +1,48 @@
+---
+import { SHOP_PLATFORM } from '../lib/config';
+
+interface Props {
+  title: string;
+  price: number;
+  slug: string;
+  image?: string;
+  label?: string;
+}
+
+const { title, price, slug, image, label = 'Add to Cart' } = Astro.props;
+
+const productUrl = `https://designandotherstories.com/gallery/${slug}`;
+---
+
+{SHOP_PLATFORM === 'snipcart' && (
+  <button
+    class="snipcart-add-item btn-warm w-full justify-center"
+    data-item-id={slug}
+    data-item-price={price}
+    data-item-url={productUrl}
+    data-item-name={title}
+    data-item-image={image}
+  >
+    {label}
+  </button>
+)}
+
+{SHOP_PLATFORM === 'etsy' && (
+  <a
+    href={productUrl}
+    target="_blank"
+    rel="noopener noreferrer"
+    class="btn-outline w-full justify-center"
+  >
+    View on Etsy
+  </a>
+)}
+
+{(SHOP_PLATFORM === 'inquiry' || SHOP_PLATFORM === null) && (
+  <a
+    href={`mailto:hello@designandotherstories.com?subject=Inquiry: ${encodeURIComponent(title)}`}
+    class="btn-outline w-full justify-center"
+  >
+    {label}
+  </a>
+)}

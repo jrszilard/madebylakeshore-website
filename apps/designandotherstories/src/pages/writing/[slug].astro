@@ -1,0 +1,174 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PurchaseLinks from '../../components/PurchaseLinks.astro';
+import FromThisWorld from '../../components/FromThisWorld.astro';
+import RelatedSubstackPosts from '../../components/RelatedSubstackPosts.tsx';
+import { sanityClient, urlFor, queries } from '../../lib/sanity';
+import { SUBSTACK_FEED_URL, SUBSTACK_URL } from '../../lib/config';
+export async function getStaticPaths() {
+  const books = await sanityClient.fetch(queries.allBooks);
+  return books
+    .filter((b: any) => b.slug?.current)
+    .map((b: any) => ({
+      params: { slug: b.slug.current },
+    }));
+}
+
+const { slug } = Astro.params;
+
+const book = await sanityClient.fetch(queries.bookBySlug, { slug });
+
+if (!book) {
+  return Astro.redirect('/writing');
+}
+
+const coverUrl = book.coverImage
+  ? urlFor(book.coverImage).width(600).height(900).fit('crop').crop('focalpoint').url()
+  : null;
+
+// Render blockContent description to basic HTML
+function blockContentToHtml(blocks: any[]): string {
+  if (!Array.isArray(blocks)) return '';
+  return blocks
+    .map((block) => {
+      if (block._type !== 'block') return '';
+      const tag =
+        block.style === 'h2' ? 'h2' :
+        block.style === 'h3' ? 'h3' :
+        block.style === 'h4' ? 'h4' :
+        block.style === 'blockquote' ? 'blockquote' :
+        'p';
+
+      const text = (block.children ?? [])
+        .map((span: any) => {
+          let t = (span.text ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+          if (span.marks?.includes('strong')) t = `<strong>${t}</strong>`;
+          if (span.marks?.includes('em')) t = `<em>${t}</em>`;
+          return t;
+        })
+        .join('');
+
+      return `<${tag}>${text}</${tag}>`;
+    })
+    .join('\n');
+}
+
+let descriptionHtml = '';
+if (book.description && Array.isArray(book.description)) {
+  descriptionHtml = blockContentToHtml(book.description);
+}
+
+const showStatusBadge = book.status && book.status !== 'published';
+const badgeLabel =
+  book.status === 'coming_soon'
+    ? 'Coming Soon'
+    : book.status === 'in_progress'
+    ? 'In Progress'
+    : book.status;
+
+const seoDescription = book.seo?.description || book.blurb || '';
+const seoTitle = book.seo?.title || book.title;
+---
+
+<BaseLayout title={seoTitle} description={seoDescription}>
+  <article>
+    <!-- Two-column layout: cover left, details right -->
+    <section class="section-spacing">
+      <div class="container-art">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16 items-start">
+
+          <!-- Cover image -->
+          <div class="aspect-[2/3] overflow-hidden bg-daos-warm rounded-sm shadow-md">
+            {coverUrl ? (
+              <img
+                src={coverUrl}
+                alt={`Cover of ${book.title}`}
+                class="w-full h-full object-cover"
+              />
+            ) : (
+              <div class="w-full h-full bg-gradient-to-br from-daos-warm to-daos-clay flex items-center justify-center">
+                <span class="font-display text-daos-ink/30 text-2xl text-center px-8">{book.title}</span>
+              </div>
+            )}
+          </div>
+
+          <!-- Details -->
+          <div class="space-y-6">
+            <!-- Type + status badges -->
+            <div class="flex flex-wrap gap-2">
+              {book.type && (
+                <span class="px-3 py-1 border border-daos-warm text-daos-charcoal text-xs font-sans uppercase tracking-wider rounded-sm">
+                  {book.type}
+                </span>
+              )}
+              {showStatusBadge && (
+                <span class="px-3 py-1 bg-daos-terracotta text-white text-xs font-sans font-medium rounded-sm">
+                  {badgeLabel}
+                </span>
+              )}
+            </div>
+
+            <!-- Title -->
+            <h1 class="font-display text-display md:text-display-lg text-daos-ink leading-tight">
+              {book.title}
+            </h1>
+
+            <!-- Blurb -->
+            {book.blurb && (
+              <p class="font-body text-daos-charcoal text-lg leading-relaxed">
+                {book.blurb}
+              </p>
+            )}
+
+            <!-- Purchase links -->
+            {book.purchaseLinks && book.purchaseLinks.length > 0 && (
+              <PurchaseLinks links={book.purchaseLinks} />
+            )}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Extended description (blockContent) -->
+    {descriptionHtml && (
+      <section class="section-spacing bg-daos-paper">
+        <div class="container-art">
+          <div
+            class="max-w-2xl mx-auto prose prose-stone font-body text-daos-charcoal leading-relaxed"
+            set:html={descriptionHtml}
+          />
+        </div>
+      </section>
+    )}
+
+    <!-- From This World -->
+    {book.fromThisWorld && book.fromThisWorld.length > 0 && (
+      <section class="section-spacing">
+        <div class="container-art">
+          <div class="max-w-2xl mx-auto">
+            <FromThisWorld items={book.fromThisWorld} />
+          </div>
+        </div>
+      </section>
+    )}
+
+    <!-- Related Substack posts (client-side React island) -->
+    {book.substackTag && (
+      <section class="section-spacing bg-daos-paper">
+        <div class="container-art">
+          <div class="max-w-2xl mx-auto">
+            <p class="font-sans text-xs uppercase tracking-widest text-daos-clay mb-6">
+              Related Reading
+            </p>
+            <RelatedSubstackPosts
+              client:idle
+              substackTag={book.substackTag}
+              feedUrl={SUBSTACK_FEED_URL}
+              fallbackUrl={SUBSTACK_URL}
+            />
+          </div>
+        </div>
+      </section>
+    )}
+  </article>
+</BaseLayout>
