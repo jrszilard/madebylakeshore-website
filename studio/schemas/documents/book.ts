@@ -77,8 +77,7 @@ export default defineType({
       description: 'Related books and writing pieces that share this world.',
       type: 'array',
       of: [
-        { type: 'reference', to: [{ type: 'book' }] },
-        { type: 'reference', to: [{ type: 'writingPiece' }] },
+        { type: 'reference', to: [{ type: 'book' }, { type: 'writingPiece' }] },
       ],
     }),
     defineField({
