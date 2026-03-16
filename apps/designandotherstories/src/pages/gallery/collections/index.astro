@@ -1,0 +1,82 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { sanityClient, urlFor, queries } from '../../../lib/sanity';
+
+const allCollections = await sanityClient.fetch(queries.allCollections);
+---
+
+<BaseLayout
+  title="Collections"
+  description="Curated collections of original artwork by Wilma — thematic groupings of paintings, drawings, and mixed media works."
+>
+  <!-- Page header -->
+  <section class="section-spacing">
+    <div class="container-art">
+      <a href="/gallery" class="inline-flex items-center gap-1 font-sans text-sm text-daos-charcoal hover:text-daos-terracotta transition-colors mb-10">
+        &larr; Back to Gallery
+      </a>
+      <div class="max-w-2xl">
+        <p class="font-sans text-xs uppercase tracking-widest text-daos-terracotta mb-4">Collections</p>
+        <h1 class="font-display italic text-display-lg md:text-display-xl text-daos-ink mb-6 leading-tight">
+          Curated series
+        </h1>
+        <p class="font-body text-daos-charcoal text-lg leading-relaxed">
+          Artworks grouped by theme, mood, and moment — each collection telling its own story.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Collections grid -->
+  <section class="section-spacing bg-daos-paper">
+    <div class="container-art">
+      {allCollections && allCollections.length > 0 ? (
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {allCollections.map((collection: any) => {
+            const coverUrl = collection.coverImage
+              ? urlFor(collection.coverImage).width(600).height(400).fit('crop').crop('focalpoint').url()
+              : null;
+            return (
+              <a
+                href={`/gallery/collections/${collection.slug.current}`}
+                class="group block bg-daos-cream rounded-sm overflow-hidden hover:shadow-lg transition-shadow duration-300"
+              >
+                <div class="relative aspect-[3/2] overflow-hidden bg-daos-warm">
+                  {coverUrl ? (
+                    <img
+                      src={coverUrl}
+                      alt={collection.title}
+                      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <div class="absolute inset-0 bg-gradient-to-br from-daos-warm to-daos-clay flex items-center justify-center">
+                      <span class="font-display text-daos-ink/30 text-xl text-center px-6">{collection.title}</span>
+                    </div>
+                  )}
+                </div>
+                <div class="p-5 space-y-2">
+                  <h2 class="font-display text-xl text-daos-ink group-hover:text-daos-terracotta transition-colors">
+                    {collection.title}
+                  </h2>
+                  {collection.description && (
+                    <p class="font-body text-sm text-daos-charcoal leading-relaxed line-clamp-2">
+                      {collection.description}
+                    </p>
+                  )}
+                  {collection.artworkCount != null && (
+                    <p class="font-sans text-xs text-daos-clay uppercase tracking-wide">
+                      {collection.artworkCount} {collection.artworkCount === 1 ? 'work' : 'works'}
+                    </p>
+                  )}
+                </div>
+              </a>
+            );
+          })}
+        </div>
+      ) : (
+        <p class="font-body text-daos-charcoal text-center py-16">No collections yet.</p>
+      )}
+    </div>
+  </section>
+</BaseLayout>

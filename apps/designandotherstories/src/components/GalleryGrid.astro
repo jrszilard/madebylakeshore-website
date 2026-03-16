@@ -1,0 +1,91 @@
+---
+import GalleryCard from './GalleryCard.astro';
+
+interface Props {
+  artwork: any[];
+  showFilters?: boolean;
+}
+
+const { artwork, showFilters = true } = Astro.props;
+
+const filterPills = [
+  { label: 'All', value: 'all' },
+  { label: 'Paintings', value: 'painting' },
+  { label: 'Drawings', value: 'drawing' },
+  { label: 'Mixed Media', value: 'mixed-media' },
+  { label: 'Prints', value: 'print' },
+];
+---
+
+{showFilters && (
+  <div class="flex flex-wrap gap-2 mb-8" id="gallery-filters">
+    {filterPills.map((pill) => (
+      <a
+        href={pill.value === 'all' ? '/gallery' : `/gallery?category=${pill.value}`}
+        data-filter={pill.value}
+        class:list={[
+          'filter-pill px-4 py-2 text-sm font-sans rounded-sm border transition-colors duration-200',
+          'border-daos-clay text-daos-charcoal hover:border-daos-terracotta hover:text-daos-terracotta',
+        ]}
+      >
+        {pill.label}
+      </a>
+    ))}
+    <a
+      href="/gallery/collections"
+      class="px-4 py-2 text-sm font-sans rounded-sm border border-daos-sage text-daos-sage hover:border-daos-terracotta hover:text-daos-terracotta transition-colors duration-200"
+    >
+      Collections
+    </a>
+  </div>
+)}
+
+<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4" id="gallery-grid">
+  {artwork.map((piece: any) => (
+    <div
+      class="gallery-item"
+      data-category={piece.category ?? 'other'}
+    >
+      <GalleryCard
+        title={piece.title}
+        slug={piece.slug}
+        images={piece.images ?? []}
+        medium={piece.medium}
+        category={piece.category}
+        collectionTitle={piece.collection?.title}
+        collectionSlug={piece.collection?.slug}
+      />
+    </div>
+  ))}
+</div>
+
+{artwork.length === 0 && (
+  <p class="font-body text-daos-charcoal text-center py-16">No artwork found.</p>
+)}
+
+{showFilters && (
+  <script>
+    (function () {
+      const params = new URLSearchParams(window.location.search);
+      const active = params.get('category') || 'all';
+
+      // Highlight active pill
+      document.querySelectorAll<HTMLAnchorElement>('.filter-pill').forEach((pill) => {
+        const val = pill.dataset.filter ?? 'all';
+        if (val === active) {
+          pill.classList.remove('border-daos-clay', 'text-daos-charcoal', 'hover:border-daos-terracotta', 'hover:text-daos-terracotta');
+          pill.classList.add('bg-daos-ink', 'text-daos-cream', 'border-daos-ink');
+        }
+      });
+
+      // Filter cards
+      if (active !== 'all') {
+        document.querySelectorAll<HTMLDivElement>('.gallery-item').forEach((item) => {
+          if (item.dataset.category !== active) {
+            item.classList.add('hidden');
+          }
+        });
+      }
+    })();
+  </script>
+)}
