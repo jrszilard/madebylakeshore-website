@@ -71,7 +71,6 @@ export const structure: StructureResolver = (S) =>
                     .title('Events')
                     .defaultOrdering([{ field: 'startDate', direction: 'desc' }])
                 ),
-              S.divider(),
               S.listItem()
                 .title('Artwork')
                 .schemaType('artwork')
@@ -120,11 +119,14 @@ export const structure: StructureResolver = (S) =>
                 .title('Collections')
                 .schemaType('artCollection')
                 .child(S.documentTypeList('artCollection').title('Collections')),
-              S.divider(),
-              S.document()
-                .schemaType('artistProfile')
-                .documentId('artistProfile')
-                .title('Artist Profile'),
+              S.listItem()
+                .title('Artist Profile')
+                .child(
+                  S.document()
+                    .schemaType('artistProfile')
+                    .documentId('artistProfile')
+                    .title('Artist Profile')
+                ),
             ])
         ),
 
