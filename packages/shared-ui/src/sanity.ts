@@ -277,8 +277,17 @@ export const queries = {
 
   // DesignAndOtherStories — Artist Profile
   artistProfile: `*[_type == "artistProfile"][0] {
-  name, portrait, bio, shortBio, socialLinks, substackUrl
+  name, portrait, heroImage, bio, shortBio, socialLinks, substackUrl
 }`,
+
+  featuredWritingForHome: `[
+  ...*[_type == "book" && featuredOnHome == true] | order(publishedDate desc) {
+    _id, _type, title, slug, coverImage, blurb, type, status, publishedDate
+  },
+  ...*[_type == "writingPiece" && featuredOnHome == true] | order(publishedDate desc) {
+    _id, _type, title, coverImage, excerpt, type, substackUrl, publishedDate
+  }
+]`,
 
   // DesignAndOtherStories — Artwork (new queries for redesign)
   featuredArtwork: `*[_type == "artwork" && featured == true] | order(year desc)[0...4] {
@@ -287,6 +296,10 @@ export const queries = {
 
   artworkForSale: `*[_type == "artwork" && forSale == true] | order(year desc) {
   _id, title, slug, category, images, medium, price, originalAvailable, printsAvailable, printOptions
+}`,
+
+  featuredShopItems: `*[_type == "artwork" && forSale == true] | order(year desc)[0...4] {
+  _id, title, slug, images, medium, price, originalAvailable, printsAvailable
 }`,
 
   artworkByCollectionSlug: `*[_type == "artwork" && collection->slug.current == $slug] | order(year desc) {

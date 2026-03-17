@@ -61,6 +61,12 @@ export default defineType({
       title: 'Substack URL',
       type: 'url',
     }),
+    defineField({
+      name: 'heroImage',
+      title: 'Hero Image',
+      type: 'figure',
+      description: 'Full-bleed cover image displayed on the home page hero section.',
+    }),
   ],
   preview: {
     select: {

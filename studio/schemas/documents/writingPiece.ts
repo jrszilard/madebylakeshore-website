@@ -61,6 +61,13 @@ export default defineType({
       initialValue: false,
     }),
     defineField({
+      name: 'featuredOnHome',
+      title: 'Featured on Home',
+      type: 'boolean',
+      initialValue: false,
+      description: 'Show this writing piece in the Latest Writing swimlane on the home page.',
+    }),
+    defineField({
       name: 'tags',
       title: 'Tags',
       type: 'array',

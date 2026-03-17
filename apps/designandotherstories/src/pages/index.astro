@@ -2,70 +2,110 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import HeroSection from '../components/HeroSection.astro';
 import SectionHeader from '../components/SectionHeader.astro';
-import BookCard from '../components/BookCard.astro';
 import GalleryCard from '../components/GalleryCard.astro';
+import ShopCard from '../components/ShopCard.astro';
 import EventCard from '../components/EventCard.astro';
-import SubstackFeedCard from '../components/SubstackFeedCard.astro';
 import SubstackEmbed from '../components/SubstackEmbed.astro';
-import { sanityClient, queries } from '../lib/sanity';
+import { sanityClient, urlFor, queries } from '../lib/sanity';
 import { fetchSubstackFeed } from '../lib/substack';
 
 // Fetch all data at build time (static page)
-const [featuredBooks, featuredArtwork, nextEvent, substackPosts] = await Promise.all([
-  sanityClient.fetch(queries.featuredBooks),
+const [artistProfile, featuredWriting, featuredArtwork, shopItems, nextEvent, substackPosts] = await Promise.all([
+  sanityClient.fetch(queries.artistProfile),
+  sanityClient.fetch(queries.featuredWritingForHome),
   sanityClient.fetch(queries.featuredArtwork),
+  sanityClient.fetch(queries.featuredShopItems),
   sanityClient.fetch(queries.nextEvent),
   fetchSubstackFeed(),
 ]);
 
-const latestPost = substackPosts.length > 0 ? substackPosts[0] : null;
+// Merge Sanity featured writing + Substack posts, up to 5 cards total
+const sanityWritingItems: any[] = (featuredWriting ?? []).slice(0, 5);
+const substackSlots = Math.max(0, 5 - sanityWritingItems.length);
+const substackItems = (substackPosts ?? []).slice(0, substackSlots);
 
-// Limit to up to 2 books for the 3-card writing row
-const writingBooks = (featuredBooks ?? []).slice(0, 2);
+const typeLabels: Record<string, string> = {
+  novel: 'Novel',
+  novella: 'Novella',
+  'short-story-collection': 'Short Story Collection',
+  poetry: 'Poetry',
+  'short-story': 'Short Story',
+  essay: 'Essay',
+  poem: 'Poem',
+  'serial-chapter': 'Serial Chapter',
+};
 ---
 
 <BaseLayout
   title="Home"
   description="Original paintings, drawings, and written works by Design & Other Stories. Art. Words. Worlds."
+  showSnipcart={shopItems && shopItems.length > 0}
 >
   <!-- 1. Hero -->
-  <HeroSection />
+  <HeroSection heroImage={artistProfile?.heroImage} />
 
-  <!-- 2. Featured Writing -->
+  <!-- 2. Latest Writing -->
   <section class="section-spacing bg-daos-paper">
     <div class="container-art">
-      <SectionHeader title="Writing" viewAllHref="/writing" />
+      <SectionHeader title="Latest Writing" viewAllHref="/writing" />
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {writingBooks.map((book: any) => (
-          <BookCard
-            title={book.title}
-            slug={book.slug}
-            coverImage={book.coverImage}
-            blurb={book.blurb}
-            type={book.type}
-            status={book.status}
-          />
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+        {sanityWritingItems.map((item: any) => {
+          const isBook = item._type === 'book';
+          const href = isBook && item.slug ? `/writing/${item.slug.current}` : item.substackUrl || '#';
+          const isExternal = !isBook;
+          const thumbUrl = item.coverImage
+            ? urlFor(item.coverImage).width(600).height(400).fit('crop').crop('focalpoint').url()
+            : null;
+          const snippet = item.blurb || item.excerpt || '';
+          return (
+            <a
+              href={href}
+              target={isExternal ? '_blank' : undefined}
+              rel={isExternal ? 'noopener noreferrer' : undefined}
+              class="group block"
+            >
+              <div class="aspect-[3/2] overflow-hidden rounded-sm bg-daos-warm mb-3">
+                {thumbUrl ? (
+                  <img src={thumbUrl} alt={item.title} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                ) : (
+                  <div class="w-full h-full bg-gradient-to-br from-daos-warm to-daos-clay"></div>
+                )}
+              </div>
+              <div class="space-y-1">
+                {item.type && <p class="font-sans text-xs text-daos-clay uppercase tracking-wider">{typeLabels[item.type] ?? item.type}</p>}
+                <h3 class="font-display text-lg font-bold text-daos-ink group-hover:text-daos-terracotta transition-colors leading-snug">{item.title}</h3>
+                {snippet && <p class="font-body text-sm text-daos-charcoal line-clamp-2">{snippet}</p>}
+              </div>
+            </a>
+          );
+        })}
+
+        {substackItems.map((post: any) => (
+          <a href={post.link} target="_blank" rel="noopener noreferrer" class="group block">
+            <div class="aspect-[3/2] overflow-hidden rounded-sm bg-daos-warm mb-3">
+              {post.coverImage ? (
+                <img src={post.coverImage} alt={post.title} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+              ) : (
+                <div class="w-full h-full bg-gradient-to-br from-daos-warm to-daos-clay"></div>
+              )}
+            </div>
+            <div class="space-y-1">
+              <p class="font-sans text-xs text-daos-clay uppercase tracking-wider">From Substack</p>
+              <h3 class="font-display text-lg font-bold text-daos-ink group-hover:text-daos-terracotta transition-colors leading-snug">{post.title}</h3>
+              {post.excerpt && <p class="font-body text-sm text-daos-charcoal line-clamp-2">{post.excerpt}</p>}
+            </div>
+          </a>
         ))}
-
-        {latestPost && (
-          <SubstackFeedCard
-            title={latestPost.title}
-            link={latestPost.link}
-            excerpt={latestPost.excerpt}
-            coverImage={latestPost.coverImage}
-            type="From Substack"
-          />
-        )}
       </div>
     </div>
   </section>
 
-  <!-- 3. Featured Gallery -->
+  <!-- 3. From the Gallery -->
   {featuredArtwork && featuredArtwork.length > 0 && (
     <section class="section-spacing">
       <div class="container-art">
-        <SectionHeader title="Gallery" viewAllHref="/gallery" />
+        <SectionHeader title="From the Gallery" viewAllHref="/gallery" />
 
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
           {(featuredArtwork as any[]).map((piece: any) => (
@@ -82,7 +122,30 @@ const writingBooks = (featuredBooks ?? []).slice(0, 2);
     </section>
   )}
 
-  <!-- 4. Next Event (only if upcoming event exists) -->
+  <!-- 4. From the Studio (shop) -->
+  {shopItems && shopItems.length > 0 && (
+    <section class="section-spacing bg-daos-paper">
+      <div class="container-art">
+        <SectionHeader title="From the Studio" viewAllHref="/shop" />
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+          {(shopItems as any[]).map((item: any) => (
+            <ShopCard
+              title={item.title}
+              slug={item.slug}
+              images={item.images}
+              medium={item.medium}
+              price={item.price}
+              originalAvailable={item.originalAvailable}
+              printsAvailable={item.printsAvailable}
+            />
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- 5. Next Event (only if upcoming event exists) -->
   {nextEvent && (
     <section class="section-spacing bg-daos-paper">
       <div class="container-art">

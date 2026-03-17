@@ -1,29 +1,62 @@
 ---
+import { urlFor } from '../lib/sanity';
+
 interface Props {
   label?: string;
   headline?: string;
   subtitle?: string;
+  heroImage?: any;
 }
 
 const {
   label = 'Design & Other Stories',
   headline = 'Art. Words. Worlds.',
   subtitle = 'Original paintings, drawings, and written works—each piece crafted with intention and care.',
+  heroImage,
 } = Astro.props;
+
+const heroImageUrl = heroImage
+  ? urlFor(heroImage).width(1600).height(900).fit('crop').crop('focalpoint').url()
+  : null;
 ---
 
-<section class="py-20 md:py-28">
-  <div class="container-art">
-    <div class="max-w-3xl mx-auto text-center space-y-6">
-      <p class="font-sans text-xs uppercase tracking-widest text-daos-terracotta">
+{heroImageUrl ? (
+  <section class="relative min-h-[80vh] flex items-center justify-center overflow-hidden">
+    <!-- Background image -->
+    <img
+      src={heroImageUrl}
+      alt={heroImage?.alt ?? headline}
+      class="absolute inset-0 w-full h-full object-cover object-center"
+    />
+    <!-- Dark overlay -->
+    <div class="absolute inset-0 bg-daos-ink/40"></div>
+    <!-- Content -->
+    <div class="relative z-10 max-w-3xl mx-auto text-center px-6 space-y-6">
+      <p class="font-sans text-xs uppercase tracking-widest text-daos-warm/80">
         {label}
       </p>
-      <h1 class="font-display italic text-display-lg md:text-display-xl text-daos-ink leading-tight">
+      <h1 class="font-display italic text-display-lg md:text-display-xl text-white leading-tight">
         {headline}
       </h1>
-      <p class="font-body text-lg text-daos-charcoal leading-relaxed max-w-xl mx-auto">
+      <p class="font-body text-lg text-white/80 leading-relaxed max-w-xl mx-auto">
         {subtitle}
       </p>
     </div>
-  </div>
-</section>
+  </section>
+) : (
+  <section class="py-20 md:py-28">
+    <div class="container-art">
+      <div class="max-w-3xl mx-auto text-center space-y-6">
+        <p class="font-sans text-xs uppercase tracking-widest text-daos-terracotta">
+          {label}
+        </p>
+        <h1 class="font-display italic text-display-lg md:text-display-xl text-daos-ink leading-tight">
+          {headline}
+        </h1>
+        <p class="font-body text-lg text-daos-charcoal leading-relaxed max-w-xl mx-auto">
+          {subtitle}
+        </p>
+      </div>
+    </div>
+  </section>
+)}

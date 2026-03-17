@@ -120,6 +120,13 @@ export default defineType({
       initialValue: false,
     }),
     defineField({
+      name: 'featuredOnHome',
+      title: 'Featured on Home',
+      type: 'boolean',
+      initialValue: false,
+      description: 'Show this book in the Latest Writing swimlane on the home page.',
+    }),
+    defineField({
       name: 'order',
       title: 'Order',
       type: 'number',
