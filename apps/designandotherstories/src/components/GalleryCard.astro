@@ -6,12 +6,11 @@ interface Props {
   slug: { current: string };
   images: any[];
   medium?: string;
-  category?: string;
   collectionTitle?: string;
   collectionSlug?: { current: string };
 }
 
-const { title, slug, images, medium, category, collectionTitle, collectionSlug } = Astro.props;
+const { title, slug, images, medium, collectionTitle, collectionSlug } = Astro.props;
 
 const imageUrl =
   images && images.length > 0

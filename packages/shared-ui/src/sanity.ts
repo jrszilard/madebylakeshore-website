@@ -181,7 +181,6 @@ export const queries = {
     _id,
     title,
     slug,
-    category,
     images,
     medium,
     dimensions,
@@ -191,22 +190,10 @@ export const queries = {
     "collection": collection->{ title, slug }
   }`,
 
-  artworkByCategory: `*[_type == "artwork" && category == $category] | order(year desc) {
-    _id,
-    title,
-    slug,
-    category,
-    images,
-    medium,
-    price,
-    originalAvailable
-  }`,
-
   artworkBySlug: `*[_type == "artwork" && slug.current == $slug][0] {
     _id,
     title,
     slug,
-    category,
     images,
     description,
     story,
@@ -226,7 +213,8 @@ export const queries = {
     _id,
     title,
     slug,
-    description,
+    tagline,
+    releaseDate,
     coverImage,
     "artworkCount": count(*[_type == "artwork" && references(^._id)])
   }`,
@@ -291,11 +279,11 @@ export const queries = {
 
   // DesignAndOtherStories — Artwork (new queries for redesign)
   featuredArtwork: `*[_type == "artwork" && featured == true] | order(year desc)[0...4] {
-  _id, title, slug, category, images, medium
+  _id, title, slug, images, medium
 }`,
 
   artworkForSale: `*[_type == "artwork" && forSale == true] | order(year desc) {
-  _id, title, slug, category, images, medium, price, originalAvailable, printsAvailable, printOptions
+  _id, title, slug, images, medium, price, originalAvailable, printsAvailable, printOptions
 }`,
 
   featuredShopItems: `*[_type == "artwork" && forSale == true] | order(year desc)[0...4] {
@@ -303,11 +291,21 @@ export const queries = {
 }`,
 
   artworkByCollectionSlug: `*[_type == "artwork" && collection->slug.current == $slug] | order(year desc) {
-  _id, title, slug, category, images, medium, price, originalAvailable, forSale
+  _id, title, slug, images, medium, price, originalAvailable, forSale
 }`,
 
   collectionBySlug: `*[_type == "artCollection" && slug.current == $slug][0] {
-  _id, title, slug, description, coverImage
+  _id, title, slug, tagline, description, releaseDate, coverImage,
+  lookbookContent[] {
+    _type,
+    _key,
+    _type == "artworkEntry" => {
+      "artwork": artwork->{ _id, title, slug, images, medium, price, originalAvailable, printsAvailable }
+    },
+    _type == "editorialText" => {
+      layout, heading, body
+    }
+  }
 }`,
 
   // Incubator queries

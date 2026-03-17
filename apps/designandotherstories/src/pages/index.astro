@@ -2,18 +2,16 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import HeroSection from '../components/HeroSection.astro';
 import SectionHeader from '../components/SectionHeader.astro';
-import GalleryCard from '../components/GalleryCard.astro';
 import ShopCard from '../components/ShopCard.astro';
 import EventCard from '../components/EventCard.astro';
-import SubstackEmbed from '../components/SubstackEmbed.astro';
+import { SUBSTACK_URL } from '../lib/config';
 import { sanityClient, urlFor, queries } from '../lib/sanity';
 import { fetchSubstackFeed } from '../lib/substack';
 
 // Fetch all data at build time (static page)
-const [artistProfile, featuredWriting, featuredArtwork, shopItems, nextEvent, substackPosts] = await Promise.all([
+const [artistProfile, featuredWriting, shopItems, nextEvent, substackPosts] = await Promise.all([
   sanityClient.fetch(queries.artistProfile),
   sanityClient.fetch(queries.featuredWritingForHome),
-  sanityClient.fetch(queries.featuredArtwork),
   sanityClient.fetch(queries.featuredShopItems),
   sanityClient.fetch(queries.nextEvent),
   fetchSubstackFeed(),
@@ -44,10 +42,81 @@ const typeLabels: Record<string, string> = {
   <!-- 1. Hero -->
   <HeroSection heroImage={artistProfile?.heroImage} />
 
-  <!-- 2. Latest Writing -->
+  <!-- 2. Manifesto -->
+  <section class="section-spacing">
+    <div class="container-art">
+      <div class="max-w-2xl mx-auto space-y-10">
+        <h2 class="font-display italic text-display-lg text-daos-ink leading-tight">
+          written. painted. left to linger.
+        </h2>
+        <p class="font-body text-lg text-daos-charcoal leading-relaxed">
+          This is a small, careful body of work. Literary fiction and traditional art made one piece at a time, without shortcuts.
+        </p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 pt-2">
+          <div class="space-y-3">
+            <p class="font-display text-xl text-daos-ink">Words</p>
+            <p class="font-body text-daos-charcoal leading-relaxed">Literary romance that takes its time. Slow burn, real consequence, quiet devastation.</p>
+            <a href="/writing" class="inline-block font-sans text-sm text-daos-terracotta hover:underline transition-colors">Read the fiction &rarr;</a>
+          </div>
+          <div class="space-y-3">
+            <p class="font-display text-xl text-daos-ink">Images</p>
+            <p class="font-body text-daos-charcoal leading-relaxed">Ink, watercolor, graphite. Made by hand in New Hampshire.</p>
+            <a href="/gallery" class="inline-block font-sans text-sm text-daos-terracotta hover:underline transition-colors">See the work &rarr;</a>
+          </div>
+        </div>
+        <p class="font-body text-daos-charcoal leading-relaxed pt-2">
+          A practice, not a product — because the world needs more things made with intention and care.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. Next Event -->
+  {nextEvent && (
+    <section class="section-spacing bg-daos-paper">
+      <div class="container-art">
+        <SectionHeader title="Let's Hang Out Together" viewAllHref="/events" />
+
+        <EventCard
+          title={nextEvent.title}
+          slug={nextEvent.slug}
+          startDate={nextEvent.startDate}
+          endDate={nextEvent.endDate}
+          location={nextEvent.location}
+          eventType={nextEvent.eventType}
+          isPast={false}
+        />
+      </div>
+    </section>
+  )}
+
+  <!-- 3. From the Studio (shop) -->
+  {shopItems && shopItems.length > 0 && (
+    <section class="section-spacing">
+      <div class="container-art">
+        <SectionHeader title="From the Studio" viewAllHref="/shop" />
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+          {(shopItems as any[]).map((item: any) => (
+            <ShopCard
+              title={item.title}
+              slug={item.slug}
+              images={item.images}
+              medium={item.medium}
+              price={item.price}
+              originalAvailable={item.originalAvailable}
+              printsAvailable={item.printsAvailable}
+            />
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- 4. Latest Writing -->
   <section class="section-spacing bg-daos-paper">
     <div class="container-art">
-      <SectionHeader title="Latest Writing" viewAllHref="/writing" />
+      <SectionHeader title="See What We're Up To" viewAllHref="/writing" />
 
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
         {sanityWritingItems.map((item: any) => {
@@ -98,82 +167,11 @@ const typeLabels: Record<string, string> = {
           </a>
         ))}
       </div>
-    </div>
-  </section>
 
-  <!-- 3. From the Gallery -->
-  {featuredArtwork && featuredArtwork.length > 0 && (
-    <section class="section-spacing">
-      <div class="container-art">
-        <SectionHeader title="From the Gallery" viewAllHref="/gallery" />
-
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {(featuredArtwork as any[]).map((piece: any) => (
-            <GalleryCard
-              title={piece.title}
-              slug={piece.slug}
-              images={piece.images}
-              medium={piece.medium}
-              category={piece.category}
-            />
-          ))}
-        </div>
-      </div>
-    </section>
-  )}
-
-  <!-- 4. From the Studio (shop) -->
-  {shopItems && shopItems.length > 0 && (
-    <section class="section-spacing bg-daos-paper">
-      <div class="container-art">
-        <SectionHeader title="From the Studio" viewAllHref="/shop" />
-
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-          {(shopItems as any[]).map((item: any) => (
-            <ShopCard
-              title={item.title}
-              slug={item.slug}
-              images={item.images}
-              medium={item.medium}
-              price={item.price}
-              originalAvailable={item.originalAvailable}
-              printsAvailable={item.printsAvailable}
-            />
-          ))}
-        </div>
-      </div>
-    </section>
-  )}
-
-  <!-- 5. Next Event (only if upcoming event exists) -->
-  {nextEvent && (
-    <section class="section-spacing bg-daos-paper">
-      <div class="container-art">
-        <SectionHeader title="Next Event" viewAllHref="/events" />
-
-        <EventCard
-          title={nextEvent.title}
-          slug={nextEvent.slug}
-          startDate={nextEvent.startDate}
-          endDate={nextEvent.endDate}
-          location={nextEvent.location}
-          eventType={nextEvent.eventType}
-          isPast={false}
-        />
-      </div>
-    </section>
-  )}
-
-  <!-- 5. Newsletter -->
-  <section class="section-spacing">
-    <div class="container-art">
-      <div class="max-w-xl mx-auto text-center space-y-6">
-        <p class="font-sans text-xs uppercase tracking-widest text-daos-terracotta">Newsletter</p>
-        <h2 class="font-display text-display text-daos-ink">Stay Connected</h2>
-        <p class="font-body text-daos-charcoal leading-relaxed">
-          New work, upcoming events, and dispatches from the studio — straight to your inbox.
-        </p>
-        <SubstackEmbed />
+      <div class="mt-10 flex justify-center">
+        <a href={`${SUBSTACK_URL}/subscribe`} target="_blank" rel="noopener noreferrer" class="btn-warm">
+          Subscribe for more
+        </a>
       </div>
     </div>
   </section>

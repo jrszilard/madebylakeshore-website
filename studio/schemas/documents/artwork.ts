@@ -22,20 +22,6 @@ export default defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'category',
-      title: 'Category',
-      type: 'string',
-      options: {
-        list: [
-          { title: 'Painting', value: 'painting' },
-          { title: 'Drawing', value: 'drawing' },
-          { title: 'Mixed Media', value: 'mixed-media' },
-          { title: 'Print', value: 'print' },
-        ],
-      },
-      validation: (Rule) => Rule.required(),
-    }),
-    defineField({
       name: 'collection',
       title: 'Collection',
       type: 'reference',
@@ -170,17 +156,16 @@ export default defineType({
   preview: {
     select: {
       title: 'title',
-      category: 'category',
       media: 'images.0',
       price: 'price',
       available: 'originalAvailable',
     },
-    prepare({ title, category, media, price, available }) {
+    prepare({ title, media, price, available }) {
       const availability = available ? 'Available' : 'Sold';
       const priceDisplay = price ? `$${price}` : 'Price on request';
       return {
         title,
-        subtitle: `${category} • ${priceDisplay} • ${availability}`,
+        subtitle: `${priceDisplay} • ${availability}`,
         media,
       };
     },

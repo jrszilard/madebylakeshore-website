@@ -1,14 +1,13 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import GalleryGrid from '../../components/GalleryGrid.astro';
-import { sanityClient, queries } from '../../lib/sanity';
+import { sanityClient, urlFor, queries } from '../../lib/sanity';
 
-const allArtwork = await sanityClient.fetch(queries.allArtwork);
+const allCollections = await sanityClient.fetch(queries.allCollections);
 ---
 
 <BaseLayout
   title="Gallery"
-  description="Original paintings, drawings, prints, and mixed media artworks by Wilma. Browse the full collection and find a piece for your home."
+  description="Seasonal drops and curated series by W. H. Bonilla."
 >
   <!-- Page header -->
   <section class="section-spacing">
@@ -16,19 +15,71 @@ const allArtwork = await sanityClient.fetch(queries.allArtwork);
       <div class="max-w-2xl">
         <p class="font-sans text-xs uppercase tracking-widest text-daos-terracotta mb-4">Gallery</p>
         <h1 class="font-display italic text-display-lg md:text-display-xl text-daos-ink mb-6 leading-tight">
-          The work
+          The drops
         </h1>
         <p class="font-body text-daos-charcoal text-lg leading-relaxed">
-          Paintings, drawings, prints, and mixed media — each piece a quiet study in colour, texture, and the small wonders of everyday life.
+          Seasonal releases and curated series — each one a distinct body of work with its own mood and moment.
         </p>
       </div>
     </div>
   </section>
 
-  <!-- Gallery grid -->
+  <!-- Collections grid -->
   <section class="section-spacing bg-daos-paper">
     <div class="container-art">
-      <GalleryGrid artwork={allArtwork} showFilters={true} />
+      {allCollections && allCollections.length > 0 ? (
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {allCollections.map((collection: any) => {
+            const coverUrl = collection.coverImage
+              ? urlFor(collection.coverImage).width(800).height(1000).fit('crop').crop('focalpoint').url()
+              : null;
+            const releaseYear = collection.releaseDate
+              ? new Date(collection.releaseDate).getFullYear()
+              : null;
+            return (
+              <a
+                href={`/gallery/collections/${collection.slug.current}`}
+                class="group block"
+              >
+                <div class="relative aspect-[4/5] overflow-hidden rounded-sm bg-daos-warm mb-4">
+                  {coverUrl ? (
+                    <img
+                      src={coverUrl}
+                      alt={collection.title}
+                      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <div class="absolute inset-0 bg-gradient-to-br from-daos-warm to-daos-clay flex items-center justify-center">
+                      <span class="font-display text-daos-ink/30 text-xl text-center px-6">{collection.title}</span>
+                    </div>
+                  )}
+                </div>
+                <div class="space-y-1">
+                  {releaseYear && (
+                    <p class="font-sans text-xs uppercase tracking-widest text-daos-clay">{releaseYear}</p>
+                  )}
+                  <h2 class="font-display text-xl text-daos-ink group-hover:text-daos-terracotta transition-colors leading-snug">
+                    {collection.title}
+                  </h2>
+                  {collection.tagline && (
+                    <p class="font-body text-sm text-daos-charcoal leading-relaxed line-clamp-2">
+                      {collection.tagline}
+                    </p>
+                  )}
+                  {collection.artworkCount != null && (
+                    <p class="font-sans text-xs text-daos-clay uppercase tracking-wide">
+                      {collection.artworkCount} {collection.artworkCount === 1 ? 'piece' : 'pieces'}
+                    </p>
+                  )}
+                </div>
+              </a>
+            );
+          })}
+        </div>
+      ) : (
+        <p class="font-body text-daos-charcoal text-center py-16">No collections yet.</p>
+      )}
     </div>
   </section>
 </BaseLayout>

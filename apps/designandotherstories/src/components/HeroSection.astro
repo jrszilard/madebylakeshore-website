@@ -9,9 +9,8 @@ interface Props {
 }
 
 const {
-  label = 'Design & Other Stories',
-  headline = 'Art. Words. Worlds.',
-  subtitle = 'Original paintings, drawings, and written works—each piece crafted with intention and care.',
+  headline = 'Everything begins with a line.',
+  subtitle = 'The written and drawn worlds of W. H. Bonilla.',
   heroImage,
 } = Astro.props;
 
@@ -21,35 +20,48 @@ const heroImageUrl = heroImage
 ---
 
 {heroImageUrl ? (
-  <section class="relative min-h-[80vh] flex items-center justify-center overflow-hidden">
-    <!-- Background image -->
+  <section id="hero" class="relative h-screen flex items-center justify-center overflow-hidden">
+    <!-- Background image (parallax target) -->
     <img
+      id="hero-bg"
       src={heroImageUrl}
       alt={heroImage?.alt ?? headline}
-      class="absolute inset-0 w-full h-full object-cover object-center"
+      class="absolute inset-0 w-full h-[120%] object-cover object-center will-change-transform"
+      style="top: -10%;"
     />
     <!-- Dark overlay -->
     <div class="absolute inset-0 bg-daos-ink/40"></div>
-    <!-- Content -->
+    <!-- Content — staggered fade-up -->
     <div class="relative z-10 max-w-3xl mx-auto text-center px-6 space-y-6">
-      <p class="font-sans text-xs uppercase tracking-widest text-daos-warm/80">
-        {label}
-      </p>
-      <h1 class="font-display italic text-display-lg md:text-display-xl text-white leading-tight">
+      <h1
+        class="font-display italic text-display-lg md:text-display-xl text-white leading-tight opacity-0 animate-slide-up"
+        style="animation-delay: 0.3s;"
+      >
         {headline}
       </h1>
-      <p class="font-body text-lg text-white/80 leading-relaxed max-w-xl mx-auto">
+      <p
+        class="font-body text-lg text-white/80 leading-relaxed max-w-xl mx-auto opacity-0 animate-slide-up"
+        style="animation-delay: 0.5s;"
+      >
         {subtitle}
       </p>
     </div>
   </section>
+
+  <script>
+    const heroBg = document.getElementById('hero-bg');
+    if (heroBg) {
+      window.addEventListener('scroll', () => {
+        const scrollY = window.scrollY;
+        heroBg.style.transform = `translateY(${scrollY * 0.3}px)`;
+      }, { passive: true });
+    }
+  </script>
 ) : (
   <section class="py-20 md:py-28">
     <div class="container-art">
       <div class="max-w-3xl mx-auto text-center space-y-6">
-        <p class="font-sans text-xs uppercase tracking-widest text-daos-terracotta">
-          {label}
-        </p>
+        
         <h1 class="font-display italic text-display-lg md:text-display-xl text-daos-ink leading-tight">
           {headline}
         </h1>
