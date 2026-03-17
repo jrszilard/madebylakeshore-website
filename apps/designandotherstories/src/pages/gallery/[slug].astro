@@ -20,12 +20,14 @@ if (!artwork) {
   return Astro.redirect('/gallery');
 }
 
-// Build image arrays for ImageViewer
-const images = (artwork.images ?? []).map((img: any) => ({
-  url: urlFor(img).width(800).fit('max').url(),
-  alt: img.alt ?? artwork.title,
-  thumbUrl: urlFor(img).width(160).height(160).fit('crop').url(),
-}));
+// Build image arrays for ImageViewer (skip entries without a valid asset)
+const images = (artwork.images ?? [])
+  .filter((img: any) => img.asset)
+  .map((img: any) => ({
+    url: urlFor(img).width(800).fit('max').url(),
+    alt: img.alt ?? artwork.title,
+    thumbUrl: urlFor(img).width(160).height(160).fit('crop').url(),
+  }));
 
 // Thumbnail for purchase actions / OG image
 const firstImageUrl = images.length > 0 ? images[0].url : undefined;
