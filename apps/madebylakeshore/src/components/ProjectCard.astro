@@ -20,7 +20,7 @@ const { title, client, category, image, href, index } = Astro.props;
     {image && !image.includes('placeholder') ? (
       <img src={image} alt={title} class="w-full h-full object-cover" />
     ) : (
-      <div class="absolute inset-0 bg-gradient-to-br from-mbl-slate to-mbl-ink opacity-80"></div>
+      <div class="absolute inset-0 bg-gradient-to-br from-mbl-slate to-mbl-dusk opacity-80"></div>
     )}
 
     <!-- Hover overlay -->

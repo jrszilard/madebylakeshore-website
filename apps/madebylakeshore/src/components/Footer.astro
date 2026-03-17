@@ -3,7 +3,7 @@ const currentYear = new Date().getFullYear();
 
 const footerLinks = {
   services: [
-    { href: '/services/design', label: 'Design Consulting' },
+    { href: '/services/design', label: 'Creative Services' },
     { href: '/services/data', label: 'Data & Analytics' },
     { href: '/services/ai', label: 'AI Solutions' },
   ],
@@ -19,7 +19,7 @@ const footerLinks = {
 };
 ---
 
-<footer class="bg-mbl-ink text-white">
+<footer class="bg-mbl-dusk text-white">
   <div class="container-wide section-spacing">
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
       <!-- Brand Column -->
@@ -27,7 +27,7 @@ const footerLinks = {
         <a href="/" class="flex items-center mb-6">
           <span class="font-heading font-semibold">Lakeshore Studios</span>
         </a>
-        <p class="text-mbl-mist/80 text-sm leading-relaxed mb-6">
+        <p class="text-white/80 text-sm leading-relaxed mb-6">
           Strategic consulting in design, data, and AI. We help businesses transform through thoughtful solutions.
         </p>
       </div>
@@ -38,7 +38,7 @@ const footerLinks = {
         <ul class="space-y-3">
           {footerLinks.services.map((link) => (
             <li>
-              <a href={link.href} class="text-mbl-mist/80 hover:text-white text-sm transition-colors">
+              <a href={link.href} class="text-white/80 hover:text-white text-sm transition-colors">
                 {link.label}
               </a>
             </li>
@@ -52,7 +52,7 @@ const footerLinks = {
         <ul class="space-y-3">
           {footerLinks.company.map((link) => (
             <li>
-              <a href={link.href} class="text-mbl-mist/80 hover:text-white text-sm transition-colors">
+              <a href={link.href} class="text-white/80 hover:text-white text-sm transition-colors">
                 {link.label}
               </a>
             </li>
@@ -70,7 +70,7 @@ const footerLinks = {
                 href={link.href} 
                 target={link.external ? "_blank" : undefined}
                 rel={link.external ? "noopener noreferrer" : undefined}
-                class="text-mbl-mist/80 hover:text-white text-sm transition-colors inline-flex items-center gap-1"
+                class="text-white/80 hover:text-white text-sm transition-colors inline-flex items-center gap-1"
               >
                 {link.label}
                 {link.external && (
@@ -87,12 +87,12 @@ const footerLinks = {
     
     <!-- Bottom Bar -->
     <div class="mt-16 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4">
-      <p class="text-mbl-mist/60 text-sm">
+      <p class="text-white/60 text-sm">
         © {currentYear} Lakeshore Studios. All rights reserved.
       </p>
       <div class="flex gap-6 text-sm">
-        <a href="/privacy" class="text-mbl-mist/60 hover:text-white transition-colors">Privacy</a>
-        <a href="/terms" class="text-mbl-mist/60 hover:text-white transition-colors">Terms</a>
+        <a href="/privacy" class="text-white/60 hover:text-white transition-colors">Privacy</a>
+        <a href="/terms" class="text-white/60 hover:text-white transition-colors">Terms</a>
       </div>
     </div>
   </div>

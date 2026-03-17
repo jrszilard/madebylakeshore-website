@@ -97,7 +97,7 @@ export default function PasswordGate({ slug, title }: PasswordGateProps) {
           <button
             type="submit"
             disabled={loading || !password}
-            className="w-full px-4 py-3 bg-mbl-ink text-white font-heading font-medium rounded-lg hover:bg-mbl-slate transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full px-4 py-3 bg-mbl-dusk text-white font-heading font-medium rounded-lg hover:bg-mbl-slate transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? 'Verifying...' : 'View Case Study'}
           </button>
