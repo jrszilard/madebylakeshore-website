@@ -4,13 +4,13 @@ import SubstackFeedCard from './SubstackFeedCard.astro';
 import { fetchSubstackFeed, SUBSTACK_FALLBACK_URL } from '../lib/substack';
 
 interface Props {
-  tag?: string;
+  excludeSectionId?: string;
   limit?: number;
 }
 
-const { tag, limit = 5 } = Astro.props;
+const { excludeSectionId, limit = 5 } = Astro.props;
 
-const posts = await fetchSubstackFeed(tag);
+const posts = await fetchSubstackFeed(excludeSectionId);
 const visiblePosts = posts.slice(0, limit);
 ---
 

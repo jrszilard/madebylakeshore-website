@@ -4,9 +4,15 @@ export const prerender = false;
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import BookCard from '../../components/BookCard.astro';
 import SubstackFeed from '../../components/SubstackFeed.astro';
+import ShortStoriesCarousel from '../../components/ShortStoriesCarousel';
 import { sanityClient, queries } from '../../lib/sanity';
+import { fetchSubstackSection } from '../../lib/substack';
+import { SUBSTACK_SHORT_STORIES_SECTION_ID } from '../../lib/config';
 
-const allBooks = await sanityClient.fetch(queries.allBooks);
+const [allBooks, shortStories] = await Promise.all([
+  sanityClient.fetch(queries.allBooks),
+  fetchSubstackSection(SUBSTACK_SHORT_STORIES_SECTION_ID),
+]);
 ---
 
 <BaseLayout
@@ -50,11 +56,19 @@ const allBooks = await sanityClient.fetch(queries.allBooks);
     </section>
   )}
 
+  <!-- Short Stories Carousel -->
+  <section class="section-spacing">
+    <div class="container-art">
+      <p class="font-sans text-xs uppercase tracking-widest text-daos-clay mb-8">Short Stories</p>
+      <ShortStoriesCarousel posts={shortStories} client:load />
+    </div>
+  </section>
+
   <!-- Substack Feed -->
   <section class="section-spacing">
     <div class="container-art">
       <div class="max-w-2xl mx-auto">
-        <SubstackFeed limit={5} />
+        <SubstackFeed limit={5} excludeSectionId={SUBSTACK_SHORT_STORIES_SECTION_ID} />
       </div>
     </div>
   </section>

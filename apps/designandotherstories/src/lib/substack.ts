@@ -36,7 +36,7 @@ function extractAttribute(xml: string, tag: string, attr: string): string | null
   return match ? match[1] : null;
 }
 
-function parseRssFeed(xml: string, tag?: string): SubstackPost[] {
+function parseRssFeed(xml: string): SubstackPost[] {
   const itemPattern = /<item>([\s\S]*?)<\/item>/gi;
   const items: SubstackPost[] = [];
   let match: RegExpExecArray | null;
@@ -65,37 +65,51 @@ function parseRssFeed(xml: string, tag?: string): SubstackPost[] {
 
     if (!title || !link) continue;
 
-    if (tag) {
-      const normalizedTag = tag.toLowerCase();
-      const hasTag = categories.some((c) => c.toLowerCase() === normalizedTag);
-      if (!hasTag) continue;
-    }
-
     items.push({ title, link, excerpt, pubDate, coverImage, categories });
   }
 
   return items;
 }
 
-export async function fetchSubstackFeed(tag?: string): Promise<SubstackPost[]> {
+async function fetchFeedXml(url: string): Promise<string | null> {
   try {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 5000);
-
-    const response = await fetch(SUBSTACK_FEED_URL, {
-      signal: controller.signal,
-    });
+    const response = await fetch(url, { signal: controller.signal });
     clearTimeout(timeoutId);
-
     if (!response.ok) {
       console.error(`Substack RSS fetch failed: ${response.status} ${response.statusText}`);
-      return [];
+      return null;
     }
-
-    const xml = await response.text();
-    return parseRssFeed(xml, tag);
+    return await response.text();
   } catch (err) {
     console.error('Failed to fetch Substack feed:', err);
-    return [];
+    return null;
   }
+}
+
+/** Fetch the main feed, optionally excluding posts that appear in a given section feed. */
+export async function fetchSubstackFeed(excludeSectionId?: string): Promise<SubstackPost[]> {
+  const [mainXml, excludeXml] = await Promise.all([
+    fetchFeedXml(SUBSTACK_FEED_URL),
+    excludeSectionId
+      ? fetchFeedXml(`${SUBSTACK_FEED_URL}?sectionId=${excludeSectionId}`)
+      : Promise.resolve(null),
+  ]);
+
+  if (!mainXml) return [];
+
+  const posts = parseRssFeed(mainXml);
+
+  if (!excludeXml) return posts;
+
+  const excludedLinks = new Set(parseRssFeed(excludeXml).map((p) => p.link));
+  return posts.filter((p) => !excludedLinks.has(p.link));
+}
+
+/** Fetch only posts from a specific Substack section. */
+export async function fetchSubstackSection(sectionId: string): Promise<SubstackPost[]> {
+  const xml = await fetchFeedXml(`${SUBSTACK_FEED_URL}?sectionId=${sectionId}`);
+  if (!xml) return [];
+  return parseRssFeed(xml);
 }

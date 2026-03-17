@@ -4,7 +4,7 @@ import HeroSection from '../components/HeroSection.astro';
 import SectionHeader from '../components/SectionHeader.astro';
 import ShopCard from '../components/ShopCard.astro';
 import EventCard from '../components/EventCard.astro';
-import { SUBSTACK_URL } from '../lib/config';
+import { SUBSTACK_URL, SUBSTACK_SHORT_STORIES_SECTION_ID } from '../lib/config';
 import { sanityClient, urlFor, queries } from '../lib/sanity';
 import { fetchSubstackFeed } from '../lib/substack';
 
@@ -14,7 +14,7 @@ const [artistProfile, featuredWriting, shopItems, nextEvent, substackPosts] = aw
   sanityClient.fetch(queries.featuredWritingForHome),
   sanityClient.fetch(queries.featuredShopItems),
   sanityClient.fetch(queries.nextEvent),
-  fetchSubstackFeed(),
+  fetchSubstackFeed(SUBSTACK_SHORT_STORIES_SECTION_ID),
 ]);
 
 // Merge Sanity featured writing + Substack posts, up to 5 cards total
