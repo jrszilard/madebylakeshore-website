@@ -238,7 +238,7 @@ export const queries = {
 
   bookBySlug: `*[_type == "book" && slug.current == $slug][0] {
   _id, title, slug, coverImage, blurb, description, type, status, publishedDate,
-  fromThisWorld[]->{ _id, _type, title, slug, coverImage, type, status, substackUrl },
+  fromThisWorld[]->{ _id, _type, title, slug, coverImage, type, status, substackUrl, blurb, excerpt, publishedDate },
   purchaseLinks, substackTag, seo
 }`,
 

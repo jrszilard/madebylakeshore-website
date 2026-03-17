@@ -11,6 +11,9 @@ interface WorldItem {
   type?: string;
   status?: string;
   substackUrl?: string;
+  blurb?: string;
+  excerpt?: string;
+  publishedDate?: string;
 }
 
 interface Props {
@@ -22,12 +25,28 @@ const { items } = Astro.props;
 if (!items || items.length === 0) {
   return;
 }
+
+const typeLabels: Record<string, string> = {
+  'novel': 'Novel',
+  'novella': 'Novella',
+  'short-story-collection': 'Short Story Collection',
+  'poetry': 'Poetry',
+  'short-story': 'Short Story',
+  'essay': 'Essay',
+  'poem': 'Poem',
+  'serial-chapter': 'Serial Chapter',
+};
+
+function formatDate(dateStr: string): string {
+  const date = new Date(dateStr);
+  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).toUpperCase();
+}
 ---
 
 <section>
   <SectionHeader title="From This World" />
 
-  <div class="grid grid-cols-2 gap-4">
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
     {items.map((item) => {
       const isBook = item._type === 'book';
       const href = isBook && item.slug
@@ -36,18 +55,20 @@ if (!items || items.length === 0) {
       const isExternal = !isBook;
 
       const thumbUrl = item.coverImage
-        ? urlFor(item.coverImage).width(120).height(180).fit('crop').crop('focalpoint').url()
+        ? urlFor(item.coverImage).width(600).height(400).fit('crop').crop('focalpoint').url()
         : null;
+
+      const snippet = item.blurb || item.excerpt || '';
 
       return (
         <a
           href={href}
           target={isExternal ? '_blank' : undefined}
           rel={isExternal ? 'noopener noreferrer' : undefined}
-          class="group flex gap-3 bg-daos-paper rounded-sm p-3 hover:shadow-md transition-shadow duration-300"
+          class="group block"
         >
-          <!-- Small cover thumbnail -->
-          <div class="flex-shrink-0 w-10 h-[60px] rounded-sm overflow-hidden bg-daos-warm">
+          <!-- Image -->
+          <div class="aspect-[3/2] overflow-hidden rounded-sm bg-daos-warm mb-3">
             {thumbUrl ? (
               <img
                 src={thumbUrl}
@@ -59,14 +80,20 @@ if (!items || items.length === 0) {
             )}
           </div>
 
-          <!-- Info -->
-          <div class="flex-1 min-w-0 space-y-0.5">
-            <h4 class="font-sans text-xs font-medium text-daos-ink group-hover:text-daos-terracotta transition-colors leading-snug line-clamp-2">
+          <!-- Text -->
+          <div class="space-y-1">
+            {item.type && (
+              <p class="font-sans text-xs text-daos-clay uppercase tracking-wider">{typeLabels[item.type] ?? item.type}</p>
+            )}
+            <h4 class="font-display text-lg font-bold text-daos-ink group-hover:text-daos-terracotta transition-colors leading-snug">
               {item.title}
             </h4>
-            {item.type && (
-              <p class="font-sans text-xs text-daos-charcoal uppercase tracking-wider">
-                {item.type}
+            {snippet && (
+              <p class="font-body text-sm text-daos-charcoal line-clamp-2">{snippet}</p>
+            )}
+            {item.publishedDate && (
+              <p class="font-sans text-xs text-daos-charcoal/60 uppercase tracking-wider">
+                {formatDate(item.publishedDate)}
               </p>
             )}
           </div>

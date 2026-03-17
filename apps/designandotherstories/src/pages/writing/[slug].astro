@@ -60,9 +60,9 @@ if (book.description && Array.isArray(book.description)) {
 
 const showStatusBadge = book.status && book.status !== 'published';
 const badgeLabel =
-  book.status === 'coming_soon'
+  book.status === 'coming-soon'
     ? 'Coming Soon'
-    : book.status === 'in_progress'
+    : book.status === 'in-progress'
     ? 'In Progress'
     : book.status;
 
@@ -113,12 +113,17 @@ const seoTitle = book.seo?.title || book.title;
               {book.title}
             </h1>
 
-            <!-- Blurb -->
-            {book.blurb && (
-              <p class="font-body text-daos-charcoal text-lg leading-relaxed">
-                {book.blurb}
-              </p>
-            )}
+            <!-- Extended description (blockContent) -->
+    {descriptionHtml && (
+      <section class="section-spacing">
+        <div class="container-art">
+          <div
+            class="max-w-2xl mx-auto space-y-4 font-body text-daos-charcoal leading-relaxed"
+            set:html={descriptionHtml}
+          />
+        </div>
+      </section>
+    )}
 
             <!-- Purchase links -->
             {book.purchaseLinks && book.purchaseLinks.length > 0 && (
@@ -129,17 +134,7 @@ const seoTitle = book.seo?.title || book.title;
       </div>
     </section>
 
-    <!-- Extended description (blockContent) -->
-    {descriptionHtml && (
-      <section class="section-spacing bg-daos-paper">
-        <div class="container-art">
-          <div
-            class="max-w-2xl mx-auto prose prose-stone font-body text-daos-charcoal leading-relaxed"
-            set:html={descriptionHtml}
-          />
-        </div>
-      </section>
-    )}
+    
 
     <!-- From This World -->
     {book.fromThisWorld && book.fromThisWorld.length > 0 && (
