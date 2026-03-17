@@ -4,21 +4,22 @@ export default {
   theme: {
     extend: {
       colors: {
-        // MadeByLakeshore brand colors - sophisticated, professional
         'mbl': {
           'ink': '#1a1a2e',
+          'dusk': '#4a5c5c',
           'slate': '#2d3748',
           'stone': '#4a5568',
-          'mist': '#e2e8f0',
+          'mist': '#AFB9B8',
           'cloud': '#f7fafc',
-          'accent': '#3182ce',
-          'accent-dark': '#2c5282',
-          'warm': '#ed8936',
+          'accent': '#A05C1F',
+          'accent-dark': '#7A4516',
+          'warm': '#BC6C25',
+          'secondary': '#AFB9B8',
         }
       },
       fontFamily: {
-        'display': ['"DM Serif Display"', 'Georgia', 'serif'],
-        'heading': ['"Instrument Sans"', 'system-ui', 'sans-serif'],
+        'display': ['"Nunito"', 'system-ui', 'sans-serif'],
+        'heading': ['"Nunito"', 'system-ui', 'sans-serif'],
         'body': ['"Source Sans 3"', 'system-ui', 'sans-serif'],
         'mono': ['"JetBrains Mono"', 'monospace'],
       },

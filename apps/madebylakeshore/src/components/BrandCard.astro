@@ -10,13 +10,13 @@ interface Props {
 const { title, description, href, external, color } = Astro.props;
 
 const colorClasses = {
-  warm: 'from-mbl-warm/20 to-mbl-warm/5 hover:from-mbl-warm/30 hover:to-mbl-warm/10',
-  accent: 'from-mbl-accent/20 to-mbl-accent/5 hover:from-mbl-accent/30 hover:to-mbl-accent/10',
+  warm: 'from-mbl-mist/20 to-mbl-mist/5 hover:from-mbl-mist/30 hover:to-mbl-mist/10',
+  accent: 'from-mbl-mist/20 to-mbl-mist/5 hover:from-mbl-mist/30 hover:to-mbl-mist/10',
 };
 
 const accentColor = {
-  warm: 'text-mbl-warm',
-  accent: 'text-mbl-accent',
+  warm: 'text-white/90',
+  accent: 'text-white/90',
 };
 ---
 
@@ -43,7 +43,7 @@ const accentColor = {
     </div>
   </div>
   
-  <p class="text-mbl-mist/80 leading-relaxed">
+  <p class="text-white/70 leading-relaxed">
     {description}
   </p>
   
