@@ -131,9 +131,9 @@ const authorName = study?.author?.name || '';
   <!-- Hero Image -->
   <section class="pb-20">
     <div class="container-wide">
-      <div class="aspect-[21/9] bg-gradient-to-br from-mbl-slate to-mbl-dusk rounded-lg overflow-hidden">
+      <div class="rounded-lg overflow-hidden">
         {heroImage && (
-          <img src={heroImage} alt={study.title} class="w-full h-full object-cover" />
+          <img src={heroImage} alt={study.title} class="w-full h-auto block" fetchpriority="high" decoding="async" />
         )}
       </div>
     </div>
@@ -168,11 +168,11 @@ const authorName = study?.author?.name || '';
       <div class="grid lg:grid-cols-12 gap-16">
         <!-- Main Content -->
         <div class="lg:col-span-8">
-          <div class="prose prose-lg max-w-none">
+          <div>
             {study.challenge && (
               <>
                 <h2 class="text-display text-2xl mb-6">The Challenge</h2>
-                <div class="text-mbl-stone leading-relaxed whitespace-pre-line mb-12">
+                <div class="text-base text-mbl-stone leading-relaxed whitespace-pre-line mb-12">
                   {blocksToText(study.challenge)}
                 </div>
               </>
@@ -181,7 +181,7 @@ const authorName = study?.author?.name || '';
             {study.solution && (
               <>
                 <h2 class="text-display text-2xl mb-6">Our Approach</h2>
-                <div class="text-mbl-stone leading-relaxed whitespace-pre-line mb-12">
+                <div class="text-base text-mbl-stone leading-relaxed whitespace-pre-line mb-12">
                   {blocksToText(study.solution)}
                 </div>
               </>
@@ -190,7 +190,7 @@ const authorName = study?.author?.name || '';
             {study.results && (
               <>
                 <h2 class="text-display text-2xl mb-6">The Solution</h2>
-                <div class="text-mbl-stone leading-relaxed whitespace-pre-line mb-12">
+                <div class="text-base text-mbl-stone leading-relaxed whitespace-pre-line mb-12">
                   {blocksToText(study.results)}
                 </div>
               </>
@@ -230,9 +230,9 @@ const authorName = study?.author?.name || '';
 
             <!-- CTA -->
             <div class="bg-mbl-dusk rounded-lg p-6 text-white">
-              <h3 class="font-display text-lg mb-2">Need similar results?</h3>
-              <p class="text-mbl-mist/80 text-sm mb-4">Let's discuss how we can help your business.</p>
-              <a href="/contact" class="inline-flex items-center gap-2 text-sm font-heading font-medium text-mbl-accent hover:text-white transition-colors">
+              <h3 class="font-display text-lg mb-2 text-white">Need similar results?</h3>
+              <p class="text-white/70 text-sm mb-4">Let's discuss how we can help your business.</p>
+              <a href="/contact" class="inline-flex items-center gap-2 text-sm font-heading font-medium text-white underline underline-offset-2 hover:no-underline transition-all">
                 Get in touch
                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
@@ -248,22 +248,114 @@ const authorName = study?.author?.name || '';
   <!-- Testimonial -->
   {study.testimonial && study.testimonial.quote && (
     <section class="section-spacing bg-white">
-      <div class="container-narrow text-center">
-        <svg class="w-12 h-12 text-mbl-mist mx-auto mb-8" fill="currentColor" viewBox="0 0 24 24">
+      <figure class="container-narrow text-center">
+        <svg class="w-12 h-12 text-mbl-mist mx-auto mb-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
           <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
         </svg>
         <blockquote class="text-2xl md:text-3xl font-display text-mbl-ink leading-relaxed mb-8">
           "{study.testimonial.quote}"
         </blockquote>
-        <div>
+        <figcaption>
           <p class="font-heading font-semibold text-mbl-ink">{study.testimonial.authorName}</p>
           {study.testimonial.authorTitle && (
             <p class="text-mbl-stone">{study.testimonial.authorTitle}{study.testimonial.company ? `, ${study.testimonial.company}` : ''}</p>
           )}
-        </div>
-      </div>
+        </figcaption>
+      </figure>
     </section>
   )}
+
+  <!-- Gallery Carousel -->
+  {study.gallery && study.gallery.length > 0 && (
+    <section class="pb-20">
+      <div class="relative">
+        <div
+          id="gallery-track"
+          class="flex gap-4 overflow-x-auto snap-x snap-mandatory scroll-smooth px-6 md:px-12 lg:px-24"
+          style="scrollbar-width: none; -ms-overflow-style: none;"
+        >
+          {study.gallery.map((img: any, i: number) => (
+            <div class="snap-start flex-shrink-0 w-[80vw] md:w-[60vw] lg:w-[45vw]">
+              <button
+                class="gallery-item w-full text-left cursor-zoom-in"
+                data-index={i}
+                data-src={`${img.imageUrl}?w=2400&auto=format`}
+                data-alt={img.alt || study.title}
+                data-caption={img.caption || ''}
+                aria-label={`View ${img.alt || 'image'} fullscreen`}
+              >
+                <img
+                  src={`${img.imageUrl}?w=1200&auto=format`}
+                  alt={img.alt || study.title}
+                  class="w-full h-auto rounded-lg block"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </button>
+              {img.caption && (
+                <p class="text-sm text-mbl-stone mt-2 px-1">{img.caption}</p>
+              )}
+            </div>
+          ))}
+        </div>
+
+        <!-- Prev / Next buttons -->
+        <button
+          id="gallery-prev"
+          aria-label="Previous image"
+          class="absolute left-2 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/90 rounded-full shadow flex items-center justify-center hover:bg-white transition-colors"
+        >
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+        <button
+          id="gallery-next"
+          aria-label="Next image"
+          class="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/90 rounded-full shadow flex items-center justify-center hover:bg-white transition-colors"
+        >
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+      </div>
+
+      <style>
+        #gallery-track::-webkit-scrollbar { display: none; }
+      </style>
+    </section>
+  )}
+
+  <!-- Lightbox (always in DOM so Astro script can reference it) -->
+  <div
+    id="lightbox"
+    class="fixed inset-0 z-50 bg-black/90 flex items-center justify-center opacity-0 pointer-events-none"
+    style="transition: opacity 0.2s ease;"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="lightbox-title"
+  >
+    <h2 id="lightbox-title" class="sr-only">Image viewer</h2>
+    <button id="lb-close" aria-label="Close" class="absolute top-4 right-4 text-white/70 hover:text-white transition-colors">
+      <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+    <button id="lb-prev" aria-label="Previous" class="absolute left-4 top-1/2 -translate-y-1/2 text-white/70 hover:text-white transition-colors">
+      <svg class="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+      </svg>
+    </button>
+    <button id="lb-next" aria-label="Next" class="absolute right-4 top-1/2 -translate-y-1/2 text-white/70 hover:text-white transition-colors">
+      <svg class="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+      </svg>
+    </button>
+    <div class="max-w-[90vw] max-h-[90vh] flex flex-col items-center gap-3">
+      <img id="lb-img" src="" alt="" class="max-w-full max-h-[80vh] object-contain rounded-lg" />
+      <p id="lb-caption" class="text-white/60 text-sm"></p>
+    </div>
+  </div>
 
   <!-- Next Case Study -->
   {nextStudy && (
@@ -288,3 +380,73 @@ const authorName = study?.author?.name || '';
     </Fragment>
   )}
 </BaseLayout>
+
+<script>
+  // --- Carousel ---
+  const track = document.getElementById('gallery-track') as HTMLElement | null;
+  document.getElementById('gallery-prev')?.addEventListener('click', () => {
+    if (!track) return;
+    const item = track.querySelector('div') as HTMLElement;
+    track.scrollBy({ left: -(item ? item.offsetWidth + 16 : track.offsetWidth), behavior: 'smooth' });
+  });
+  document.getElementById('gallery-next')?.addEventListener('click', () => {
+    if (!track) return;
+    const item = track.querySelector('div') as HTMLElement;
+    track.scrollBy({ left: item ? item.offsetWidth + 16 : track.offsetWidth, behavior: 'smooth' });
+  });
+
+  // --- Lightbox ---
+  const items = Array.from(document.querySelectorAll<HTMLButtonElement>('.gallery-item'));
+  const lightbox = document.getElementById('lightbox') as HTMLElement;
+  const lbImg = document.getElementById('lb-img') as HTMLImageElement;
+  const lbCaption = document.getElementById('lb-caption') as HTMLElement;
+  let currentIndex = 0;
+
+  let lastFocused: HTMLElement | null = null;
+
+  function openLightbox(index: number) {
+    currentIndex = index;
+    const item = items[index];
+    lbImg.src = item.dataset.src || '';
+    lbImg.alt = item.dataset.alt || '';
+    lbCaption.textContent = item.dataset.caption || '';
+    lightbox.classList.remove('opacity-0', 'pointer-events-none');
+    document.body.style.overflow = 'hidden';
+    lastFocused = document.activeElement as HTMLElement;
+    document.getElementById('lb-close')?.focus();
+  }
+
+  function closeLightbox() {
+    lightbox.classList.add('opacity-0', 'pointer-events-none');
+    document.body.style.overflow = '';
+    lastFocused?.focus();
+  }
+
+  // Focus trap
+  lightbox?.addEventListener('keydown', (e) => {
+    if (e.key !== 'Tab') return;
+    const focusable = Array.from(lightbox.querySelectorAll<HTMLElement>('button:not([disabled])'));
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (e.shiftKey ? document.activeElement === first : document.activeElement === last) {
+      e.preventDefault();
+      (e.shiftKey ? last : first).focus();
+    }
+  });
+
+  function navigate(dir: number) {
+    openLightbox((currentIndex + dir + items.length) % items.length);
+  }
+
+  items.forEach((item, i) => item.addEventListener('click', () => openLightbox(i)));
+  document.getElementById('lb-close')?.addEventListener('click', closeLightbox);
+  document.getElementById('lb-prev')?.addEventListener('click', () => navigate(-1));
+  document.getElementById('lb-next')?.addEventListener('click', () => navigate(1));
+  lightbox?.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
+  document.addEventListener('keydown', (e) => {
+    if (lightbox?.classList.contains('pointer-events-none')) return;
+    if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowLeft') navigate(-1);
+    if (e.key === 'ArrowRight') navigate(1);
+  });
+</script>

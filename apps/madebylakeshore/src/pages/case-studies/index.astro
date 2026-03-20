@@ -47,7 +47,7 @@ const categoryColors: Record<string, string> = {
     <HeroTwinkle />
     <!-- Constellation — connecting insights -->
     <div class="absolute bottom-0 right-0 pointer-events-none select-none overflow-hidden w-[520px] h-[400px]">
-      <svg viewBox="0 0 520 400" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full opacity-40">
+      <svg viewBox="0 0 520 400" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full opacity-40" aria-hidden="true">
         <!-- Connector lines -->
         <line x1="420" y1="60" x2="320" y2="140" stroke="white" stroke-width="1" opacity="0.4"/>
         <line x1="420" y1="60" x2="480" y2="180" stroke="white" stroke-width="1" opacity="0.4"/>
@@ -105,7 +105,9 @@ const categoryColors: Record<string, string> = {
   <section class="pt-20 md:pt-28 pb-20">
     <div class="container-wide">
       <div class="space-y-40">
-        {caseStudies.map((study: any, index: number) => (
+        {caseStudies.map((study: any, index: number) => {
+          const isFirst = index === 0;
+          return (
           <a 
             href={`/case-studies/${study.slug}`}
             class="group block"
@@ -114,7 +116,14 @@ const categoryColors: Record<string, string> = {
               <!-- Image -->
               <div class={`relative rounded-lg overflow-hidden ${index % 2 === 1 ? 'lg:order-2' : ''}`}>
                 {study.heroImage ? (
-                  <img src={study.heroImage} alt={study.title} class="w-full h-auto block" />
+                  <img
+                    src={study.heroImage}
+                    alt={study.title}
+                    class="w-full h-auto block"
+                    loading={isFirst ? undefined : 'lazy'}
+                    fetchpriority={isFirst ? 'high' : undefined}
+                    decoding="async"
+                  />
                 ) : (
                   <div class="aspect-[4/3] bg-gradient-to-br from-mbl-slate to-mbl-dusk opacity-80"></div>
                 )}
@@ -170,7 +179,8 @@ const categoryColors: Record<string, string> = {
               </div>
             </article>
           </a>
-        ))}
+          );
+        })}
       </div>
     </div>
   </section>

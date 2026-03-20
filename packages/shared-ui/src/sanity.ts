@@ -125,7 +125,12 @@ export const queries = {
     clientLogo,
     category,
     featuredImage,
-    gallery,
+    gallery[] {
+      _key,
+      alt,
+      caption,
+      "imageUrl": asset->url
+    },
     excerpt,
     challenge,
     solution,
@@ -166,6 +171,15 @@ export const queries = {
     client
   }`,
 
+  studioSettings: `*[_type == "studioSettings" && _id == "studioSettings"][0] {
+    timeline[] {
+      _key,
+      year,
+      title,
+      description
+    }
+  }`,
+
   allPeople: `*[_type == "person"] {
     _id,
     name,
@@ -173,7 +187,12 @@ export const queries = {
     role,
     image,
     shortBio,
-    calendlyUrl
+    calendlyUrl,
+    companies[] {
+      _key,
+      name,
+      "logoUrl": logo.asset->url
+    }
   }`,
 
   caseStudiesByPerson: `*[_type == "caseStudy" && author->slug.current == $slug && !(isProtected == true && listingVisibility == "hidden")] | order(coalesce(order, 100) asc, publishedAt desc) {

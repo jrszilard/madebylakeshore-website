@@ -38,7 +38,8 @@ export function getCookieName(slug: string): string {
 export function buildCookieHeader(slug: string, password: string): string {
   const name = getCookieName(slug);
   const value = computeHmac(slug, password);
-  return `${name}=${value}; Path=/; HttpOnly; Secure; SameSite=Strict`;
+  const secure = typeof process !== 'undefined' && process.env.NODE_ENV === 'production' ? '; Secure' : '';
+  return `${name}=${value}; Path=/; HttpOnly${secure}; SameSite=Strict`;
 }
 
 // --- Timing-safe password comparison ---

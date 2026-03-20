@@ -1,4 +1,5 @@
 // Document types
+import studioSettings from './documents/studioSettings';
 import person from './documents/person';
 import service from './documents/service';
 import caseStudy from './documents/caseStudy';
@@ -26,6 +27,7 @@ import figure from './objects/figure';
 
 export const schemaTypes = [
   // Documents
+  studioSettings,
   person,
   service,
   caseStudy,
