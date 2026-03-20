@@ -21,12 +21,16 @@ export default function ShortStoriesCarousel({ posts }: Props) {
     updateArrows();
   }, [posts]);
 
+  function getScrollBehavior(): ScrollBehavior {
+    return typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
+  }
+
   function scrollPrev() {
-    scrollRef.current?.scrollBy({ left: -320, behavior: 'smooth' });
+    scrollRef.current?.scrollBy({ left: -320, behavior: getScrollBehavior() });
   }
 
   function scrollNext() {
-    scrollRef.current?.scrollBy({ left: 320, behavior: 'smooth' });
+    scrollRef.current?.scrollBy({ left: 320, behavior: getScrollBehavior() });
   }
 
   if (posts.length === 0) {

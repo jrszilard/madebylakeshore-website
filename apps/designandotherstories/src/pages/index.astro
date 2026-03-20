@@ -36,59 +36,11 @@ const typeLabels: Record<string, string> = {
 
 <BaseLayout
   title="Home"
-  description="Original paintings, drawings, and written works by Design & Other Stories. Art. Words. Worlds."
+  description="Design & Other Stories is a small studio making literary fiction and traditional art by hand in New Hampshire. Original paintings, drawings, and books — made one piece at a time."
   showSnipcart={shopItems && shopItems.length > 0}
 >
   <!-- 1. Hero -->
   <HeroSection heroImage={artistProfile?.heroImage} />
-
-  <!-- 2. Manifesto -->
-  <section class="section-spacing">
-    <div class="container-art">
-      <div class="max-w-2xl mx-auto space-y-10">
-        <h2 class="font-display italic text-display-lg text-daos-ink leading-tight">
-          written. painted. left to linger.
-        </h2>
-        <p class="font-body text-lg text-daos-charcoal leading-relaxed">
-          This is a small, careful body of work. Literary fiction and traditional art made one piece at a time, without shortcuts.
-        </p>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 pt-2">
-          <div class="space-y-3">
-            <p class="font-display text-xl text-daos-ink">Words</p>
-            <p class="font-body text-daos-charcoal leading-relaxed">Literary romance that takes its time. Slow burn, real consequence, quiet devastation.</p>
-            <a href="/writing" class="inline-block font-sans text-sm text-daos-terracotta hover:underline transition-colors">Read the fiction &rarr;</a>
-          </div>
-          <div class="space-y-3">
-            <p class="font-display text-xl text-daos-ink">Images</p>
-            <p class="font-body text-daos-charcoal leading-relaxed">Ink, watercolor, graphite. Made by hand in New Hampshire.</p>
-            <a href="/gallery" class="inline-block font-sans text-sm text-daos-terracotta hover:underline transition-colors">See the work &rarr;</a>
-          </div>
-        </div>
-        <p class="font-body text-daos-charcoal leading-relaxed pt-2">
-          A practice, not a product — because the world needs more things made with intention and care.
-        </p>
-      </div>
-    </div>
-  </section>
-
-  <!-- 3. Next Event -->
-  {nextEvent && (
-    <section class="section-spacing bg-daos-paper">
-      <div class="container-art">
-        <SectionHeader title="Let's Hang Out Together" viewAllHref="/events" />
-
-        <EventCard
-          title={nextEvent.title}
-          slug={nextEvent.slug}
-          startDate={nextEvent.startDate}
-          endDate={nextEvent.endDate}
-          location={nextEvent.location}
-          eventType={nextEvent.eventType}
-          isPast={false}
-        />
-      </div>
-    </section>
-  )}
 
   <!-- 3. From the Studio (shop) -->
   {shopItems && shopItems.length > 0 && (
@@ -113,10 +65,29 @@ const typeLabels: Record<string, string> = {
     </section>
   )}
 
-  <!-- 4. Latest Writing -->
-  <section class="section-spacing bg-daos-paper">
+  <!-- 4. Next Event -->
+  {nextEvent && (
+    <section class="section-spacing bg-daos-paper">
+      <div class="container-art">
+        <SectionHeader title="Out in the World" viewAllHref="/events" />
+
+        <EventCard
+          title={nextEvent.title}
+          slug={nextEvent.slug}
+          startDate={nextEvent.startDate}
+          endDate={nextEvent.endDate}
+          location={nextEvent.location}
+          eventType={nextEvent.eventType}
+          isPast={false}
+        />
+      </div>
+    </section>
+  )}
+
+  <!-- 5. Latest Writing -->
+  <section class="section-spacing bg-daos-cream">
     <div class="container-art">
-      <SectionHeader title="See What We're Up To" viewAllHref="/writing" />
+      <SectionHeader title="From the Desk" viewAllHref="/writing" />
 
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
         {sanityWritingItems.map((item: any) => {
@@ -160,7 +131,7 @@ const typeLabels: Record<string, string> = {
               )}
             </div>
             <div class="space-y-1">
-              <p class="font-sans text-xs text-daos-clay uppercase tracking-wider">From Substack</p>
+              <p class="font-sans text-xs text-daos-clay uppercase tracking-wider">Essay</p>
               <h3 class="font-display text-lg font-bold text-daos-ink group-hover:text-daos-terracotta transition-colors leading-snug">{post.title}</h3>
               {post.excerpt && <p class="font-body text-sm text-daos-charcoal line-clamp-2">{post.excerpt}</p>}
             </div>
@@ -170,7 +141,7 @@ const typeLabels: Record<string, string> = {
 
       <div class="mt-10 flex justify-center">
         <a href={`${SUBSTACK_URL}/subscribe`} target="_blank" rel="noopener noreferrer" class="btn-warm">
-          Subscribe for more
+          Stay in the loop
         </a>
       </div>
     </div>

@@ -46,15 +46,15 @@ export default function ImageViewer({ images }: Props) {
               onClick={() => setActiveIndex(i)}
               aria-label={`View image ${i + 1}`}
               className={[
-                'w-16 h-16 rounded-sm overflow-hidden border-2 transition-colors duration-200 flex-shrink-0',
+                'w-16 h-16 rounded-sm overflow-hidden border-2 transition-colors duration-200 flex-shrink-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-daos-terracotta-dark',
                 i === activeIndex
-                  ? 'border-daos-terracotta'
+                  ? 'border-daos-terracotta-dark'
                   : 'border-transparent hover:border-daos-clay',
               ].join(' ')}
             >
               <img
                 src={img.thumbUrl}
-                alt={`Thumbnail ${i + 1}`}
+                alt={img.alt || `Image ${i + 1}`}
                 className="w-full h-full object-cover"
               />
             </button>
