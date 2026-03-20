@@ -1,136 +1,168 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionHeader from '../components/SectionHeader.astro';
 import { sanityClient, urlFor, queries } from '../lib/sanity';
+import { SUBSTACK_URL } from '../lib/config';
 
-const profile = await sanityClient.fetch(queries.artistProfile);
+const [profile, featuredArtwork, nextEvent] = await Promise.all([
+  sanityClient.fetch(queries.artistProfile),
+  sanityClient.fetch(queries.featuredArtwork),
+  sanityClient.fetch(queries.nextEvent),
+]);
 
 const portraitUrl = profile?.portrait?.asset
-  ? urlFor(profile.portrait).width(600).height(750).fit('crop').crop('focalpoint').url()
+  ? urlFor(profile.portrait).width(1400).height(1000).fit('crop').crop('focalpoint').url()
   : null;
-
-// BlockContent serializer
-function blockContentToHtml(blocks: any[]): string {
-  if (!Array.isArray(blocks)) return '';
-  return blocks
-    .map((block) => {
-      if (block._type !== 'block') return '';
-      const tag =
-        block.style === 'h2' ? 'h2' :
-        block.style === 'h3' ? 'h3' :
-        block.style === 'h4' ? 'h4' :
-        block.style === 'blockquote' ? 'blockquote' :
-        'p';
-
-      const text = (block.children ?? [])
-        .map((span: any) => {
-          let t = (span.text ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-          if (span.marks?.includes('strong')) t = `<strong>${t}</strong>`;
-          if (span.marks?.includes('em')) t = `<em>${t}</em>`;
-          return t;
-        })
-        .join('');
-
-      return `<${tag}>${text}</${tag}>`;
-    })
-    .join('\n');
-}
-
-let bioHtml = '';
-if (profile?.bio && Array.isArray(profile.bio)) {
-  bioHtml = blockContentToHtml(profile.bio);
-}
 ---
 
 <BaseLayout
   title="About"
-  description={profile?.shortBio || 'Meet the artist behind Design & Other Stories — paintings, drawings, and written works crafted with intention.'}
+  description="Design & Other Stories is the work of W. H. Bonilla, painter, printmaker, and writer based in New Hampshire. Art you can put on your wall and fiction about the people who show up for each other."
 >
+
+  <!-- 1. Full-bleed portrait -->
+  <div class="relative w-full h-[75vh] overflow-hidden bg-daos-warm">
+    {portraitUrl ? (
+      <>
+        <img
+          src={portraitUrl}
+          alt={profile?.name || 'W. H. Bonilla'}
+          class="w-full h-full object-cover object-top"
+        />
+        <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-daos-cream"></div>
+      </>
+    ) : (
+      <div class="w-full h-full bg-gradient-to-br from-daos-warm to-daos-clay"></div>
+    )}
+  </div>
+
+  <!-- 2. Bio -->
   <section class="section-spacing">
     <div class="container-art">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16 items-start">
-
-        <!-- Left: Portrait -->
-        <div class="aspect-[4/5] overflow-hidden rounded-sm shadow-md bg-daos-warm">
-          {portraitUrl ? (
-            <img
-              src={portraitUrl}
-              alt={profile?.name || 'Portrait of the artist'}
-              class="w-full h-full object-cover"
-            />
-          ) : (
-            <div class="w-full h-full bg-gradient-to-br from-daos-warm to-daos-clay flex items-center justify-center">
-              <span class="font-display text-daos-ink/30 text-2xl text-center px-8">
-                {profile?.name || 'Design & Other Stories'}
-              </span>
-            </div>
-          )}
+      <div class="max-w-2xl mx-auto space-y-6">
+        <p class="font-sans text-xs uppercase tracking-widest text-daos-terracotta-dark">About</p>
+        <h1 class="font-display italic text-display md:text-display-lg text-daos-ink leading-tight">
+          The studio.
+        </h1>
+        <p class="font-body text-daos-charcoal text-lg leading-relaxed italic border-l-2 border-daos-clay pl-4">
+          Making things you can hold in a world that keeps asking you to let go of everything physical.
+        </p>
+        <div class="prose prose-stone font-body text-daos-charcoal leading-relaxed max-w-none">
+          <p>
+            Design & Other Stories is the work of W. H. Bonilla, painter, printmaker, and writer based in New Hampshire.
+          </p>
+          <p>
+            The studio makes two kinds of things. Art you can put on your wall, and fiction about the people who show up for each other. Ink on paper, watercolor, graphite. Novels and short stories about connection, found family, and the weight of ordinary moments.
+          </p>
+          <p>
+            Both come from the same place. A belief that the things we choose to bring into our lives, the objects, the stories, should be made with care, by a person, on purpose.
+          </p>
+          <p><em>A practice, not a product.</em></p>
         </div>
 
-        <!-- Right: Bio -->
-        <div class="space-y-6">
-          <div>
-            <p class="font-sans text-xs uppercase tracking-widest text-daos-terracotta mb-4">About</p>
-            <h1 class="font-display text-display md:text-display-lg text-daos-ink leading-tight">
-              {profile?.name ? `About ${profile.name}` : 'About the Artist'}
-            </h1>
-          </div>
-
-          {profile?.shortBio && (
-            <p class="font-body text-daos-charcoal text-lg leading-relaxed italic border-l-2 border-daos-clay pl-4">
-              {profile.shortBio}
-            </p>
-          )}
-
-          {bioHtml ? (
-            <div
-              class="prose prose-stone font-body text-daos-charcoal leading-relaxed max-w-none"
-              set:html={bioHtml}
-            />
-          ) : !profile && (
-            <div class="prose prose-stone font-body text-daos-charcoal leading-relaxed">
-              <p>
-                Design & Other Stories is a creative practice exploring the intersections of art,
-                design, and everyday life. Through paintings, drawings, and written works, each
-                piece is crafted with intention and care.
-              </p>
-              <p>
-                The work spans mediums and disciplines, united by a curiosity about the beauty
-                found in ordinary moments and the stories objects carry with them.
-              </p>
-            </div>
-          )}
-
-          <!-- Social links -->
-          {profile?.socialLinks && profile.socialLinks.length > 0 && (
-            <div class="flex flex-wrap gap-3 pt-2">
-              {profile.socialLinks.map((link: any) => (
-                <a
-                  href={link.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="btn-outline text-sm"
-                >
-                  {link.platform || link.label || 'Link'}
-                </a>
-              ))}
-            </div>
-          )}
-
-          {profile?.substackUrl && (
-            <div class="pt-2">
+        {profile?.socialLinks && profile.socialLinks.length > 0 && (
+          <div class="flex flex-wrap gap-3 pt-2">
+            {profile.socialLinks.map((link: any) => (
               <a
-                href={profile.substackUrl}
+                href={link.url}
                 target="_blank"
                 rel="noopener noreferrer"
                 class="btn-outline text-sm"
               >
-                Read on Substack
+                {link.platform || link.label || 'Link'}
+              </a>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. Selected work -->
+  {featuredArtwork && featuredArtwork.length > 0 && (
+    <section class="section-spacing bg-daos-paper">
+      <div class="container-art">
+        <SectionHeader title="Selected Work" viewAllHref="/gallery" />
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+          {featuredArtwork.map((piece: any) => {
+            const thumbUrl = piece.images?.[0]?.asset
+              ? urlFor(piece.images[0]).width(600).height(750).fit('crop').crop('focalpoint').url()
+              : null;
+            return (
+              <a href={`/gallery/${piece.slug?.current}`} class="group block">
+                <div class="aspect-[4/5] overflow-hidden rounded-sm bg-daos-warm mb-3">
+                  {thumbUrl ? (
+                    <img
+                      src={thumbUrl}
+                      alt={piece.title}
+                      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <div class="w-full h-full bg-gradient-to-br from-daos-warm to-daos-clay"></div>
+                  )}
+                </div>
+                <p class="font-display text-sm text-daos-ink group-hover:text-daos-terracotta-dark transition-colors leading-snug">{piece.title}</p>
+                {piece.medium && <p class="font-sans text-xs text-daos-clay mt-0.5">{piece.medium}</p>}
+              </a>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- 4. Find me -->
+  <section class="section-spacing">
+    <div class="container-art">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16">
+
+        <!-- Next event -->
+        <div class="space-y-4">
+          <p class="font-sans text-xs uppercase tracking-widest text-daos-terracotta-dark">Out in the world</p>
+          {nextEvent ? (
+            <div class="space-y-2">
+              <h2 class="font-display text-xl text-daos-ink">{nextEvent.title}</h2>
+              {nextEvent.location?.city && (
+                <p class="font-sans text-sm text-daos-charcoal">
+                  {[nextEvent.location.venueName, nextEvent.location.city, nextEvent.location.state].filter(Boolean).join(', ')}
+                </p>
+              )}
+              <p class="font-sans text-sm text-daos-charcoal">
+                {new Date(nextEvent.startDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' })}
+              </p>
+              <a href={`/events/${nextEvent.slug?.current}`} class="inline-block font-sans text-sm text-daos-terracotta-dark hover:underline transition-colors mt-2">
+                Details &rarr;
               </a>
             </div>
+          ) : (
+            <p class="font-body text-daos-charcoal leading-relaxed">
+              No upcoming events right now. Check back soon, or subscribe to hear first.
+            </p>
           )}
+          <a href="/events" class="inline-block font-sans text-sm text-daos-charcoal hover:text-daos-ink transition-colors underline">
+            All events
+          </a>
+        </div>
+
+        <!-- Newsletter -->
+        <div class="space-y-4">
+          <p class="font-sans text-xs uppercase tracking-widest text-daos-terracotta-dark">Stay in the loop</p>
+          <p class="font-body text-daos-charcoal leading-relaxed">
+            New work, upcoming events, and occasional dispatches from the studio. No noise.
+          </p>
+          <a
+            href={`${SUBSTACK_URL}/subscribe`}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="btn-warm inline-flex"
+          >
+            Subscribe
+          </a>
         </div>
 
       </div>
     </div>
   </section>
+
 </BaseLayout>

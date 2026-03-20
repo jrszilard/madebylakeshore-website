@@ -12,7 +12,7 @@ interface Props {
 
 const {
   title,
-  description = 'Original artwork, paintings, drawings, and written works by a passionate artist. Handcrafted pieces for collectors and art enthusiasts.',
+  description = 'Design & Other Stories is a small studio making literary fiction and traditional art by hand in New Hampshire. Original paintings, drawings, and books — made one piece at a time.',
   noindex = false,
   showSnipcart = false,
 } = Astro.props;
@@ -47,9 +47,12 @@ const snipcartApiKey = import.meta.env.PUBLIC_SNIPCART_API_KEY || 'your-snipcart
     <title>{siteTitle}</title>
   </head>
   <body class="min-h-screen flex flex-col paper-texture">
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-daos-ink focus:text-daos-cream focus:rounded-sm focus:text-sm focus:font-sans">
+      Skip to main content
+    </a>
     <Navigation />
 
-    <main class="flex-1">
+    <main id="main-content" class="flex-1">
       <slot />
     </main>
 

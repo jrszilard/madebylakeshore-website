@@ -11,6 +11,7 @@ export default {
           'warm': '#e8dfd3',
           'clay': '#c4a77d',
           'terracotta': '#c67c4e',
+          'terracotta-dark': '#a0562e',
           'ink': '#2d2a26',
           'charcoal': '#4a4641',
           'sage': '#7d8471',

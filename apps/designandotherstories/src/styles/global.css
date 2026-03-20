@@ -33,7 +33,12 @@
   }
   
   .btn-warm {
-    @apply inline-flex items-center gap-2 px-6 py-3 bg-daos-terracotta text-white font-sans font-medium rounded-sm hover:bg-daos-terracotta/90 transition-colors duration-200;
+    @apply inline-flex items-center gap-2 px-6 py-3 text-white font-sans font-medium rounded-sm transition-colors duration-200;
+    background-color: #a0562e;
+  }
+
+  .btn-warm:hover {
+    background-color: rgb(160 86 46 / 0.9);
   }
   
   .btn-outline {
@@ -47,13 +52,66 @@
 
   .btn-warm:focus-visible,
   .btn-outline:focus-visible {
-    @apply outline-2 outline-offset-2 outline-daos-terracotta;
+    @apply outline-2 outline-offset-2;
+    outline-color: #a0562e;
+  }
+
+  /* Link underline animation */
+  .link-underline {
+    @apply relative;
+  }
+
+  .link-underline::after {
+    content: '';
+    @apply absolute bottom-0 left-0 w-full h-px;
+    background-color: #a0562e;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 300ms ease;
+  }
+
+  .link-underline:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
   }
 }
 
 @layer base {
   :focus-visible {
-    @apply outline-2 outline-offset-2 outline-daos-terracotta;
+    @apply outline-2 outline-offset-2;
+    outline-color: #a0562e;
+  }
+}
+
+@layer utilities {
+  .animate-fade-in {
+    animation: fade-in 0.8s ease-out both;
+  }
+
+  .animate-slide-up {
+    animation: slide-up 0.8s ease-out both;
+  }
+
+  .animate-stagger-1 { animation-delay: 0.1s; }
+  .animate-stagger-2 { animation-delay: 0.2s; }
+  .animate-stagger-3 { animation-delay: 0.3s; }
+  .animate-stagger-4 { animation-delay: 0.4s; }
+  .animate-stagger-5 { animation-delay: 0.5s; }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
