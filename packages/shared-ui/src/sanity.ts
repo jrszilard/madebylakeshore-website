@@ -176,6 +176,51 @@ export const queries = {
     calendlyUrl
   }`,
 
+  caseStudiesByPerson: `*[_type == "caseStudy" && author->slug.current == $slug && !(isProtected == true && listingVisibility == "hidden")] | order(coalesce(order, 100) asc, publishedAt desc) {
+    _id,
+    title,
+    slug,
+    client,
+    category,
+    excerpt,
+    featuredImage,
+    metrics,
+    isProtected
+  }`,
+
+  personBySlug: `*[_type == "person" && slug.current == $slug][0] {
+    _id,
+    name,
+    slug,
+    role,
+    headline,
+    image,
+    bio,
+    shortBio,
+    email,
+    social,
+    calendlyUrl,
+    location,
+    interests[] {
+      label,
+      "imageUrl": image.asset->url
+    },
+    favoriteShows,
+    favoriteBooks,
+    currentlyListening,
+    photoGallery[] {
+      _key,
+      alt,
+      caption,
+      asset
+    },
+    companies[] {
+      _key,
+      name,
+      logo
+    }
+  }`,
+
   // DesignAndOtherStories queries
   allArtwork: `*[_type == "artwork"] | order(year desc) {
     _id,

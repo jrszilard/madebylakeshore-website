@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import HeroTwinkle from '../../components/HeroTwinkle.astro';
 import { sanityClient, urlFor, queries } from '../../lib/sanity';
 
 export const prerender = false;
@@ -39,17 +40,61 @@ const categoryColors: Record<string, string> = {
   description="In-depth looks at how we've helped businesses solve complex challenges with design, data, and AI."
 >
   <!-- Hero -->
-  <section class="section-spacing">
-    <div class="container-wide">
+  <section class="relative section-spacing bg-[#1e3030] overflow-hidden">
+    <div class="absolute inset-0 opacity-5">
+      <div class="absolute inset-0 bg-pattern"></div>
+    </div>
+    <HeroTwinkle />
+    <!-- Constellation — connecting insights -->
+    <div class="absolute bottom-0 right-0 pointer-events-none select-none overflow-hidden w-[520px] h-[400px]">
+      <svg viewBox="0 0 520 400" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full opacity-40">
+        <!-- Connector lines -->
+        <line x1="420" y1="60" x2="320" y2="140" stroke="white" stroke-width="1" opacity="0.4"/>
+        <line x1="420" y1="60" x2="480" y2="180" stroke="white" stroke-width="1" opacity="0.4"/>
+        <line x1="320" y1="140" x2="200" y2="100" stroke="white" stroke-width="1" opacity="0.4"/>
+        <line x1="320" y1="140" x2="260" y2="240" stroke="white" stroke-width="1" opacity="0.4"/>
+        <line x1="320" y1="140" x2="480" y2="180" stroke="white" stroke-width="1" opacity="0.3"/>
+        <line x1="200" y1="100" x2="100" y2="180" stroke="white" stroke-width="1" opacity="0.4"/>
+        <line x1="200" y1="100" x2="260" y2="240" stroke="white" stroke-width="1" opacity="0.3"/>
+        <line x1="480" y1="180" x2="380" y2="280" stroke="white" stroke-width="1" opacity="0.4"/>
+        <line x1="480" y1="180" x2="440" y2="310" stroke="white" stroke-width="1" opacity="0.3"/>
+        <line x1="260" y1="240" x2="100" y2="180" stroke="white" stroke-width="1" opacity="0.3"/>
+        <line x1="260" y1="240" x2="380" y2="280" stroke="white" stroke-width="1" opacity="0.4"/>
+        <line x1="260" y1="240" x2="160" y2="340" stroke="white" stroke-width="1" opacity="0.4"/>
+        <line x1="100" y1="180" x2="60" y2="300" stroke="white" stroke-width="1" opacity="0.3"/>
+        <line x1="380" y1="280" x2="440" y2="310" stroke="white" stroke-width="1" opacity="0.4"/>
+        <line x1="380" y1="280" x2="300" y2="370" stroke="white" stroke-width="1" opacity="0.3"/>
+        <line x1="160" y1="340" x2="60" y2="300" stroke="white" stroke-width="1" opacity="0.4"/>
+        <line x1="160" y1="340" x2="300" y2="370" stroke="white" stroke-width="1" opacity="0.3"/>
+        <line x1="440" y1="310" x2="520" y2="350" stroke="white" stroke-width="1" opacity="0.3"/>
+        <!-- Nodes — varying sizes by importance -->
+        <circle cx="420" cy="60" r="5" fill="white" opacity="1"/>
+        <circle cx="320" cy="140" r="7" fill="white" opacity="0.95"/>
+        <circle cx="200" cy="100" r="4" fill="white" opacity="0.8"/>
+        <circle cx="480" cy="180" r="5" fill="white" opacity="0.85"/>
+        <circle cx="260" cy="240" r="8" fill="white" opacity="1"/>
+        <circle cx="100" cy="180" r="4" fill="white" opacity="0.75"/>
+        <circle cx="380" cy="280" r="6" fill="white" opacity="0.9"/>
+        <circle cx="440" cy="310" r="4" fill="white" opacity="0.75"/>
+        <circle cx="160" cy="340" r="5" fill="white" opacity="0.8"/>
+        <circle cx="60" cy="300" r="3.5" fill="white" opacity="0.65"/>
+        <circle cx="300" cy="370" r="4.5" fill="white" opacity="0.7"/>
+        <circle cx="520" cy="350" r="3" fill="white" opacity="0.55"/>
+        <!-- Glow rings on key nodes -->
+        <circle cx="260" cy="240" r="14" stroke="white" stroke-width="1" fill="none" opacity="0.2"/>
+        <circle cx="320" cy="140" r="12" stroke="white" stroke-width="1" fill="none" opacity="0.18"/>
+      </svg>
+    </div>
+    <div class="container-wide relative z-10">
       <div class="max-w-3xl">
-        <p class="font-heading text-mbl-accent font-medium tracking-wide mb-4 animate-slide-up opacity-0" style="animation-delay: 0.1s;">
+        <p class="font-heading text-white/50 font-medium tracking-wide mb-4 animate-slide-up opacity-0" style="animation-delay: 0.1s;">
           Case Studies
         </p>
-        <h1 class="text-display-lg mb-6 animate-slide-up opacity-0" style="animation-delay: 0.2s;">
-          Stories of <span class="text-gradient">transformation</span>
+        <h1 class="text-display-lg text-white mb-6 animate-slide-up opacity-0" style="animation-delay: 0.2s;">
+          Stories of <span class="text-mbl-dusk">transformation</span>
         </h1>
-        <p class="text-xl text-mbl-stone leading-relaxed animate-slide-up opacity-0" style="animation-delay: 0.3s;">
-          Deep dives into our most impactful projects. Learn about the challenges, 
+        <p class="text-xl text-white/70 leading-relaxed animate-slide-up opacity-0" style="animation-delay: 0.3s;">
+          Deep dives into our most impactful projects. Learn about the challenges,
           our approach, and the results we achieved together with our clients.
         </p>
       </div>
@@ -57,9 +102,9 @@ const categoryColors: Record<string, string> = {
   </section>
 
   <!-- Case Studies List -->
-  <section class="pb-20">
+  <section class="pt-20 md:pt-28 pb-20">
     <div class="container-wide">
-      <div class="space-y-16">
+      <div class="space-y-40">
         {caseStudies.map((study: any, index: number) => (
           <a 
             href={`/case-studies/${study.slug}`}
@@ -67,26 +112,21 @@ const categoryColors: Record<string, string> = {
           >
             <article class="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
               <!-- Image -->
-              <div class={`relative aspect-[4/3] rounded-lg overflow-hidden bg-mbl-mist ${index % 2 === 1 ? 'lg:order-2' : ''}`}>
+              <div class={`relative rounded-lg overflow-hidden ${index % 2 === 1 ? 'lg:order-2' : ''}`}>
                 {study.heroImage ? (
-                  <img src={study.heroImage} alt={study.title} class="w-full h-full object-cover" />
+                  <img src={study.heroImage} alt={study.title} class="w-full h-auto block" />
                 ) : (
-                  <div class="absolute inset-0 bg-gradient-to-br from-mbl-slate to-mbl-dusk opacity-80"></div>
+                  <div class="aspect-[4/3] bg-gradient-to-br from-mbl-slate to-mbl-dusk opacity-80"></div>
                 )}
 
-                <div class="absolute inset-0 bg-mbl-accent/0 group-hover:bg-mbl-accent/10 transition-colors duration-300"></div>
-
-                <!-- Category badge -->
-                <div class="absolute top-4 left-4">
-                  <span class={`px-3 py-1 rounded-full text-xs font-heading font-medium ${categoryColors[study.category]}`}>
-                    {study.category.charAt(0).toUpperCase() + study.category.slice(1)}
-                  </span>
-                </div>
               </div>
-              
+
               <!-- Content -->
               <div class={index % 2 === 1 ? 'lg:order-1' : ''}>
                 <div class="flex items-center gap-4 mb-4 flex-wrap">
+                  <span class={`px-3 py-1 rounded-full text-xs font-heading font-medium ${categoryColors[study.category]}`}>
+                    {study.category.charAt(0).toUpperCase() + study.category.slice(1)}
+                  </span>
                   {study.client && <span class="text-sm text-mbl-stone">{study.client}</span>}
                   {study.client && study.author && <span class="text-mbl-mist">•</span>}
                   {study.author && <span class="text-sm text-mbl-stone">with {study.author}</span>}

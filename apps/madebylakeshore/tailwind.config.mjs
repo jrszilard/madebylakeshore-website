@@ -6,14 +6,14 @@ export default {
       colors: {
         'mbl': {
           'ink': '#1a1a2e',
-          'dusk': '#4a5c5c',
-          'slate': '#2d3748',
+          'dusk': '#BC6C25',
+          'slate': '#A05C1F',
           'stone': '#4a5568',
           'mist': '#AFB9B8',
           'cloud': '#f7fafc',
-          'accent': '#A05C1F',
-          'accent-dark': '#7A4516',
-          'warm': '#BC6C25',
+          'accent': '#4a5c5c',
+          'accent-dark': '#3a4c4c',
+          'warm': '#5a7070',
           'secondary': '#AFB9B8',
         }
       },

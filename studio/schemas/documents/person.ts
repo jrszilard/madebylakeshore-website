@@ -70,6 +70,91 @@ export default defineType({
         { name: 'github', title: 'GitHub', type: 'url' },
       ],
     }),
+    // Personal portfolio fields
+    defineField({
+      name: 'headline',
+      title: 'Personal Headline',
+      type: 'string',
+      description: 'A punchy personal tagline, e.g. "Product Designer. Gamer. Dog Mom."',
+    }),
+    defineField({
+      name: 'location',
+      title: 'Locations',
+      type: 'array',
+      of: [{ type: 'string' }],
+      description: 'Cities or places you call home.',
+    }),
+    defineField({
+      name: 'interests',
+      title: 'Interests',
+      type: 'array',
+      description: 'Hobbies and personal interests. Add an image to show a hover preview.',
+      of: [{
+        type: 'object',
+        fields: [
+          { name: 'label', title: 'Label', type: 'string' },
+          { name: 'image', title: 'Image', type: 'image', options: { hotspot: true } },
+        ],
+        preview: { select: { title: 'label', media: 'image' } },
+      }],
+    }),
+    defineField({
+      name: 'favoriteShows',
+      title: 'Favorite Shows',
+      type: 'array',
+      of: [{ type: 'string' }],
+    }),
+    defineField({
+      name: 'favoriteBooks',
+      title: 'Favorite Books',
+      type: 'array',
+      of: [{ type: 'string' }],
+    }),
+    defineField({
+      name: 'currentlyListening',
+      title: 'Currently Listening To',
+      type: 'array',
+      of: [{ type: 'string' }],
+      description: 'Podcasts, albums, artists, etc.',
+    }),
+    defineField({
+      name: 'photoGallery',
+      title: 'Personal Photo Gallery',
+      type: 'array',
+      of: [
+        {
+          type: 'image',
+          options: { hotspot: true },
+          fields: [
+            { name: 'alt', title: 'Alt text', type: 'string' },
+            { name: 'caption', title: 'Caption', type: 'string' },
+          ],
+        },
+      ],
+    }),
+    defineField({
+      name: 'companies',
+      title: 'Companies / Experience',
+      type: 'array',
+      description: 'Logos of companies you have worked with.',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            { name: 'name', title: 'Company Name', type: 'string' },
+            {
+              name: 'logo',
+              title: 'Logo',
+              type: 'image',
+              options: { hotspot: false },
+            },
+          ],
+          preview: {
+            select: { title: 'name', media: 'logo' },
+          },
+        },
+      ],
+    }),
   ],
   preview: {
     select: {

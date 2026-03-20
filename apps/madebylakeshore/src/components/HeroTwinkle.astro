@@ -1,0 +1,49 @@
+---
+// All positions snapped to the bg-pattern grid: cx = 2 + 20n, cy = 2 + 20m
+// viewBox matches the pattern's pixel space so r=1.5 == pattern dot size.
+const dots = [
+  { cx:   82, cy:  62, delay: '0.0s', dur: '3.2s' },
+  { cx:  222, cy: 182, delay: '1.2s', dur: '4.5s' },
+  { cx:  402, cy:  82, delay: '0.5s', dur: '2.8s' },
+  { cx:  542, cy: 302, delay: '2.3s', dur: '5.1s' },
+  { cx:  682, cy:  42, delay: '0.9s', dur: '3.7s' },
+  { cx:  762, cy: 222, delay: '1.8s', dur: '4.0s' },
+  { cx:  902, cy: 122, delay: '0.3s', dur: '2.5s' },
+  { cx: 1022, cy: 362, delay: '3.1s', dur: '5.3s' },
+  { cx: 1142, cy:  82, delay: '1.5s', dur: '3.4s' },
+  { cx: 1262, cy: 262, delay: '0.7s', dur: '4.8s' },
+  { cx:  142, cy: 382, delay: '2.6s', dur: '3.0s' },
+  { cx:  302, cy: 482, delay: '1.0s', dur: '4.2s' },
+  { cx:  462, cy: 422, delay: '0.2s', dur: '2.9s' },
+  { cx:  602, cy: 502, delay: '1.9s', dur: '5.5s' },
+  { cx:  742, cy: 442, delay: '3.4s', dur: '3.8s' },
+  { cx:  882, cy: 502, delay: '0.6s', dur: '4.6s' },
+  { cx: 1002, cy: 202, delay: '2.0s', dur: '3.5s' },
+  { cx: 1102, cy: 462, delay: '1.4s', dur: '4.9s' },
+  { cx: 1322, cy: 142, delay: '3.8s', dur: '2.7s' },
+  { cx:  202, cy: 282, delay: '0.4s', dur: '5.0s' },
+  { cx:  422, cy: 162, delay: '2.8s', dur: '3.3s' },
+  { cx:  822, cy:  22, delay: '1.7s', dur: '4.3s' },
+  { cx:   42, cy: 462, delay: '3.2s', dur: '3.6s' },
+  { cx:  962, cy: 402, delay: '0.1s', dur: '2.6s' },
+  { cx: 1202, cy: 382, delay: '2.5s', dur: '5.2s' },
+];
+---
+
+<svg
+  class="absolute inset-0 w-full h-full pointer-events-none"
+  viewBox="0 0 1400 600"
+  preserveAspectRatio="xMidYMid slice"
+  xmlns="http://www.w3.org/2000/svg"
+  aria-hidden="true"
+>
+  {dots.map((d) => (
+    <circle
+      cx={d.cx}
+      cy={d.cy}
+      r="1.5"
+      fill="white"
+      style={`animation: twinkle ${d.dur} ease-in-out infinite ${d.delay}; opacity: 0;`}
+    />
+  ))}
+</svg>

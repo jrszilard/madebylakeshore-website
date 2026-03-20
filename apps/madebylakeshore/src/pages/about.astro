@@ -1,14 +1,16 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import HeroTwinkle from '../components/HeroTwinkle.astro';
 import { sanityClient, urlFor, queries } from '../lib/sanity';
 
 // Fetch team members from Sanity
 const sanityPeople = await sanityClient.fetch(queries.allPeople);
 const team = sanityPeople.map((person: any) => ({
   name: person.name,
+  slug: person.slug,
   role: person.role || '',
   bio: person.shortBio || '',
-  specialties: [], // Specialties are not in the schema, could be added later
+  specialties: [],
   image: person.image?.asset ? urlFor(person.image).width(600).height(800).url() : null,
   calendlyUrl: person.calendlyUrl || null,
 }));
@@ -38,18 +40,35 @@ const values = [
   description="Meet the team behind Lakeshore Studios. We're a husband-and-wife consulting studio specializing in design, data, and AI."
 >
   <!-- Hero -->
-  <section class="section-spacing">
-    <div class="container-wide">
+  <section class="relative section-spacing bg-[#1e3030] overflow-hidden">
+    <div class="absolute inset-0 opacity-5">
+      <div class="absolute inset-0 bg-pattern"></div>
+    </div>
+    <HeroTwinkle />
+    <!-- Two ripple drops — partnership/duo -->
+    <div class="absolute bottom-0 right-0 pointer-events-none select-none overflow-hidden w-[480px] h-[380px]">
+      <svg viewBox="0 0 480 380" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full opacity-40">
+        <circle cx="160" cy="280" r="55" stroke="white" stroke-width="3" fill="none"/>
+        <circle cx="160" cy="280" r="110" stroke="white" stroke-width="2" fill="none" opacity="0.6"/>
+        <circle cx="160" cy="280" r="165" stroke="white" stroke-width="1.5" fill="none" opacity="0.3"/>
+        <circle cx="160" cy="280" r="4" fill="white"/>
+        <circle cx="330" cy="320" r="45" stroke="white" stroke-width="3" fill="none"/>
+        <circle cx="330" cy="320" r="95" stroke="white" stroke-width="2" fill="none" opacity="0.6"/>
+        <circle cx="330" cy="320" r="145" stroke="white" stroke-width="1.5" fill="none" opacity="0.3"/>
+        <circle cx="330" cy="320" r="4" fill="white"/>
+      </svg>
+    </div>
+    <div class="container-wide relative z-10">
       <div class="max-w-3xl">
-        <p class="font-heading text-mbl-accent font-medium tracking-wide mb-4 animate-slide-up opacity-0" style="animation-delay: 0.1s;">
+        <p class="font-heading text-white/50 font-medium tracking-wide mb-4 animate-slide-up opacity-0" style="animation-delay: 0.1s;">
           About Us
         </p>
-        <h1 class="text-display-lg mb-6 animate-slide-up opacity-0" style="animation-delay: 0.2s;">
-          A studio built on <span class="text-gradient">partnership</span>
+        <h1 class="text-display-lg text-white mb-6 animate-slide-up opacity-0" style="animation-delay: 0.2s;">
+          A studio built on <span class="text-mbl-dusk">partnership</span>
         </h1>
-        <p class="text-xl text-mbl-stone leading-relaxed animate-slide-up opacity-0" style="animation-delay: 0.3s;">
-          Lakeshore Studios is a husband-and-wife consulting studio. We bring together 
-          creative vision and technical expertise to help businesses transform how 
+        <p class="text-xl text-white/70 leading-relaxed animate-slide-up opacity-0" style="animation-delay: 0.3s;">
+          Lakeshore Studios is a husband-and-wife consulting studio. We bring together
+          creative vision and technical expertise to help businesses transform how
           they look, think, and operate.
         </p>
       </div>
@@ -57,7 +76,7 @@ const values = [
   </section>
 
   <!-- Our Story -->
-  <section class="pb-20">
+  <section class="pt-20 md:pt-28 pb-20">
     <div class="container-wide">
       <div class="grid lg:grid-cols-2 gap-16 items-center">
         <div>
@@ -100,7 +119,7 @@ const values = [
 
       <div class="grid md:grid-cols-2 gap-12">
         {team.map((member: any) => (
-          <div class="group">
+          <a href={`/team/${member.slug?.current}`} class="group block">
             <div class="aspect-[3/4] bg-gradient-to-br from-mbl-slate to-mbl-dusk rounded-lg mb-6 overflow-hidden">
               {member.image ? (
                 <img src={member.image} alt={member.name} class="w-full h-full object-cover" />
@@ -124,7 +143,13 @@ const values = [
                 ))}
               </div>
             )}
-          </div>
+            <span class="inline-flex items-center gap-2 mt-4 text-sm font-heading font-medium text-mbl-accent group-hover:gap-3 transition-all duration-200">
+              View profile
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
+            </span>
+          </a>
         ))}
       </div>
     </div>

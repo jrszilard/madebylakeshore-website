@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import HeroTwinkle from '../../components/HeroTwinkle.astro';
 import { sanityClient, queries } from '../../lib/sanity';
 
 export const prerender = true;
@@ -21,18 +22,49 @@ const services = sanityServices.map((service: any) => ({
   description="Strategic consulting in design, data analytics, and AI solutions. Explore our expertise and how we can help transform your business."
 >
   <!-- Hero -->
-  <section class="section-spacing">
-    <div class="container-wide">
+  <section class="relative section-spacing bg-[#1e3030] overflow-hidden">
+    <div class="absolute inset-0 opacity-5">
+      <div class="absolute inset-0 bg-pattern"></div>
+    </div>
+    <HeroTwinkle />
+    <!-- Topographic map — closed contour loops -->
+    <div class="absolute bottom-0 right-0 pointer-events-none select-none overflow-hidden w-[580px] h-[440px]">
+      <svg viewBox="0 0 580 440" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full opacity-40">
+        <!-- Peak 1 — dominant, upper right -->
+        <path d="M420 80 C445 55, 495 48, 528 65 C558 80, 572 112, 562 142 C552 170, 528 188, 498 192 C468 196, 440 180, 424 158 C406 134, 398 104, 420 80Z" stroke="white" stroke-width="1" fill="none" opacity="0.3"/>
+        <path d="M428 90 C450 68, 494 62, 522 78 C548 92, 560 120, 550 146 C540 170, 518 185, 492 188 C464 191, 440 176, 426 156 C410 134, 406 110, 428 90Z" stroke="white" stroke-width="1.2" fill="none" opacity="0.45"/>
+        <path d="M438 102 C458 82, 495 78, 518 94 C540 108, 550 132, 540 155 C530 176, 510 188, 486 190 C462 192, 442 177, 430 158 C416 138, 416 120, 438 102Z" stroke="white" stroke-width="1.5" fill="none" opacity="0.6"/>
+        <path d="M450 116 C468 98, 498 95, 516 110 C534 124, 540 148, 530 166 C520 182, 502 190, 480 190 C458 190, 442 178, 434 160 C424 142, 428 132, 450 116Z" stroke="white" stroke-width="1.8" fill="none" opacity="0.75"/>
+        <path d="M462 130 C476 116, 500 114, 514 128 C526 140, 528 160, 518 174 C508 186, 492 192, 474 190 C456 188, 446 178, 440 162 C434 148, 446 142, 462 130Z" stroke="white" stroke-width="2" fill="none" opacity="0.88"/>
+        <path d="M474 145 C484 134, 502 133, 510 144 C518 155, 516 172, 506 180 C496 188, 480 188, 470 178 C460 168, 462 156, 474 145Z" stroke="white" stroke-width="2.2" fill="none"/>
+        <circle cx="492" cy="162" r="3" fill="white"/>
+
+        <!-- Peak 2 — lower left, partial, cut by edge -->
+        <path d="M60 380 C30 355, 8 318, 18 282 C28 248, 65 228, 105 235 C142 242, 168 272, 165 308 C162 342, 138 368, 108 378 C88 384, 72 388, 60 380Z" stroke="white" stroke-width="1" fill="none" opacity="0.3"/>
+        <path d="M55 370 C30 348, 18 315, 28 282 C38 252, 70 236, 106 244 C138 250, 160 278, 156 310 C152 340, 130 364, 102 372 C80 378, 62 378, 55 370Z" stroke="white" stroke-width="1.2" fill="none" opacity="0.45"/>
+        <path d="M52 358 C32 340, 24 310, 36 282 C48 256, 76 244, 108 252 C136 260, 154 286, 148 314 C142 340, 122 360, 96 366 C74 370, 56 364, 52 358Z" stroke="white" stroke-width="1.5" fill="none" opacity="0.6"/>
+        <path d="M54 344 C38 328, 34 302, 46 278 C58 256, 84 248, 110 258 C134 266, 148 292, 140 316 C132 338, 114 354, 90 358 C70 362, 58 352, 54 344Z" stroke="white" stroke-width="1.8" fill="none" opacity="0.75"/>
+        <path d="M58 330 C46 316, 44 294, 56 274 C68 256, 90 252, 112 262 C132 272, 142 296, 134 318 C126 338, 108 350, 86 352 C68 354, 60 338, 58 330Z" stroke="white" stroke-width="2" fill="none" opacity="0.88"/>
+        <circle cx="98" cy="302" r="3" fill="white"/>
+
+        <!-- Peak 3 — small, mid-right area -->
+        <path d="M340 255 C355 235, 385 230, 405 245 C422 258, 425 282, 412 298 C400 312, 378 316, 360 305 C342 294, 330 272, 340 255Z" stroke="white" stroke-width="1" fill="none" opacity="0.35"/>
+        <path d="M348 262 C360 245, 384 242, 400 256 C414 268, 416 288, 404 302 C392 314, 372 316, 356 306 C340 296, 334 276, 348 262Z" stroke="white" stroke-width="1.3" fill="none" opacity="0.55"/>
+        <path d="M356 270 C366 256, 384 254, 396 266 C406 276, 408 293, 398 305 C388 314, 370 316, 356 306 C344 296, 344 282, 356 270Z" stroke="white" stroke-width="1.6" fill="none" opacity="0.75"/>
+        <circle cx="382" cy="286" r="2.5" fill="white"/>
+      </svg>
+    </div>
+    <div class="container-wide relative z-10">
       <div class="max-w-3xl">
-        <p class="font-heading text-mbl-accent font-medium tracking-wide mb-4 animate-slide-up opacity-0" style="animation-delay: 0.1s;">
+        <p class="font-heading text-white/50 font-medium tracking-wide mb-4 animate-slide-up opacity-0" style="animation-delay: 0.1s;">
           Our Services
         </p>
-        <h1 class="text-display-lg mb-6 animate-slide-up opacity-0" style="animation-delay: 0.2s;">
-          Expertise that drives results
+        <h1 class="text-display-lg text-white mb-6 animate-slide-up opacity-0" style="animation-delay: 0.2s;">
+          Expertise that <span class="text-mbl-dusk">drives results</span>
         </h1>
-        <p class="text-xl text-mbl-stone leading-relaxed animate-slide-up opacity-0" style="animation-delay: 0.3s;">
-          We bring together creative and technical disciplines to solve complex 
-          business challenges. Each engagement is tailored to your specific needs 
+        <p class="text-xl text-white/70 leading-relaxed animate-slide-up opacity-0" style="animation-delay: 0.3s;">
+          We bring together creative and technical disciplines to solve complex
+          business challenges. Each engagement is tailored to your specific needs
           and goals.
         </p>
       </div>
@@ -40,7 +72,7 @@ const services = sanityServices.map((service: any) => ({
   </section>
 
   <!-- AI Companion CTA -->
-  <section class="pb-12">
+  <section class="pt-20 md:pt-28 pb-12">
     <div class="container-wide">
       <a 
         href="/chat"
