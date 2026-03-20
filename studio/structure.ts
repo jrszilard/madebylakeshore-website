@@ -12,6 +12,14 @@ export const structure: StructureResolver = (S) =>
             .title('MadeByLakeshore')
             .items([
               S.listItem()
+                .title('Studio Settings')
+                .child(
+                  S.document()
+                    .schemaType('studioSettings')
+                    .documentId('studioSettings')
+                    .title('Studio Settings')
+                ),
+              S.listItem()
                 .title('Team')
                 .schemaType('person')
                 .child(S.documentTypeList('person').title('Team Members')),

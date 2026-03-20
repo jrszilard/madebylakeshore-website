@@ -39,15 +39,23 @@ const siteTitle = title === 'Home' ? 'Lakeshore Studios' : `${title} | Lakeshore
     <meta name="twitter:description" content={description} />
     {noindex && <meta name="robots" content="noindex" />}
 
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=Source+Sans+3:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" />
+
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="sitemap" href="/sitemap-index.xml" />
     
     <title>{siteTitle}</title>
   </head>
   <body class="min-h-screen flex flex-col">
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:bg-mbl-accent focus:text-white focus:px-4 focus:py-2 focus:rounded-md focus:font-heading focus:font-medium">
+      Skip to main content
+    </a>
     <Navigation />
-    
-    <main class="flex-1">
+
+    <main id="main-content" class="flex-1">
       <slot />
     </main>
     

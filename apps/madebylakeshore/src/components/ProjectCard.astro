@@ -18,7 +18,7 @@ const { title, client, category, image, href, index } = Astro.props;
 >
   <div class="relative aspect-[4/3] rounded-lg overflow-hidden mb-4 bg-mbl-mist">
     {image && !image.includes('placeholder') ? (
-      <img src={image} alt={title} class="w-full h-full object-cover" />
+      <img src={image} alt={title} class="w-full h-full object-cover" loading={index === 0 ? undefined : 'lazy'} fetchpriority={index === 0 ? 'high' : undefined} decoding="async" />
     ) : (
       <div class="absolute inset-0 bg-gradient-to-br from-mbl-slate to-mbl-dusk opacity-80"></div>
     )}

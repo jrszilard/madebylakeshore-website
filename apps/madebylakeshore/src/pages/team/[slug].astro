@@ -32,15 +32,66 @@ const categoryColors: Record<string, string> = {
       <div class="absolute inset-0 bg-pattern"></div>
     </div>
     <HeroTwinkle />
-    <!-- Single droplet with ripples — individual/personal -->
-    <div class="absolute bottom-0 right-0 pointer-events-none select-none overflow-hidden w-[420px] h-[380px]">
-      <svg viewBox="0 0 420 380" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full opacity-40">
-        <path d="M280 80 C280 80, 210 175, 210 250 C210 300, 245 340, 280 340 C315 340, 350 300, 350 250 C350 175, 280 80, 280 80Z" stroke="white" stroke-width="3" stroke-linecap="round" fill="none"/>
-        <ellipse cx="280" cy="345" rx="45" ry="16" stroke="white" stroke-width="2.5" fill="none"/>
-        <ellipse cx="280" cy="348" rx="90" ry="30" stroke="white" stroke-width="2" fill="none" opacity="0.6"/>
-        <ellipse cx="280" cy="352" rx="138" ry="46" stroke="white" stroke-width="1.5" fill="none" opacity="0.35"/>
-        <circle cx="280" cy="340" r="4" fill="white" opacity="0.8"/>
-      </svg>
+    <!-- Person-specific motif -->
+    <div class="absolute bottom-0 right-0 pointer-events-none select-none overflow-hidden w-[520px] h-[400px]">
+      {slug === 'wilma-huertas' ? (
+        /* Wilma — golden ratio / Fibonacci spiral */
+        <svg viewBox="0 0 520 400" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full opacity-40" aria-hidden="true">
+          <!-- Fibonacci rectangle grid lines -->
+          <rect x="30" y="30" width="460" height="340" stroke="white" stroke-width="1" opacity="0.2"/>
+          <line x1="314" y1="30" x2="314" y2="370" stroke="white" stroke-width="1" opacity="0.2"/>
+          <line x1="30" y1="240" x2="314" y2="240" stroke="white" stroke-width="1" opacity="0.2"/>
+          <line x1="314" y1="136" x2="490" y2="136" stroke="white" stroke-width="1" opacity="0.2"/>
+          <line x1="420" y1="136" x2="420" y2="370" stroke="white" stroke-width="1" opacity="0.2"/>
+          <line x1="314" y1="302" x2="420" y2="302" stroke="white" stroke-width="1" opacity="0.2"/>
+          <line x1="368" y1="302" x2="368" y2="370" stroke="white" stroke-width="1" opacity="0.2"/>
+          <!-- The spiral — quarter-circle arcs following Fibonacci boxes -->
+          <!-- Large arc: bottom-right of big left square -->
+          <path d="M 314 240 A 284 284 0 0 0 30 370" stroke="white" stroke-width="2.5" fill="none" opacity="0.9" stroke-linecap="round"/>
+          <!-- Second arc -->
+          <path d="M 314 30 A 176 176 0 0 1 314 240" stroke="white" stroke-width="2" fill="none" opacity="0.75" stroke-linecap="round"/>
+          <!-- Third arc -->
+          <path d="M 490 136 A 108 108 0 0 0 314 30" stroke="white" stroke-width="2" fill="none" opacity="0.65" stroke-linecap="round"/>
+          <!-- Fourth arc -->
+          <path d="M 420 370 A 66 66 0 0 1 490 136" stroke="white" stroke-width="1.5" fill="none" opacity="0.55" stroke-linecap="round"/>
+          <!-- Fifth arc -->
+          <path d="M 314 302 A 41 41 0 0 0 420 370" stroke="white" stroke-width="1.5" fill="none" opacity="0.45" stroke-linecap="round"/>
+          <!-- Sixth arc -->
+          <path d="M 368 136 A 25 25 0 0 1 314 302" stroke="white" stroke-width="1" fill="none" opacity="0.35" stroke-linecap="round"/>
+          <!-- Tiny arcs -->
+          <path d="M 368 302 A 15 15 0 0 0 368 136" stroke="white" stroke-width="1" fill="none" opacity="0.25" stroke-linecap="round"/>
+        </svg>
+      ) : (
+        /* Justin — scatter plot / data viz */
+        <svg viewBox="0 0 520 400" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full opacity-40" aria-hidden="true">
+          <!-- Axis lines -->
+          <line x1="60" y1="340" x2="480" y2="340" stroke="white" stroke-width="1.5" opacity="0.4"/>
+          <line x1="60" y1="60" x2="60" y2="340" stroke="white" stroke-width="1.5" opacity="0.4"/>
+          <!-- Trend line -->
+          <line x1="80" y1="300" x2="460" y2="100" stroke="white" stroke-width="1" opacity="0.25" stroke-dasharray="6 4"/>
+          <!-- Data points — scattered around the trend -->
+          <circle cx="100" cy="290" r="5" fill="white" opacity="0.9"/>
+          <circle cx="140" cy="270" r="4" fill="white" opacity="0.7"/>
+          <circle cx="175" cy="255" r="6" fill="white" opacity="0.85"/>
+          <circle cx="210" cy="230" r="3.5" fill="white" opacity="0.6"/>
+          <circle cx="240" cy="245" r="5" fill="white" opacity="0.75"/>
+          <circle cx="275" cy="210" r="4.5" fill="white" opacity="0.8"/>
+          <circle cx="300" cy="195" r="3" fill="white" opacity="0.55"/>
+          <circle cx="330" cy="180" r="6" fill="white" opacity="0.9"/>
+          <circle cx="360" cy="165" r="4" fill="white" opacity="0.65"/>
+          <circle cx="390" cy="150" r="5" fill="white" opacity="0.8"/>
+          <circle cx="420" cy="135" r="3.5" fill="white" opacity="0.6"/>
+          <circle cx="450" cy="115" r="5.5" fill="white" opacity="0.85"/>
+          <!-- Outliers -->
+          <circle cx="160" cy="310" r="3" fill="white" opacity="0.45"/>
+          <circle cx="260" cy="175" r="3.5" fill="white" opacity="0.5"/>
+          <circle cx="350" cy="220" r="4" fill="white" opacity="0.5"/>
+          <circle cx="410" cy="175" r="3" fill="white" opacity="0.4"/>
+          <!-- Glow rings on key points -->
+          <circle cx="175" cy="255" r="12" stroke="white" stroke-width="1" fill="none" opacity="0.2"/>
+          <circle cx="330" cy="180" r="13" stroke="white" stroke-width="1" fill="none" opacity="0.18"/>
+        </svg>
+      )}
     </div>
     <div class="container-wide relative z-10">
       <div class="grid lg:grid-cols-2 gap-16 items-center">
@@ -131,11 +182,13 @@ const categoryColors: Record<string, string> = {
 
         <!-- Photo -->
         {heroImage && (
-          <div class="relative">
+          <div class="relative flex justify-center">
             <img
               src={heroImage}
               alt={person.name}
-              class="w-full rounded-lg object-cover"
+              class="w-80 lg:w-96 rounded-lg object-cover"
+              fetchpriority="high"
+              decoding="async"
             />
           </div>
         )}
@@ -159,9 +212,9 @@ const categoryColors: Record<string, string> = {
             return (
               <a href={`/case-studies/${study.slug?.current}`} class="group grid md:grid-cols-2 gap-8 lg:gap-16 items-center block">
                 <!-- Image -->
-                <div class="relative rounded-lg overflow-hidden bg-mbl-mist">
+                <div class="relative rounded-lg overflow-hidden">
                   {studyImage ? (
-                    <img src={studyImage} alt={study.title} class="w-full h-auto block" />
+                    <img src={studyImage} alt={study.title} class="w-full h-auto block" loading="lazy" decoding="async" />
                   ) : (
                     <div class="aspect-[4/3] bg-gradient-to-br from-mbl-slate to-mbl-dusk opacity-80"></div>
                   )}
@@ -212,7 +265,7 @@ const categoryColors: Record<string, string> = {
 
   <!-- Beyond Work -->
   {(person.location?.length || person.interests?.length || person.favoriteShows?.length || person.favoriteBooks?.length || person.currentlyListening?.length || person.photoGallery?.length) && (
-    <section class="section-spacing bg-white">
+    <section class="pt-20 md:pt-28 pb-8 bg-white">
       <div class="container-wide">
         <h2 class="font-display text-2xl mb-12">Beyond Work</h2>
 
@@ -259,7 +312,7 @@ const categoryColors: Record<string, string> = {
 
           <!-- Shows & Books as styled cards -->
           {(person.favoriteShows?.length || person.favoriteBooks?.length || person.currentlyListening?.length) && (
-            <div class="grid md:grid-cols-2 gap-6">
+            <div class="grid md:grid-cols-3 gap-6">
               {person.favoriteShows?.length > 0 && (
                 <div class="rounded-2xl border border-mbl-mist/50 p-6">
                   <div class="flex items-center gap-2 text-mbl-accent mb-6">
@@ -328,6 +381,8 @@ const categoryColors: Record<string, string> = {
                       src={photoUrl}
                       alt={photo.alt || person.name}
                       class="w-full block transition-transform duration-500 group-hover:scale-105"
+                      loading="lazy"
+                      decoding="async"
                     />
                   </div>
                 ) : null;
@@ -340,25 +395,44 @@ const categoryColors: Record<string, string> = {
   )}
 
   <!-- Companies / Experience -->
-  {person.companies?.length > 0 && (
-    <section class="section-spacing bg-white">
-      <div class="container-wide">
-        <h2 class="font-display text-2xl mb-12">Companies I've Worked With</h2>
-        <div class="flex flex-wrap gap-10 items-center">
-          {person.companies.map((company: any) => {
-            const logoUrl = company.logo?.asset ? urlFor(company.logo).height(60).url() : null;
-            return logoUrl ? (
+  {person.companies?.filter((c: any) => c.logo?.asset).length > 0 && (
+    <section class="pt-0 pb-16 bg-white overflow-hidden">
+      <div class="container-wide mb-10">
+        <h2 class="font-display text-2xl">Companies I've Worked With</h2>
+      </div>
+
+      <div class="relative">
+        <div class="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none"></div>
+        <div class="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none"></div>
+
+        <div class="flex logo-scroll-track-profile">
+          {[...person.companies, ...person.companies].filter((c: any) => c.logo?.asset).map((company: any, i: number) => (
+            <div class="flex-shrink-0 flex items-center justify-center px-10 h-20">
               <img
-                src={logoUrl}
-                alt={company.name}
-                class="h-10 object-contain grayscale hover:grayscale-0 transition-all duration-300 opacity-60 hover:opacity-100"
+                src={`${urlFor(company.logo).height(60).url()}`}
+                alt={company.name || ''}
+                class="h-10 w-auto object-contain grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all duration-300"
+                loading="lazy"
+                decoding="async"
               />
-            ) : (
-              <span class="text-mbl-stone font-heading font-medium">{company.name}</span>
-            );
-          })}
+            </div>
+          ))}
         </div>
       </div>
+
+      <style>
+        .logo-scroll-track-profile {
+          animation: logo-scroll 30s linear infinite;
+          width: max-content;
+        }
+        .logo-scroll-track-profile:hover {
+          animation-play-state: paused;
+        }
+        @keyframes logo-scroll {
+          from { transform: translateX(0); }
+          to { transform: translateX(-50%); }
+        }
+      </style>
     </section>
   )}
 

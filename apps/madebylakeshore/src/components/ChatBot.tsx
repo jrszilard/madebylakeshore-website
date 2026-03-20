@@ -600,8 +600,8 @@ export default function ChatBot() {
         {isStreaming && messages[messages.length - 1]?.role !== 'assistant' && (
           <div className="flex justify-start">
             <div className="bg-white border border-mbl-mist rounded-2xl px-5 py-4">
-              <div className="flex space-x-2" role="status" aria-label="Thinking">
-                <span className="sr-only">Thinking...</span>
+              <div className="flex space-x-2" role="status" aria-live="polite" aria-atomic="true">
+                <span className="sr-only">Assistant is thinking...</span>
                 <div className="w-2 h-2 bg-mbl-stone rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
                 <div className="w-2 h-2 bg-mbl-stone rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
                 <div className="w-2 h-2 bg-mbl-stone rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
