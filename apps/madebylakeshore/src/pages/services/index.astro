@@ -10,11 +10,46 @@ const sanityServices = await sanityClient.fetch(queries.allServices);
 const services = sanityServices.map((service: any) => ({
   title: service.title,
   slug: service.slug?.current || service.icon,
+  icon: service.icon as 'design' | 'data' | 'ai',
   consultant: service.consultant?.name || '',
   description: service.tagline || '',
   offerings: service.offerings?.map((o: any) => o.title) || [],
   color: service.icon === 'design' ? 'warm' : 'accent',
 }));
+
+const serviceIcons: Record<string, string> = {
+  // Letterform — capital A with typographic construction guides
+  design: `
+    <line x1="2" y1="3" x2="22" y2="3" stroke="currentColor" stroke-width="0.5" stroke-linecap="round" opacity="0.3"/>
+    <line x1="2" y1="21" x2="22" y2="21" stroke="currentColor" stroke-width="0.6" stroke-linecap="round" opacity="0.4"/>
+    <line x1="2" y1="13" x2="22" y2="13" stroke="currentColor" stroke-width="0.4" stroke-linecap="round" opacity="0.15"/>
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M5 21 L12 3 L19 21" />
+    <path stroke-linecap="round" stroke-width="0.9" d="M8 13 L16 13" />
+    <circle cx="5" cy="21" r="1" fill="currentColor" opacity="0.7"/>
+    <circle cx="19" cy="21" r="1" fill="currentColor" opacity="0.7"/>
+    <circle cx="12" cy="3" r="1.2" fill="currentColor"/>
+    <circle cx="12" cy="3" r="3.5" stroke="currentColor" stroke-width="0.5" fill="none" opacity="0.22"/>
+  `,
+  // Bar chart — lines + trend curve + node dots + glow on tallest
+  data: `
+    <line x1="5.5" y1="21" x2="5.5" y2="15" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+    <line x1="12" y1="21" x2="12" y2="10" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+    <line x1="18.5" y1="21" x2="18.5" y2="6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+    <line x1="3" y1="21" x2="21" y2="21" stroke="currentColor" stroke-width="0.6" stroke-linecap="round" opacity="0.45"/>
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="0.7" d="M5.5 15 C8 12.5 10 10.5 12 10 C14.5 8.5 16.5 7 18.5 6" opacity="0.5"/>
+    <circle cx="5.5" cy="15" r="1.5" fill="currentColor" opacity="0.8"/>
+    <circle cx="12" cy="10" r="1.5" fill="currentColor" opacity="0.9"/>
+    <circle cx="18.5" cy="6" r="2" fill="currentColor"/>
+    <circle cx="18.5" cy="6" r="4.5" stroke="currentColor" stroke-width="0.6" fill="none" opacity="0.25"/>
+  `,
+  // Sparkles — three at decreasing size/opacity + subtle ring around main
+  ai: `
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
+    <circle cx="9" cy="12" r="7" stroke="currentColor" stroke-width="0.5" fill="none" opacity="0.2"/>
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="0.8" d="M18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456z" opacity="0.7"/>
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="0.6" d="M16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z" opacity="0.45"/>
+  `,
+};
 ---
 
 <BaseLayout 
@@ -71,46 +106,8 @@ const services = sanityServices.map((service: any) => ({
     </div>
   </section>
 
-  <!-- AI Companion CTA -->
-  <section class="pt-20 md:pt-28 pb-12">
-    <div class="container-wide">
-      <a 
-        href="/chat"
-        class="group block p-6 md:p-8 rounded-2xl bg-gradient-to-br from-mbl-dusk to-mbl-slate border border-mbl-slate hover:border-mbl-accent/50 transition-all duration-300"
-      >
-        <div class="flex flex-col md:flex-row md:items-center gap-6">
-          <div class="flex-shrink-0">
-            <div class="w-16 h-16 rounded-xl bg-mbl-accent/20 flex items-center justify-center group-hover:bg-mbl-accent/30 transition-colors">
-              <svg class="w-8 h-8 text-mbl-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-              </svg>
-            </div>
-          </div>
-          <div class="flex-1">
-            <div class="flex items-center gap-2 mb-2">
-              <h2 class="font-display text-xl text-white">Design & Data Companion</h2>
-              <span class="px-2 py-0.5 bg-mbl-accent/20 text-mbl-accent text-xs font-heading font-medium rounded-full">
-                AI-Powered
-              </span>
-            </div>
-            <p class="text-mbl-mist/80 mb-4">
-              Not sure where to start? Chat with our AI assistant about your design or data challenges. 
-              Get instant insights, helpful frameworks, and a taste of how we think about problems.
-            </p>
-            <span class="inline-flex items-center gap-2 text-mbl-accent font-heading font-medium group-hover:gap-3 transition-all">
-              Try it now
-              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-              </svg>
-            </span>
-          </div>
-        </div>
-      </a>
-    </div>
-  </section>
-  
   <!-- Services List -->
-  <section class="pb-20">
+  <section class="pt-20 md:pt-28 pb-20">
     <div class="container-wide">
       <div class="space-y-16">
         {services.map((service: any) => (
@@ -120,12 +117,11 @@ const services = sanityServices.map((service: any) => ({
           >
             <div class="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center p-8 lg:p-12 rounded-2xl bg-white border border-mbl-mist/50 hover:border-mbl-accent/30 hover:shadow-lg transition-all duration-300">
               <div>
-                <div class="flex items-center gap-3 mb-4">
-                  <span class={`px-3 py-1 rounded-full text-xs font-heading font-medium ${service.color === 'warm' ? 'bg-mbl-warm/10 text-mbl-warm' : 'bg-mbl-accent/10 text-mbl-accent'}`}>
-                    with {service.consultant}
-                  </span>
+                <!-- Large service icon -->
+                <div class="w-32 h-32 flex items-center justify-start mb-0 -ml-2">
+                  <svg class={`w-24 h-24 ${service.color === 'warm' ? 'text-mbl-warm' : 'text-mbl-accent'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" set:html={serviceIcons[service.icon] || serviceIcons.ai} />
                 </div>
-                
+
                 <h2 class="font-display text-3xl mb-4 group-hover:text-mbl-accent transition-colors duration-300">
                   {service.title}
                 </h2>
@@ -165,7 +161,7 @@ const services = sanityServices.map((service: any) => ({
   </section>
   
   <!-- CTA -->
-  <section class="section-spacing bg-mbl-dusk">
+  <section class="section-spacing bg-[#1e3030]">
     <div class="container-narrow text-center">
       <h2 class="text-display text-white mb-6">Not sure which service you need?</h2>
       <p class="text-lg text-mbl-mist/80 mb-10 max-w-xl mx-auto">

@@ -4,6 +4,11 @@
   50% { opacity: 0.5; }
 }
 
+@keyframes drawPath {
+  from { stroke-dashoffset: 1; }
+  to   { stroke-dashoffset: 0; }
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
