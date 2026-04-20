@@ -59,7 +59,7 @@ const aboutImages = (profile?.aboutImages ?? [])
         <!-- Right: mosaic -->
         {aboutImages.length > 0 && (
           <div class="hidden lg:grid grid-cols-2 grid-rows-2 gap-3 h-[480px]">
-            {aboutImages.map(({ url }, i) => (
+            {aboutImages.map(({ url }: { url: string }, i: number) => (
               <div class="overflow-hidden rounded-sm">
                 <img
                   src={url}
