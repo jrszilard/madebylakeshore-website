@@ -329,7 +329,15 @@ export const queries = {
 
   // DesignAndOtherStories — Artist Profile
   artistProfile: `*[_type == "artistProfile"][0] {
-  name, portrait, heroImage, bio, shortBio, socialLinks, substackUrl
+  name, heroImage, shortBio, socialLinks,
+  aboutImages[] {
+    alt,
+    asset-> { url, metadata { dimensions { width, height } } }
+  },
+  mediums[] {
+    title, description,
+    images[] { alt, caption, asset, crop, hotspot }
+  }
 }`,
 
   featuredWritingForHome: `[
@@ -347,10 +355,10 @@ export const queries = {
 }`,
 
   artworkForSale: `*[_type == "artwork" && forSale == true] | order(year desc) {
-  _id, title, slug, images, medium, price, originalAvailable, printsAvailable, printOptions
+  _id, title, slug, images, medium, price, artworkType, originalAvailable, printsAvailable, printOptions
 }`,
 
-  featuredShopItems: `*[_type == "artwork" && forSale == true] | order(year desc)[0...4] {
+  featuredShopItems: `*[_type == "artwork" && forSale == true && featured == true] | order(year desc)[0...4] {
   _id, title, slug, images, medium, price, originalAvailable, printsAvailable
 }`,
 

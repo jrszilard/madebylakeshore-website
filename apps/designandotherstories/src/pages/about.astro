@@ -1,18 +1,29 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import SectionHeader from '../components/SectionHeader.astro';
+import MediumCarousel from '../components/MediumCarousel';
 import { sanityClient, urlFor, queries } from '../lib/sanity';
 import { SUBSTACK_URL } from '../lib/config';
 
-const [profile, featuredArtwork, nextEvent] = await Promise.all([
+const [profile, nextEvent] = await Promise.all([
   sanityClient.fetch(queries.artistProfile),
-  sanityClient.fetch(queries.featuredArtwork),
   sanityClient.fetch(queries.nextEvent),
 ]);
 
-const portraitUrl = profile?.portrait?.asset
-  ? urlFor(profile.portrait).width(1400).height(1000).fit('crop').crop('focalpoint').url()
-  : null;
+const aboutImages = (profile?.aboutImages ?? [])
+  .slice(0, 4)
+  .map((img: any, i: number) => {
+    const w = img.asset?.metadata?.dimensions?.width ?? 1;
+    const h = img.asset?.metadata?.dimensions?.height ?? 1;
+    const isLandscape = w > h;
+    return {
+      url: isLandscape
+        ? urlFor(img).width(900).height(600).fit('crop').crop('focalpoint').url()
+        : urlFor(img).width(600).height(800).fit('crop').crop('focalpoint').url(),
+      aspect: isLandscape ? 'aspect-[3/2]' : 'aspect-[3/4]',
+      span: isLandscape ? 'col-span-2' : 'col-span-1',
+      offset: ['0', '2rem', '1rem', '3rem'][i] ?? '0',
+    };
+  });
 ---
 
 <BaseLayout
@@ -20,97 +31,101 @@ const portraitUrl = profile?.portrait?.asset
   description="Design & Other Stories is the work of W. H. Bonilla, painter, printmaker, and writer based in New Hampshire. Art you can put on your wall and fiction about the people who show up for each other."
 >
 
-  <!-- 1. Full-bleed portrait -->
-  <div class="relative w-full h-[75vh] overflow-hidden bg-daos-warm">
-    {portraitUrl ? (
-      <>
-        <img
-          src={portraitUrl}
-          alt={profile?.name || 'W. H. Bonilla'}
-          class="w-full h-full object-cover object-top"
-        />
-        <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-daos-cream"></div>
-      </>
-    ) : (
-      <div class="w-full h-full bg-gradient-to-br from-daos-warm to-daos-clay"></div>
-    )}
-  </div>
-
-  <!-- 2. Bio -->
+  <!-- 1. Header: bio + mosaic -->
   <section class="section-spacing">
     <div class="container-art">
-      <div class="max-w-2xl mx-auto space-y-6">
-        <p class="font-sans text-xs uppercase tracking-widest text-daos-terracotta-dark">About</p>
-        <h1 class="font-display italic text-display md:text-display-lg text-daos-ink leading-tight">
-          The studio.
-        </h1>
-        <p class="font-body text-daos-charcoal text-lg leading-relaxed italic border-l-2 border-daos-clay pl-4">
-          Making things you can hold in a world that keeps asking you to let go of everything physical.
-        </p>
-        <div class="prose prose-stone font-body text-daos-charcoal leading-relaxed max-w-none">
-          <p>
-            Design & Other Stories is the work of W. H. Bonilla, painter, printmaker, and writer based in New Hampshire.
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+
+        <!-- Left: headline + pull quote -->
+        <div class="space-y-6">
+          <p class="font-sans text-xs uppercase tracking-widest text-daos-terracotta-dark">About</p>
+          <h1 class="font-display italic text-display md:text-display-lg text-daos-ink leading-tight">
+            From New Hampshire and Puerto Rico to the world.
+          </h1>
+          <p class="font-body text-daos-charcoal text-lg leading-relaxed italic border-l-2 border-daos-clay pl-4">
+            Making things you can hold in a world that keeps asking you to let go of everything physical.
           </p>
-          <p>
-            The studio makes two kinds of things. Art you can put on your wall, and fiction about the people who show up for each other. Ink on paper, watercolor, graphite. Novels and short stories about connection, found family, and the weight of ordinary moments.
-          </p>
-          <p>
-            Both come from the same place. A belief that the things we choose to bring into our lives, the objects, the stories, should be made with care, by a person, on purpose.
-          </p>
-          <p><em>A practice, not a product.</em></p>
+          {profile?.socialLinks && profile.socialLinks.length > 0 && (
+            <div class="flex flex-wrap gap-3 pt-2">
+              {profile.socialLinks.map((link: any) => (
+                <a href={link.url} target="_blank" rel="noopener noreferrer" class="btn-outline text-sm">
+                  {link.platform || link.label || 'Link'}
+                </a>
+              ))}
+            </div>
+          )}
         </div>
 
-        {profile?.socialLinks && profile.socialLinks.length > 0 && (
-          <div class="flex flex-wrap gap-3 pt-2">
-            {profile.socialLinks.map((link: any) => (
-              <a
-                href={link.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                class="btn-outline text-sm"
-              >
-                {link.platform || link.label || 'Link'}
-              </a>
+        <!-- Right: mosaic -->
+        {aboutImages.length > 0 && (
+          <div class="hidden lg:grid grid-cols-2 grid-rows-2 gap-3 h-[480px]">
+            {aboutImages.map(({ url }, i) => (
+              <div class="overflow-hidden rounded-sm">
+                <img
+                  src={url}
+                  alt=""
+                  class="w-full h-full object-contain"
+                  loading={i === 0 ? 'eager' : 'lazy'}
+                />
+              </div>
             ))}
           </div>
         )}
+
       </div>
     </div>
   </section>
 
-  <!-- 3. Selected work -->
-  {featuredArtwork && featuredArtwork.length > 0 && (
-    <section class="section-spacing bg-daos-paper">
+  <!-- 2. Bio paragraphs -->
+  <section class="pb-16">
+    <div class="container-art">
+      <div class="max-w-2xl space-y-4 prose prose-stone font-body text-daos-charcoal leading-relaxed">
+        <p>
+          I'm Wilma — a designer, painter, and writer living in New Hampshire with my husband and our dog.
+        </p>
+        <p>
+          I make two kinds of things: art you can put on your wall, and fiction about people who show up for each other. Ink, watercolor, graphite. Novels and short stories about connection, found family, and the weight of ordinary moments.
+        </p>
+        <p>
+          Both come from the same place — a belief that the things we bring into our lives should be made with care, by a person, on purpose.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. Mediums -->
+  {profile?.mediums?.length > 0 && profile.mediums.map((medium: any, i: number) => (
+    <section class={`section-spacing ${i % 2 === 1 ? 'bg-daos-paper' : ''}`}>
       <div class="container-art">
-        <SectionHeader title="Selected Work" viewAllHref="/gallery" />
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-          {featuredArtwork.map((piece: any) => {
-            const thumbUrl = piece.images?.[0]?.asset
-              ? urlFor(piece.images[0]).width(600).height(750).fit('crop').crop('focalpoint').url()
-              : null;
-            return (
-              <a href={`/gallery/${piece.slug?.current}`} class="group block">
-                <div class="aspect-[4/5] overflow-hidden rounded-sm bg-daos-warm mb-3">
-                  {thumbUrl ? (
-                    <img
-                      src={thumbUrl}
-                      alt={piece.title}
-                      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                      loading="lazy"
-                    />
-                  ) : (
-                    <div class="w-full h-full bg-gradient-to-br from-daos-warm to-daos-clay"></div>
-                  )}
-                </div>
-                <p class="font-display text-sm text-daos-ink group-hover:text-daos-terracotta-dark transition-colors leading-snug">{piece.title}</p>
-                {piece.medium && <p class="font-sans text-xs text-daos-clay mt-0.5">{piece.medium}</p>}
-              </a>
-            );
-          })}
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+
+          <!-- Text: odd rows flip to right -->
+          <div class={`space-y-4 ${i % 2 === 1 ? 'lg:order-2' : ''}`}>
+            <p class="font-sans text-xs uppercase tracking-widest text-daos-terracotta-dark">Medium</p>
+            <h2 class="font-display italic text-2xl md:text-3xl text-daos-ink leading-tight">{medium.title}</h2>
+            {medium.description && (
+              <p class="font-body text-daos-charcoal leading-relaxed">{medium.description}</p>
+            )}
+          </div>
+
+          <!-- Carousel -->
+          {medium.images?.length > 0 && (
+            <div class={i % 2 === 1 ? 'lg:order-1' : ''}>
+              <MediumCarousel
+                client:load
+                images={medium.images.map((img: any) => ({
+                  url: urlFor(img).width(900).height(600).fit('crop').crop('focalpoint').url(),
+                  alt: img.alt ?? medium.title,
+                  caption: img.caption,
+                }))}
+              />
+            </div>
+          )}
+
         </div>
       </div>
     </section>
-  )}
+  ))}
 
   <!-- 4. Find me -->
   <section class="section-spacing">
