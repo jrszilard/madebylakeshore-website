@@ -14,7 +14,7 @@ const navLinks = [
 
 <header class="sticky top-0 z-50 bg-daos-cream/95 backdrop-blur-sm border-b border-daos-warm">
   <nav class="container-art">
-    <div class="flex items-center justify-between h-20">
+    <div class="flex items-center h-20">
       <!-- Logo -->
       <a href="/" class="group">
         <span class="font-display text-xl md:text-2xl text-daos-ink italic">
@@ -23,7 +23,7 @@ const navLinks = [
       </a>
 
       <!-- Desktop Navigation -->
-      <div class="hidden lg:flex items-center gap-8">
+      <div class="hidden lg:flex items-center gap-8 ml-12">
         {navLinks.map((link) => (
           <a
             href={link.href}
@@ -40,18 +40,8 @@ const navLinks = [
       </div>
 
       <!-- Cart Button and Mobile Menu Toggle -->
-      <div class="flex items-center gap-4">
-        {SHOP_PLATFORM === 'snipcart' && (
-          <button
-            class="snipcart-checkout relative p-2 text-daos-charcoal hover:text-daos-ink transition-colors"
-            aria-label="Shopping cart"
-          >
-            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-            </svg>
-            <span class="snipcart-items-count absolute -top-1 -right-1 w-5 h-5 bg-daos-terracotta text-white text-xs rounded-full flex items-center justify-center" aria-hidden="true"></span>
-          </button>
-        )}
+      <div class="flex items-center gap-4 ml-auto">
+        {/* Cart icon hidden for now */}
 
         <!-- Mobile Menu Button -->
         <button

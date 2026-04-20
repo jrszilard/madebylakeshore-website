@@ -10,11 +10,11 @@ interface Props {
 }
 
 const { title, slug, category, medium, price, image, available } = Astro.props;
-const productUrl = `https://designandotherstories.com/shop/${slug}`;
+const productUrl = `https://designandotherstories.com/gallery/${slug}`;
 ---
 
 <article class="group">
-  <a href={`/shop/${slug}`} class="block">
+  <a href={`/gallery/${slug}`} class="block">
     <div class="relative aspect-[3/4] mb-4 overflow-hidden bg-daos-warm">
       {image ? (
         <img src={image} alt={title} class="w-full h-full object-cover" />
@@ -44,7 +44,7 @@ const productUrl = `https://designandotherstories.com/shop/${slug}`;
       {category}
     </p>
     <h3 class="font-display text-lg">
-      <a href={`/shop/${slug}`} class="hover:text-daos-terracotta transition-colors">
+      <a href={`/gallery/${slug}`} class="hover:text-daos-terracotta transition-colors">
         {title}
       </a>
     </h3>

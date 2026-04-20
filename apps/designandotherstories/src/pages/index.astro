@@ -9,13 +9,16 @@ import { sanityClient, urlFor, queries } from '../lib/sanity';
 import { fetchSubstackFeed } from '../lib/substack';
 
 // Fetch all data at build time (static page)
-const [artistProfile, featuredWriting, shopItems, nextEvent, substackPosts] = await Promise.all([
+const [artistProfile, featuredWriting, shopItems, allCollections, nextEvent, substackPosts] = await Promise.all([
   sanityClient.fetch(queries.artistProfile),
   sanityClient.fetch(queries.featuredWritingForHome),
   sanityClient.fetch(queries.featuredShopItems),
+  sanityClient.fetch(queries.allCollections),
   sanityClient.fetch(queries.nextEvent),
   fetchSubstackFeed(SUBSTACK_SHORT_STORIES_SECTION_ID),
 ]);
+
+const isSingleCollection = (allCollections ?? []).length === 1;
 
 // Merge Sanity featured writing + Substack posts, up to 5 cards total
 const sanityWritingItems: any[] = (featuredWriting ?? []).slice(0, 5);
@@ -40,13 +43,13 @@ const typeLabels: Record<string, string> = {
   showSnipcart={shopItems && shopItems.length > 0}
 >
   <!-- 1. Hero -->
-  <HeroSection heroImage={artistProfile?.heroImage} />
+  <HeroSection heroImage={artistProfile?.heroImage} shopItems={shopItems ?? []} />
 
   <!-- 3. From the Studio (shop) -->
   {shopItems && shopItems.length > 0 && (
     <section class="section-spacing">
       <div class="container-art">
-        <SectionHeader title="From the Studio" viewAllHref="/shop" />
+        <SectionHeader title="From the Studio" viewAllHref="/gallery" />
 
         <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
           {(shopItems as any[]).map((item: any) => (
@@ -62,6 +65,91 @@ const typeLabels: Record<string, string> = {
           ))}
         </div>
       </div>
+    </section>
+  )}
+
+  <!-- Collections -->
+  {allCollections && allCollections.length > 0 && (
+    <section class="section-spacing">
+
+      {/* Single: full-bleed with overlay title */}
+      {isSingleCollection && (
+        <a
+          href={`/gallery/collections/${(allCollections as any[])[0].slug.current}`}
+          class="group block relative overflow-hidden"
+        >
+          {(allCollections as any[])[0].coverImage ? (
+            <img
+              src={urlFor((allCollections as any[])[0].coverImage).width(1600).height(700).fit('crop').crop('focalpoint').url()}
+              alt={(allCollections as any[])[0].title}
+              class="w-full object-cover group-hover:scale-105 transition-transform duration-700"
+              style="aspect-ratio: 16/7;"
+            />
+          ) : (
+            <div class="w-full bg-gradient-to-br from-daos-warm to-daos-clay" style="aspect-ratio: 16/7;" />
+          )}
+          <div class="absolute inset-0 bg-daos-ink/30 group-hover:bg-daos-ink/40 transition-colors duration-300" />
+          <div class="absolute inset-0 flex flex-col justify-end p-8 md:p-12">
+            <p class="font-sans text-xs uppercase tracking-widest text-white/70 mb-2">Collections</p>
+            <h2 class="font-display italic text-3xl md:text-5xl text-white leading-tight">{(allCollections as any[])[0].title}</h2>
+            {(allCollections as any[])[0].tagline && (
+              <p class="font-body text-white/80 mt-2 text-lg max-w-xl">{(allCollections as any[])[0].tagline}</p>
+            )}
+          </div>
+        </a>
+      )}
+
+      {/* Multiple: carousel */}
+      {!isSingleCollection && (
+        <div>
+          <div class="container-art mb-6">
+            <SectionHeader title="Collections" />
+          </div>
+          <div class="relative">
+            <div
+              id="collections-track"
+              class="flex overflow-x-auto gap-4 px-6 md:px-12 scroll-smooth snap-x snap-mandatory scrollbar-hide"
+              style="scroll-padding-left: 1.5rem;"
+            >
+              {(allCollections as any[]).map((collection: any) => {
+                const coverUrl = collection.coverImage
+                  ? urlFor(collection.coverImage).width(900).height(1100).fit('crop').crop('focalpoint').url()
+                  : null;
+                const releaseYear = collection.releaseDate
+                  ? new Date(collection.releaseDate).getFullYear()
+                  : null;
+                return (
+                  <a href={`/gallery/collections/${collection.slug.current}`} class="group snap-start shrink-0 w-[80vw] md:w-[40vw] lg:w-[30vw] block">
+                    <div class="relative aspect-[3/4] overflow-hidden rounded-sm bg-daos-warm mb-4">
+                      {coverUrl ? (
+                        <img src={coverUrl} alt={collection.title} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+                      ) : (
+                        <div class="absolute inset-0 bg-gradient-to-br from-daos-warm to-daos-clay flex items-center justify-center">
+                          <span class="font-display text-daos-ink/30 text-xl text-center px-6">{collection.title}</span>
+                        </div>
+                      )}
+                    </div>
+                    <div class="space-y-1 px-1">
+                      {releaseYear && <p class="font-sans text-xs uppercase tracking-widest text-daos-clay">{releaseYear}</p>}
+                      <h2 class="font-display text-xl text-daos-ink group-hover:text-daos-terracotta transition-colors leading-snug">{collection.title}</h2>
+                      {collection.tagline && <p class="font-body text-sm text-daos-charcoal leading-relaxed line-clamp-2">{collection.tagline}</p>}
+                    </div>
+                  </a>
+                );
+              })}
+            </div>
+            <div class="container-art mt-6 flex gap-3">
+              <button id="collections-prev" aria-label="Previous collection" class="w-10 h-10 flex items-center justify-center border border-daos-warm text-daos-charcoal hover:border-daos-ink hover:text-daos-ink transition-colors rounded-sm">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+              <button id="collections-next" aria-label="Next collection" class="w-10 h-10 flex items-center justify-center border border-daos-warm text-daos-charcoal hover:border-daos-ink hover:text-daos-ink transition-colors rounded-sm">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </section>
   )}
 
@@ -87,7 +175,7 @@ const typeLabels: Record<string, string> = {
   <!-- 5. Latest Writing -->
   <section class="section-spacing bg-daos-cream">
     <div class="container-art">
-      <SectionHeader title="From the Desk" viewAllHref="/writing" />
+      <SectionHeader title="Fresh Off the Press" viewAllHref="/writing" />
 
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
         {sanityWritingItems.map((item: any) => {
@@ -113,7 +201,6 @@ const typeLabels: Record<string, string> = {
                 )}
               </div>
               <div class="space-y-1">
-                {item.type && <p class="font-sans text-xs text-daos-clay uppercase tracking-wider">{typeLabels[item.type] ?? item.type}</p>}
                 <h3 class="font-display text-lg font-bold text-daos-ink group-hover:text-daos-terracotta transition-colors leading-snug">{item.title}</h3>
                 {snippet && <p class="font-body text-sm text-daos-charcoal line-clamp-2">{snippet}</p>}
               </div>
@@ -131,7 +218,6 @@ const typeLabels: Record<string, string> = {
               )}
             </div>
             <div class="space-y-1">
-              <p class="font-sans text-xs text-daos-clay uppercase tracking-wider">Essay</p>
               <h3 class="font-display text-lg font-bold text-daos-ink group-hover:text-daos-terracotta transition-colors leading-snug">{post.title}</h3>
               {post.excerpt && <p class="font-body text-sm text-daos-charcoal line-clamp-2">{post.excerpt}</p>}
             </div>
@@ -146,4 +232,18 @@ const typeLabels: Record<string, string> = {
       </div>
     </div>
   </section>
+<script>
+  const track = document.getElementById('collections-track');
+  const prev = document.getElementById('collections-prev');
+  const next = document.getElementById('collections-next');
+
+  function slideWidth() {
+    const first = track?.firstElementChild as HTMLElement | null;
+    return first ? first.offsetWidth + 16 : 0;
+  }
+
+  prev?.addEventListener('click', () => track?.scrollBy({ left: -slideWidth(), behavior: 'smooth' }));
+  next?.addEventListener('click', () => track?.scrollBy({ left: slideWidth(), behavior: 'smooth' }));
+</script>
+
 </BaseLayout>

@@ -10,13 +10,16 @@ interface Props {
   price?: number;
   originalAvailable?: boolean;
   printsAvailable?: boolean;
+  landscape?: boolean;
 }
 
-const { title, slug, images, medium, price, originalAvailable = true, printsAvailable = false } = Astro.props;
+const { title, slug, images, medium, price, originalAvailable = true, printsAvailable = false, landscape = false } = Astro.props;
 
 const imageUrl =
   images && images.length > 0
-    ? urlFor(images[0]).width(400).height(533).fit('crop').crop('focalpoint').url()
+    ? landscape
+      ? urlFor(images[0]).width(600).height(400).fit('crop').crop('focalpoint').url()
+      : urlFor(images[0]).width(400).height(533).fit('crop').crop('focalpoint').url()
     : null;
 
 const isSold = !originalAvailable;
@@ -27,7 +30,7 @@ const isDimmed = isSold && !printsAvailable;
 <article class:list={['group bg-daos-paper rounded-sm overflow-hidden hover:shadow-lg transition-shadow duration-300', isDimmed && 'opacity-60']}>
   <a href={`/gallery/${slug.current}`} class="block">
     <!-- Uniform 3:4 image container -->
-    <div class="relative aspect-[3/4] overflow-hidden bg-daos-warm">
+    <div class={`relative overflow-hidden bg-daos-warm ${landscape ? 'aspect-[3/2]' : 'aspect-[3/4]'}`}>
       {imageUrl ? (
         <img
           src={imageUrl}
