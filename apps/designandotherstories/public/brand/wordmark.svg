@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 180" width="480" height="180" role="img" aria-label="Design &amp; Other Stories">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;1,9..144,500&amp;display=swap');
+    </style>
+  </defs>
+
+  <!-- Primary wordmark: stacked, centered, Fraunces 500 -->
+  <text
+    x="240" y="72"
+    text-anchor="middle"
+    font-family="Fraunces, Georgia, serif"
+    font-weight="500"
+    font-style="normal"
+    font-size="72"
+    letter-spacing="-2"
+    fill="#20221C"
+    style="font-variation-settings: 'opsz' 144;">Design</text>
+
+  <!-- Line 2: italic terracotta &amp; + rest in roman -->
+  <text
+    x="240" y="148"
+    text-anchor="middle"
+    font-family="Fraunces, Georgia, serif"
+    font-weight="500"
+    font-style="normal"
+    font-size="72"
+    letter-spacing="-2"
+    fill="#20221C"
+    style="font-variation-settings: 'opsz' 144;">
+    <tspan font-style="italic" fill="#B5481F" style="font-variation-settings: 'opsz' 144;">&amp;</tspan>
+    <tspan> Other Stories</tspan>
+  </text>
+</svg>

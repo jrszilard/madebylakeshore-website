@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Work+Sans:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=JetBrains+Mono:wght@300;400;500&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -11,7 +11,15 @@
   
   body {
     @apply font-body text-daos-ink bg-daos-cream antialiased;
-    font-feature-settings: "kern" 1, "liga" 1;
+    font-optical-sizing: auto;
+    font-variation-settings: "opsz" 14;
+    text-rendering: optimizeLegibility;
+    letter-spacing: 0.002em;
+  }
+
+  em, i {
+    font-style: italic;
+    font-variation-settings: "opsz" 14;
   }
   
   h1, h2, h3, h4 {
@@ -33,16 +41,21 @@
   }
   
   .btn-warm {
-    @apply inline-flex items-center gap-2 px-6 py-3 text-white font-sans font-medium rounded-sm transition-colors duration-200;
-    background-color: #a0562e;
+    @apply inline-flex items-center gap-2 px-6 py-3 text-white font-sans tracking-widest uppercase transition-colors duration-200;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    background-color: #B5481F;
   }
 
   .btn-warm:hover {
-    background-color: rgb(160 86 46 / 0.9);
+    background-color: #8F3614;
   }
-  
+
   .btn-outline {
-    @apply inline-flex items-center gap-2 px-6 py-3 border border-daos-ink text-daos-ink font-sans font-medium rounded-sm hover:bg-daos-ink hover:text-daos-cream transition-colors duration-200;
+    @apply inline-flex items-center gap-2 px-6 py-3 border border-daos-ink text-daos-ink font-sans hover:bg-daos-ink hover:text-daos-cream transition-colors duration-200;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
   }
   
   /* Snipcart button styling */
@@ -53,7 +66,7 @@
   .btn-warm:focus-visible,
   .btn-outline:focus-visible {
     @apply outline-2 outline-offset-2;
-    outline-color: #a0562e;
+    outline-color: #8F3614;
   }
 
   /* Link underline animation */
@@ -64,7 +77,7 @@
   .link-underline::after {
     content: '';
     @apply absolute bottom-0 left-0 w-full h-px;
-    background-color: #a0562e;
+    background-color: #8F3614;
     transform: scaleX(0);
     transform-origin: right;
     transition: transform 300ms ease;
@@ -79,7 +92,7 @@
 @layer base {
   :focus-visible {
     @apply outline-2 outline-offset-2;
-    outline-color: #a0562e;
+    outline-color: #8F3614;
   }
 }
 

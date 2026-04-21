@@ -4,23 +4,23 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Design & Other Stories - warm, artistic, handcrafted feel
+        // Design & Other Stories — Fog·Moss brand palette
         'daos': {
-          'cream': '#faf8f5',
-          'paper': '#f5f0e8',
-          'warm': '#e8dfd3',
-          'clay': '#c4a77d',
-          'terracotta': '#c67c4e',
-          'terracotta-dark': '#a0562e',
-          'ink': '#2d2a26',
-          'charcoal': '#4a4641',
-          'sage': '#7d8471',
+          'cream': '#ECEBE3',
+          'paper': '#E4E3DA',
+          'warm': '#CFCFC2',
+          'clay': '#858779',
+          'terracotta': '#B5481F',
+          'terracotta-dark': '#8F3614',
+          'ink': '#20221C',
+          'charcoal': '#3D3F38',
+          'sage': '#4E6547',
         }
       },
       fontFamily: {
-        'display': ['"Playfair Display"', 'Georgia', 'serif'],
-        'body': ['"Libre Baskerville"', 'Georgia', 'serif'],
-        'sans': ['"Work Sans"', 'system-ui', 'sans-serif'],
+        'display': ['"Fraunces"', 'Georgia', 'serif'],
+        'body': ['"Fraunces"', 'Georgia', 'serif'],
+        'sans': ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
       },
       fontSize: {
         'display-xl': ['4rem', { lineHeight: '1.1', letterSpacing: '-0.01em' }],

@@ -17,8 +17,8 @@ const navLinks = [
     <div class="flex items-center h-20">
       <!-- Logo -->
       <a href="/" class="group">
-        <span class="font-display text-xl md:text-2xl text-daos-ink italic">
-          Design & Other Stories
+        <span class="font-display text-xl md:text-2xl text-daos-ink" style="font-weight: 500; letter-spacing: -0.02em; font-variation-settings: 'opsz' 96;">
+          Design <em class="not-italic" style="font-style: italic; color: #B5481F; font-variation-settings: 'opsz' 96;">&</em> Other Stories
         </span>
       </a>
 
@@ -28,7 +28,7 @@ const navLinks = [
           <a
             href={link.href}
             class:list={[
-              "font-sans text-sm tracking-wide transition-colors duration-200",
+              "font-sans text-[11px] tracking-[0.18em] uppercase transition-colors duration-200",
               currentPath === link.href || currentPath.startsWith(link.href + '/')
                 ? "text-daos-terracotta-dark"
                 : "text-daos-charcoal hover:text-daos-ink"
@@ -66,7 +66,7 @@ const navLinks = [
         <a
           href={link.href}
           class:list={[
-            "block py-2 font-sans transition-colors",
+            "block py-2 font-sans text-[11px] tracking-[0.18em] uppercase transition-colors",
             currentPath === link.href || currentPath.startsWith(link.href + '/')
               ? "text-daos-terracotta-dark"
               : "text-daos-charcoal hover:text-daos-ink"

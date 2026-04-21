@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200" role="img" aria-label="Design &amp; Other Stories monogram">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@1,9..144,500&amp;display=swap');
+    </style>
+  </defs>
+
+  <!-- Outer ring -->
+  <circle cx="100" cy="100" r="96" fill="#20221C"/>
+  <!-- Inner ring hint -->
+  <circle cx="100" cy="100" r="86" fill="none" stroke="#ECEBE3" stroke-width="0.75" opacity="0.18"/>
+  <!-- Italic d -->
+  <text
+    x="100" y="138"
+    text-anchor="middle"
+    font-family="Fraunces, Georgia, serif"
+    font-weight="500"
+    font-style="italic"
+    font-size="120"
+    fill="#ECEBE3"
+    style="font-variation-settings: 'opsz' 144, 'SOFT' 100;">d</text>
+</svg>

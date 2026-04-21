@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200" fill="none" role="img" aria-label="Design &amp; Other Stories studio seal">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@1,9..144,500&amp;family=JetBrains+Mono:wght@400&amp;display=swap');
+    </style>
+    <path id="seal-top" d="M 26,100 A 74,74 0 0,1 174,100"/>
+    <path id="seal-bot" d="M 26,100 A 74,74 0 0,0 174,100"/>
+  </defs>
+
+  <!-- Outer ring -->
+  <circle cx="100" cy="100" r="90" stroke="#20221C" stroke-width="0.75" opacity="0.9"/>
+
+  <!-- Top text: DESIGN AND OTHER STORIES -->
+  <text font-family="JetBrains Mono, ui-monospace, monospace" font-size="7.4" letter-spacing="3" fill="#20221C" font-weight="400">
+    <textPath href="#seal-top" startOffset="50%" text-anchor="middle">DESIGN  AND  OTHER  STORIES</textPath>
+  </text>
+
+  <!-- Bottom text: NEW HAMPSHIRE -->
+  <text font-family="JetBrains Mono, ui-monospace, monospace" font-size="7.4" letter-spacing="3" fill="#20221C" font-weight="400">
+    <textPath href="#seal-bot" startOffset="50%" text-anchor="middle">NEW HAMPSHIRE</textPath>
+  </text>
+
+  <!-- Center italic & -->
+  <text x="100" y="122" text-anchor="middle"
+        font-family="Fraunces, Georgia, serif"
+        font-style="italic"
+        font-weight="500"
+        font-size="78"
+        fill="#20221C"
+        style="font-variation-settings: 'opsz' 144, 'SOFT' 100;">&amp;</text>
+</svg>

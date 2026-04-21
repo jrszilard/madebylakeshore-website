@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 120" width="480" height="120" role="img" aria-label="d·a·o·s">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500&amp;display=swap');
+    </style>
+  </defs>
+
+  <!-- Short form: d·a·o·s with terracotta separators -->
+  <text
+    x="240" y="90"
+    text-anchor="middle"
+    font-family="Fraunces, Georgia, serif"
+    font-weight="500"
+    font-style="normal"
+    font-size="88"
+    fill="#20221C"
+    style="font-variation-settings: 'opsz' 144;">
+    d<tspan fill="#B5481F" font-weight="400">·</tspan>a<tspan fill="#B5481F" font-weight="400">·</tspan>o<tspan fill="#B5481F" font-weight="400">·</tspan>s
+  </text>
+</svg>
