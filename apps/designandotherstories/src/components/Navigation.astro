@@ -1,5 +1,5 @@
 ---
-import { SHOP_PLATFORM } from '../lib/config';
+import { SHOP_PLATFORM, SUBSTACK_URL } from '../lib/config';
 
 const currentPath = Astro.url.pathname;
 
@@ -7,8 +7,8 @@ const navLinks = [
   { href: '/gallery', label: 'Gallery' },
   { href: '/writing', label: 'Writing' },
   { href: '/events', label: 'Events' },
+  { href: SUBSTACK_URL, label: 'The Blog', external: true },
   { href: '/about', label: 'About' },
-  // { href: '/shop', label: 'Shop' },
 ];
 ---
 
@@ -27,9 +27,11 @@ const navLinks = [
         {navLinks.map((link) => (
           <a
             href={link.href}
+            target={link.external ? '_blank' : undefined}
+            rel={link.external ? 'noopener noreferrer' : undefined}
             class:list={[
               "font-sans text-[11px] tracking-[0.18em] uppercase transition-colors duration-200",
-              currentPath === link.href || currentPath.startsWith(link.href + '/')
+              !link.external && (currentPath === link.href || currentPath.startsWith(link.href + '/'))
                 ? "text-daos-terracotta-dark"
                 : "text-daos-charcoal hover:text-daos-ink"
             ]}
@@ -65,9 +67,11 @@ const navLinks = [
       {navLinks.map((link) => (
         <a
           href={link.href}
+          target={link.external ? '_blank' : undefined}
+          rel={link.external ? 'noopener noreferrer' : undefined}
           class:list={[
             "block py-2 font-sans text-[11px] tracking-[0.18em] uppercase transition-colors",
-            currentPath === link.href || currentPath.startsWith(link.href + '/')
+            !link.external && (currentPath === link.href || currentPath.startsWith(link.href + '/'))
               ? "text-daos-terracotta-dark"
               : "text-daos-charcoal hover:text-daos-ink"
           ]}
