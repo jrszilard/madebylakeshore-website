@@ -42,48 +42,69 @@ export default defineType({
       type: 'figure',
     }),
     defineField({
-      name: 'lookbookContent',
-      title: 'Lookbook Content',
-      description: 'Build the collection page by interleaving artwork and editorial text in any order.',
+      name: 'essayBlocks',
+      title: 'Visual Essay',
+      description: 'Build the collection essay block by block. A swimlane of all pieces in the collection appears automatically at the end.',
       type: 'array',
       of: [
         {
           type: 'object',
-          name: 'artworkEntry',
-          title: 'Artwork',
+          name: 'imageBlock',
+          title: 'Image',
           fields: [
             {
-              name: 'artwork',
-              title: 'Artwork',
-              type: 'reference',
-              to: [{ type: 'artwork' }],
+              name: 'style',
+              title: 'Style',
+              type: 'string',
+              options: {
+                list: [
+                  { title: 'Full bleed (edge to edge)', value: 'full-bleed' },
+                  { title: 'Full width (in container)', value: 'full-width' },
+                ],
+                layout: 'radio',
+              },
+              initialValue: 'full-width',
               validation: (Rule: any) => Rule.required(),
+            },
+            {
+              name: 'image',
+              title: 'Image',
+              type: 'figure',
+              validation: (Rule: any) => Rule.required(),
+            },
+            {
+              name: 'caption',
+              title: 'Caption',
+              type: 'string',
             },
           ],
           preview: {
-            select: { title: 'artwork.title', media: 'artwork.images.0' },
-            prepare({ title, media }: any) {
-              return { title: title ?? 'Untitled artwork', media };
+            select: { style: 'style', media: 'image' },
+            prepare({ style, media }: any) {
+              return {
+                title: style === 'full-bleed' ? 'Image — Full bleed' : 'Image — Full width',
+                media,
+              };
             },
           },
         },
         {
           type: 'object',
-          name: 'editorialText',
-          title: 'Editorial Text',
+          name: 'textBlock',
+          title: 'Text',
           fields: [
             {
-              name: 'layout',
-              title: 'Layout',
+              name: 'style',
+              title: 'Style',
               type: 'string',
               options: {
                 list: [
-                  { title: 'Full width', value: 'fullwidth' },
-                  { title: 'Inline (card in grid)', value: 'inline' },
+                  { title: 'Full bleed (edge to edge, dark background)', value: 'full-bleed' },
+                  { title: 'Full width (in container)', value: 'full-width' },
                 ],
                 layout: 'radio',
               },
-              initialValue: 'fullwidth',
+              initialValue: 'full-width',
               validation: (Rule: any) => Rule.required(),
             },
             {
@@ -95,16 +116,16 @@ export default defineType({
               name: 'body',
               title: 'Body',
               type: 'text',
-              rows: 4,
+              rows: 5,
               validation: (Rule: any) => Rule.required(),
             },
           ],
           preview: {
-            select: { title: 'heading', subtitle: 'body', layout: 'layout' },
-            prepare({ title, subtitle, layout }: any) {
+            select: { style: 'style', title: 'heading', subtitle: 'body' },
+            prepare({ style, title, subtitle }: any) {
               return {
-                title: title ?? 'Editorial text',
-                subtitle: `${layout === 'inline' ? 'Inline' : 'Full width'} — ${subtitle ?? ''}`,
+                title: title ?? (style === 'full-bleed' ? 'Text — Full bleed' : 'Text — Full width'),
+                subtitle: subtitle ?? '',
               };
             },
           },

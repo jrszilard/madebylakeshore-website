@@ -358,7 +358,7 @@ export const queries = {
   _id, title, slug, images, medium, price, artworkType, originalAvailable, printsAvailable, printOptions
 }`,
 
-  featuredShopItems: `*[_type == "artwork" && forSale == true && featured == true] | order(year desc)[0...4] {
+  featuredShopItems: `*[_type == "artwork" && forSale == true && featured == true && (artworkType == "original" || !defined(artworkType))] | order(year desc)[0...4] {
   _id, title, slug, images, medium, price, originalAvailable, printsAvailable
 }`,
 
@@ -368,15 +368,9 @@ export const queries = {
 
   collectionBySlug: `*[_type == "artCollection" && slug.current == $slug][0] {
   _id, title, slug, tagline, description, releaseDate, coverImage,
-  lookbookContent[] {
-    _type,
-    _key,
-    _type == "artworkEntry" => {
-      "artwork": artwork->{ _id, title, slug, images, medium, price, originalAvailable, printsAvailable }
-    },
-    _type == "editorialText" => {
-      layout, heading, body
-    }
+  essayBlocks[] {
+    _type, _key, style, caption, heading, body,
+    image { ..., asset-> { url, metadata { dimensions } } }
   }
 }`,
 

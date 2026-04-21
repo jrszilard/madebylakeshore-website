@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
-import GalleryCard from '../../../components/GalleryCard.astro';
+import ShopCard from '../../../components/ShopCard.astro';
 import { sanityClient, urlFor, queries } from '../../../lib/sanity';
 
 export async function getStaticPaths() {
@@ -14,14 +14,12 @@ export async function getStaticPaths() {
 
 const { slug } = Astro.params;
 
-const [collection, artworkFallback] = await Promise.all([
+const [collection, artwork] = await Promise.all([
   sanityClient.fetch(queries.collectionBySlug, { slug }),
   sanityClient.fetch(queries.artworkByCollectionSlug, { slug }),
 ]);
 
-if (!collection) {
-  return Astro.redirect('/gallery');
-}
+if (!collection) return Astro.redirect('/gallery');
 
 const coverUrl = collection.coverImage
   ? urlFor(collection.coverImage).width(1600).height(900).fit('crop').crop('focalpoint').url()
@@ -31,39 +29,14 @@ const releaseYear = collection.releaseDate
   ? new Date(collection.releaseDate).getFullYear()
   : null;
 
-const hasLookbook = collection.lookbookContent && collection.lookbookContent.length > 0;
-
-const artworkCount = hasLookbook
-  ? collection.lookbookContent.filter((item: any) => item._type === 'artworkEntry').length
-  : (artworkFallback?.length ?? 0);
-
-// Group lookbook items into chunks: each full-width editorial text breaks the flow,
-// while artwork entries and inline editorial texts are grouped into grid rows.
-type LookbookChunk =
-  | { kind: 'fullwidth'; item: any }
-  | { kind: 'grid'; items: any[] };
-
-function chunkLookbook(content: any[]): LookbookChunk[] {
-  const chunks: LookbookChunk[] = [];
-  let gridBuffer: any[] = [];
-  for (const item of content) {
-    if (item._type === 'editorialText' && item.layout !== 'inline') {
-      if (gridBuffer.length) { chunks.push({ kind: 'grid', items: gridBuffer }); gridBuffer = []; }
-      chunks.push({ kind: 'fullwidth', item });
-    } else {
-      gridBuffer.push(item);
-    }
-  }
-  if (gridBuffer.length) chunks.push({ kind: 'grid', items: gridBuffer });
-  return chunks;
-}
-
-const lookbookChunks = hasLookbook ? chunkLookbook(collection.lookbookContent) : [];
+const hasEssay = collection.essayBlocks?.length > 0;
+const hasArtwork = artwork?.length > 0;
 ---
 
 <BaseLayout
   title={collection.title}
   description={collection.tagline ?? `A collection by W. H. Bonilla.`}
+  showSnipcart={hasArtwork}
 >
   <!-- Full-bleed cover -->
   {coverUrl ? (
@@ -84,14 +57,14 @@ const lookbookChunks = hasLookbook ? chunkLookbook(collection.lookbookContent) :
               {collection.title}
             </h1>
             {collection.tagline && (
-              <p class="font-body text-lg text-white/80 leading-relaxed max-w-xl">
-                {collection.tagline}
-              </p>
+              <p class="font-body text-lg text-white/80 leading-relaxed max-w-xl">{collection.tagline}</p>
             )}
           </div>
-          <p class="font-sans text-sm text-white/50 hidden md:block">
-            {artworkCount} {artworkCount === 1 ? 'piece' : 'pieces'}
-          </p>
+          {hasArtwork && (
+            <p class="font-sans text-xs uppercase tracking-widest text-white/50 hidden md:block">
+              {artwork.length} {artwork.length === 1 ? 'piece' : 'pieces'}
+            </p>
+          )}
         </div>
       </div>
     </section>
@@ -111,98 +84,114 @@ const lookbookChunks = hasLookbook ? chunkLookbook(collection.lookbookContent) :
     </section>
   )}
 
-  <!-- Editorial description -->
-  {collection.description && (
-    <section class="py-16">
-      <div class="container-art">
-        <div class="max-w-2xl mx-auto">
-          <p class="font-body text-lg text-daos-charcoal leading-relaxed">
-            {typeof collection.description === 'string'
-              ? collection.description
-              : collection.description[0]?.children?.[0]?.text ?? ''}
-          </p>
-        </div>
-      </div>
-    </section>
-  )}
+  <!-- Visual essay blocks -->
+  {hasEssay && (
+    <div class="pt-16">
+      {(collection.essayBlocks as any[]).map((block: any) => {
 
-  <!-- Lookbook content (interleaved artwork + editorial text) -->
-  {hasLookbook ? (
-    <section class="pb-24">
-      <div class="container-art space-y-16">
-        {lookbookChunks.map((chunk) => {
-          if (chunk.kind === 'fullwidth') {
-            const item = chunk.item;
+        if (block._type === 'imageBlock') {
+          const imgUrl = block.image?.asset?.url
+            ? block.style === 'full-bleed'
+              ? urlFor(block.image).width(1920).fit('max').url()
+              : urlFor(block.image).width(1400).fit('max').url()
+            : null;
+
+          if (block.style === 'full-bleed') {
             return (
-              <div class="max-w-2xl mx-auto py-4 space-y-4">
-                {item.heading && (
-                  <h2 class="font-display italic text-display text-daos-ink leading-tight">
-                    {item.heading}
-                  </h2>
+              <div class="mb-6">
+                {imgUrl && (
+                  <img
+                    src={imgUrl}
+                    alt={block.image?.alt ?? ''}
+                    class="w-full block"
+                    style="max-height: 90vh; object-fit: cover;"
+                  />
                 )}
-                <p class="font-body text-lg text-daos-charcoal leading-relaxed">{item.body}</p>
+                {block.caption && (
+                  <div class="container-art pt-3">
+                    <p class="font-sans text-xs uppercase tracking-widest text-daos-clay">{block.caption}</p>
+                  </div>
+                )}
               </div>
             );
           }
-          // Grid chunk: artwork cards + inline text cards
+
           return (
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {chunk.items.map((item: any) => {
-                if (item._type === 'artworkEntry' && item.artwork) {
-                  const piece = item.artwork;
-                  return (
-                    <GalleryCard
-                      title={piece.title}
-                      slug={piece.slug}
-                      images={piece.images ?? []}
-                      medium={piece.medium}
-                    />
-                  );
-                }
-                if (item._type === 'editorialText') {
-                  return (
-                    <div class="h-full bg-daos-paper rounded-sm p-8 flex flex-col justify-center space-y-3">
-                      {item.heading && (
-                        <h2 class="font-display italic text-xl text-daos-ink leading-tight">
-                          {item.heading}
-                        </h2>
-                      )}
-                      <p class="font-body text-daos-charcoal leading-relaxed">{item.body}</p>
-                    </div>
-                  );
-                }
-              })}
+            <div class="container-art mb-16">
+              {imgUrl && (
+                <img
+                  src={imgUrl}
+                  alt={block.image?.alt ?? ''}
+                  class="w-full block rounded-sm"
+                />
+              )}
+              {block.caption && (
+                <p class="font-sans text-xs uppercase tracking-widest text-daos-clay mt-3">{block.caption}</p>
+              )}
             </div>
           );
-        })}
+        }
+
+        if (block._type === 'textBlock') {
+          if (block.style === 'full-bleed') {
+            return (
+              <div class="bg-daos-ink text-daos-cream py-24 mb-6">
+                <div class="container-art">
+                  <div class="max-w-2xl mx-auto space-y-5">
+                    {block.heading && (
+                      <h2 class="font-display italic text-display text-daos-cream leading-tight">{block.heading}</h2>
+                    )}
+                    <p class="font-body text-lg text-daos-cream/80 leading-relaxed">{block.body}</p>
+                  </div>
+                </div>
+              </div>
+            );
+          }
+
+          return (
+            <div class="container-art mb-16">
+              <div class="max-w-2xl mx-auto space-y-5">
+                {block.heading && (
+                  <h2 class="font-display italic text-display text-daos-ink leading-tight">{block.heading}</h2>
+                )}
+                <p class="font-body text-lg text-daos-charcoal leading-relaxed">{block.body}</p>
+              </div>
+            </div>
+          );
+        }
+      })}
+    </div>
+  )}
+
+  <!-- Products swimlane -->
+  {hasArtwork && (
+    <section class="py-16 border-t border-daos-warm">
+      <div class="container-art mb-8">
+        <p class="font-sans text-xs uppercase tracking-widest text-daos-clay">The Collection</p>
       </div>
-    </section>
-  ) : (
-    <!-- Fallback: artwork grid from collection reference -->
-    <section class="pb-24">
-      <div class="container-art">
-        {artworkFallback && artworkFallback.length > 0 ? (
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {(artworkFallback as any[]).map((piece: any) => (
-              <GalleryCard
-                title={piece.title}
-                slug={piece.slug}
-                images={piece.images ?? []}
-                medium={piece.medium}
-              />
-            ))}
+      <div class="flex overflow-x-auto gap-4 px-6 md:px-12 pb-4 scrollbar-hide snap-x snap-mandatory" style="scroll-padding-left: 1.5rem;">
+        {(artwork as any[]).map((piece: any) => (
+          <div class="snap-start shrink-0 w-[280px] md:w-[320px]">
+            <ShopCard
+              title={piece.title}
+              slug={piece.slug}
+              images={piece.images ?? []}
+              medium={piece.medium}
+              price={piece.price}
+              originalAvailable={piece.originalAvailable}
+              printsAvailable={piece.printsAvailable ?? false}
+            />
           </div>
-        ) : (
-          <p class="font-body text-daos-charcoal text-center py-16">No pieces in this collection yet.</p>
-        )}
+        ))}
       </div>
     </section>
   )}
 
   <!-- Back link -->
-  <div class="container-art pb-16">
-    <a href="/gallery" class="font-sans text-sm text-daos-terracotta hover:underline transition-colors">
+  <div class="container-art py-12">
+    <a href="/gallery" class="font-sans text-xs uppercase tracking-widest text-daos-terracotta hover:text-daos-terracotta-dark transition-colors">
       &larr; All Collections
     </a>
   </div>
+
 </BaseLayout>
