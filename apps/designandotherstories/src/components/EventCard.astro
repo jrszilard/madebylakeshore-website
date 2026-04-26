@@ -83,17 +83,6 @@ const locationDisplay = [location.venueName, location.city, location.state]
         {title}
       </h3>
       <p class="font-sans text-xs text-daos-charcoal truncate">{locationDisplay}</p>
-      {eventType && (
-        <span class="inline-block px-2 py-0.5 border border-daos-warm text-daos-charcoal text-xs font-sans uppercase tracking-wider rounded-sm">
-          {eventType}
-        </span>
-      )}
     </div>
-
-    {!isPast && (
-      <span class="flex-shrink-0 font-sans text-sm text-daos-terracotta group-hover:underline whitespace-nowrap">
-        Details &rarr;
-      </span>
-    )}
   </div>
 </a>
