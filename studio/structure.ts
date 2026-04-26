@@ -85,7 +85,7 @@ export const structure: StructureResolver = (S) =>
                 .child(
                   S.documentTypeList('artwork')
                     .title('All Artwork')
-                    .defaultOrdering([{ field: 'year', direction: 'desc' }])
+                    .defaultOrdering([{ field: '_createdAt', direction: 'desc' }])
                 ),
               S.listItem()
                 .title('By Type')
@@ -99,7 +99,7 @@ export const structure: StructureResolver = (S) =>
                           S.documentList()
                             .title('Originals')
                             .filter('_type == "artwork" && (artworkType == "original" || !defined(artworkType))')
-                            .defaultOrdering([{ field: 'year', direction: 'desc' }])
+                            .defaultOrdering([{ field: '_createdAt', direction: 'desc' }])
                         ),
                       S.listItem()
                         .title('Photography')
@@ -107,7 +107,7 @@ export const structure: StructureResolver = (S) =>
                           S.documentList()
                             .title('Photography')
                             .filter('_type == "artwork" && artworkType == "photography"')
-                            .defaultOrdering([{ field: 'year', direction: 'desc' }])
+                            .defaultOrdering([{ field: '_createdAt', direction: 'desc' }])
                         ),
                     ])
                 ),
@@ -117,7 +117,7 @@ export const structure: StructureResolver = (S) =>
                   S.documentList()
                     .title('Featured Artwork')
                     .filter('_type == "artwork" && featured == true')
-                    .defaultOrdering([{ field: 'year', direction: 'desc' }])
+                    .defaultOrdering([{ field: '_createdAt', direction: 'desc' }])
                 ),
               S.listItem()
                 .title('By Collection')
@@ -125,13 +125,6 @@ export const structure: StructureResolver = (S) =>
                   S.documentTypeList('artCollection')
                     .title('Collections')
                     .defaultOrdering([{ field: 'order', direction: 'asc' }])
-                    .child((collectionId: string) =>
-                      S.documentList()
-                        .title('Artwork in Collection')
-                        .filter('_type == "artwork" && collection._ref == $collectionId')
-                        .params({ collectionId })
-                        .defaultOrdering([{ field: 'year', direction: 'desc' }])
-                    )
                 ),
               S.listItem()
                 .title('Collections')
