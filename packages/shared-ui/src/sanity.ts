@@ -241,17 +241,12 @@ export const queries = {
   }`,
 
   // DesignAndOtherStories queries
-  allArtwork: `*[_type == "artwork"] | order(year desc) {
+  allArtwork: `*[_type == "artwork"] | order(_createdAt desc) {
     _id,
     title,
     slug,
     images,
-    medium,
-    dimensions,
     artworkType,
-    price,
-    originalAvailable,
-    printsAvailable,
     "collection": collection->{ title, slug }
   }`,
 
