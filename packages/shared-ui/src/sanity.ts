@@ -259,19 +259,11 @@ export const queries = {
     _id,
     title,
     slug,
+    artworkType,
     images,
     description,
-    story,
-    medium,
-    dimensions,
-    year,
-    price,
-    originalAvailable,
-    printsAvailable,
-    forSale,
-    printOptions,
-    "collection": collection->{ title, slug },
-    seo
+    featured,
+    "collection": collection->{ title, slug }
   }`,
 
   allCollections: `*[_type == "artCollection"] | order(order asc) {
