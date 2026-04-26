@@ -88,40 +88,50 @@ export const structure: StructureResolver = (S) =>
                     .defaultOrdering([{ field: 'year', direction: 'desc' }])
                 ),
               S.listItem()
-                .title('By Category')
+                .title('By Type')
                 .child(
                   S.list()
-                    .title('Categories')
+                    .title('By Type')
                     .items([
                       S.listItem()
-                        .title('Paintings')
+                        .title('Originals')
                         .child(
                           S.documentList()
-                            .title('Paintings')
-                            .filter('_type == "artwork" && category == "painting"')
+                            .title('Originals')
+                            .filter('_type == "artwork" && (artworkType == "original" || !defined(artworkType))')
+                            .defaultOrdering([{ field: 'year', direction: 'desc' }])
                         ),
                       S.listItem()
-                        .title('Drawings')
+                        .title('Photography')
                         .child(
                           S.documentList()
-                            .title('Drawings')
-                            .filter('_type == "artwork" && category == "drawing"')
-                        ),
-                      S.listItem()
-                        .title('Mixed Media')
-                        .child(
-                          S.documentList()
-                            .title('Mixed Media')
-                            .filter('_type == "artwork" && category == "mixed-media"')
-                        ),
-                      S.listItem()
-                        .title('Prints')
-                        .child(
-                          S.documentList()
-                            .title('Prints')
-                            .filter('_type == "artwork" && category == "print"')
+                            .title('Photography')
+                            .filter('_type == "artwork" && artworkType == "photography"')
+                            .defaultOrdering([{ field: 'year', direction: 'desc' }])
                         ),
                     ])
+                ),
+              S.listItem()
+                .title('Featured')
+                .child(
+                  S.documentList()
+                    .title('Featured Artwork')
+                    .filter('_type == "artwork" && featured == true')
+                    .defaultOrdering([{ field: 'year', direction: 'desc' }])
+                ),
+              S.listItem()
+                .title('By Collection')
+                .child(
+                  S.documentTypeList('artCollection')
+                    .title('Collections')
+                    .defaultOrdering([{ field: 'order', direction: 'asc' }])
+                    .child((collectionId: string) =>
+                      S.documentList()
+                        .title('Artwork in Collection')
+                        .filter('_type == "artwork" && collection._ref == $collectionId')
+                        .params({ collectionId })
+                        .defaultOrdering([{ field: 'year', direction: 'desc' }])
+                    )
                 ),
               S.listItem()
                 .title('Collections')
