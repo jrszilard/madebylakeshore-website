@@ -109,13 +109,6 @@ const seoDescription = event.seo?.description || `${event.title} — ${locationD
           <!-- Left: Event details (2 cols) -->
           <div class="md:col-span-2 space-y-6">
 
-            <!-- Event type badge -->
-            {event.eventType && (
-              <span class="inline-block px-3 py-1 border border-daos-warm text-daos-charcoal text-xs font-sans uppercase tracking-wider rounded-sm">
-                {event.eventType}
-              </span>
-            )}
-
             <!-- Title -->
             <h1 class="font-display italic text-display md:text-display-lg text-daos-ink leading-tight">
               {event.title}
