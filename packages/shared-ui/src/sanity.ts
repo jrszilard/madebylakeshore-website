@@ -248,6 +248,7 @@ export const queries = {
     images,
     medium,
     dimensions,
+    artworkType,
     price,
     originalAvailable,
     printsAvailable,

@@ -3,10 +3,10 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import ShopCard from '../../components/ShopCard.astro';
 import { sanityClient, queries } from '../../lib/sanity';
 
-const artworkForSale = await sanityClient.fetch(queries.artworkForSale);
+const allArtwork = await sanityClient.fetch(queries.allArtwork);
 
-const originals = (artworkForSale ?? []).filter((p: any) => (p.artworkType ?? 'original') === 'original');
-const photography = (artworkForSale ?? []).filter((p: any) => p.artworkType === 'photography');
+const originals = (allArtwork ?? []).filter((p: any) => (p.artworkType ?? 'original') === 'original');
+const photography = (allArtwork ?? []).filter((p: any) => p.artworkType === 'photography');
 ---
 
 <BaseLayout
