@@ -54,6 +54,13 @@ export default defineType({
       type: 'datetime',
     }),
     defineField({
+      name: 'eventRecapFor',
+      title: 'Event Recap For',
+      type: 'reference',
+      to: [{ type: 'event' }],
+      description: 'If this post is a recap of an event, link the event here. Used by the auto-scaffold script.',
+    }),
+    defineField({
       name: 'seo',
       title: 'SEO',
       type: 'seo',

@@ -5,6 +5,7 @@ import PurchaseAction from '../../components/PurchaseAction.astro';
 import JsonLd from '../../components/JsonLd.astro';
 import { sanityClient, urlFor, queries } from '../../lib/sanity';
 import { artworkSchema, productSchema, breadcrumbSchema } from '../../lib/structured-data';
+import { artworkMetaTitle, artworkMetaDescription } from '../../lib/seo-fallbacks';
 
 export async function getStaticPaths() {
   const allArtwork = await sanityClient.fetch(queries.allArtwork);
@@ -81,11 +82,11 @@ const categoryLabel = artwork.category
   ? artwork.category.charAt(0).toUpperCase() + artwork.category.slice(1).replace('-', ' ')
   : null;
 
-const seoTitle = artwork.seo?.title || artwork.title;
-const seoDescription = artwork.seo?.description || artwork.story || `${artwork.title}${artwork.medium ? ` — ${artwork.medium}` : ''}.`;
+const seoTitle = artworkMetaTitle(artwork);
+const seoDescription = artworkMetaDescription(artwork);
 ---
 
-<BaseLayout title={seoTitle} description={seoDescription} showSnipcart={artwork.forSale} ogImage={firstImageUrl} ogType="article">
+<BaseLayout title={seoTitle} description={seoDescription} showSnipcart={artwork.forSale} ogImage={firstImageUrl} ogImageType="artwork" ogImageSubtitle={artwork.medium} ogType="article">
   <Fragment slot="head">
     <JsonLd schema={[
       artworkSchema({

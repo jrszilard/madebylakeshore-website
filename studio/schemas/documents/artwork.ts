@@ -59,6 +59,11 @@ export default defineType({
       type: 'reference',
       to: [{ type: 'artCollection' }],
     }),
+    defineField({
+      name: 'seo',
+      title: 'SEO',
+      type: 'seo',
+    }),
   ],
   preview: {
     select: {

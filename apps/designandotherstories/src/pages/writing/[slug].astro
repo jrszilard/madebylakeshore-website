@@ -7,6 +7,7 @@ import JsonLd from '../../components/JsonLd.astro';
 import { sanityClient, urlFor, queries } from '../../lib/sanity';
 import { SUBSTACK_FEED_URL, SUBSTACK_URL } from '../../lib/config';
 import { bookSchema, breadcrumbSchema } from '../../lib/structured-data';
+import { bookMetaTitle, bookMetaDescription } from '../../lib/seo-fallbacks';
 export async function getStaticPaths() {
   const books = await sanityClient.fetch(queries.allBooks);
   return books
@@ -68,11 +69,11 @@ const badgeLabel =
     ? 'In Progress'
     : book.status;
 
-const seoDescription = book.seo?.description || book.blurb || '';
-const seoTitle = book.seo?.title || book.title;
+const seoTitle = bookMetaTitle(book);
+const seoDescription = bookMetaDescription(book);
 ---
 
-<BaseLayout title={seoTitle} description={seoDescription} ogImage={coverUrl ?? undefined} ogType="book">
+<BaseLayout title={seoTitle} description={seoDescription} ogImage={coverUrl ?? undefined} ogImageType="writing" ogImageSubtitle={book.type?.replace('-', ' ') || ''} ogType="book">
   <Fragment slot="head">
     <JsonLd schema={[
       bookSchema({

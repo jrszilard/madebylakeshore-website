@@ -4,6 +4,7 @@ import BringingGrid from '../../components/BringingGrid.astro';
 import JsonLd from '../../components/JsonLd.astro';
 import { sanityClient, urlFor, queries } from '../../lib/sanity';
 import { eventSchema, breadcrumbSchema } from '../../lib/structured-data';
+import { eventMetaTitle, eventMetaDescription } from '../../lib/seo-fallbacks';
 
 export async function getStaticPaths() {
   const events = await sanityClient.fetch(`*[_type == "event"]{ slug }`);
@@ -79,11 +80,11 @@ const coverUrl = event.coverImage?.asset
   ? urlFor(event.coverImage).width(800).height(500).fit('crop').crop('focalpoint').url()
   : null;
 
-const seoTitle = event.seo?.title || event.title;
-const seoDescription = event.seo?.description || `${event.title} — ${locationDisplay}`;
+const seoTitle = eventMetaTitle(event);
+const seoDescription = eventMetaDescription(event);
 ---
 
-<BaseLayout title={seoTitle} description={seoDescription} ogImage={coverUrl ?? undefined}>
+<BaseLayout title={seoTitle} description={seoDescription} ogImage={coverUrl ?? undefined} ogImageType="event" ogImageSubtitle={locationDisplay}>
   <Fragment slot="head">
     <JsonLd schema={[
       eventSchema({

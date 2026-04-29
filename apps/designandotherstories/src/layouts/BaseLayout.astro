@@ -7,6 +7,8 @@ interface Props {
   title: string;
   description?: string;
   ogImage?: string;
+  ogImageType?: 'artwork' | 'event' | 'writing' | 'collection' | 'default';
+  ogImageSubtitle?: string;
   ogType?: string;
   noindex?: boolean;
   showSnipcart?: boolean;
@@ -19,6 +21,8 @@ const {
   title,
   description = 'Design & Other Stories is a small studio making literary fiction and traditional art by hand in New Hampshire. Original paintings, drawings, and books — made one piece at a time.',
   ogImage,
+  ogImageType = 'default',
+  ogImageSubtitle = '',
   ogType = 'website',
   noindex = false,
   showSnipcart = false,
@@ -27,7 +31,10 @@ const {
 
 const siteTitle = title === 'Home' ? 'Design & Other Stories' : `${title} | Design & Other Stories`;
 const canonical = canonicalUrl || `${SITE_URL}${Astro.url.pathname}`;
-const ogImageUrl = ogImage || `${SITE_URL}/brand/seal.svg`;
+
+// Use explicit OG image if provided, otherwise generate one dynamically
+const ogImageUrl = ogImage
+  || `${SITE_URL}/api/og?${new URLSearchParams({ title: title === 'Home' ? 'Design & Other Stories' : title, subtitle: ogImageSubtitle, type: ogImageType }).toString()}`;
 
 const snipcartApiKey = import.meta.env.PUBLIC_SNIPCART_API_KEY || 'your-snipcart-api-key';
 ---

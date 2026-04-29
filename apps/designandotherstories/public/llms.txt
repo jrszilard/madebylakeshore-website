@@ -1,0 +1,30 @@
+# Design & Other Stories
+> A small studio making literary fiction and traditional art by hand in New Hampshire.
+
+## About
+Design & Other Stories is the work of W. H. Bonilla (Wilma), a painter, printmaker, and writer based in New Hampshire with roots in Puerto Rico. The studio makes two things: original handmade art and literary fiction.
+
+All art is 100% handmade — watercolor, ink, and graphite. No AI-generated art, no mass production. Each piece is created by hand from start to finish.
+
+The literary fiction includes novels and short stories about connection, found family, and the weight of ordinary moments.
+
+## What You'll Find on This Site
+- **Gallery** (/gallery): Original paintings, drawings, and prints available for purchase
+- **Collections** (/gallery/collections/*): Seasonal art releases as curated bodies of work
+- **Writing** (/writing): Novels, short stories, and essays
+- **Events** (/events): Craft fairs, art markets, and exhibitions throughout New England
+- **About** (/about): The artist's background, mediums, and studio practice
+- **FAQ** (/faq): Common questions about the studio, art, purchasing, and shipping
+
+## Key Facts
+- **Artist:** W. H. Bonilla (also known as Wilma Bonilla)
+- **Location:** New Hampshire, USA
+- **Mediums:** Watercolor, ink, graphite, printmaking
+- **Writing genres:** Literary fiction, short stories, essays
+- **Sales channels:** designandotherstories.com, craft fairs and art markets in New England
+- **All art is handmade** — no AI generation, no prints-on-demand from stock images
+
+## Contact & Social
+- **Website:** https://designandotherstories.com
+- **Newsletter:** https://designandtheotherstories.substack.com
+- **Part of:** Lakeshore Studios (https://madebylakeshore.com)

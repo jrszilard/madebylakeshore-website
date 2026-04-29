@@ -1,6 +1,6 @@
 ---
 import { sanityClient, queries } from '../lib/sanity';
-import { SUBSTACK_URL } from '../lib/config';
+import { SUBSTACK_URL, MARKETPLACE_LINKS } from '../lib/config';
 
 const currentYear = new Date().getFullYear();
 
@@ -63,6 +63,12 @@ const brandDescription =
         <ul class="space-y-2">
           <li><a href="/about" class="text-daos-charcoal hover:text-daos-terracotta text-sm transition-colors">About</a></li>
           <li><a href="/faq" class="text-daos-charcoal hover:text-daos-terracotta text-sm transition-colors">FAQ</a></li>
+          {MARKETPLACE_LINKS.etsy && (
+            <li><a href={MARKETPLACE_LINKS.etsy} target="_blank" rel="noopener noreferrer" class="text-daos-charcoal hover:text-daos-terracotta text-sm transition-colors">Etsy Shop</a></li>
+          )}
+          {MARKETPLACE_LINKS.ebay && (
+            <li><a href={MARKETPLACE_LINKS.ebay} target="_blank" rel="noopener noreferrer" class="text-daos-charcoal hover:text-daos-terracotta text-sm transition-colors">eBay Store</a></li>
+          )}
           <li>
             <a
               href={SUBSTACK_URL}
