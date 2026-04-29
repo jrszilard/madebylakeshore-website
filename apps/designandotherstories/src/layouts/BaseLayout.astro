@@ -6,18 +6,28 @@ import Footer from '../components/Footer.astro';
 interface Props {
   title: string;
   description?: string;
+  ogImage?: string;
+  ogType?: string;
   noindex?: boolean;
   showSnipcart?: boolean;
+  canonicalUrl?: string;
 }
+
+const SITE_URL = 'https://designandotherstories.com';
 
 const {
   title,
   description = 'Design & Other Stories is a small studio making literary fiction and traditional art by hand in New Hampshire. Original paintings, drawings, and books — made one piece at a time.',
+  ogImage,
+  ogType = 'website',
   noindex = false,
   showSnipcart = false,
+  canonicalUrl,
 } = Astro.props;
 
 const siteTitle = title === 'Home' ? 'Design & Other Stories' : `${title} | Design & Other Stories`;
+const canonical = canonicalUrl || `${SITE_URL}${Astro.url.pathname}`;
+const ogImageUrl = ogImage || `${SITE_URL}/brand/seal.svg`;
 
 const snipcartApiKey = import.meta.env.PUBLIC_SNIPCART_API_KEY || 'your-snipcart-api-key';
 ---
@@ -30,11 +40,31 @@ const snipcartApiKey = import.meta.env.PUBLIC_SNIPCART_API_KEY || 'your-snipcart
     <meta name="description" content={description} />
     {noindex && <meta name="robots" content="noindex, nofollow" />}
 
+    <!-- Canonical URL -->
+    <link rel="canonical" href={canonical} />
+
+    <!-- Open Graph -->
     <meta property="og:title" content={siteTitle} />
     <meta property="og:description" content={description} />
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:site_name" content="Design & Other Stories" />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={siteTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
+
+    <!-- Additional SEO -->
+    <meta name="author" content="W. H. Bonilla" />
+    <meta name="geo.region" content="US-NH" />
+    <meta name="geo.placename" content="New Hampshire" />
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
 
     {showSnipcart && (
       <>
@@ -45,6 +75,9 @@ const snipcartApiKey = import.meta.env.PUBLIC_SNIPCART_API_KEY || 'your-snipcart
     )}
 
     <title>{siteTitle}</title>
+
+    <!-- Structured data slot (pages inject their JSON-LD here) -->
+    <slot name="head" />
   </head>
   <body class="min-h-screen flex flex-col paper-texture">
     <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-daos-ink focus:text-daos-cream focus:rounded-sm focus:text-sm focus:font-sans">

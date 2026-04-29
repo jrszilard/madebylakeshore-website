@@ -2,7 +2,9 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import ImageViewer from '../../components/ImageViewer.tsx';
 import PurchaseAction from '../../components/PurchaseAction.astro';
+import JsonLd from '../../components/JsonLd.astro';
 import { sanityClient, urlFor, queries } from '../../lib/sanity';
+import { artworkSchema, productSchema, breadcrumbSchema } from '../../lib/structured-data';
 
 export async function getStaticPaths() {
   const allArtwork = await sanityClient.fetch(queries.allArtwork);
@@ -83,7 +85,36 @@ const seoTitle = artwork.seo?.title || artwork.title;
 const seoDescription = artwork.seo?.description || artwork.story || `${artwork.title}${artwork.medium ? ` — ${artwork.medium}` : ''}.`;
 ---
 
-<BaseLayout title={seoTitle} description={seoDescription} showSnipcart={artwork.forSale}>
+<BaseLayout title={seoTitle} description={seoDescription} showSnipcart={artwork.forSale} ogImage={firstImageUrl} ogType="article">
+  <Fragment slot="head">
+    <JsonLd schema={[
+      artworkSchema({
+        title: artwork.title,
+        slug: artwork.slug.current,
+        description: artwork.story || seoDescription,
+        medium: artwork.medium,
+        dimensions: artwork.dimensions,
+        year: artwork.year,
+        imageUrl: firstImageUrl,
+        price: artwork.price,
+        available: artwork.originalAvailable || artwork.printsAvailable,
+        collection: artwork.collection?.title,
+      }),
+      ...(artwork.forSale ? [productSchema({
+        title: artwork.title,
+        slug: artwork.slug.current,
+        description: artwork.story || seoDescription,
+        imageUrl: firstImageUrl,
+        price: artwork.price,
+        available: artwork.originalAvailable || artwork.printsAvailable,
+      })] : []),
+      breadcrumbSchema([
+        { name: 'Home', url: '/' },
+        { name: 'Gallery', url: '/gallery' },
+        { name: artwork.title, url: `/gallery/${artwork.slug.current}` },
+      ]),
+    ]} />
+  </Fragment>
   <article>
     <section class="section-spacing">
       <div class="container-art">

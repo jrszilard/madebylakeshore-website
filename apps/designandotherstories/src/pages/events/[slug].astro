@@ -1,7 +1,9 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import BringingGrid from '../../components/BringingGrid.astro';
+import JsonLd from '../../components/JsonLd.astro';
 import { sanityClient, urlFor, queries } from '../../lib/sanity';
+import { eventSchema, breadcrumbSchema } from '../../lib/structured-data';
 
 export async function getStaticPaths() {
   const events = await sanityClient.fetch(`*[_type == "event"]{ slug }`);
@@ -81,7 +83,27 @@ const seoTitle = event.seo?.title || event.title;
 const seoDescription = event.seo?.description || `${event.title} — ${locationDisplay}`;
 ---
 
-<BaseLayout title={seoTitle} description={seoDescription}>
+<BaseLayout title={seoTitle} description={seoDescription} ogImage={coverUrl ?? undefined}>
+  <Fragment slot="head">
+    <JsonLd schema={[
+      eventSchema({
+        title: event.title,
+        slug: slug!,
+        description: seoDescription,
+        startDate: event.startDate,
+        endDate: event.endDate,
+        location: event.location,
+        eventType: event.eventType,
+        imageUrl: coverUrl ?? undefined,
+        externalUrl: event.externalUrl,
+      }),
+      breadcrumbSchema([
+        { name: 'Home', url: '/' },
+        { name: 'Events', url: '/events' },
+        { name: event.title, url: `/events/${slug}` },
+      ]),
+    ]} />
+  </Fragment>
   <article>
     <!-- Back link + header -->
     <section class="section-spacing">

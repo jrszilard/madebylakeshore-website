@@ -1,8 +1,10 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import MediumCarousel from '../components/MediumCarousel';
+import JsonLd from '../components/JsonLd.astro';
 import { sanityClient, urlFor, queries } from '../lib/sanity';
 import { SUBSTACK_URL } from '../lib/config';
+import { personSchema, breadcrumbSchema, faqSchema } from '../lib/structured-data';
 
 const [profile, nextEvent] = await Promise.all([
   sanityClient.fetch(queries.artistProfile),
@@ -29,7 +31,39 @@ const aboutImages = (profile?.aboutImages ?? [])
 <BaseLayout
   title="About"
   description="Design & Other Stories is the work of W. H. Bonilla, painter, printmaker, and writer based in New Hampshire. Art you can put on your wall and fiction about the people who show up for each other."
+  ogType="profile"
 >
+  <Fragment slot="head">
+    <JsonLd schema={[
+      personSchema({ socialLinks: profile?.socialLinks }),
+      breadcrumbSchema([
+        { name: 'Home', url: '/' },
+        { name: 'About', url: '/about' },
+      ]),
+      faqSchema([
+        {
+          question: 'Who is the artist behind Design & Other Stories?',
+          answer: 'Design & Other Stories is the work of W. H. Bonilla (Wilma), a painter, printmaker, and writer based in New Hampshire. She makes original art — ink, watercolor, and graphite — as well as literary fiction including novels and short stories.',
+        },
+        {
+          question: 'What kind of art does Design & Other Stories make?',
+          answer: 'The studio creates original paintings, drawings, and prints using traditional media: watercolor, ink, and graphite. Each piece is handmade — no AI-generated art, no mass production. The studio also produces literary fiction about connection, found family, and the weight of ordinary moments.',
+        },
+        {
+          question: 'Where is Design & Other Stories based?',
+          answer: 'Design & Other Stories is based in New Hampshire, USA. The artist, W. H. Bonilla, has roots in both New Hampshire and Puerto Rico.',
+        },
+        {
+          question: 'Can I buy original art from Design & Other Stories?',
+          answer: 'Yes! Original paintings, drawings, and prints are available through the gallery at designandotherstories.com. You can also find the work at craft fairs and art events throughout New England. Check the events page for upcoming shows.',
+        },
+        {
+          question: 'Does Design & Other Stories sell at craft fairs?',
+          answer: 'Yes, the studio regularly participates in craft fairs, art markets, and exhibitions throughout New England. Visit the events page at designandotherstories.com/events to see upcoming shows and find the studio in person.',
+        },
+      ]),
+    ]} />
+  </Fragment>
 
   <!-- 1. Header: bio + mosaic -->
   <section class="section-spacing">
