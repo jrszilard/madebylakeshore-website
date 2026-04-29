@@ -1,7 +1,10 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import ShopCard from '../../../components/ShopCard.astro';
+import JsonLd from '../../../components/JsonLd.astro';
 import { sanityClient, urlFor, queries } from '../../../lib/sanity';
+import { collectionSchema, breadcrumbSchema } from '../../../lib/structured-data';
+import { collectionMetaDescription } from '../../../lib/seo-fallbacks';
 
 export async function getStaticPaths() {
   const allCollections = await sanityClient.fetch(queries.allCollections);
@@ -35,9 +38,26 @@ const hasArtwork = artwork?.length > 0;
 
 <BaseLayout
   title={collection.title}
-  description={collection.tagline ?? `A collection by W. H. Bonilla.`}
+  description={collectionMetaDescription({ title: collection.title, tagline: collection.tagline, artworkCount: artwork?.length })}
   showSnipcart={hasArtwork}
+  ogImage={coverUrl ?? undefined}
 >
+  <Fragment slot="head">
+    <JsonLd schema={[
+      collectionSchema({
+        title: collection.title,
+        slug: slug!,
+        description: collection.tagline,
+        imageUrl: coverUrl ?? undefined,
+        artworkCount: artwork?.length,
+      }),
+      breadcrumbSchema([
+        { name: 'Home', url: '/' },
+        { name: 'Gallery', url: '/gallery' },
+        { name: collection.title, url: `/gallery/collections/${slug}` },
+      ]),
+    ]} />
+  </Fragment>
   <!-- Full-bleed cover -->
   {coverUrl ? (
     <section class="relative h-[85vh] flex items-end overflow-hidden">

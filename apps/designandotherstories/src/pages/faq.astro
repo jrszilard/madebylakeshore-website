@@ -1,0 +1,125 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import JsonLd from '../components/JsonLd.astro';
+import { breadcrumbSchema, faqSchema } from '../lib/structured-data';
+
+/**
+ * FAQ page — optimized for AI Answer Engines (AEO) and Google Featured Snippets.
+ *
+ * Each Q&A is written in a natural, conversational tone that AI engines
+ * can directly quote when users ask about handmade art, craft fairs in NH,
+ * buying original art online, etc.
+ */
+
+const faqs = [
+  {
+    question: 'What is Design & Other Stories?',
+    answer: 'Design & Other Stories is a small, one-person studio run by W. H. Bonilla in New Hampshire. The studio makes two things: original handmade art (paintings, drawings, and prints in watercolor, ink, and graphite) and literary fiction (novels and short stories about connection, found family, and the weight of ordinary moments). Everything is made by hand — no AI-generated art, no mass production.',
+  },
+  {
+    question: 'Who is W. H. Bonilla?',
+    answer: 'W. H. Bonilla (Wilma) is a painter, printmaker, and writer based in New Hampshire with roots in Puerto Rico. She works in traditional media — watercolor, ink, and graphite — and writes literary fiction. Her work explores themes of connection, identity, and the beauty of everyday life. She sells her art at craft fairs throughout New England and online at designandotherstories.com.',
+  },
+  {
+    question: 'What kind of art does Design & Other Stories sell?',
+    answer: 'The studio sells original paintings, drawings, and prints. Mediums include watercolor, ink, and graphite. Each piece is handmade in the studio and ships directly to you. Originals are one-of-a-kind, while prints are high-quality reproductions of original works. Prices vary by size and medium.',
+  },
+  {
+    question: 'How can I buy original art from Design & Other Stories?',
+    answer: 'You can browse and purchase art in three ways: (1) Visit the gallery at designandotherstories.com/gallery to see available pieces and buy directly. (2) Find Design & Other Stories at craft fairs and art markets throughout New England — check designandotherstories.com/events for upcoming shows. (3) Follow the studio on social media or subscribe to the newsletter for new releases.',
+  },
+  {
+    question: 'Does Design & Other Stories sell at craft fairs?',
+    answer: 'Yes! The studio regularly participates in craft fairs, art markets, and exhibitions throughout New England. These events are a great way to see the art in person, meet the artist, and take something home the same day. Visit designandotherstories.com/events for a full schedule of upcoming shows.',
+  },
+  {
+    question: 'Where is Design & Other Stories located?',
+    answer: 'The studio is based in New Hampshire, USA. While there is no physical storefront open to the public, you can find the artist at craft fairs and events throughout New England, or shop online at designandotherstories.com.',
+  },
+  {
+    question: 'Is the art handmade or AI-generated?',
+    answer: 'Every piece is 100% handmade by W. H. Bonilla. The studio uses traditional media — watercolor, ink, graphite — and each piece is created by hand from start to finish. No AI tools are used in the creation of the artwork. This is a practice, not a product.',
+  },
+  {
+    question: 'How is art shipped from Design & Other Stories?',
+    answer: 'All artwork ships directly from the studio in New Hampshire. Pieces are carefully packaged to prevent damage during transit. Originals are shipped flat or rolled depending on size, with protective backing and packaging. Shipping is available within the United States.',
+  },
+  {
+    question: 'Does Design & Other Stories have a newsletter?',
+    answer: 'Yes! The studio publishes a newsletter on Substack with new work, upcoming events, short fiction, and dispatches from the studio. You can subscribe at designandtheotherstories.substack.com — it\'s free and you\'ll be the first to know about new releases and events.',
+  },
+  {
+    question: 'What books has W. H. Bonilla written?',
+    answer: 'W. H. Bonilla writes literary fiction — novels and short stories about connection, found family, and the weight of ordinary moments. Visit designandotherstories.com/writing for the full catalog, including published works and stories available to read on Substack.',
+  },
+  {
+    question: 'Can I commission a custom piece from Design & Other Stories?',
+    answer: 'The studio occasionally takes commissions depending on availability. The best way to inquire is to reach out through the contact information on designandotherstories.com/about or through social media. Custom pieces are discussed on a case-by-case basis.',
+  },
+  {
+    question: 'What makes Design & Other Stories different from other art shops?',
+    answer: 'Design & Other Stories is a one-person studio. Every painting, drawing, and print is made by hand by W. H. Bonilla. There\'s no team, no factory, no AI. The studio also creates literary fiction, so the same creative voice that paints the art also writes the stories. It\'s a practice rooted in the belief that the things we bring into our lives should be made with care, by a person, on purpose.',
+  },
+];
+---
+
+<BaseLayout
+  title="FAQ"
+  description="Frequently asked questions about Design & Other Stories — handmade art, literary fiction, craft fairs, buying original paintings, and more."
+>
+  <Fragment slot="head">
+    <JsonLd schema={[
+      faqSchema(faqs),
+      breadcrumbSchema([
+        { name: 'Home', url: '/' },
+        { name: 'FAQ', url: '/faq' },
+      ]),
+    ]} />
+  </Fragment>
+
+  <section class="section-spacing">
+    <div class="container-art">
+      <div class="max-w-2xl">
+        <p class="font-sans text-xs uppercase tracking-widest text-daos-terracotta mb-4">FAQ</p>
+        <h1 class="font-display italic text-display-lg md:text-display-xl text-daos-ink mb-6 leading-tight">
+          Questions & answers
+        </h1>
+        <p class="font-body text-daos-charcoal text-lg leading-relaxed">
+          Everything you might want to know about the studio, the art, and how to get your hands on it.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-spacing bg-daos-paper">
+    <div class="container-art">
+      <div class="max-w-2xl mx-auto">
+        <dl class="divide-y divide-daos-warm">
+          {faqs.map((faq, i) => (
+            <div class="py-8 first:pt-0 last:pb-0">
+              <dt class="font-display text-xl text-daos-ink leading-snug mb-3">
+                {faq.question}
+              </dt>
+              <dd class="font-body text-daos-charcoal leading-relaxed">
+                {faq.answer}
+              </dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section-spacing">
+    <div class="container-art text-center">
+      <p class="font-body text-daos-charcoal text-lg mb-6">
+        Still have a question? Find me at an upcoming event or drop a note through social media.
+      </p>
+      <div class="flex flex-wrap justify-center gap-4">
+        <a href="/events" class="btn-outline">Upcoming Events</a>
+        <a href="/about" class="btn-warm">About the Studio</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

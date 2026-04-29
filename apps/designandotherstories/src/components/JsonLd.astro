@@ -1,0 +1,20 @@
+---
+/**
+ * Renders one or more JSON-LD structured data blocks in <script> tags.
+ * Accepts a single schema object or an array of them.
+ *
+ * Usage:
+ *   <JsonLd schema={websiteSchema()} />
+ *   <JsonLd schema={[personSchema(), breadcrumbSchema(...)]} />
+ */
+interface Props {
+  schema: object | object[];
+}
+
+const { schema } = Astro.props;
+const schemas = Array.isArray(schema) ? schema : [schema];
+---
+
+{schemas.map((s) => (
+  <script type="application/ld+json" set:html={JSON.stringify(s)} />
+))}

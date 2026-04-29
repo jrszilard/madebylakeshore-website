@@ -3,8 +3,11 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import PurchaseLinks from '../../components/PurchaseLinks.astro';
 import FromThisWorld from '../../components/FromThisWorld.astro';
 import RelatedSubstackPosts from '../../components/RelatedSubstackPosts.tsx';
+import JsonLd from '../../components/JsonLd.astro';
 import { sanityClient, urlFor, queries } from '../../lib/sanity';
 import { SUBSTACK_FEED_URL, SUBSTACK_URL } from '../../lib/config';
+import { bookSchema, breadcrumbSchema } from '../../lib/structured-data';
+import { bookMetaTitle, bookMetaDescription } from '../../lib/seo-fallbacks';
 export async function getStaticPaths() {
   const books = await sanityClient.fetch(queries.allBooks);
   return books
@@ -66,11 +69,28 @@ const badgeLabel =
     ? 'In Progress'
     : book.status;
 
-const seoDescription = book.seo?.description || book.blurb || '';
-const seoTitle = book.seo?.title || book.title;
+const seoTitle = bookMetaTitle(book);
+const seoDescription = bookMetaDescription(book);
 ---
 
-<BaseLayout title={seoTitle} description={seoDescription}>
+<BaseLayout title={seoTitle} description={seoDescription} ogImage={coverUrl ?? undefined} ogImageType="writing" ogImageSubtitle={book.type?.replace('-', ' ') || ''} ogType="book">
+  <Fragment slot="head">
+    <JsonLd schema={[
+      bookSchema({
+        title: book.title,
+        slug: book.slug.current,
+        description: seoDescription,
+        type: book.type,
+        imageUrl: coverUrl ?? undefined,
+        purchaseLinks: book.purchaseLinks,
+      }),
+      breadcrumbSchema([
+        { name: 'Home', url: '/' },
+        { name: 'Writing', url: '/writing' },
+        { name: book.title, url: `/writing/${book.slug.current}` },
+      ]),
+    ]} />
+  </Fragment>
   <article>
     <!-- Two-column layout: cover left, details right -->
     <section class="section-spacing">

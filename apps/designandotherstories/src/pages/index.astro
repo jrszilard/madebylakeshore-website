@@ -4,9 +4,11 @@ import HeroSection from '../components/HeroSection.astro';
 import SectionHeader from '../components/SectionHeader.astro';
 import ShopCard from '../components/ShopCard.astro';
 import EventCard from '../components/EventCard.astro';
+import JsonLd from '../components/JsonLd.astro';
 import { SUBSTACK_URL, SUBSTACK_SHORT_STORIES_SECTION_ID } from '../lib/config';
 import { sanityClient, urlFor, queries } from '../lib/sanity';
 import { fetchSubstackFeed } from '../lib/substack';
+import { websiteSchema, organizationSchema, breadcrumbSchema } from '../lib/structured-data';
 
 // Fetch all data at build time (static page)
 const [artistProfile, featuredWriting, shopItems, allCollections, nextEvent, substackPosts] = await Promise.all([
@@ -42,6 +44,13 @@ const typeLabels: Record<string, string> = {
   description="Design & Other Stories is a small studio making literary fiction and traditional art by hand in New Hampshire. Original paintings, drawings, and books — made one piece at a time."
   showSnipcart={shopItems && shopItems.length > 0}
 >
+  <Fragment slot="head">
+    <JsonLd schema={[
+      websiteSchema(),
+      organizationSchema({ logoUrl: 'https://designandotherstories.com/brand/seal.svg' }),
+      breadcrumbSchema([{ name: 'Home', url: '/' }]),
+    ]} />
+  </Fragment>
   <!-- 1. Hero -->
   <HeroSection heroImage={artistProfile?.heroImage} shopItems={shopItems ?? []} />
 

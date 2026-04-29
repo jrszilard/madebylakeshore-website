@@ -4,7 +4,9 @@ export const prerender = false;
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import EventCard from '../../components/EventCard.astro';
 import SectionHeader from '../../components/SectionHeader.astro';
+import JsonLd from '../../components/JsonLd.astro';
 import { sanityClient, queries } from '../../lib/sanity';
+import { eventSchema, breadcrumbSchema } from '../../lib/structured-data';
 
 const upcomingEvents = await sanityClient.fetch(queries.upcomingEvents);
 const pastEvents = await sanityClient.fetch(queries.pastEvents);
@@ -12,8 +14,24 @@ const pastEvents = await sanityClient.fetch(queries.pastEvents);
 
 <BaseLayout
   title="Events"
-  description="Art fairs, exhibitions, and events featuring Design & Other Stories. Come find us."
+  description="Upcoming craft fairs, art markets, and exhibitions featuring original handmade art by W. H. Bonilla. Find Design & Other Stories at events throughout New England."
 >
+  <Fragment slot="head">
+    <JsonLd schema={[
+      breadcrumbSchema([
+        { name: 'Home', url: '/' },
+        { name: 'Events', url: '/events' },
+      ]),
+      ...(upcomingEvents ?? []).map((event: any) => eventSchema({
+        title: event.title,
+        slug: event.slug?.current,
+        startDate: event.startDate,
+        endDate: event.endDate,
+        location: event.location,
+        eventType: event.eventType,
+      })),
+    ]} />
+  </Fragment>
   <!-- Page Header -->
   <section class="section-spacing">
     <div class="container-art">

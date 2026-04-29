@@ -1,7 +1,9 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import ShopCard from '../../components/ShopCard.astro';
+import JsonLd from '../../components/JsonLd.astro';
 import { sanityClient, queries } from '../../lib/sanity';
+import { breadcrumbSchema } from '../../lib/structured-data';
 
 const allArtwork = await sanityClient.fetch(queries.allArtwork);
 
@@ -11,9 +13,25 @@ const photography = (allArtwork ?? []).filter((p: any) => p.artworkType === 'pho
 
 <BaseLayout
   title="Gallery"
-  description="Purchase original artworks, paintings, and prints by Wilma. Each piece is handmade and ships directly from the studio."
+  description="Browse and purchase original handmade paintings, drawings, and prints by W. H. Bonilla. Watercolor, ink, and graphite art made by hand in New Hampshire. Ships directly from the studio."
   showSnipcart={true}
 >
+  <Fragment slot="head">
+    <JsonLd schema={[
+      breadcrumbSchema([
+        { name: 'Home', url: '/' },
+        { name: 'Gallery', url: '/gallery' },
+      ]),
+      {
+        '@context': 'https://schema.org',
+        '@type': 'CollectionPage',
+        name: 'Gallery — Design & Other Stories',
+        description: 'Original handmade paintings, drawings, and prints by W. H. Bonilla. Watercolor, ink, and graphite art from New Hampshire.',
+        url: 'https://designandotherstories.com/gallery',
+        creator: { '@type': 'Person', name: 'W. H. Bonilla' },
+      },
+    ]} />
+  </Fragment>
   <!-- Page header -->
   <section class="section-spacing">
     <div class="container-art">

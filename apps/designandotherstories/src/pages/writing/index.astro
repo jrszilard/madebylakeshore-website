@@ -5,9 +5,11 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import BookCard from '../../components/BookCard.astro';
 import SubstackFeed from '../../components/SubstackFeed.astro';
 import ShortStoriesCarousel from '../../components/ShortStoriesCarousel';
+import JsonLd from '../../components/JsonLd.astro';
 import { sanityClient, queries } from '../../lib/sanity';
 import { fetchSubstackSection } from '../../lib/substack';
 import { SUBSTACK_SHORT_STORIES_SECTION_ID } from '../../lib/config';
+import { breadcrumbSchema } from '../../lib/structured-data';
 
 const [allBooks, shortStories] = await Promise.all([
   sanityClient.fetch(queries.allBooks),
@@ -17,8 +19,16 @@ const [allBooks, shortStories] = await Promise.all([
 
 <BaseLayout
   title="Writing"
-  description="Novels, short stories, and essays from Design & Other Stories. Literary fiction and nonfiction made with care."
+  description="Literary fiction by W. H. Bonilla — novels, short stories, and essays from Design & Other Stories. Stories about connection, found family, and the weight of ordinary moments."
 >
+  <Fragment slot="head">
+    <JsonLd schema={[
+      breadcrumbSchema([
+        { name: 'Home', url: '/' },
+        { name: 'Writing', url: '/writing' },
+      ]),
+    ]} />
+  </Fragment>
   <!-- Page Header -->
   <section class="section-spacing">
     <div class="container-art">
