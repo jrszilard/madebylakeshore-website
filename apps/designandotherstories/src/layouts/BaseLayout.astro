@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import Navigation from '../components/Navigation.astro';
+import Banner from '../components/Banner.astro';
 import Footer from '../components/Footer.astro';
 
 interface Props {
@@ -51,6 +52,7 @@ const snipcartApiKey = import.meta.env.PUBLIC_SNIPCART_API_KEY || 'your-snipcart
       Skip to main content
     </a>
     <Navigation />
+    <Banner />
 
     <main id="main-content" class="flex-1">
       <slot />

@@ -4,7 +4,8 @@ import HeroSection from '../components/HeroSection.astro';
 import SectionHeader from '../components/SectionHeader.astro';
 import ShopCard from '../components/ShopCard.astro';
 import EventCard from '../components/EventCard.astro';
-import { SUBSTACK_URL, SUBSTACK_SHORT_STORIES_SECTION_ID } from '../lib/config';
+import SubstackEmbed from '../components/SubstackEmbed.astro';
+import { SUBSTACK_SHORT_STORIES_SECTION_ID } from '../lib/config';
 import { sanityClient, urlFor, queries } from '../lib/sanity';
 import { fetchSubstackFeed } from '../lib/substack';
 
@@ -225,10 +226,8 @@ const typeLabels: Record<string, string> = {
         ))}
       </div>
 
-      <div class="mt-10 flex justify-center">
-        <a href={`${SUBSTACK_URL}/subscribe`} target="_blank" rel="noopener noreferrer" class="btn-warm">
-          Stay in the loop
-        </a>
+      <div class="mt-10 max-w-md mx-auto">
+        <SubstackEmbed />
       </div>
     </div>
   </section>

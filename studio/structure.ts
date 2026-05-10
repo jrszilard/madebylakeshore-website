@@ -138,6 +138,14 @@ export const structure: StructureResolver = (S) =>
                     .documentId('artistProfile')
                     .title('Artist Profile')
                 ),
+              S.listItem()
+                .title('Site Banner')
+                .child(
+                  S.document()
+                    .schemaType('banner')
+                    .documentId('banner')
+                    .title('Site Banner')
+                ),
             ])
         ),
 

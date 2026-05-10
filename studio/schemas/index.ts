@@ -8,6 +8,7 @@ import testimonial from './documents/testimonial';
 import blogPost from './documents/blogPost';
 
 // DesignAndOtherStories documents
+import banner from './documents/banner';
 import artwork from './documents/artwork';
 import artCollection from './documents/artCollection';
 import book from './documents/book';
@@ -34,6 +35,7 @@ export const schemaTypes = [
   portfolioProject,
   testimonial,
   blogPost,
+  banner,
   artwork,
   artCollection,
   book,
