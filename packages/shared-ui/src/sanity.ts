@@ -317,7 +317,7 @@ export const queries = {
 
   // DesignAndOtherStories — Artist Profile
   artistProfile: `*[_type == "artistProfile"][0] {
-  name, heroImage, shortBio, socialLinks,
+  name, heroImage, shortBio, aboutHeadline, aboutPullQuote, bio, socialLinks,
   aboutImages[] {
     alt,
     asset-> { url, metadata { dimensions { width, height } } }

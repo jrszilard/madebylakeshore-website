@@ -19,6 +19,26 @@ export default defineType({
       description: 'A brief one-paragraph bio for cards and previews.',
     }),
     defineField({
+      name: 'aboutHeadline',
+      title: 'About Headline',
+      type: 'string',
+      description: 'Large heading at the top of the About page.',
+    }),
+    defineField({
+      name: 'aboutPullQuote',
+      title: 'About Pull Quote',
+      type: 'text',
+      rows: 2,
+      description: 'Italic pull quote displayed below the headline.',
+    }),
+    defineField({
+      name: 'bio',
+      title: 'Bio',
+      type: 'text',
+      rows: 8,
+      description: 'Full bio shown on the About page. Separate paragraphs with a blank line.',
+    }),
+    defineField({
       name: 'socialLinks',
       title: 'Social Links',
       type: 'array',

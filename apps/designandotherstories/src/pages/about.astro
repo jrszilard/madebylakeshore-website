@@ -40,11 +40,13 @@ const aboutImages = (profile?.aboutImages ?? [])
         <div class="space-y-6">
           <p class="font-sans text-xs uppercase tracking-widest text-daos-terracotta-dark">About</p>
           <h1 class="font-display italic text-display md:text-display-lg text-daos-ink leading-tight">
-            From New Hampshire and Puerto Rico to the world.
+            {profile?.aboutHeadline ?? 'From New Hampshire and Puerto Rico to the world.'}
           </h1>
-          <p class="font-body text-daos-charcoal text-lg leading-relaxed italic border-l-2 border-daos-clay pl-4">
-            Making things you can hold in a world that keeps asking you to let go of everything physical.
-          </p>
+          {(profile?.aboutPullQuote ?? 'Making things you can hold in a world that keeps asking you to let go of everything physical.') && (
+            <p class="font-body text-daos-charcoal text-lg leading-relaxed italic border-l-2 border-daos-clay pl-4">
+              {profile?.aboutPullQuote ?? 'Making things you can hold in a world that keeps asking you to let go of everything physical.'}
+            </p>
+          )}
           {profile?.socialLinks && profile.socialLinks.length > 0 && (
             <div class="flex flex-wrap gap-3 pt-2">
               {profile.socialLinks.map((link: any) => (
@@ -77,21 +79,19 @@ const aboutImages = (profile?.aboutImages ?? [])
   </section>
 
   <!-- 2. Bio paragraphs -->
-  <section class="pb-16">
-    <div class="container-art">
-      <div class="max-w-2xl space-y-4 prose prose-stone font-body text-daos-charcoal leading-relaxed">
-        <p>
-          I'm Wilma — a designer, painter, and writer living in New Hampshire with my husband and our dog.
-        </p>
-        <p>
-          I make two kinds of things: art you can put on your wall, and fiction about people who show up for each other. Ink, watercolor, graphite. Novels and short stories about connection, found family, and the weight of ordinary moments.
-        </p>
-        <p>
-          Both come from the same place — a belief that the things we bring into our lives should be made with care, by a person, on purpose.
-        </p>
-      </div>
-    </div>
-  </section>
+  {(() => {
+    const fallback = `I'm Wilma — a designer, painter, and writer living in New Hampshire with my husband and our dog.\n\nI make two kinds of things: art you can put on your wall, and fiction about people who show up for each other. Ink, watercolor, graphite. Novels and short stories about connection, found family, and the weight of ordinary moments.\n\nBoth come from the same place — a belief that the things we bring into our lives should be made with care, by a person, on purpose.`;
+    const paragraphs = (profile?.bio ?? fallback).split(/\n\n+/).filter(Boolean);
+    return (
+      <section class="pb-16">
+        <div class="container-art">
+          <div class="max-w-2xl space-y-4 prose prose-stone font-body text-daos-charcoal leading-relaxed">
+            {paragraphs.map((p: string) => <p>{p}</p>)}
+          </div>
+        </div>
+      </section>
+    );
+  })()}
 
   <!-- 3. Mediums -->
   {profile?.mediums?.length > 0 && profile.mediums.map((medium: any, i: number) => (
