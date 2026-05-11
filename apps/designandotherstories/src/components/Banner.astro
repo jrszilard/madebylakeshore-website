@@ -1,46 +1,60 @@
 ---
-import { sanityClient } from '../lib/sanity';
-
-const banner = await sanityClient.fetch<{
-  active: boolean;
-  title?: string;
-  body?: string;
-  cta1?: { label?: string; url?: string };
-  cta2?: { label?: string; url?: string };
-} | null>(`*[_type == "banner" && _id == "banner" && active == true][0]`);
 ---
 
-{banner && (
-  <div class="bg-daos-sage text-daos-cream">
-    <div class="container-art py-3 flex flex-col sm:flex-row items-center justify-center gap-3 text-center sm:text-left">
-      <div class="space-y-0.5">
-        {banner.title && (
-          <p class="font-sans font-semibold text-sm">{banner.title}</p>
-        )}
-        {banner.body && (
-          <p class="font-body text-sm text-daos-cream/90">{banner.body}</p>
-        )}
-      </div>
-      {(banner.cta1?.label && banner.cta1?.url) || (banner.cta2?.label && banner.cta2?.url) ? (
-        <div class="flex items-center gap-3 shrink-0">
-          {banner.cta1?.label && banner.cta1?.url && (
-            <a
-              href={banner.cta1.url}
-              class="px-4 py-1.5 bg-daos-cream text-daos-sage font-sans font-medium text-sm rounded-sm hover:bg-white transition-colors"
-            >
-              {banner.cta1.label}
-            </a>
-          )}
-          {banner.cta2?.label && banner.cta2?.url && (
-            <a
-              href={banner.cta2.url}
-              class="font-sans text-sm text-daos-cream/90 underline underline-offset-2 hover:text-white transition-colors"
-            >
-              {banner.cta2.label}
-            </a>
-          )}
-        </div>
-      ) : null}
+<div id="site-banner" hidden class="bg-daos-sage text-daos-cream">
+  <div class="container-art py-3 flex flex-col sm:flex-row items-center justify-center gap-3 text-center sm:text-left">
+    <div class="space-y-0.5">
+      <p id="banner-title" class="font-sans font-semibold text-sm hidden"></p>
+      <p id="banner-body" class="font-body text-sm text-daos-cream/90 hidden"></p>
     </div>
+    <div id="banner-ctas" class="flex items-center gap-3 shrink-0 hidden"></div>
   </div>
-)}
+</div>
+
+<script>
+  async function loadBanner() {
+    try {
+      const res = await fetch('/api/banner.json');
+      const banner = await res.json();
+      if (!banner) return;
+
+      const el = document.getElementById('site-banner');
+      if (!el) return;
+
+      const titleEl = document.getElementById('banner-title');
+      const bodyEl = document.getElementById('banner-body');
+      const ctasEl = document.getElementById('banner-ctas');
+
+      if (banner.title && titleEl) {
+        titleEl.textContent = banner.title;
+        titleEl.classList.remove('hidden');
+      }
+      if (banner.body && bodyEl) {
+        bodyEl.textContent = banner.body;
+        bodyEl.classList.remove('hidden');
+      }
+      if (ctasEl) {
+        const ctas = [
+          { data: banner.cta1, cls: 'px-4 py-1.5 bg-daos-cream text-daos-sage font-sans font-medium text-sm rounded-sm hover:bg-white transition-colors' },
+          { data: banner.cta2, cls: 'font-sans text-sm text-daos-cream/90 underline underline-offset-2 hover:text-white transition-colors' },
+        ].filter(c => c.data?.label && c.data?.url);
+        if (ctas.length > 0) {
+          ctas.forEach(({ data: cta, cls }) => {
+            const a = document.createElement('a');
+            a.href = cta!.url!;
+            a.textContent = cta!.label!;
+            a.className = cls;
+            ctasEl.appendChild(a);
+          });
+          ctasEl.classList.remove('hidden');
+        }
+      }
+
+      el.removeAttribute('hidden');
+    } catch {
+      // fail silently — no banner shown
+    }
+  }
+
+  loadBanner();
+</script>

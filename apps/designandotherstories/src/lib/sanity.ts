@@ -45,6 +45,13 @@ export const sanityClient = {
   },
 };
 
+// Bypasses CDN — use for time-sensitive data like the active banner state
+export const sanityClientFresh = {
+  fetch: <T = any>(query: string, params?: Record<string, any>): Promise<T> => {
+    return getClient().client.withConfig({ useCdn: false }).fetch(query, params) as Promise<T>;
+  },
+};
+
 export function urlFor(source: any) {
   return getClient().urlFor(source);
 }
