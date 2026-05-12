@@ -11,7 +11,7 @@ interface Props {
     category: string;
     priceCents?: number;
     priceDisplayOverride?: string;
-    status: string;
+    status: 'available' | 'sold_out' | 'coming_soon' | 'concept';
   };
   rotate?: 'none' | 'left' | 'right';
 }
@@ -35,7 +35,7 @@ const statusOverlay =
 ---
 <a
   href={`/things/${product.slug.current}`}
-  class={`group block ${rotateClass} transition-transform hover:rotate-0 hover:scale-[1.02]`}
+  class={`group block ${rotateClass} transition-transform hover:rotate-0 hover:scale-[1.02] focus-visible:outline focus-visible:outline-2 focus-visible:outline-ft-shout focus-visible:outline-offset-4 motion-reduce:transition-none motion-reduce:hover:rotate-0 motion-reduce:hover:scale-100`}
 >
   <div class="relative aspect-square overflow-hidden bg-ft-paper border-2 border-ft-ink">
     {thumbUrl && (

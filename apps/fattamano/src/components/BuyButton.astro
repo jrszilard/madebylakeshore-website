@@ -1,21 +1,14 @@
 ---
-import { sanityClient, queries } from '../lib/sanity';
+import type { } from 'astro';
 
 interface Props {
   status: 'available' | 'sold_out' | 'coming_soon' | 'concept';
   buyUrl?: string | null;
   title: string;
+  contactEmail?: string;
 }
 
-const { status, buyUrl, title } = Astro.props;
-
-let contactEmail = '';
-try {
-  const settings = await sanityClient.fetch<{ contactEmail?: string }>(queries.fattamanoSettings);
-  contactEmail = settings?.contactEmail || '';
-} catch (_e) {
-  // Settings doc may be missing during early dev — fall back silently.
-}
+const { status, buyUrl, title, contactEmail = '' } = Astro.props;
 
 const mailtoLink = contactEmail
   ? `mailto:${contactEmail}?subject=${encodeURIComponent(`interested in: ${title}`)}`
@@ -30,9 +23,7 @@ const labelByStatus: Record<string, string> = {
 
 const label = labelByStatus[status];
 const disabled = status === 'sold_out' || status === 'coming_soon';
-const href = disabled
-  ? null
-  : (buyUrl || (status === 'concept' ? mailtoLink : mailtoLink) || null);
+const href = disabled ? null : (buyUrl || mailtoLink || null);
 ---
 {disabled ? (
   <span class="inline-block bg-ft-smudge text-ft-paper font-display px-6 py-3 text-lg cursor-not-allowed">
@@ -43,7 +34,7 @@ const href = disabled
     href={href}
     target={href.startsWith('mailto:') ? '_self' : '_blank'}
     rel={href.startsWith('mailto:') ? undefined : 'noopener noreferrer'}
-    class="inline-block bg-ft-shout text-ft-paper font-display px-6 py-3 text-lg hover:bg-ft-ink transition-colors"
+    class="inline-block bg-ft-shout text-ft-paper font-display px-6 py-3 text-lg hover:bg-ft-ink transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-ft-ink focus-visible:outline-offset-2"
   >
     {label}
   </a>
