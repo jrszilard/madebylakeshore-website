@@ -258,7 +258,8 @@ export const queries = {
     images,
     description,
     featured,
-    "collection": collection->{ title, slug }
+    "collection": collection->{ title, slug },
+    secretLinkRegion
   }`,
 
   allCollections: `*[_type == "artCollection"] | order(order asc) {
