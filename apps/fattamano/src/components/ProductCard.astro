@@ -1,0 +1,64 @@
+---
+import { urlFor } from '../lib/sanity';
+import { formatPrice } from '../lib/format';
+
+interface Props {
+  product: {
+    title: string;
+    slug: { current: string };
+    tagline?: string;
+    images: any[];
+    category: string;
+    priceCents?: number;
+    priceDisplayOverride?: string;
+    status: string;
+  };
+  rotate?: 'none' | 'left' | 'right';
+}
+
+const { product, rotate = 'none' } = Astro.props;
+const thumb = product.images?.[0];
+const thumbUrl = thumb ? urlFor(thumb).width(800).height(800).fit('crop').url() : null;
+const priceLabel = formatPrice(product.priceCents, product.priceDisplayOverride);
+
+const rotateClass =
+  rotate === 'left' ? '-rotate-1.5' : rotate === 'right' ? 'rotate-1.5' : '';
+
+const statusOverlay =
+  product.status === 'sold_out'
+    ? 'sold out'
+    : product.status === 'coming_soon'
+    ? 'soon'
+    : product.status === 'concept'
+    ? 'maybe?'
+    : null;
+---
+<a
+  href={`/things/${product.slug.current}`}
+  class={`group block ${rotateClass} transition-transform hover:rotate-0 hover:scale-[1.02]`}
+>
+  <div class="relative aspect-square overflow-hidden bg-ft-paper border-2 border-ft-ink">
+    {thumbUrl && (
+      <img
+        src={thumbUrl}
+        alt={product.title}
+        class="w-full h-full object-cover"
+        loading="lazy"
+      />
+    )}
+    {statusOverlay && (
+      <span class="absolute top-3 right-3 bg-ft-ink text-ft-paper font-display text-xs uppercase tracking-wide px-2 py-1">
+        {statusOverlay}
+      </span>
+    )}
+  </div>
+  <div class="mt-3 px-1">
+    <h3 class="font-display text-xl leading-tight">{product.title}</h3>
+    {product.tagline && (
+      <p class="font-body text-sm text-ft-smudge mt-1">{product.tagline}</p>
+    )}
+    {priceLabel && (
+      <p class="font-display text-ft-shout text-lg mt-1">{priceLabel}</p>
+    )}
+  </div>
+</a>
