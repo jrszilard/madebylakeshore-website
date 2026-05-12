@@ -1,13 +1,37 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import ProductGrid from '../components/ProductGrid.astro';
+import { sanityClient, queries } from '../lib/sanity';
+
+const settings = await sanityClient.fetch<{
+  heroHeadline?: string;
+  heroSubcopy?: string;
+}>(queries.fattamanoSettings).catch(() => null);
+
+const featured = await sanityClient
+  .fetch<any[]>(queries.featuredFattamanoProducts)
+  .catch(() => []);
+
+const headline = settings?.heroHeadline ?? 'we make things by hand.';
+const subcopy = settings?.heroSubcopy ?? 'Stickers, shirts, prints. Made in small batches, occasionally serious.';
 ---
-<BaseLayout title="Home">
-  <section class="max-w-6xl mx-auto px-6 py-24">
-    <h1 class="font-display text-huge">
-      hi. <span class="text-ft-shout">we make things.</span>
+<BaseLayout title="Home" description={subcopy}>
+  <section class="max-w-6xl mx-auto px-6 py-16 md:py-24">
+    <h1 class="font-display text-big md:text-huge">
+      {headline}
     </h1>
-    <p class="mt-6 max-w-xl font-body text-lg text-ft-smudge">
-      Stickers, shirts, prints. Mostly stupid, occasionally good. Always by hand.
+    <p class="mt-6 max-w-2xl font-body text-lg text-ft-smudge">
+      {subcopy}
     </p>
   </section>
+
+  {featured.length > 0 && (
+    <section class="max-w-6xl mx-auto px-6 pb-24">
+      <div class="flex items-end justify-between mb-10">
+        <h2 class="font-display text-3xl">currently <span class="text-ft-shout">on the bench</span></h2>
+        <a href="/things" class="font-body text-sm underline hover:text-ft-shout">see everything →</a>
+      </div>
+      <ProductGrid products={featured} jitter={true} />
+    </section>
+  )}
 </BaseLayout>

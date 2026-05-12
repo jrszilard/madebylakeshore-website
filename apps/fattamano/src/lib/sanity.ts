@@ -41,7 +41,11 @@ function getClient() {
 // Export a proxy that lazily initializes the client
 export const sanityClient = {
   fetch: <T = any>(query: string, params?: Record<string, any>): Promise<T> => {
-    return getClient().client.fetch(query, params) as Promise<T>;
+    try {
+      return getClient().client.fetch(query, params) as Promise<T>;
+    } catch (err) {
+      return Promise.reject(err);
+    }
   },
 };
 
