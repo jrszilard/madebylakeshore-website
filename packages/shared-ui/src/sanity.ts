@@ -434,6 +434,31 @@ export const queries = {
     publishedAt,
     "project": project->{ title, slug }
   }`,
+
+  // fattamano queries
+  fattamanoSettings: `*[_type == "fattamanoSettings"][0] {
+    heroHeadline, heroSubcopy, aboutBody, footerCopy, notFoundCopy, contactEmail
+  }`,
+
+  allFattamanoProducts: `*[_type == "fattamanoProduct"] | order(dateAdded desc) {
+    _id, title, slug, tagline, images, category, priceCents, priceDisplayOverride,
+    buyUrl, status, dateAdded, featured, tags
+  }`,
+
+  featuredFattamanoProducts: `*[_type == "fattamanoProduct" && featured == true] | order(dateAdded desc)[0...6] {
+    _id, title, slug, tagline, images, category, priceCents, priceDisplayOverride,
+    buyUrl, status
+  }`,
+
+  fattamanoProductBySlug: `*[_type == "fattamanoProduct" && slug.current == $slug][0] {
+    _id, title, slug, tagline, description, images, category, priceCents,
+    priceDisplayOverride, buyUrl, status, dateAdded, tags, seo
+  }`,
+
+  fattamanoProductsByCategory: `*[_type == "fattamanoProduct" && category == $category] | order(dateAdded desc) {
+    _id, title, slug, tagline, images, category, priceCents, priceDisplayOverride,
+    buyUrl, status
+  }`,
 };
 
 // Re-export types for convenience
