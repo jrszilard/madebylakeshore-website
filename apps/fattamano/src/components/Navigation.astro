@@ -1,0 +1,19 @@
+---
+const navItems = [
+  { href: '/', label: 'home' },
+  { href: '/things', label: 'things' },
+  { href: '/about', label: 'about' },
+];
+---
+<nav class="border-b-2 border-ft-ink bg-ft-paper">
+  <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+    <a href="/" class="font-display text-2xl tracking-tight">
+      <span class="text-ft-shout">fatta</span><span>mano</span>
+    </a>
+    <ul class="flex gap-6 font-body text-sm">
+      {navItems.map(item => (
+        <li><a href={item.href} class="hover:text-ft-shout transition-colors">{item.label}</a></li>
+      ))}
+    </ul>
+  </div>
+</nav>
