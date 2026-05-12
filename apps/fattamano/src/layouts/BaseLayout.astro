@@ -17,7 +17,9 @@ const {
 
 const siteTitle = title === 'Home' ? 'fattamano' : `${title} — fattamano`;
 const canonical = new URL(Astro.url.pathname, Astro.site).toString();
-const ogImage = ogImagePath ?? new URL('/og-default.png', Astro.site).toString();
+const ogImage = ogImagePath
+  ? new URL(ogImagePath, Astro.site).toString()
+  : new URL('/og-default.png', Astro.site).toString();
 ---
 <!DOCTYPE html>
 <html lang="en">
