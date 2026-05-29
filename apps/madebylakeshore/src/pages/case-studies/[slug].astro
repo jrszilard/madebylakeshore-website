@@ -8,6 +8,10 @@ export const prerender = false;
 
 const { slug } = Astro.params;
 
+const rawBack = Astro.url.searchParams.get('back');
+const backHref = (rawBack && /^\/team\/[a-z0-9-]+$/.test(rawBack)) ? rawBack : '/case-studies';
+const backLabel = backHref === '/case-studies' ? 'All Case Studies' : 'Back to Portfolio';
+
 if (!slug) {
   return Astro.redirect('/case-studies');
 }
@@ -83,11 +87,11 @@ const authorName = study?.author?.name || '';
     <Fragment>
       <section class="section-spacing">
         <div class="container-wide">
-          <a href="/case-studies" class="inline-flex items-center gap-2 text-sm text-mbl-stone hover:text-mbl-ink mb-8 transition-colors">
+          <a href={backHref} class="inline-flex items-center gap-2 text-sm text-mbl-stone hover:text-mbl-ink mb-8 transition-colors">
             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
             </svg>
-            All Case Studies
+            {backLabel}
           </a>
         </div>
       </section>
@@ -99,11 +103,11 @@ const authorName = study?.author?.name || '';
   <section class="section-spacing">
     <div class="container-wide">
       <div class="max-w-4xl">
-        <a href="/case-studies" class="inline-flex items-center gap-2 text-sm text-mbl-stone hover:text-mbl-ink mb-8 transition-colors">
+        <a href={backHref} class="inline-flex items-center gap-2 text-sm text-mbl-stone hover:text-mbl-ink mb-8 transition-colors">
           <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
           </svg>
-          All Case Studies
+          {backLabel}
         </a>
 
         <div class="flex flex-wrap items-center gap-4 mb-6">
@@ -367,7 +371,7 @@ const authorName = study?.author?.name || '';
             <h3 class="font-display text-2xl">{nextStudy.title}</h3>
             {nextStudy.client && <p class="text-mbl-stone">{nextStudy.client}</p>}
           </div>
-          <a href={`/case-studies/${nextStudy.slug?.current}`} class="btn-primary">
+          <a href={`/case-studies/${nextStudy.slug?.current}${backHref !== '/case-studies' ? `?back=${backHref}` : ''}`} class="btn-primary">
             Read Case Study
             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
