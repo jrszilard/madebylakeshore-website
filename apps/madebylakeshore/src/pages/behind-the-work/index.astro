@@ -1,0 +1,128 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { sanityClient, urlFor, queries } from '../../lib/sanity';
+
+export const prerender = false;
+
+const posts = await sanityClient.fetch(queries.allBlogPosts);
+
+const categoryColors: Record<string, string> = {
+  design: 'bg-mbl-warm/10 text-mbl-warm',
+  data: 'bg-mbl-accent/10 text-mbl-accent',
+  ai: 'bg-purple-100 text-purple-600',
+};
+
+function formatDate(iso: string | null | undefined): string {
+  if (!iso) return '';
+  return new Date(iso).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+}
+---
+
+<BaseLayout
+  title="Behind the Work"
+  description="Deeper dives into the process, decisions, and craft behind our projects — the parts that don't fit in a case study."
+>
+  <!-- Hero -->
+  <section class="section-spacing bg-mbl-ink">
+    <div class="container-wide">
+      <div class="max-w-3xl">
+        <p class="font-heading text-white/50 font-medium tracking-wide mb-4">
+          Behind the Work
+        </p>
+        <h1 class="text-display-lg text-white mb-6">
+          The process <span class="text-mbl-dusk">behind</span> the work
+        </h1>
+        <p class="text-xl text-white/70 leading-relaxed">
+          Case studies show what we built. These posts explain how and why —
+          the decisions, dead ends, and discoveries along the way.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Posts -->
+  <section class="pt-20 md:pt-28 pb-20">
+    <div class="container-wide">
+      {posts.length === 0 ? (
+        <p class="text-mbl-stone text-lg text-center py-16">Posts coming soon.</p>
+      ) : (
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {posts.map((post: any, index: number) => {
+            const imgUrl = post.featuredImage?.asset
+              ? urlFor(post.featuredImage).width(800).height(500).fit('crop').url()
+              : null;
+            const caseStudy = post.relatedCaseStudy;
+
+            return (
+              <a href={`/behind-the-work/${post.slug?.current}`} class="group block">
+                <article class="h-full flex flex-col rounded-lg overflow-hidden border border-mbl-mist/50 hover:border-mbl-accent/30 transition-colors duration-300">
+                  <!-- Image -->
+                  <div class="aspect-[16/10] overflow-hidden bg-mbl-cloud">
+                    {imgUrl ? (
+                      <img
+                        src={imgUrl}
+                        alt={post.title}
+                        class="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-500"
+                        loading={index < 3 ? undefined : 'lazy'}
+                        fetchpriority={index === 0 ? 'high' : undefined}
+                        decoding="async"
+                      />
+                    ) : (
+                      <div class="w-full h-full bg-gradient-to-br from-mbl-slate to-mbl-dusk opacity-60" />
+                    )}
+                  </div>
+
+                  <!-- Content -->
+                  <div class="flex flex-col flex-1 p-6">
+                    {caseStudy && (
+                      <div class="mb-3">
+                        <span class={`inline-block px-2.5 py-1 rounded-full text-xs font-heading font-medium ${categoryColors[caseStudy.category] ?? 'bg-mbl-mist text-mbl-stone'}`}>
+                          {caseStudy.client || caseStudy.title}
+                        </span>
+                      </div>
+                    )}
+
+                    <h2 class="font-display text-xl text-mbl-ink mb-3 leading-snug group-hover:text-mbl-accent transition-colors duration-300">
+                      {post.title}
+                    </h2>
+
+                    {post.excerpt && (
+                      <p class="text-mbl-stone text-sm leading-relaxed mb-4 flex-1">
+                        {post.excerpt}
+                      </p>
+                    )}
+
+                    <div class="flex items-center gap-3 mt-auto pt-4 border-t border-mbl-mist/50">
+                      {post.author?.image?.asset && (
+                        <img
+                          src={urlFor(post.author.image).width(40).height(40).fit('crop').url()}
+                          alt={post.author.name}
+                          class="w-8 h-8 rounded-full object-cover"
+                          loading="lazy"
+                        />
+                      )}
+                      <div class="min-w-0">
+                        {post.author?.name && (
+                          <p class="text-sm font-heading font-medium text-mbl-ink truncate">{post.author.name}</p>
+                        )}
+                        {post.publishedAt && (
+                          <p class="text-xs text-mbl-stone">{formatDate(post.publishedAt)}</p>
+                        )}
+                      </div>
+                      <span class="ml-auto text-sm font-heading font-medium text-mbl-stone group-hover:text-mbl-accent transition-colors inline-flex items-center gap-1">
+                        Read
+                        <svg class="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                        </svg>
+                      </span>
+                    </div>
+                  </div>
+                </article>
+              </a>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  </section>
+</BaseLayout>

@@ -434,6 +434,43 @@ export const queries = {
     publishedAt,
     "project": project->{ title, slug }
   }`,
+
+  // Behind the Work (blog) queries
+  allBlogPosts: `*[_type == "blogPost"] | order(publishedAt desc) {
+    _id,
+    title,
+    slug,
+    excerpt,
+    featuredImage,
+    publishedAt,
+    categories,
+    "author": author->{ name, slug, image },
+    "relatedCaseStudy": relatedCaseStudy->{ title, slug, client, category }
+  }`,
+
+  blogPostBySlug: `*[_type == "blogPost" && slug.current == $slug][0] {
+    _id,
+    title,
+    slug,
+    excerpt,
+    featuredImage,
+    body,
+    publishedAt,
+    categories,
+    seo,
+    "author": author->{ name, slug, image },
+    "relatedCaseStudy": relatedCaseStudy->{ title, slug, client, category, excerpt }
+  }`,
+
+  blogPostsByCaseStudy: `*[_type == "blogPost" && relatedCaseStudy._ref == $caseStudyId] | order(publishedAt desc) {
+    _id,
+    title,
+    slug,
+    excerpt,
+    featuredImage,
+    publishedAt,
+    "author": author->{ name, slug, image }
+  }`,
 };
 
 // Re-export types for convenience

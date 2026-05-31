@@ -1,0 +1,167 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PortableText from '../../components/PortableText.astro';
+import { sanityClient, urlFor, queries } from '../../lib/sanity';
+
+export const prerender = false;
+
+const { slug } = Astro.params;
+
+if (!slug) {
+  return Astro.redirect('/behind-the-work');
+}
+
+const post = await sanityClient.fetch(queries.blogPostBySlug, { slug });
+
+if (!post) {
+  return Astro.redirect('/behind-the-work');
+}
+
+const heroImage = post.featuredImage?.asset ? urlFor(post.featuredImage).width(1400).url() : null;
+const authorImg = post.author?.image?.asset
+  ? urlFor(post.author.image).width(80).height(80).fit('crop').url()
+  : null;
+
+const caseStudy = post.relatedCaseStudy;
+
+const categoryColors: Record<string, string> = {
+  design: 'bg-mbl-warm/10 text-mbl-warm',
+  data: 'bg-mbl-accent/10 text-mbl-accent',
+  ai: 'bg-purple-100 text-purple-600',
+};
+
+function formatDate(iso: string | null | undefined): string {
+  if (!iso) return '';
+  return new Date(iso).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+}
+---
+
+<BaseLayout
+  title={post.seo?.title || post.title}
+  description={post.seo?.description || post.excerpt}
+>
+  <!-- Hero -->
+  <section class="section-spacing">
+    <div class="container-wide">
+      <div class="max-w-4xl">
+        <a
+          href="/behind-the-work"
+          class="inline-flex items-center gap-2 text-sm text-mbl-stone hover:text-mbl-ink mb-8 transition-colors"
+        >
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+          </svg>
+          Behind the Work
+        </a>
+
+        <div class="flex flex-wrap items-center gap-3 mb-6">
+          {caseStudy && (
+            <span class={`px-3 py-1 rounded-full text-sm font-heading font-medium ${categoryColors[caseStudy.category] ?? 'bg-mbl-mist text-mbl-stone'}`}>
+              {caseStudy.category?.charAt(0).toUpperCase() + caseStudy.category?.slice(1)}
+            </span>
+          )}
+          {post.categories?.map((cat: string) => (
+            <span class="px-3 py-1 rounded-full text-sm font-heading font-medium bg-mbl-cloud text-mbl-stone">
+              {cat}
+            </span>
+          ))}
+        </div>
+
+        <h1 class="text-display-lg mb-6">{post.title}</h1>
+
+        {post.excerpt && (
+          <p class="text-xl text-mbl-stone leading-relaxed">{post.excerpt}</p>
+        )}
+      </div>
+    </div>
+  </section>
+
+  <!-- Hero Image -->
+  {heroImage && (
+    <section class="pb-20">
+      <div class="container-wide">
+        <div class="rounded-lg overflow-hidden">
+          <img
+            src={heroImage}
+            alt={post.title}
+            class="w-full h-auto block"
+            fetchpriority="high"
+            decoding="async"
+          />
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- Body + Sidebar -->
+  <section class="pb-20">
+    <div class="container-wide">
+      <div class="grid lg:grid-cols-12 gap-16">
+        <!-- Body -->
+        <div class="lg:col-span-8">
+          {post.body && post.body.length > 0 ? (
+            <PortableText blocks={post.body} />
+          ) : (
+            <p class="text-mbl-stone">No content yet.</p>
+          )}
+        </div>
+
+        <!-- Sidebar -->
+        <div class="lg:col-span-4">
+          <div class="sticky top-24 space-y-8">
+            <!-- Author + Date -->
+            <div class="bg-white border border-mbl-mist/50 rounded-lg p-6">
+              <h3 class="font-heading font-semibold text-sm uppercase tracking-wider text-mbl-stone mb-4">
+                About this post
+              </h3>
+              <div class="space-y-4">
+                {post.author && (
+                  <div class="flex items-center gap-3">
+                    {authorImg && (
+                      <img
+                        src={authorImg}
+                        alt={post.author.name}
+                        class="w-10 h-10 rounded-full object-cover flex-shrink-0"
+                        loading="lazy"
+                      />
+                    )}
+                    <div>
+                      <p class="text-xs text-mbl-stone/70">Written by</p>
+                      <p class="font-heading font-medium text-mbl-ink">{post.author.name}</p>
+                    </div>
+                  </div>
+                )}
+                {post.publishedAt && (
+                  <div>
+                    <p class="text-xs text-mbl-stone/70">Published</p>
+                    <p class="font-heading font-medium text-mbl-ink">{formatDate(post.publishedAt)}</p>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <!-- Related Case Study -->
+            {caseStudy?.slug?.current && (
+              <div class="bg-mbl-dusk rounded-lg p-6 text-white">
+                <p class="text-xs text-white/60 font-heading uppercase tracking-wider mb-2">Part of the case study</p>
+                <h3 class="font-display text-lg mb-2 text-white leading-snug">{caseStudy.title}</h3>
+                {caseStudy.client && (
+                  <p class="text-white/70 text-sm mb-4">{caseStudy.client}</p>
+                )}
+                <a
+                  href={`/case-studies/${caseStudy.slug.current}`}
+                  class="inline-flex items-center gap-2 text-sm font-heading font-medium text-white underline underline-offset-2 hover:no-underline transition-all"
+                >
+                  Read the case study
+                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  </svg>
+                </a>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
