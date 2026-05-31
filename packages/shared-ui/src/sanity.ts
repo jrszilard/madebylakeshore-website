@@ -137,6 +137,7 @@ export const queries = {
     results,
     metrics,
     "author": author->{ name, slug, image, bio },
+    "relatedBlogPosts": relatedBlogPosts[]->{ _id, title, slug, excerpt, featuredImage, publishedAt, "author": author->{ name, slug, image } },
     "testimonial": testimonial->{ quote, authorName, authorTitle, company },
     seo
   }`,

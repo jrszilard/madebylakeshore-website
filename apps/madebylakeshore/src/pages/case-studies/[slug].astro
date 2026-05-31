@@ -57,7 +57,12 @@ if (!isProtected || isAuthenticated) {
   if (nextStudy?.slug?.current === slug) nextStudy = null;
 
   if (study?._id) {
-    behindThePosts = await sanityClient.fetch(queries.blogPostsByCaseStudy, { caseStudyId: study._id });
+    // Prefer the curated list set on the case study; fall back to reverse-query
+    if (study.relatedBlogPosts && study.relatedBlogPosts.length > 0) {
+      behindThePosts = study.relatedBlogPosts;
+    } else {
+      behindThePosts = await sanityClient.fetch(queries.blogPostsByCaseStudy, { caseStudyId: study._id });
+    }
   }
 }
 

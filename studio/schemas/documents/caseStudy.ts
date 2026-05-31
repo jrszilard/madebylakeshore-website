@@ -126,6 +126,13 @@ export default defineType({
       ],
     }),
     defineField({
+      name: 'relatedBlogPosts',
+      title: 'Behind the Work Posts',
+      type: 'array',
+      of: [{ type: 'reference', to: [{ type: 'blogPost' }] }],
+      description: 'Curate which blog posts appear in the "Behind the Work" section on this case study page. Order is preserved.',
+    }),
+    defineField({
       name: 'testimonial',
       title: 'Client Testimonial',
       type: 'reference',
