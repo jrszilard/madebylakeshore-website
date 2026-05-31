@@ -43,11 +43,12 @@ function renderBlock(block: any): string {
   if (block._type === 'figure') {
     try {
       const src = urlFor(block).width(1200).url();
+      const srcFull = urlFor(block).width(2400).url();
       const alt = escapeHtml(block.alt || '');
       const caption = block.caption
         ? `<figcaption class="text-sm text-mbl-stone mt-2 text-center">${escapeHtml(block.caption)}</figcaption>`
         : '';
-      return `<figure class="my-8"><img src="${src}" alt="${alt}" class="w-full rounded-lg" loading="lazy" />${caption}</figure>`;
+      return `<figure class="my-8"><button class="lightbox-trigger w-full cursor-zoom-in text-left" data-src="${escapeHtml(srcFull)}" data-alt="${alt}"><img src="${src}" alt="${alt}" class="w-full rounded-lg" loading="lazy" /></button>${caption}</figure>`;
     } catch {
       return '';
     }

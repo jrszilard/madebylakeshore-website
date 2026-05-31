@@ -17,7 +17,6 @@ if (!post) {
   return Astro.redirect('/behind-the-work');
 }
 
-const heroImage = post.featuredImage?.asset ? urlFor(post.featuredImage).width(1400).url() : null;
 const authorImg = post.author?.image?.asset
   ? urlFor(post.author.image).width(80).height(80).fit('crop').url()
   : null;
@@ -75,23 +74,6 @@ function formatDate(iso: string | null | undefined): string {
       </div>
     </div>
   </section>
-
-  <!-- Hero Image -->
-  {heroImage && (
-    <section class="pb-20">
-      <div class="container-wide">
-        <div class="rounded-lg overflow-hidden">
-          <img
-            src={heroImage}
-            alt={post.title}
-            class="w-full h-auto block"
-            fetchpriority="high"
-            decoding="async"
-          />
-        </div>
-      </div>
-    </section>
-  )}
 
   <!-- Body + Sidebar -->
   <section class="pb-20">
@@ -164,4 +146,93 @@ function formatDate(iso: string | null | undefined): string {
       </div>
     </div>
   </section>
+  <!-- Lightbox -->
+  <div
+    id="lightbox"
+    class="fixed inset-0 z-50 bg-black/90 flex items-center justify-center opacity-0 pointer-events-none"
+    style="transition: opacity 0.2s ease;"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="lightbox-title"
+  >
+    <h2 id="lightbox-title" class="sr-only">Image viewer</h2>
+    <button id="lb-close" aria-label="Close" class="absolute top-4 right-4 text-white/70 hover:text-white transition-colors">
+      <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+    <button id="lb-prev" aria-label="Previous image" class="absolute left-4 top-1/2 -translate-y-1/2 text-white/70 hover:text-white transition-colors">
+      <svg class="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+      </svg>
+    </button>
+    <button id="lb-next" aria-label="Next image" class="absolute right-4 top-1/2 -translate-y-1/2 text-white/70 hover:text-white transition-colors">
+      <svg class="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+      </svg>
+    </button>
+    <div class="max-w-[90vw] max-h-[90vh] flex flex-col items-center gap-3">
+      <img id="lb-img" src="" alt="" class="max-w-full max-h-[85vh] object-contain rounded-lg" />
+    </div>
+  </div>
 </BaseLayout>
+
+<script>
+  const triggers = Array.from(document.querySelectorAll<HTMLButtonElement>('.lightbox-trigger'));
+  const lightbox = document.getElementById('lightbox') as HTMLElement;
+  const lbImg = document.getElementById('lb-img') as HTMLImageElement;
+  let current = 0;
+  let lastFocused: HTMLElement | null = null;
+
+  function open(index: number) {
+    current = index;
+    const t = triggers[index];
+    lbImg.src = t.dataset.src || '';
+    lbImg.alt = t.dataset.alt || '';
+    lightbox.classList.remove('opacity-0', 'pointer-events-none');
+    document.body.style.overflow = 'hidden';
+    lastFocused = document.activeElement as HTMLElement;
+    document.getElementById('lb-close')?.focus();
+  }
+
+  function close() {
+    lightbox.classList.add('opacity-0', 'pointer-events-none');
+    document.body.style.overflow = '';
+    lastFocused?.focus();
+  }
+
+  function navigate(dir: number) {
+    open((current + dir + triggers.length) % triggers.length);
+  }
+
+  triggers.forEach((t, i) => t.addEventListener('click', () => open(i)));
+  document.getElementById('lb-close')?.addEventListener('click', close);
+  document.getElementById('lb-prev')?.addEventListener('click', () => navigate(-1));
+  document.getElementById('lb-next')?.addEventListener('click', () => navigate(1));
+  lightbox?.addEventListener('click', (e) => { if (e.target === lightbox) close(); });
+
+  // Hide prev/next when only one image
+  if (triggers.length <= 1) {
+    document.getElementById('lb-prev')?.classList.add('hidden');
+    document.getElementById('lb-next')?.classList.add('hidden');
+  }
+
+  // Keyboard: Escape + arrow keys + focus trap
+  document.addEventListener('keydown', (e) => {
+    if (lightbox.classList.contains('pointer-events-none')) return;
+    if (e.key === 'Escape') close();
+    if (e.key === 'ArrowLeft') navigate(-1);
+    if (e.key === 'ArrowRight') navigate(1);
+  });
+
+  lightbox?.addEventListener('keydown', (e) => {
+    if (e.key !== 'Tab') return;
+    const focusable = Array.from(lightbox.querySelectorAll<HTMLElement>('button:not([disabled])'));
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (e.shiftKey ? document.activeElement === first : document.activeElement === last) {
+      e.preventDefault();
+      (e.shiftKey ? last : first).focus();
+    }
+  });
+</script>
