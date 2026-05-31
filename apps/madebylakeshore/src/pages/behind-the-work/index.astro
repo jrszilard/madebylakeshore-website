@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import HeroTwinkle from '../../components/HeroTwinkle.astro';
 import { sanityClient, urlFor, queries } from '../../lib/sanity';
 
 export const prerender = false;
@@ -23,16 +24,20 @@ function formatDate(iso: string | null | undefined): string {
   description="Deeper dives into the process, decisions, and craft behind our projects — the parts that don't fit in a case study."
 >
   <!-- Hero -->
-  <section class="section-spacing bg-mbl-ink">
-    <div class="container-wide">
+  <section class="relative section-spacing bg-[#1e3030] overflow-hidden">
+    <div class="absolute inset-0 opacity-5">
+      <div class="absolute inset-0 bg-pattern"></div>
+    </div>
+    <HeroTwinkle />
+    <div class="container-wide relative z-10">
       <div class="max-w-3xl">
-        <p class="font-heading text-white/50 font-medium tracking-wide mb-4">
+        <p class="font-heading text-white/50 font-medium tracking-wide mb-4 animate-slide-up opacity-0" style="animation-delay: 0.1s;">
           Behind the Work
         </p>
-        <h1 class="text-display-lg text-white mb-6">
+        <h1 class="text-display-lg text-white mb-6 animate-slide-up opacity-0" style="animation-delay: 0.2s;">
           The process <span class="text-mbl-dusk">behind</span> the work
         </h1>
-        <p class="text-xl text-white/70 leading-relaxed">
+        <p class="text-xl text-white/70 leading-relaxed animate-slide-up opacity-0" style="animation-delay: 0.3s;">
           Case studies show what we built. These posts explain how and why —
           the decisions, dead ends, and discoveries along the way.
         </p>
