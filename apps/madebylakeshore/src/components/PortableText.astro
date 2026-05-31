@@ -23,8 +23,7 @@ function renderSpan(span: any, markDefs: any[]): string {
     const def = markDefs?.find((d: any) => d._key === mark);
     if (def?._type === 'link') {
       const href = (def.href || '').replace(/^javascript:/i, '');
-      const isExternal = href.startsWith('http');
-      const attrs = isExternal ? ' target="_blank" rel="noopener noreferrer"' : '';
+      const attrs = def.blank ? ' target="_blank" rel="noopener noreferrer"' : '';
       text = `<a href="${escapeHtml(href)}"${attrs} class="text-mbl-accent underline underline-offset-2 hover:no-underline transition-all">${text}</a>`;
     } else {
       const tagMap: Record<string, string> = {
@@ -41,12 +40,14 @@ function renderSpan(span: any, markDefs: any[]): string {
 }
 
 function renderBlock(block: any): string {
-  if (block._type === 'image') {
+  if (block._type === 'figure') {
     try {
       const src = urlFor(block).width(1200).url();
       const alt = escapeHtml(block.alt || '');
-      const caption = block.caption ? `<figcaption class="text-sm text-mbl-stone mt-2 text-center">${escapeHtml(block.caption)}</figcaption>` : '';
-      return `<figure class="my-8">${caption ? `<img src="${src}" alt="${alt}" class="w-full rounded-lg" loading="lazy" />${caption}` : `<img src="${src}" alt="${alt}" class="w-full rounded-lg" loading="lazy" />`}</figure>`;
+      const caption = block.caption
+        ? `<figcaption class="text-sm text-mbl-stone mt-2 text-center">${escapeHtml(block.caption)}</figcaption>`
+        : '';
+      return `<figure class="my-8"><img src="${src}" alt="${alt}" class="w-full rounded-lg" loading="lazy" />${caption}</figure>`;
     } catch {
       return '';
     }
