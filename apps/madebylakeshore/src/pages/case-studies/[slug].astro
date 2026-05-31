@@ -279,7 +279,7 @@ const authorName = study?.author?.name || '';
           </div>
           <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {behindThePosts.slice(0, 3).map((post: any) => (
-              <a href={`/behind-the-work/${post.slug?.current}`} class="group block">
+              <a href={`/behind-the-work/${post.slug?.current}?back=/case-studies/${slug}`} class="group block">
                 <article class="h-full flex flex-col rounded-lg overflow-hidden border border-mbl-mist/50 hover:border-mbl-accent/30 transition-colors duration-300">
                   {post.featuredImage?.asset && (
                     <div class="aspect-[16/9] overflow-hidden bg-mbl-cloud">

@@ -11,6 +11,16 @@ if (!slug) {
   return Astro.redirect('/behind-the-work');
 }
 
+const rawBack = Astro.url.searchParams.get('back');
+const backHref = (rawBack && /^\/(case-studies|team)\/[a-z0-9-]+$/.test(rawBack))
+  ? rawBack
+  : '/behind-the-work';
+const backLabel = backHref === '/behind-the-work'
+  ? 'Behind the Work'
+  : backHref.startsWith('/case-studies/')
+    ? 'Back to Case Study'
+    : 'Back to Portfolio';
+
 const post = await sanityClient.fetch(queries.blogPostBySlug, { slug });
 
 if (!post) {
@@ -44,13 +54,13 @@ function formatDate(iso: string | null | undefined): string {
     <div class="container-wide">
       <div class="max-w-4xl">
         <a
-          href="/behind-the-work"
+          href={backHref}
           class="inline-flex items-center gap-2 text-sm text-mbl-stone hover:text-mbl-ink mb-8 transition-colors"
         >
           <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
           </svg>
-          Behind the Work
+          {backLabel}
         </a>
 
         <div class="flex flex-wrap items-center gap-3 mb-6">
