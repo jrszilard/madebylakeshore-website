@@ -17,6 +17,10 @@ function formatDate(iso: string | null | undefined): string {
   if (!iso) return '';
   return new Date(iso).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 }
+
+const allCategories: string[] = Array.from(
+  new Set(posts.flatMap((p: any) => p.categories ?? []))
+).sort() as string[];
 ---
 
 <BaseLayout
@@ -51,15 +55,37 @@ function formatDate(iso: string | null | undefined): string {
       {posts.length === 0 ? (
         <p class="text-mbl-stone text-lg text-center py-16">Posts coming soon.</p>
       ) : (
-        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <>
+          {/* Filter pills */}
+          {allCategories.length > 0 && (
+            <div class="flex flex-wrap gap-2 mb-10" id="filter-bar" role="group" aria-label="Filter posts by category">
+              <button
+                data-filter="all"
+                class="filter-pill px-4 py-1.5 rounded-full text-sm font-heading font-medium transition-colors duration-200 bg-mbl-ink text-white"
+              >
+                All
+              </button>
+              {allCategories.map((cat) => (
+                <button
+                  data-filter={cat}
+                  class="filter-pill px-4 py-1.5 rounded-full text-sm font-heading font-medium transition-colors duration-200 bg-mbl-cloud text-mbl-stone hover:bg-mbl-mist"
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+          )}
+
+          <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8" id="posts-grid">
           {posts.map((post: any, index: number) => {
             const imgUrl = post.featuredImage?.asset
               ? urlFor(post.featuredImage).width(800).height(500).fit('crop').url()
               : null;
             const caseStudy = post.relatedCaseStudy;
+            const cats = (post.categories ?? []).join(',');
 
             return (
-              <a href={`/behind-the-work/${post.slug?.current}`} class="group block">
+              <a href={`/behind-the-work/${post.slug?.current}`} class="group block post-card" data-categories={cats}>
                 <article class="h-full flex flex-col rounded-lg overflow-hidden border border-mbl-mist/50 hover:border-mbl-accent/30 transition-colors duration-300">
                   <!-- Image -->
                   <div class="aspect-[16/10] overflow-hidden bg-mbl-cloud">
@@ -126,8 +152,45 @@ function formatDate(iso: string | null | undefined): string {
               </a>
             );
           })}
-        </div>
+          </div>
+
+          {/* Empty state when filter has no results */}
+          <p id="no-results" class="hidden text-mbl-stone text-lg text-center py-16">
+            No posts in this category yet.
+          </p>
+        </>
       )}
     </div>
   </section>
 </BaseLayout>
+
+<script>
+  const pills = Array.from(document.querySelectorAll<HTMLButtonElement>('.filter-pill'));
+  const cards = Array.from(document.querySelectorAll<HTMLElement>('.post-card'));
+  const noResults = document.getElementById('no-results');
+
+  function setActive(filter: string) {
+    pills.forEach((p) => {
+      const isActive = p.dataset.filter === filter;
+      p.classList.toggle('bg-mbl-ink', isActive);
+      p.classList.toggle('text-white', isActive);
+      p.classList.toggle('bg-mbl-cloud', !isActive);
+      p.classList.toggle('text-mbl-stone', !isActive);
+      p.classList.toggle('hover:bg-mbl-mist', !isActive);
+    });
+
+    let visible = 0;
+    cards.forEach((card) => {
+      const cats = card.dataset.categories?.split(',') ?? [];
+      const show = filter === 'all' || cats.includes(filter);
+      card.classList.toggle('hidden', !show);
+      if (show) visible++;
+    });
+
+    noResults?.classList.toggle('hidden', visible > 0);
+  }
+
+  pills.forEach((pill) => {
+    pill.addEventListener('click', () => setActive(pill.dataset.filter ?? 'all'));
+  });
+</script>
