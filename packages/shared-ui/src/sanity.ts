@@ -446,7 +446,7 @@ export const queries = {
     publishedAt,
     categories,
     "author": author->{ name, slug, image },
-    "relatedCaseStudy": relatedCaseStudy->{ title, slug, client, category }
+    "relatedCaseStudies": relatedCaseStudies[]->{ title, slug, client, category }
   }`,
 
   blogPostBySlug: `*[_type == "blogPost" && slug.current == $slug][0] {
@@ -460,10 +460,10 @@ export const queries = {
     categories,
     seo,
     "author": author->{ name, slug, image },
-    "relatedCaseStudy": relatedCaseStudy->{ title, slug, client, category, excerpt }
+    "relatedCaseStudies": relatedCaseStudies[]->{ title, slug, client, category, excerpt }
   }`,
 
-  blogPostsByCaseStudy: `*[_type == "blogPost" && relatedCaseStudy._ref == $caseStudyId] | order(publishedAt desc) {
+  blogPostsByCaseStudy: `*[_type == "blogPost" && $caseStudyId in relatedCaseStudies[]._ref] | order(publishedAt desc) {
     _id,
     title,
     slug,

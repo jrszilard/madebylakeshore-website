@@ -81,7 +81,9 @@ const allCategories: string[] = Array.from(
             const imgUrl = post.featuredImage?.asset
               ? urlFor(post.featuredImage).width(800).height(500).fit('crop').url()
               : null;
-            const caseStudy = post.relatedCaseStudy;
+            const caseStudies = post.relatedCaseStudies ?? [];
+            const primaryCS = caseStudies[0];
+            const extraCount = caseStudies.length - 1;
             const cats = (post.categories ?? []).join(',');
 
             return (
@@ -105,11 +107,14 @@ const allCategories: string[] = Array.from(
 
                   <!-- Content -->
                   <div class="flex flex-col flex-1 p-6">
-                    {caseStudy && (
-                      <div class="mb-3">
-                        <span class={`inline-block px-2.5 py-1 rounded-full text-xs font-heading font-medium ${categoryColors[caseStudy.category] ?? 'bg-mbl-mist text-mbl-stone'}`}>
-                          {caseStudy.client || caseStudy.title}
+                    {primaryCS && (
+                      <div class="flex items-center gap-2 mb-3">
+                        <span class={`inline-block px-2.5 py-1 rounded-full text-xs font-heading font-medium ${categoryColors[primaryCS.category] ?? 'bg-mbl-mist text-mbl-stone'}`}>
+                          {primaryCS.client || primaryCS.title}
                         </span>
+                        {extraCount > 0 && (
+                          <span class="text-xs text-mbl-stone">+{extraCount} more</span>
+                        )}
                       </div>
                     )}
 

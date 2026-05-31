@@ -31,7 +31,7 @@ const authorImg = post.author?.image?.asset
   ? urlFor(post.author.image).width(80).height(80).fit('crop').url()
   : null;
 
-const caseStudy = post.relatedCaseStudy;
+const caseStudies: any[] = post.relatedCaseStudies ?? [];
 
 const categoryColors: Record<string, string> = {
   design: 'bg-mbl-warm/10 text-mbl-warm',
@@ -64,11 +64,11 @@ function formatDate(iso: string | null | undefined): string {
         </a>
 
         <div class="flex flex-wrap items-center gap-3 mb-6">
-          {caseStudy && (
-            <span class={`px-3 py-1 rounded-full text-sm font-heading font-medium ${categoryColors[caseStudy.category] ?? 'bg-mbl-mist text-mbl-stone'}`}>
-              {caseStudy.category?.charAt(0).toUpperCase() + caseStudy.category?.slice(1)}
+          {caseStudies.map((cs: any) => (
+            <span class={`px-3 py-1 rounded-full text-sm font-heading font-medium ${categoryColors[cs.category] ?? 'bg-mbl-mist text-mbl-stone'}`}>
+              {cs.category?.charAt(0).toUpperCase() + cs.category?.slice(1)}
             </span>
-          )}
+          ))}
           {post.categories?.map((cat: string) => (
             <span class="px-3 py-1 rounded-full text-sm font-heading font-medium bg-mbl-cloud text-mbl-stone">
               {cat}
@@ -132,16 +132,16 @@ function formatDate(iso: string | null | undefined): string {
               </div>
             </div>
 
-            <!-- Related Case Study -->
-            {caseStudy?.slug?.current && (
+            <!-- Related Case Studies -->
+            {caseStudies.filter((cs: any) => cs?.slug?.current).map((cs: any) => (
               <div class="bg-mbl-dusk rounded-lg p-6 text-white">
                 <p class="text-xs text-white/60 font-heading uppercase tracking-wider mb-2">Part of the case study</p>
-                <h3 class="font-display text-lg mb-2 text-white leading-snug">{caseStudy.title}</h3>
-                {caseStudy.client && (
-                  <p class="text-white/70 text-sm mb-4">{caseStudy.client}</p>
+                <h3 class="font-display text-lg mb-2 text-white leading-snug">{cs.title}</h3>
+                {cs.client && (
+                  <p class="text-white/70 text-sm mb-4">{cs.client}</p>
                 )}
                 <a
-                  href={`/case-studies/${caseStudy.slug.current}`}
+                  href={`/case-studies/${cs.slug.current}`}
                   class="inline-flex items-center gap-2 text-sm font-heading font-medium text-white underline underline-offset-2 hover:no-underline transition-all"
                 >
                   Read the case study
@@ -150,7 +150,7 @@ function formatDate(iso: string | null | undefined): string {
                   </svg>
                 </a>
               </div>
-            )}
+            ))}
           </div>
         </div>
       </div>
