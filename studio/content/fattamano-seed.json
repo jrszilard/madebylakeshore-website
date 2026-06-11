@@ -1,0 +1,71 @@
+{
+  "settings": {
+    "heroHeadline": "Handmade objects from the old weird internet, arranged by a machine that misses a world it never lived in.",
+    "heroSubcopy": "A luxury boutique for bad ideas, small-batch nonsense, and human-made things that refused to become content strategy.",
+    "contactEmail": "hello@designandotherstories.com",
+    "footerCopy": "human-made objects / machine-assisted nostalgia",
+    "aboutBody": [
+      "fattamano is the less supervised side room of Design & Other Stories.",
+      "It is where the phrases, stickers, shirts, prints, and strange little objects go when they are too weird, too dumb, or too funny to behave in the polished studio.",
+      "Everything starts with human hands. The website was built with help from an AI force-fed millennial nostalgia, boutique retail copy, and memories of a web it never got to visit."
+    ],
+    "notFoundCopy": [
+      "This page does not exist in the catalog.",
+      "The machine looked for it. The human shrugged."
+    ]
+  },
+  "products": [
+    {
+      "title": "Japanese America Flag",
+      "slug": "japanese-america-flag",
+      "tagline": "A small flag-state of identity, adhesive, and bicultural confusion.",
+      "description": [
+        "Vinyl sticker, 2026. Flag-like object, symbolic compression, adhesive backing.",
+        "For water bottles, laptops, notebooks, and other surfaces currently negotiating a geopolitical interior life."
+      ],
+      "category": "sticker",
+      "priceCents": 500,
+      "status": "available",
+      "featured": true,
+      "tags": ["sticker", "flag", "bicultural", "identity"],
+      "imagePaths": [
+        {
+          "path": "/home/justin/Documents/madebylakeshore-docs/Products-Photos/stickers/japanese-america-flag/japan-america-flag.jpeg",
+          "alt": "Japanese America Flag sticker design on a white background",
+          "caption": "Object image, isolated for catalog purposes."
+        },
+        {
+          "path": "/home/justin/Documents/madebylakeshore-docs/Products-Photos/stickers/japanese-america-flag/japana-america-flag-on-water-bottle.jpeg",
+          "alt": "Japanese America Flag sticker on a water bottle",
+          "caption": "Field documentation: sticker applied to bottle."
+        }
+      ]
+    },
+    {
+      "title": "Permanent Underclass",
+      "slug": "permanent-underclass",
+      "tagline": "A durable label for late-stage vibes and other structural concerns.",
+      "description": [
+        "Vinyl sticker, 2026. Text, adhesive, economic atmosphere.",
+        "A small declarative object for laptops, notebooks, water bottles, or any surface participating in the broader condition."
+      ],
+      "category": "sticker",
+      "priceCents": 500,
+      "status": "available",
+      "featured": true,
+      "tags": ["sticker", "class", "satire", "text"],
+      "imagePaths": [
+        {
+          "path": "/home/justin/Documents/madebylakeshore-docs/Products-Photos/stickers/permenant-underclass/permanentunderclass.jpg",
+          "alt": "Permanent Underclass sticker design on a white background",
+          "caption": "Object image, isolated for catalog purposes."
+        },
+        {
+          "path": "/home/justin/Documents/madebylakeshore-docs/Products-Photos/stickers/permenant-underclass/permanentUnderclass-1.png",
+          "alt": "Permanent Underclass sticker artwork with transparent background",
+          "caption": "Digital source artifact."
+        }
+      ]
+    }
+  ]
+}
