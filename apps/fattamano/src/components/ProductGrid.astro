@@ -11,12 +11,12 @@ const { products, jitter = false } = Astro.props;
 
 function rotateFor(i: number): 'none' | 'left' | 'right' {
   if (!jitter) return 'none';
-  const m = i % 3;
+  const m = i % 4;
   return m === 0 ? 'left' : m === 2 ? 'right' : 'none';
 }
 ---
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-10">
+<div class="grid grid-cols-1 gap-x-7 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
   {products.map((p, i) => (
-    <ProductCard product={p} rotate={rotateFor(i)} />
+    <ProductCard product={p} rotate={rotateFor(i)} catalogNumber={i + 1} />
   ))}
 </div>
