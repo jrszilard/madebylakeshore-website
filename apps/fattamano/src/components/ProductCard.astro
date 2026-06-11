@@ -6,51 +6,89 @@ import type { FattamanoProduct } from '../lib/types';
 interface Props {
   product: FattamanoProduct;
   rotate?: 'none' | 'left' | 'right';
+  catalogNumber?: number;
 }
 
-const { product, rotate = 'none' } = Astro.props;
+const { product, rotate = 'none', catalogNumber = 1 } = Astro.props;
 const thumb = product.images?.[0];
-const thumbUrl = thumb ? urlFor(thumb)?.width(800).height(800).fit('crop').url() ?? null : null;
+const thumbUrl = thumb ? urlFor(thumb)?.width(900).height(900).fit('crop').url() ?? null : null;
 const priceLabel = formatPrice(product.priceCents, product.priceDisplayOverride);
+const objectNumber = String(catalogNumber).padStart(3, '0');
 
 const rotateClass =
   rotate === 'left' ? '-rotate-1.5' : rotate === 'right' ? 'rotate-1.5' : '';
 
 const statusOverlay =
   product.status === 'sold_out'
-    ? 'sold out'
+    ? 'already acquired'
     : product.status === 'coming_soon'
-    ? 'soon'
+    ? 'materializing'
     : product.status === 'concept'
-    ? 'maybe?'
-    : null;
+    ? 'conceptual object'
+    : 'available-ish';
+
+const statusClasses =
+  product.status === 'available'
+    ? 'bg-ft-shout text-ft-paper'
+    : product.status === 'concept'
+    ? 'bg-ft-splash text-ft-ink'
+    : 'bg-ft-ink text-ft-paper';
+
+const categoryLabel = product.category
+  ? product.category.replace(/_/g, ' ')
+  : 'unclassified';
 ---
 <a
   href={`/things/${product.slug.current}`}
-  class={`group block ${rotateClass} transition-transform hover:rotate-0 hover:scale-[1.02] focus-visible:outline focus-visible:outline-2 focus-visible:outline-ft-shout focus-visible:outline-offset-4 motion-reduce:transition-none motion-reduce:hover:rotate-0 motion-reduce:hover:scale-100`}
+  class={`group block ${rotateClass} transition-transform hover:rotate-0 hover:scale-[1.015] focus-visible:outline focus-visible:outline-2 focus-visible:outline-ft-shout focus-visible:outline-offset-4 motion-reduce:transition-none motion-reduce:hover:rotate-0 motion-reduce:hover:scale-100`}
 >
-  <div class="relative aspect-square overflow-hidden bg-ft-paper border-2 border-ft-ink">
-    {thumbUrl && (
-      <img
-        src={thumbUrl}
-        alt={product.title}
-        class="w-full h-full object-cover"
-        loading="lazy"
-      />
-    )}
-    {statusOverlay && (
-      <span class="absolute top-3 right-3 bg-ft-ink text-ft-paper font-display text-xs uppercase tracking-wide px-2 py-1">
+  <article class="h-full border-2 border-ft-ink bg-white shadow-[6px_6px_0_#1A1A1A] transition-shadow group-hover:shadow-[3px_3px_0_#1A1A1A]">
+    <div class="flex items-center justify-between border-b-2 border-ft-ink bg-ft-paper px-3 py-2 font-mono text-[0.68rem] uppercase tracking-[0.18em] text-ft-smudge">
+      <span>Object No. {objectNumber}</span>
+      <span>{categoryLabel}</span>
+    </div>
+
+    <div class="relative aspect-square overflow-hidden bg-ft-paper">
+      {thumbUrl ? (
+        <img
+          src={thumbUrl}
+          alt={product.title}
+          class="h-full w-full object-cover grayscale-[12%] transition duration-300 group-hover:grayscale-0 group-hover:scale-[1.03] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
+          loading="lazy"
+        />
+      ) : (
+        <div class="flex h-full w-full flex-col items-center justify-center gap-4 p-6 text-center">
+          <div class="font-mono text-5xl text-ft-smudge" aria-hidden="true">▧</div>
+          <p class="max-w-[14rem] font-mono text-xs uppercase tracking-[0.18em] text-ft-smudge">
+            image pending / object rumored to exist
+          </p>
+        </div>
+      )}
+      <span class={`absolute right-3 top-3 border-2 border-ft-ink px-2 py-1 font-mono text-[0.65rem] uppercase tracking-[0.16em] ${statusClasses}`}>
         {statusOverlay}
       </span>
-    )}
-  </div>
-  <div class="mt-3 px-1">
-    <h3 class="font-display text-xl leading-tight">{product.title}</h3>
-    {product.tagline && (
-      <p class="font-body text-sm text-ft-smudge mt-1">{product.tagline}</p>
-    )}
-    {priceLabel && (
-      <p class="font-display text-ft-shout text-lg mt-1">{priceLabel}</p>
-    )}
-  </div>
+    </div>
+
+    <div class="border-t-2 border-ft-ink p-4">
+      <p class="font-mono text-[0.68rem] uppercase tracking-[0.18em] text-ft-smudge">
+        human-made / machine-catalogued
+      </p>
+      <h3 class="mt-3 font-display text-2xl leading-tight text-ft-ink group-hover:text-ft-shout">
+        {product.title}
+      </h3>
+      {product.tagline && (
+        <p class="mt-2 font-body text-sm leading-relaxed text-ft-smudge">{product.tagline}</p>
+      )}
+
+      <div class="mt-5 flex items-end justify-between gap-4 border-t border-dashed border-ft-smudge pt-4">
+        <div>
+          <p class="font-mono text-[0.65rem] uppercase tracking-[0.18em] text-ft-smudge">acquisition fee</p>
+          <p class="font-display text-xl text-ft-shout">{priceLabel || 'inquire spiritually'}</p>
+        </div>
+        <span class="font-mono text-[0.65rem] uppercase tracking-[0.18em] text-ft-ink underline decoration-ft-splash decoration-4 underline-offset-4">
+          inspect →
+        </span>
+      </div>
+    </div>
+  </article>
 </a>
