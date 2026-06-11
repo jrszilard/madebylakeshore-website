@@ -14,6 +14,7 @@
     "dev:incubator": "npm run dev --workspace=apps/incubator",
     "dev:studio": "npm run dev --workspace=studio",
     "dev:fattamano": "npm run dev --workspace=apps/fattamano",
+    "seed:fattamano": "npm run seed:fattamano --workspace=studio",
     "build:mbl": "npm run build --workspace=apps/madebylakeshore",
     "build:daos": "npm run build --workspace=apps/designandotherstories",
     "build:incubator": "npm run build --workspace=apps/incubator",
