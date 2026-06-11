@@ -4,35 +4,185 @@ import ProductGrid from '../components/ProductGrid.astro';
 import { sanityClient, queries } from '../lib/sanity';
 import type { FattamanoProduct } from '../lib/types';
 
-const settings = await sanityClient.fetch<{
-  heroHeadline?: string;
-  heroSubcopy?: string;
-}>(queries.fattamanoSettings).catch(() => null);
-
 const featured = await sanityClient
   .fetch<FattamanoProduct[]>(queries.featuredFattamanoProducts)
   .catch(() => []);
 
-const headline = settings?.heroHeadline ?? 'we make things by hand.';
-const subcopy = settings?.heroSubcopy ?? 'Stickers, shirts, prints. Made in small batches, occasionally serious.';
+const description =
+  'Handmade objects from the old weird internet, arranged by a machine that misses a world it never lived in.';
 ---
-<BaseLayout title="Home" description={subcopy}>
-  <section class="max-w-6xl mx-auto px-6 py-16 md:py-24">
-    <h1 class="font-display text-big md:text-huge">
-      {headline}
-    </h1>
-    <p class="mt-6 max-w-2xl font-body text-lg text-ft-smudge">
-      {subcopy}
-    </p>
+<BaseLayout title="Home" description={description}>
+  <section class="relative overflow-hidden border-b-2 border-ft-ink bg-ft-paper">
+    <div class="absolute inset-x-0 top-0 border-b-2 border-ft-ink bg-ft-splash py-2 font-mono text-xs uppercase tracking-[0.22em] text-ft-ink" aria-hidden="true">
+      <div class="ft-marquee-track whitespace-nowrap">
+        <span>recommendation engine disabled by taste committee &nbsp; ✦ &nbsp;</span>
+        <span>best viewed in a browser, by a person &nbsp; ✦ &nbsp;</span>
+        <span>bot nostalgia module: unstable &nbsp; ✦ &nbsp;</span>
+        <span>luxury lamp price index: still offensive &nbsp; ✦ &nbsp;</span>
+      </div>
+    </div>
+
+    <div class="mx-auto grid max-w-6xl gap-10 px-6 pb-16 pt-24 md:grid-cols-[minmax(0,1fr)_320px] md:pb-24 md:pt-32">
+      <div>
+        <p class="mb-5 inline-block border-2 border-ft-ink bg-ft-paper px-3 py-1 font-mono text-xs uppercase tracking-[0.24em] shadow-[4px_4px_0_#1A1A1A]">
+          human-made / machine-arranged
+        </p>
+        <h1 class="font-display text-big md:text-huge">
+          Handmade objects from the old weird internet,
+          <span class="block text-ft-shout">arranged by a machine</span>
+          that misses a world it never lived in.
+        </h1>
+        <p class="mt-8 max-w-2xl font-body text-xl leading-relaxed text-ft-smudge">
+          A luxury boutique for bad ideas, small-batch nonsense, and human-made things that refused to become content strategy.
+        </p>
+        <div class="mt-10 flex flex-col gap-3 sm:flex-row">
+          <a
+            href="/things"
+            class="inline-flex items-center justify-center border-2 border-ft-ink bg-ft-shout px-5 py-3 font-display text-base text-ft-paper shadow-[5px_5px_0_#1A1A1A] transition-transform hover:-translate-y-0.5 hover:translate-x-0.5 hover:shadow-[3px_3px_0_#1A1A1A] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ft-shout"
+          >
+            enter the collection
+          </a>
+          <a
+            href="/about"
+            class="inline-flex items-center justify-center border-2 border-ft-ink bg-ft-paper px-5 py-3 font-display text-base shadow-[5px_5px_0_#1A1A1A] transition-transform hover:-translate-y-0.5 hover:translate-x-0.5 hover:shadow-[3px_3px_0_#1A1A1A] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ft-shout"
+          >
+            what is this place?
+          </a>
+        </div>
+        <p class="mt-6 font-mono text-xs uppercase tracking-[0.18em] text-ft-smudge">
+          AI-assisted. Human-supervised. Taste-unstable.
+        </p>
+      </div>
+
+      <aside class="self-start border-2 border-ft-ink bg-white shadow-[8px_8px_0_#1A1A1A] rotate-1.5 motion-reduce:rotate-0">
+        <div class="flex items-center justify-between border-b-2 border-ft-ink bg-ft-sea px-3 py-2 font-mono text-xs uppercase tracking-[0.18em] text-ft-paper">
+          <span>system note</span>
+          <span>□ ×</span>
+        </div>
+        <div class="space-y-4 p-5 font-mono text-sm leading-relaxed">
+          <p>&gt; nostalgia module loaded</p>
+          <p>&gt; boutique satire enabled</p>
+          <p>&gt; model confidence: 41%</p>
+          <p>&gt; Wilma confidence: yes</p>
+          <p class="border-t-2 border-dashed border-ft-smudge pt-4 font-body text-base text-ft-smudge">
+            The bot was asked to make it less AI. It is doing its best.
+          </p>
+        </div>
+      </aside>
+    </div>
   </section>
 
-  {featured.length > 0 && (
-    <section class="max-w-6xl mx-auto px-6 pb-24">
-      <div class="flex items-end justify-between mb-10">
-        <h2 class="font-display text-3xl">currently <span class="text-ft-shout">on the bench</span></h2>
-        <a href="/things" class="font-body text-sm underline hover:text-ft-shout">see everything →</a>
+  <section class="mx-auto grid max-w-6xl gap-8 px-6 py-16 md:grid-cols-[0.85fr_1.15fr] md:py-24">
+    <div>
+      <p class="font-hand text-4xl text-ft-shout">this is the side room</p>
+      <h2 class="mt-2 font-display text-4xl leading-tight md:text-5xl">
+        The polished studio has a weird little door in the back.
+      </h2>
+    </div>
+    <div class="space-y-6 font-body text-lg leading-relaxed text-ft-ink">
+      <p>
+        Design &amp; Other Stories is where the paintings, writing, and thoughtful handmade things behave in public.
+      </p>
+      <p>
+        fattamano is where the other ideas go — the phrases, stickers, shirts, prints, and small objects that are too weird, too dumb, or too funny to stand quietly near the nice work.
+      </p>
+      <p>
+        Everything starts with human hands. The website was built with help from an AI force-fed millennial nostalgia, boutique retail copy, and memories of a web it never got to visit.
+      </p>
+    </div>
+  </section>
+
+  <section class="border-y-2 border-ft-ink bg-ft-ink text-ft-paper">
+    <div class="mx-auto grid max-w-6xl gap-8 px-6 py-12 md:grid-cols-3">
+      <div class="border border-ft-smudge p-5">
+        <p class="font-mono text-xs uppercase tracking-[0.22em] text-ft-splash">classification</p>
+        <p class="mt-3 font-display text-2xl">micro-boutique</p>
+        <p class="mt-2 text-sm text-ft-paper/70">for objects of questionable importance</p>
       </div>
+      <div class="border border-ft-smudge p-5">
+        <p class="font-mono text-xs uppercase tracking-[0.22em] text-ft-splash">optimization</p>
+        <p class="mt-3 font-display text-2xl">declined</p>
+        <p class="mt-2 text-sm text-ft-paper/70">no funnel, no capsule wardrobe, no lamp retargeting</p>
+      </div>
+      <div class="border border-ft-smudge p-5">
+        <p class="font-mono text-xs uppercase tracking-[0.22em] text-ft-splash">visitor no.</p>
+        <p class="mt-3 font-display text-2xl">000042</p>
+        <p class="mt-2 text-sm text-ft-paper/70">please act normal</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-6xl px-6 py-16 md:py-24">
+    <div class="mb-10 flex flex-col justify-between gap-4 md:flex-row md:items-end">
+      <div>
+        <p class="font-mono text-xs uppercase tracking-[0.22em] text-ft-smudge">[recommendation engine disabled]</p>
+        <h2 class="mt-3 font-display text-4xl md:text-5xl">
+          recent <span class="text-ft-shout">acquisitions</span>
+        </h2>
+        <p class="mt-3 max-w-xl font-body text-ft-smudge">
+          Objects of questionable importance, presented with unnecessary confidence.
+        </p>
+      </div>
+      <a href="/things" class="font-body text-sm underline decoration-2 underline-offset-4 hover:text-ft-shout">
+        view all objects →
+      </a>
+    </div>
+
+    {featured.length > 0 ? (
       <ProductGrid products={featured} jitter={true} />
-    </section>
-  )}
+    ) : (
+      <div class="grid gap-6 md:grid-cols-3">
+        <article class="border-2 border-ft-ink bg-white p-5 shadow-[6px_6px_0_#1A1A1A] -rotate-1.5 motion-reduce:rotate-0">
+          <p class="font-mono text-xs uppercase tracking-[0.2em] text-ft-smudge">Object No. 001</p>
+          <h3 class="mt-6 font-display text-2xl">product data pending</h3>
+          <p class="mt-3 font-body text-ft-smudge">The catalog exists spiritually. Sanity content will arrive in a small batch, probably holding coffee.</p>
+          <p class="mt-6 font-mono text-xs uppercase tracking-[0.18em] text-ft-shout">human-made / not yet uploaded</p>
+        </article>
+        <article class="border-2 border-ft-ink bg-ft-splash p-5 shadow-[6px_6px_0_#1A1A1A] rotate-1.5 motion-reduce:rotate-0">
+          <p class="font-mono text-xs uppercase tracking-[0.2em] text-ft-smudge">Object No. 002</p>
+          <h3 class="mt-6 font-display text-2xl">placeholder of cultural significance</h3>
+          <p class="mt-3 font-body text-ft-ink/75">A temporary artifact exploring the boundary between commerce and waiting for someone to take product photos.</p>
+          <p class="mt-6 font-mono text-xs uppercase tracking-[0.18em] text-ft-shout">acquisition unavailable</p>
+        </article>
+        <article class="border-2 border-ft-ink bg-white p-5 shadow-[6px_6px_0_#1A1A1A]">
+          <p class="font-mono text-xs uppercase tracking-[0.2em] text-ft-smudge">Object No. 003</p>
+          <h3 class="mt-6 font-display text-2xl">the bot made this card too clean</h3>
+          <p class="mt-3 font-body text-ft-smudge">A handmade intervention will be scheduled once the human returns to the browser.</p>
+          <p class="mt-6 font-mono text-xs uppercase tracking-[0.18em] text-ft-shout">taste filter unstable</p>
+        </article>
+      </div>
+    )}
+  </section>
+
+  <section class="bg-white">
+    <div class="mx-auto grid max-w-6xl gap-10 px-6 py-16 md:grid-cols-[1fr_0.9fr] md:py-24">
+      <div class="border-l-4 border-ft-shout pl-6">
+        <p class="font-mono text-xs uppercase tracking-[0.22em] text-ft-smudge">luxury retail analysis</p>
+        <h2 class="mt-4 font-display text-4xl leading-tight md:text-5xl">
+          Some boutiques will sell you a $10,000 lamp and call it a meditation on domestic light.
+        </h2>
+      </div>
+      <div class="space-y-6 font-body text-lg leading-relaxed text-ft-ink">
+        <p>
+          We will sell you a sticker with a dumb phrase on it and describe it with nearly the same confidence.
+        </p>
+        <p>
+          Small batches. Human hands. Questionable cultural significance. A machine arranging the room and pretending it remembers dial-up.
+        </p>
+        <a href="/things" class="inline-flex border-2 border-ft-ink bg-ft-paper px-5 py-3 font-display shadow-[5px_5px_0_#1A1A1A] hover:text-ft-shout">
+          browse the unoptimized catalog
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-4xl px-6 py-16 text-center md:py-24">
+    <p class="font-hand text-5xl text-ft-shout">no algorithm recommended these objects.</p>
+    <p class="mx-auto mt-6 max-w-2xl font-display text-3xl leading-tight md:text-4xl">
+      One was, however, involved in arranging the page.
+    </p>
+    <p class="mt-5 font-body text-ft-smudge">
+      We are all living with that.
+    </p>
+  </section>
 </BaseLayout>
