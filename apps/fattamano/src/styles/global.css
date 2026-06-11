@@ -11,4 +11,30 @@
   h1, h2, h3 {
     @apply font-display;
   }
+  ::selection {
+    @apply bg-ft-splash text-ft-ink;
+  }
+}
+
+@layer utilities {
+  .ft-marquee-track {
+    display: inline-block;
+    min-width: 200%;
+    animation: ft-marquee 26s linear infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ft-marquee-track {
+      animation: none;
+    }
+  }
+}
+
+@keyframes ft-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
 }
