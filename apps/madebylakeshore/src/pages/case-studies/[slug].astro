@@ -8,6 +8,10 @@ export const prerender = false;
 
 const { slug } = Astro.params;
 
+const rawBack = Astro.url.searchParams.get('back');
+const backHref = (rawBack && /^\/team\/[a-z0-9-]+$/.test(rawBack)) ? rawBack : '/case-studies';
+const backLabel = backHref === '/case-studies' ? 'All Case Studies' : 'Back to Portfolio';
+
 if (!slug) {
   return Astro.redirect('/case-studies');
 }
@@ -42,6 +46,8 @@ let study: any = null;
 let allStudies: any[] = [];
 let nextStudy: any = null;
 
+let behindThePosts: any[] = [];
+
 if (!isProtected || isAuthenticated) {
   study = await sanityClient.fetch(queries.caseStudyBySlug, { slug });
   allStudies = await sanityClient.fetch(queries.caseStudiesForNavigation);
@@ -49,6 +55,15 @@ if (!isProtected || isAuthenticated) {
   nextStudy = allStudies[(currentIndex + 1) % allStudies.length];
   // Don't link to self as "next"
   if (nextStudy?.slug?.current === slug) nextStudy = null;
+
+  if (study?._id) {
+    // Prefer the curated list set on the case study; fall back to reverse-query
+    if (study.relatedBlogPosts && study.relatedBlogPosts.length > 0) {
+      behindThePosts = study.relatedBlogPosts;
+    } else {
+      behindThePosts = await sanityClient.fetch(queries.blogPostsByCaseStudy, { caseStudyId: study._id });
+    }
+  }
 }
 
 const categoryColors: Record<string, string> = {
@@ -83,11 +98,11 @@ const authorName = study?.author?.name || '';
     <Fragment>
       <section class="section-spacing">
         <div class="container-wide">
-          <a href="/case-studies" class="inline-flex items-center gap-2 text-sm text-mbl-stone hover:text-mbl-ink mb-8 transition-colors">
+          <a href={backHref} class="inline-flex items-center gap-2 text-sm text-mbl-stone hover:text-mbl-ink mb-8 transition-colors">
             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
             </svg>
-            All Case Studies
+            {backLabel}
           </a>
         </div>
       </section>
@@ -99,11 +114,11 @@ const authorName = study?.author?.name || '';
   <section class="section-spacing">
     <div class="container-wide">
       <div class="max-w-4xl">
-        <a href="/case-studies" class="inline-flex items-center gap-2 text-sm text-mbl-stone hover:text-mbl-ink mb-8 transition-colors">
+        <a href={backHref} class="inline-flex items-center gap-2 text-sm text-mbl-stone hover:text-mbl-ink mb-8 transition-colors">
           <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
           </svg>
-          All Case Studies
+          {backLabel}
         </a>
 
         <div class="flex flex-wrap items-center gap-4 mb-6">
@@ -245,6 +260,61 @@ const authorName = study?.author?.name || '';
     </div>
   </section>
 
+  <!-- Behind the Work -->
+  {behindThePosts && behindThePosts.length > 0 && (
+    <section class="pb-20">
+      <div class="container-wide">
+        <div class="border-t border-mbl-mist/50 pt-16">
+          <div class="flex items-baseline justify-between mb-10">
+            <div>
+              <p class="font-heading text-sm uppercase tracking-wider text-mbl-stone mb-1">Go deeper</p>
+              <h2 class="font-display text-2xl text-mbl-ink">Behind the Work</h2>
+            </div>
+            <a href="/behind-the-work" class="text-sm font-heading font-medium text-mbl-stone hover:text-mbl-ink transition-colors inline-flex items-center gap-1">
+              All posts
+              <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
+            </a>
+          </div>
+          <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {behindThePosts.slice(0, 3).map((post: any) => (
+              <a href={`/behind-the-work/${post.slug?.current}?back=/case-studies/${slug}`} class="group block">
+                <article class="h-full flex flex-col rounded-lg overflow-hidden border border-mbl-mist/50 hover:border-mbl-accent/30 transition-colors duration-300">
+                  {post.featuredImage?.asset && (
+                    <div class="aspect-[16/9] overflow-hidden bg-mbl-cloud">
+                      <img
+                        src={`${urlFor(post.featuredImage).width(600).height(338).fit('crop').url()}`}
+                        alt={post.title}
+                        class="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-500"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </div>
+                  )}
+                  <div class="flex flex-col flex-1 p-5">
+                    <h3 class="font-display text-lg text-mbl-ink mb-2 leading-snug group-hover:text-mbl-accent transition-colors duration-300">
+                      {post.title}
+                    </h3>
+                    {post.excerpt && (
+                      <p class="text-sm text-mbl-stone leading-relaxed flex-1">{post.excerpt}</p>
+                    )}
+                    <span class="mt-4 text-sm font-heading font-medium text-mbl-stone group-hover:text-mbl-accent transition-colors inline-flex items-center gap-1">
+                      Read post
+                      <svg class="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                      </svg>
+                    </span>
+                  </div>
+                </article>
+              </a>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  )}
+
   <!-- Testimonial -->
   {study.testimonial && study.testimonial.quote && (
     <section class="section-spacing bg-white">
@@ -367,7 +437,7 @@ const authorName = study?.author?.name || '';
             <h3 class="font-display text-2xl">{nextStudy.title}</h3>
             {nextStudy.client && <p class="text-mbl-stone">{nextStudy.client}</p>}
           </div>
-          <a href={`/case-studies/${nextStudy.slug?.current}`} class="btn-primary">
+          <a href={`/case-studies/${nextStudy.slug?.current}${backHref !== '/case-studies' ? `?back=${backHref}` : ''}`} class="btn-primary">
             Read Case Study
             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />

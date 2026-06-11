@@ -55,7 +55,8 @@
     @apply absolute bottom-0 left-0 w-full h-px bg-current scale-x-0 origin-right transition-transform duration-300;
   }
   
-  .link-underline:hover::after {
+  .link-underline:hover::after,
+  .link-underline.is-active::after {
     @apply scale-x-100 origin-left;
   }
   

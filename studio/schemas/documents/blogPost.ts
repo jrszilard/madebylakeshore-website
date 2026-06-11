@@ -42,6 +42,13 @@ export default defineType({
       type: 'blockContent',
     }),
     defineField({
+      name: 'relatedCaseStudies',
+      title: 'Related Case Studies',
+      type: 'array',
+      of: [{ type: 'reference', to: [{ type: 'caseStudy' }] }],
+      description: 'Optional — link this post to one or more case studies so it appears in their "Behind the Work" sections',
+    }),
+    defineField({
       name: 'categories',
       title: 'Categories',
       type: 'array',

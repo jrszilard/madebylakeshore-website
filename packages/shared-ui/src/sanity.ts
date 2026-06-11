@@ -137,6 +137,7 @@ export const queries = {
     results,
     metrics,
     "author": author->{ name, slug, image, bio },
+    "relatedBlogPosts": relatedBlogPosts[]->{ _id, title, slug, excerpt, featuredImage, publishedAt, "author": author->{ name, slug, image } },
     "testimonial": testimonial->{ quote, authorName, authorTitle, company },
     seo
   }`,
@@ -434,6 +435,43 @@ export const queries = {
     slug,
     publishedAt,
     "project": project->{ title, slug }
+  }`,
+
+  // Behind the Work (blog) queries
+  allBlogPosts: `*[_type == "blogPost"] | order(publishedAt desc) {
+    _id,
+    title,
+    slug,
+    excerpt,
+    featuredImage,
+    publishedAt,
+    categories,
+    "author": author->{ name, slug, image },
+    "relatedCaseStudies": relatedCaseStudies[]->{ title, slug, client, category }
+  }`,
+
+  blogPostBySlug: `*[_type == "blogPost" && slug.current == $slug][0] {
+    _id,
+    title,
+    slug,
+    excerpt,
+    featuredImage,
+    body,
+    publishedAt,
+    categories,
+    seo,
+    "author": author->{ name, slug, image },
+    "relatedCaseStudies": relatedCaseStudies[]->{ title, slug, client, category, excerpt }
+  }`,
+
+  blogPostsByCaseStudy: `*[_type == "blogPost" && $caseStudyId in relatedCaseStudies[]._ref] | order(publishedAt desc) {
+    _id,
+    title,
+    slug,
+    excerpt,
+    featuredImage,
+    publishedAt,
+    "author": author->{ name, slug, image }
   }`,
 
   // fattamano queries

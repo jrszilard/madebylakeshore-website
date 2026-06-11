@@ -1,0 +1,248 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PortableText from '../../components/PortableText.astro';
+import { sanityClient, urlFor, queries } from '../../lib/sanity';
+
+export const prerender = false;
+
+const { slug } = Astro.params;
+
+if (!slug) {
+  return Astro.redirect('/behind-the-work');
+}
+
+const rawBack = Astro.url.searchParams.get('back');
+const backHref = (rawBack && /^\/(case-studies|team)\/[a-z0-9-]+$/.test(rawBack))
+  ? rawBack
+  : '/behind-the-work';
+const backLabel = backHref === '/behind-the-work'
+  ? 'Behind the Work'
+  : backHref.startsWith('/case-studies/')
+    ? 'Back to Case Study'
+    : 'Back to Portfolio';
+
+const post = await sanityClient.fetch(queries.blogPostBySlug, { slug });
+
+if (!post) {
+  return Astro.redirect('/behind-the-work');
+}
+
+const authorImg = post.author?.image?.asset
+  ? urlFor(post.author.image).width(80).height(80).fit('crop').url()
+  : null;
+
+const caseStudies: any[] = post.relatedCaseStudies ?? [];
+
+const categoryColors: Record<string, string> = {
+  design: 'bg-mbl-warm/10 text-mbl-warm',
+  data: 'bg-mbl-accent/10 text-mbl-accent',
+  ai: 'bg-purple-100 text-purple-600',
+};
+
+function formatDate(iso: string | null | undefined): string {
+  if (!iso) return '';
+  return new Date(iso).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+}
+---
+
+<BaseLayout
+  title={post.seo?.title || post.title}
+  description={post.seo?.description || post.excerpt}
+>
+  <!-- Hero -->
+  <section class="section-spacing">
+    <div class="container-wide">
+      <div class="max-w-4xl">
+        <a
+          href={backHref}
+          class="inline-flex items-center gap-2 text-sm text-mbl-stone hover:text-mbl-ink mb-8 transition-colors"
+        >
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+          </svg>
+          {backLabel}
+        </a>
+
+        <div class="flex flex-wrap items-center gap-3 mb-6">
+          {caseStudies.map((cs: any) => (
+            <span class={`px-3 py-1 rounded-full text-sm font-heading font-medium ${categoryColors[cs.category] ?? 'bg-mbl-mist text-mbl-stone'}`}>
+              {cs.category?.charAt(0).toUpperCase() + cs.category?.slice(1)}
+            </span>
+          ))}
+          {post.categories?.map((cat: string) => (
+            <span class="px-3 py-1 rounded-full text-sm font-heading font-medium bg-mbl-cloud text-mbl-stone">
+              {cat}
+            </span>
+          ))}
+        </div>
+
+        <h1 class="text-display-lg mb-6">{post.title}</h1>
+
+        {post.excerpt && (
+          <p class="text-xl text-mbl-stone leading-relaxed">{post.excerpt}</p>
+        )}
+      </div>
+    </div>
+  </section>
+
+  <!-- Body + Sidebar -->
+  <section class="pb-20">
+    <div class="container-wide">
+      <div class="grid lg:grid-cols-12 gap-16">
+        <!-- Body -->
+        <div class="lg:col-span-8">
+          {post.body && post.body.length > 0 ? (
+            <PortableText blocks={post.body} />
+          ) : (
+            <p class="text-mbl-stone">No content yet.</p>
+          )}
+        </div>
+
+        <!-- Sidebar -->
+        <div class="lg:col-span-4">
+          <div class="sticky top-24 space-y-8">
+            <!-- Author + Date -->
+            <div class="bg-white border border-mbl-mist/50 rounded-lg p-6">
+              <h3 class="font-heading font-semibold text-sm uppercase tracking-wider text-mbl-stone mb-4">
+                About this post
+              </h3>
+              <div class="space-y-4">
+                {post.author && (
+                  <div class="flex items-center gap-3">
+                    {authorImg && (
+                      <img
+                        src={authorImg}
+                        alt={post.author.name}
+                        class="w-10 h-10 rounded-full object-cover flex-shrink-0"
+                        loading="lazy"
+                      />
+                    )}
+                    <div>
+                      <p class="text-xs text-mbl-stone/70">Written by</p>
+                      <p class="font-heading font-medium text-mbl-ink">{post.author.name}</p>
+                    </div>
+                  </div>
+                )}
+                {post.publishedAt && (
+                  <div>
+                    <p class="text-xs text-mbl-stone/70">Published</p>
+                    <p class="font-heading font-medium text-mbl-ink">{formatDate(post.publishedAt)}</p>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <!-- Related Case Studies -->
+            {caseStudies.filter((cs: any) => cs?.slug?.current).map((cs: any) => (
+              <div class="bg-mbl-dusk rounded-lg p-6 text-white">
+                <p class="text-xs text-white/60 font-heading uppercase tracking-wider mb-2">Part of the case study</p>
+                <h3 class="font-display text-lg mb-2 text-white leading-snug">{cs.title}</h3>
+                {cs.client && (
+                  <p class="text-white/70 text-sm mb-4">{cs.client}</p>
+                )}
+                <a
+                  href={`/case-studies/${cs.slug.current}`}
+                  class="inline-flex items-center gap-2 text-sm font-heading font-medium text-white underline underline-offset-2 hover:no-underline transition-all"
+                >
+                  Read the case study
+                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  </svg>
+                </a>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- Lightbox -->
+  <div
+    id="lightbox"
+    class="fixed inset-0 z-50 bg-black/90 flex items-center justify-center opacity-0 pointer-events-none"
+    style="transition: opacity 0.2s ease;"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="lightbox-title"
+  >
+    <h2 id="lightbox-title" class="sr-only">Image viewer</h2>
+    <button id="lb-close" aria-label="Close" class="absolute top-4 right-4 text-white/70 hover:text-white transition-colors">
+      <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+    <button id="lb-prev" aria-label="Previous image" class="absolute left-4 top-1/2 -translate-y-1/2 text-white/70 hover:text-white transition-colors">
+      <svg class="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+      </svg>
+    </button>
+    <button id="lb-next" aria-label="Next image" class="absolute right-4 top-1/2 -translate-y-1/2 text-white/70 hover:text-white transition-colors">
+      <svg class="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+      </svg>
+    </button>
+    <div class="max-w-[90vw] max-h-[90vh] flex flex-col items-center gap-3">
+      <img id="lb-img" src="" alt="" class="max-w-full max-h-[85vh] object-contain rounded-lg" />
+    </div>
+  </div>
+</BaseLayout>
+
+<script>
+  const triggers = Array.from(document.querySelectorAll<HTMLButtonElement>('.lightbox-trigger'));
+  const lightbox = document.getElementById('lightbox') as HTMLElement;
+  const lbImg = document.getElementById('lb-img') as HTMLImageElement;
+  let current = 0;
+  let lastFocused: HTMLElement | null = null;
+
+  function open(index: number) {
+    current = index;
+    const t = triggers[index];
+    lbImg.src = t.dataset.src || '';
+    lbImg.alt = t.dataset.alt || '';
+    lightbox.classList.remove('opacity-0', 'pointer-events-none');
+    document.body.style.overflow = 'hidden';
+    lastFocused = document.activeElement as HTMLElement;
+    document.getElementById('lb-close')?.focus();
+  }
+
+  function close() {
+    lightbox.classList.add('opacity-0', 'pointer-events-none');
+    document.body.style.overflow = '';
+    lastFocused?.focus();
+  }
+
+  function navigate(dir: number) {
+    open((current + dir + triggers.length) % triggers.length);
+  }
+
+  triggers.forEach((t, i) => t.addEventListener('click', () => open(i)));
+  document.getElementById('lb-close')?.addEventListener('click', close);
+  document.getElementById('lb-prev')?.addEventListener('click', () => navigate(-1));
+  document.getElementById('lb-next')?.addEventListener('click', () => navigate(1));
+  lightbox?.addEventListener('click', (e) => { if (e.target === lightbox) close(); });
+
+  // Hide prev/next when only one image
+  if (triggers.length <= 1) {
+    document.getElementById('lb-prev')?.classList.add('hidden');
+    document.getElementById('lb-next')?.classList.add('hidden');
+  }
+
+  // Keyboard: Escape + arrow keys + focus trap
+  document.addEventListener('keydown', (e) => {
+    if (lightbox.classList.contains('pointer-events-none')) return;
+    if (e.key === 'Escape') close();
+    if (e.key === 'ArrowLeft') navigate(-1);
+    if (e.key === 'ArrowRight') navigate(1);
+  });
+
+  lightbox?.addEventListener('keydown', (e) => {
+    if (e.key !== 'Tab') return;
+    const focusable = Array.from(lightbox.querySelectorAll<HTMLElement>('button:not([disabled])'));
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (e.shiftKey ? document.activeElement === first : document.activeElement === last) {
+      e.preventDefault();
+      (e.shiftKey ? last : first).focus();
+    }
+  });
+</script>

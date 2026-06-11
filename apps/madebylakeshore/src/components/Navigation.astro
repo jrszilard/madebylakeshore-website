@@ -4,6 +4,7 @@ const currentPath = Astro.url.pathname;
 const navLinks = [
   { href: '/services', label: 'Services' },
   { href: '/case-studies', label: 'Case Studies' },
+  { href: '/behind-the-work', label: 'Behind the Work' },
   { href: '/about', label: 'About' },
   { href: '/contact', label: 'Contact' },
 ];
@@ -24,19 +25,21 @@ const brandLinks = [
       
       <!-- Desktop Navigation -->
       <div class="hidden lg:flex items-center gap-8">
-        {navLinks.map((link) => (
-          <a 
-            href={link.href}
-            class:list={[
-              "font-heading text-sm font-medium link-underline transition-colors duration-200",
-              currentPath === link.href || currentPath.startsWith(link.href + '/') 
-                ? "text-mbl-accent" 
-                : "text-mbl-stone hover:text-mbl-ink"
-            ]}
-          >
-            {link.label}
-          </a>
-        ))}
+        {navLinks.map((link) => {
+          const isActive = currentPath === link.href || currentPath.startsWith(link.href + '/');
+          return (
+            <a
+              href={link.href}
+              aria-current={isActive ? 'page' : undefined}
+              class:list={[
+                "font-heading text-sm font-medium link-underline transition-colors duration-200",
+                isActive ? "text-mbl-accent is-active" : "text-mbl-stone hover:text-mbl-ink"
+              ]}
+            >
+              {link.label}
+            </a>
+          );
+        })}
       </div>
       
       <!-- Brand Switcher & CTA -->
@@ -93,14 +96,23 @@ const brandLinks = [
   <!-- Mobile Menu -->
   <div id="mobile-menu" class="lg:hidden hidden border-t border-mbl-mist/50 bg-white">
     <div class="container-wide py-4 space-y-4">
-      {navLinks.map((link) => (
-        <a 
-          href={link.href}
-          class="block py-2 font-heading text-mbl-stone hover:text-mbl-ink transition-colors"
-        >
-          {link.label}
-        </a>
-      ))}
+      {navLinks.map((link) => {
+        const isActive = currentPath === link.href || currentPath.startsWith(link.href + '/');
+        return (
+          <a
+            href={link.href}
+            aria-current={isActive ? 'page' : undefined}
+            class:list={[
+              "block py-2 font-heading transition-colors",
+              isActive
+                ? "text-mbl-accent font-semibold border-l-2 border-mbl-accent pl-3"
+                : "text-mbl-stone hover:text-mbl-ink"
+            ]}
+          >
+            {link.label}
+          </a>
+        );
+      })}
       <hr class="border-mbl-mist" />
       <p class="text-xs text-mbl-stone uppercase tracking-wider">Our Brands</p>
       {brandLinks.map((link) => (

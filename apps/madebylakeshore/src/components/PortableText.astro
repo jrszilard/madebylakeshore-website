@@ -1,0 +1,110 @@
+---
+import { urlFor } from '../lib/sanity';
+
+interface Props {
+  blocks: any[];
+}
+
+const { blocks = [] } = Astro.props;
+
+function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+function renderSpan(span: any, markDefs: any[]): string {
+  let text = escapeHtml(span.text || '');
+  const marks: string[] = span.marks || [];
+
+  for (const mark of marks) {
+    const def = markDefs?.find((d: any) => d._key === mark);
+    if (def?._type === 'link') {
+      const href = (def.href || '').replace(/^javascript:/i, '');
+      const attrs = def.blank ? ' target="_blank" rel="noopener noreferrer"' : '';
+      text = `<a href="${escapeHtml(href)}"${attrs} class="text-mbl-accent underline underline-offset-2 hover:no-underline transition-all">${text}</a>`;
+    } else {
+      const tagMap: Record<string, string> = {
+        strong: 'strong',
+        em: 'em',
+        code: 'code',
+        underline: 'u',
+      };
+      const tag = tagMap[mark];
+      if (tag) text = `<${tag}>${text}</${tag}>`;
+    }
+  }
+  return text;
+}
+
+function renderBlock(block: any): string {
+  if (block._type === 'figure') {
+    try {
+      const src = urlFor(block).width(1200).url();
+      const srcFull = urlFor(block).width(2400).url();
+      const alt = escapeHtml(block.alt || '');
+      const caption = block.caption
+        ? `<figcaption class="text-sm text-mbl-stone mt-2 text-center">${escapeHtml(block.caption)}</figcaption>`
+        : '';
+      return `<figure class="my-8"><button class="lightbox-trigger w-full cursor-zoom-in text-left" data-src="${escapeHtml(srcFull)}" data-alt="${alt}"><img src="${src}" alt="${alt}" class="w-full rounded-lg" loading="lazy" /></button>${caption}</figure>`;
+    } catch {
+      return '';
+    }
+  }
+
+  if (block._type === 'codeBlock') {
+    const code = escapeHtml(block.code || '');
+    const lang = block.language || '';
+    return `<pre class="bg-mbl-cloud rounded-lg p-6 overflow-x-auto my-6 text-sm"><code class="language-${lang}">${code}</code></pre>`;
+  }
+
+  if (block._type !== 'block') return '';
+
+  const { style = 'normal', children = [], markDefs = [] } = block;
+  const content = children.map((child: any) => renderSpan(child, markDefs)).join('');
+
+  const styleMap: Record<string, string> = {
+    normal: `<p class="text-base text-mbl-stone leading-relaxed mb-5">${content}</p>`,
+    h2: `<h2 class="font-display text-2xl text-mbl-ink mt-10 mb-4 leading-snug">${content}</h2>`,
+    h3: `<h3 class="font-display text-xl text-mbl-ink mt-8 mb-3 leading-snug">${content}</h3>`,
+    h4: `<h4 class="font-heading font-semibold text-lg text-mbl-ink mt-6 mb-2">${content}</h4>`,
+    blockquote: `<blockquote class="border-l-4 border-mbl-accent pl-6 my-6 text-mbl-stone italic text-lg">${content}</blockquote>`,
+  };
+
+  return styleMap[style] ?? `<p class="text-base text-mbl-stone leading-relaxed mb-5">${content}</p>`;
+}
+
+function processBlocks(blocks: any[]): string {
+  let html = '';
+  let i = 0;
+  while (i < blocks.length) {
+    const block = blocks[i];
+    if (block._type === 'block' && block.listItem) {
+      const listType: string = block.listItem;
+      const tag = listType === 'number' ? 'ol' : 'ul';
+      const listClass =
+        listType === 'number'
+          ? 'list-decimal list-outside pl-6 mb-5 space-y-1.5 text-mbl-stone'
+          : 'list-disc list-outside pl-6 mb-5 space-y-1.5 text-mbl-stone';
+      let items = '';
+      while (i < blocks.length && blocks[i]._type === 'block' && blocks[i].listItem === listType) {
+        const { children = [], markDefs = [] } = blocks[i];
+        const content = children.map((child: any) => renderSpan(child, markDefs)).join('');
+        items += `<li>${content}</li>`;
+        i++;
+      }
+      html += `<${tag} class="${listClass}">${items}</${tag}>`;
+    } else {
+      html += renderBlock(block);
+      i++;
+    }
+  }
+  return html;
+}
+
+const rendered = processBlocks(blocks);
+---
+
+<div class="portable-text" set:html={rendered} />

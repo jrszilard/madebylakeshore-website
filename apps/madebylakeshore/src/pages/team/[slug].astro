@@ -210,7 +210,7 @@ const categoryColors: Record<string, string> = {
               ? urlFor(study.featuredImage).width(800).url()
               : null;
             return (
-              <a href={`/case-studies/${study.slug?.current}`} class="group grid md:grid-cols-2 gap-8 lg:gap-16 items-center block">
+              <a href={`/case-studies/${study.slug?.current}?back=/team/${slug}`} class="group grid md:grid-cols-2 gap-8 lg:gap-16 items-center block">
                 <!-- Image -->
                 <div class="relative rounded-lg overflow-hidden">
                   {studyImage ? (
