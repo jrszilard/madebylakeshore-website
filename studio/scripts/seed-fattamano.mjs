@@ -235,7 +235,10 @@ for (let i = 0; i < products.length; i += 1) {
 let transaction = client.transaction().createOrReplace(settingsDoc);
 
 if (replaceProducts) {
-  transaction = transaction.delete({ query: '*[_type == "fattamanoProduct"]' });
+  const existingProductIds = await client.fetch('*[_type == "fattamanoProduct"]._id');
+  for (const id of existingProductIds) {
+    transaction = transaction.delete(id);
+  }
 }
 
 for (const doc of docsWithImages) {
