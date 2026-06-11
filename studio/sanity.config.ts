@@ -23,7 +23,7 @@ export default defineConfig([
   {
     name: 'lakeshore-studios',
     title: 'Lakeshore Studios',
-    basePath: '/',
+    basePath: '/lakeshore-studios',
     projectId,
     dataset,
     plugins: [structureTool({ structure }), visionTool()],
