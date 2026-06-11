@@ -1,24 +1,16 @@
 ---
 import { urlFor } from '../lib/sanity';
 import { formatPrice } from '../lib/format';
+import type { FattamanoProduct } from '../lib/types';
 
 interface Props {
-  product: {
-    title: string;
-    slug: { current: string };
-    tagline?: string;
-    images: any[];
-    category: string;
-    priceCents?: number;
-    priceDisplayOverride?: string;
-    status: 'available' | 'sold_out' | 'coming_soon' | 'concept';
-  };
+  product: FattamanoProduct;
   rotate?: 'none' | 'left' | 'right';
 }
 
 const { product, rotate = 'none' } = Astro.props;
 const thumb = product.images?.[0];
-const thumbUrl = thumb ? urlFor(thumb).width(800).height(800).fit('crop').url() : null;
+const thumbUrl = thumb ? urlFor(thumb)?.width(800).height(800).fit('crop').url() ?? null : null;
 const priceLabel = formatPrice(product.priceCents, product.priceDisplayOverride);
 
 const rotateClass =

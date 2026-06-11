@@ -2,11 +2,12 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import ProductGrid from '../../components/ProductGrid.astro';
 import { sanityClient, queries } from '../../lib/sanity';
+import type { FattamanoProduct } from '../../lib/types';
 
 export const prerender = true;
 
 const products = await sanityClient
-  .fetch<any[]>(queries.allFattamanoProducts)
+  .fetch<FattamanoProduct[]>(queries.allFattamanoProducts)
   .catch(() => []);
 ---
 <BaseLayout

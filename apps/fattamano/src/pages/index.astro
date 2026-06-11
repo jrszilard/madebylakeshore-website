@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ProductGrid from '../components/ProductGrid.astro';
 import { sanityClient, queries } from '../lib/sanity';
+import type { FattamanoProduct } from '../lib/types';
 
 const settings = await sanityClient.fetch<{
   heroHeadline?: string;
@@ -9,7 +10,7 @@ const settings = await sanityClient.fetch<{
 }>(queries.fattamanoSettings).catch(() => null);
 
 const featured = await sanityClient
-  .fetch<any[]>(queries.featuredFattamanoProducts)
+  .fetch<FattamanoProduct[]>(queries.featuredFattamanoProducts)
   .catch(() => []);
 
 const headline = settings?.heroHeadline ?? 'we make things by hand.';

@@ -14,7 +14,10 @@ function getEnvVar(name: string, fallback = ''): string {
 }
 
 // Lazy-initialize the Sanity client to ensure env vars are available
-let _client: ReturnType<typeof createSanityClientWithConfig> | null = null;
+type SanityClientBundle = ReturnType<typeof createSanityClientWithConfig>;
+type SanityImageBuilder = ReturnType<SanityClientBundle['urlFor']>;
+
+let _client: SanityClientBundle | null = null;
 
 function getClient() {
   if (!_client) {
@@ -49,8 +52,13 @@ export const sanityClient = {
   },
 };
 
-export function urlFor(source: any) {
-  return getClient().urlFor(source);
+export function urlFor(source: any): SanityImageBuilder | null {
+  try {
+    return getClient().urlFor(source);
+  } catch (err) {
+    console.warn('Unable to build Sanity image URL', err);
+    return null;
+  }
 }
 
 export { queries };

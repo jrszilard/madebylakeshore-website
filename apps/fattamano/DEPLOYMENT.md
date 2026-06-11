@@ -68,14 +68,21 @@ Before the site is publicly useful, create these in the Sanity Studio (fattamano
 
 **At least 3-5 Products** to populate the home and catalog pages.
 
-## Known polish items deferred from initial implementation
+## Polish status
+
+Completed in the 2026-06-11 polish pass:
 
 - `<main id="main-content">` skip-link target on `BaseLayout.astro` (a11y)
-- Mobile hamburger nav (currently desktop-only)
-- Active-link styling on Navigation
-- Replace `SHARED_OBJECT_TYPES` hardcoded list in `studio/sanity.config.ts` with `t.type === 'object'` filter
-- `urlFor()` in `apps/fattamano/src/lib/sanity.ts` is not wrapped in try/catch (sync throws will propagate); pages that use `urlFor` need their own guard or this needs to mirror the `sanityClient.fetch` pattern
-- Move `secretLinkRegion` overlay rendering inside `ImageViewer.tsx` so coordinates resolve against the actual painted-image box, not the full ImageViewer block (matters when an artwork has multiple thumbnails)
-- The DAOS `apps/designandotherstories/src/pages/api/og.ts` has `fonts: []` empty — a pre-existing bug that means DAOS OG images are likely broken in production. Should be fixed using the same pattern fattamano now uses (module-level Google Fonts cache).
-- Tighten `images: any[]` typing in `ProductCard.astro` and `ProductGrid.astro`
-- Verify `@tailwindcss/typography` plugin is installed if `prose` class on product detail / about page should style descriptions
+- Mobile nav using native `<details>/<summary>`
+- Active-link styling on Navigation with `aria-current="page"`
+- Replaced `SHARED_OBJECT_TYPES` hardcoded list in `studio/sanity.config.ts` with `t.type === 'object'` filter
+- Wrapped `urlFor()` in `apps/fattamano/src/lib/sanity.ts` with try/catch and guarded call sites
+- Moved `secretLinkRegion` overlay rendering inside `ImageViewer.tsx` so coordinates resolve against the actual painted-image box
+- Tightened product/image typing in `ProductCard.astro`, `ProductGrid.astro`, and fattamano page fetches
+- Added `@tailwindcss/typography` for `prose` content blocks
+
+Remaining polish / follow-up:
+
+- Human/browser visual pass for fattamano mobile nav, active states, skip link, and `prose` content
+- Human/browser visual pass for DAOS `secretLinkRegion` alignment against real artwork content
+- The DAOS `apps/designandotherstories/src/pages/api/og.ts` has `fonts: []` empty on the SEO branch where that route exists — a pre-existing bug that means DAOS OG images are likely broken in production. Should be fixed using the same pattern fattamano now uses (module-level Google Fonts cache).

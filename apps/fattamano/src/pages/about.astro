@@ -1,9 +1,10 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { sanityClient, queries } from '../lib/sanity';
+import type { RichTextBlock } from '../lib/types';
 
 const settings = await sanityClient
-  .fetch<{ aboutBody?: any[]; contactEmail?: string }>(queries.fattamanoSettings)
+  .fetch<{ aboutBody?: RichTextBlock[]; contactEmail?: string }>(queries.fattamanoSettings)
   .catch(() => null);
 
 const aboutBlocks = settings?.aboutBody ?? [];
@@ -22,9 +23,9 @@ const contactEmail = settings?.contactEmail;
     </p>
 
     <div class="prose font-body text-ft-ink max-w-none space-y-4">
-      {aboutBlocks.map((block: any) => (
+      {aboutBlocks.map((block) => (
         block._type === 'block' && (
-          <p>{block.children?.map((c: any) => c.text).join('')}</p>
+          <p>{block.children?.map((c) => c.text).join('')}</p>
         )
       ))}
     </div>

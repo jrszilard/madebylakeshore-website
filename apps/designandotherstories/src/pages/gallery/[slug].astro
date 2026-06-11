@@ -83,7 +83,6 @@ const seoTitle = artwork.seo?.title || artwork.title;
 const seoDescription = artwork.seo?.description || artwork.story || `${artwork.title}${artwork.medium ? ` — ${artwork.medium}` : ''}.`;
 
 const region = (artwork as any)?.secretLinkRegion;
-const showOverlay = region?.enabled === true && region?.url;
 ---
 
 <BaseLayout title={seoTitle} description={seoDescription} showSnipcart={artwork.forSale}>
@@ -98,17 +97,8 @@ const showOverlay = region?.enabled === true && region?.url;
         <div class="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16 items-start">
 
           <!-- Left: Image viewer -->
-          <div class="relative">
-            <ImageViewer client:visible images={images} />
-            {showOverlay && (
-              <a
-                href={region.url}
-                rel="noopener"
-                aria-label="hidden link"
-                class="absolute block hover:bg-daos-terracotta/5 transition-colors"
-                style={`left: ${region.xPct ?? 0}%; top: ${region.yPct ?? 0}%; width: ${region.widthPct ?? 15}%; height: ${region.heightPct ?? 10}%;`}
-              ></a>
-            )}
+          <div>
+            <ImageViewer client:visible images={images} secretLinkRegion={region} />
           </div>
 
           <!-- Right: Details sidebar -->

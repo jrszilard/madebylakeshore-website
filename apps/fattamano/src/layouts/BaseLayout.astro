@@ -40,8 +40,14 @@ const ogImage = ogImagePath
     <title>{siteTitle}</title>
   </head>
   <body class="min-h-screen flex flex-col">
+    <a
+      href="#main-content"
+      class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:bg-ft-splash focus:px-4 focus:py-2 focus:font-display focus:text-ft-ink focus:outline focus:outline-2 focus:outline-ft-ink"
+    >
+      skip to the good stuff
+    </a>
     <Navigation />
-    <main class="flex-1">
+    <main id="main-content" class="flex-1" tabindex="-1">
       <slot />
     </main>
     <Footer />

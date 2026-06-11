@@ -1,8 +1,9 @@
 ---
 import ProductCard from './ProductCard.astro';
+import type { FattamanoProduct } from '../lib/types';
 
 interface Props {
-  products: any[];
+  products: FattamanoProduct[];
   jitter?: boolean;
 }
 

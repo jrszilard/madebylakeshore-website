@@ -1,9 +1,10 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { sanityClient, queries } from '../lib/sanity';
+import type { RichTextBlock } from '../lib/types';
 
 const settings = await sanityClient
-  .fetch<{ notFoundCopy?: any[] }>(queries.fattamanoSettings)
+  .fetch<{ notFoundCopy?: RichTextBlock[] }>(queries.fattamanoSettings)
   .catch(() => null);
 
 const blocks = settings?.notFoundCopy ?? [];
@@ -17,9 +18,9 @@ const blocks = settings?.notFoundCopy ?? [];
 
     <div class="mt-10 font-body text-ft-smudge space-y-3">
       {blocks.length > 0
-        ? blocks.map((block: any) =>
+        ? blocks.map((block) =>
             block._type === 'block' ? (
-              <p>{block.children?.map((c: any) => c.text).join('')}</p>
+              <p>{block.children?.map((c) => c.text).join('')}</p>
             ) : null
           )
         : (
