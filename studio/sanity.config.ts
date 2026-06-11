@@ -8,15 +8,15 @@ import { fattamanoStructure } from './fattamanoStructure';
 const projectId = process.env.SANITY_STUDIO_PROJECT_ID || 'YOUR_PROJECT_ID_HERE';
 const dataset = process.env.SANITY_STUDIO_DATASET || 'production';
 
-const isObjectSchema = (t: (typeof schemaTypes)[number]) => t.type === 'object';
+const isSharedSchema = (t: (typeof schemaTypes)[number]) => t.type !== 'document';
 
 const mainSchemaTypes = schemaTypes.filter((t) => {
   const name = String(t.name);
-  return !name.startsWith('fattamano') || isObjectSchema(t);
+  return !name.startsWith('fattamano') || isSharedSchema(t);
 });
 const fattamanoSchemaTypes = schemaTypes.filter((t) => {
   const name = String(t.name);
-  return name.startsWith('fattamano') || isObjectSchema(t);
+  return name.startsWith('fattamano') || isSharedSchema(t);
 });
 
 export default defineConfig([
