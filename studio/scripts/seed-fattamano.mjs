@@ -113,7 +113,7 @@ function makeSettings(settings) {
 function baseProduct(product, index) {
   const slug = product.slug || slugify(product.title);
   return {
-    _id: `fattamanoProduct.${slug}`,
+    _id: `fattamano-product-${slug}`,
     _type: 'fattamanoProduct',
     title: product.title,
     slug: { _type: 'slug', current: slug },
