@@ -20,6 +20,10 @@ import artistProfile from './documents/artistProfile';
 import digitalProject from './documents/digitalProject';
 import buildLog from './documents/buildLog';
 
+// fattamano documents
+import fattamanoProduct from './documents/fattamanoProduct';
+import fattamanoSettings from './documents/fattamanoSettings';
+
 // Object types
 import blockContent from './objects/blockContent';
 import codeBlock from './objects/codeBlock';
@@ -44,7 +48,11 @@ export const schemaTypes = [
   artistProfile,
   digitalProject,
   buildLog,
-  
+
+  // fattamano documents
+  fattamanoProduct,
+  fattamanoSettings,
+
   // Objects
   blockContent,
   codeBlock,

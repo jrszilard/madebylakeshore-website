@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface ImageItem {
   url: string;
@@ -6,12 +6,72 @@ interface ImageItem {
   thumbUrl: string;
 }
 
-interface Props {
-  images: ImageItem[];
+interface SecretLinkRegion {
+  enabled?: boolean;
+  url?: string;
+  xPct?: number;
+  yPct?: number;
+  widthPct?: number;
+  heightPct?: number;
 }
 
-export default function ImageViewer({ images }: Props) {
+interface Props {
+  images: ImageItem[];
+  secretLinkRegion?: SecretLinkRegion | null;
+}
+
+interface ImageBox {
+  left: number;
+  top: number;
+  width: number;
+  height: number;
+}
+
+export default function ImageViewer({ images, secretLinkRegion }: Props) {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [imageBox, setImageBox] = useState<ImageBox | null>(null);
+  const frameRef = useRef<HTMLDivElement>(null);
+  const imageRef = useRef<HTMLImageElement>(null);
+
+  const shouldShowSecretLink = Boolean(secretLinkRegion?.enabled && secretLinkRegion?.url);
+
+  function updateImageBox() {
+    const frame = frameRef.current;
+    const image = imageRef.current;
+
+    if (!frame || !image || !image.naturalWidth || !image.naturalHeight) {
+      setImageBox(null);
+      return;
+    }
+
+    const frameWidth = frame.clientWidth;
+    const frameHeight = frame.clientHeight;
+    const imageRatio = image.naturalWidth / image.naturalHeight;
+    const frameRatio = frameWidth / frameHeight;
+
+    let width = frameWidth;
+    let height = frameHeight;
+    let left = 0;
+    let top = 0;
+
+    if (frameRatio > imageRatio) {
+      height = frameHeight;
+      width = height * imageRatio;
+      left = (frameWidth - width) / 2;
+    } else {
+      width = frameWidth;
+      height = width / imageRatio;
+      top = (frameHeight - height) / 2;
+    }
+
+    setImageBox({ left, top, width, height });
+  }
+
+  useEffect(() => {
+    updateImageBox();
+    window.addEventListener('resize', updateImageBox);
+    return () => window.removeEventListener('resize', updateImageBox);
+  }, [activeIndex, images]);
 
   if (!images || images.length === 0) {
     return (
@@ -25,15 +85,39 @@ export default function ImageViewer({ images }: Props) {
 
   const active = images[activeIndex];
 
+  const secretLinkStyle =
+    shouldShowSecretLink && imageBox
+      ? {
+          left: imageBox.left + ((secretLinkRegion?.xPct ?? 0) / 100) * imageBox.width,
+          top: imageBox.top + ((secretLinkRegion?.yPct ?? 0) / 100) * imageBox.height,
+          width: ((secretLinkRegion?.widthPct ?? 15) / 100) * imageBox.width,
+          height: ((secretLinkRegion?.heightPct ?? 10) / 100) * imageBox.height,
+        }
+      : undefined;
+
   return (
     <div className="space-y-3">
       {/* Main image */}
-      <div className="aspect-[3/4] bg-daos-paper rounded-sm overflow-hidden flex items-center justify-center shadow-sm">
+      <div
+        ref={frameRef}
+        className="relative aspect-[3/4] bg-daos-paper rounded-sm overflow-hidden flex items-center justify-center shadow-sm"
+      >
         <img
+          ref={imageRef}
           src={active.url}
           alt={active.alt}
           className="w-full h-full object-contain"
+          onLoad={updateImageBox}
         />
+        {shouldShowSecretLink && secretLinkStyle && (
+          <a
+            href={secretLinkRegion?.url}
+            rel="noopener"
+            aria-label="hidden link"
+            className="absolute block hover:bg-daos-terracotta/5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-daos-terracotta transition-colors"
+            style={secretLinkStyle}
+          />
+        )}
       </div>
 
       {/* Thumbnail strip — only shown when more than one image */}

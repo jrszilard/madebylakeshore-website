@@ -1,0 +1,33 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProductGrid from '../../components/ProductGrid.astro';
+import { sanityClient, queries } from '../../lib/sanity';
+import type { FattamanoProduct } from '../../lib/types';
+
+export const prerender = true;
+
+const products = await sanityClient
+  .fetch<FattamanoProduct[]>(queries.allFattamanoProducts)
+  .catch(() => []);
+---
+<BaseLayout
+  title="things"
+  description="The full catalog of fattamano stickers, shirts, prints, and other small handmade items."
+>
+  <section class="max-w-6xl mx-auto px-6 py-16">
+    <header class="mb-12">
+      <h1 class="font-display text-big">
+        <span class="font-hand text-ft-shout text-5xl">things</span> we made
+      </h1>
+      <p class="mt-4 font-body text-ft-smudge">
+        Every item here is handmade in small batches. Some are jokes. Some are sincere. Most are both.
+      </p>
+    </header>
+
+    {products.length === 0 ? (
+      <p class="font-body text-ft-smudge">Nothing here yet. Check back soon.</p>
+    ) : (
+      <ProductGrid products={products} jitter={true} />
+    )}
+  </section>
+</BaseLayout>

@@ -1,0 +1,41 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { sanityClient, queries } from '../lib/sanity';
+import type { RichTextBlock } from '../lib/types';
+
+const settings = await sanityClient
+  .fetch<{ aboutBody?: RichTextBlock[]; contactEmail?: string }>(queries.fattamanoSettings)
+  .catch(() => null);
+
+const aboutBlocks = settings?.aboutBody ?? [];
+const contactEmail = settings?.contactEmail;
+---
+<BaseLayout
+  title="about"
+  description="What fattamano is, who makes it, and why it exists."
+>
+  <section class="max-w-3xl mx-auto px-6 py-16">
+    <h1 class="font-display text-big mb-2">
+      <span class="font-hand text-ft-shout text-5xl">fatto a mano</span>
+    </h1>
+    <p class="font-body text-ft-smudge mb-10 italic">
+      Italian for "made by hand, with care."
+    </p>
+
+    <div class="prose font-body text-ft-ink max-w-none space-y-4">
+      {aboutBlocks.map((block) => (
+        block._type === 'block' && (
+          <p>{block.children?.map((c) => c.text).join('')}</p>
+        )
+      ))}
+    </div>
+
+    {contactEmail && (
+      <p class="mt-10 font-body">
+        <a href={`mailto:${contactEmail}`} class="text-ft-shout underline hover:text-ft-ink">
+          say hi → {contactEmail}
+        </a>
+      </p>
+    )}
+  </section>
+</BaseLayout>

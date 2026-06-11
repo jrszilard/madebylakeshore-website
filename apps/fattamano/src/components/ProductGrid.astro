@@ -1,0 +1,22 @@
+---
+import ProductCard from './ProductCard.astro';
+import type { FattamanoProduct } from '../lib/types';
+
+interface Props {
+  products: FattamanoProduct[];
+  jitter?: boolean;
+}
+
+const { products, jitter = false } = Astro.props;
+
+function rotateFor(i: number): 'none' | 'left' | 'right' {
+  if (!jitter) return 'none';
+  const m = i % 3;
+  return m === 0 ? 'left' : m === 2 ? 'right' : 'none';
+}
+---
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-10">
+  {products.map((p, i) => (
+    <ProductCard product={p} rotate={rotateFor(i)} />
+  ))}
+</div>

@@ -1,0 +1,104 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import BuyButton from '../../components/BuyButton.astro';
+import { sanityClient, queries, urlFor } from '../../lib/sanity';
+import { formatPrice } from '../../lib/format';
+import type { FattamanoProduct, SanityImageLike } from '../../lib/types';
+
+export const prerender = true;
+
+export async function getStaticPaths() {
+  const products = await sanityClient
+    .fetch<FattamanoProduct[]>(queries.allFattamanoProducts)
+    .catch(() => []);
+  return products.map((p) => ({
+    params: { slug: p.slug.current },
+    props: { product: p },
+  }));
+}
+
+const { product } = Astro.props as { product: FattamanoProduct };
+
+// Re-fetch with full details (description blocks, seo)
+const full = await sanityClient.fetch<FattamanoProduct>(queries.fattamanoProductBySlug, {
+  slug: product.slug.current,
+}).catch(() => product);
+
+const settings = await sanityClient
+  .fetch<{ contactEmail?: string }>(queries.fattamanoSettings)
+  .catch(() => null);
+const contactEmail = settings?.contactEmail || '';
+
+const images: SanityImageLike[] = full?.images ?? [];
+const heroUrl = images[0] ? urlFor(images[0])?.width(1400).url() ?? null : null;
+const thumbnailUrls = images
+  .slice(1)
+  .map((img) => urlFor(img)?.width(400).height(400).fit('crop').url())
+  .filter((url): url is string => Boolean(url));
+const priceLabel = formatPrice(full?.priceCents, full?.priceDisplayOverride);
+
+const metaTitle = full?.seo?.metaTitle || full?.title;
+const metaDescription =
+  full?.seo?.metaDescription || full?.tagline || `${full?.title} — handmade by fattamano.`;
+
+const ogImagePath = `/api/og?title=${encodeURIComponent(full?.title || '')}&subtitle=${encodeURIComponent(full?.tagline || full?.category || '')}`;
+---
+<BaseLayout title={metaTitle} description={metaDescription} ogImagePath={ogImagePath}>
+  <article class="max-w-6xl mx-auto px-6 py-12">
+    <a href="/things" class="inline-block mb-8 font-body text-sm text-ft-smudge hover:text-ft-shout">← back to things</a>
+
+    <div class="grid md:grid-cols-2 gap-10">
+      <div>
+        {heroUrl && (
+          <img
+            src={heroUrl}
+            alt={full.title}
+            class="w-full border-2 border-ft-ink"
+          />
+        )}
+        {thumbnailUrls.length > 0 && (
+          <div class="grid grid-cols-4 gap-3 mt-3">
+            {thumbnailUrls.map((thumbUrl) => (
+              <img
+                src={thumbUrl}
+                alt=""
+                class="w-full aspect-square object-cover border-2 border-ft-ink"
+                loading="lazy"
+              />
+            ))}
+          </div>
+        )}
+      </div>
+
+      <div class="flex flex-col">
+        <p class="font-body uppercase tracking-wide text-sm text-ft-smudge">{full.category}</p>
+        <h1 class="font-display text-big mt-2">{full.title}</h1>
+        {full.tagline && (
+          <p class="font-hand text-2xl text-ft-ink mt-3">{full.tagline}</p>
+        )}
+        {priceLabel && (
+          <p class="font-display text-3xl text-ft-shout mt-6">{priceLabel}</p>
+        )}
+
+        <div class="mt-8">
+          <BuyButton
+            status={full.status}
+            buyUrl={full.buyUrl}
+            title={full.title}
+            contactEmail={contactEmail}
+          />
+        </div>
+
+        {full.description && (
+          <div class="prose mt-10 font-body text-ft-ink max-w-none">
+            {full.description.map((block) => (
+              block._type === 'block' && (
+                <p>{block.children?.map((c) => c.text).join('')}</p>
+              )
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  </article>
+</BaseLayout>

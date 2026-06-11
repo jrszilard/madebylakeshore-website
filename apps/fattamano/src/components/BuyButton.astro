@@ -1,0 +1,45 @@
+---
+import type { } from 'astro';
+
+interface Props {
+  status: 'available' | 'sold_out' | 'coming_soon' | 'concept';
+  buyUrl?: string | null;
+  title: string;
+  contactEmail?: string;
+}
+
+const { status, buyUrl, title, contactEmail = '' } = Astro.props;
+
+const mailtoLink = contactEmail
+  ? `mailto:${contactEmail}?subject=${encodeURIComponent(`interested in: ${title}`)}`
+  : '';
+
+const labelByStatus: Record<string, string> = {
+  available: buyUrl ? 'buy it' : 'DM to buy',
+  sold_out: 'sold out',
+  coming_soon: 'coming soon',
+  concept: 'tell me you want this',
+};
+
+const label = labelByStatus[status];
+const disabled = status === 'sold_out' || status === 'coming_soon';
+const href = disabled ? null : (buyUrl || mailtoLink || null);
+---
+{disabled ? (
+  <span class="inline-block bg-ft-smudge text-ft-paper font-display px-6 py-3 text-lg cursor-not-allowed">
+    {label}
+  </span>
+) : href ? (
+  <a
+    href={href}
+    target={href.startsWith('mailto:') ? '_self' : '_blank'}
+    rel={href.startsWith('mailto:') ? undefined : 'noopener noreferrer'}
+    class="inline-block bg-ft-shout text-ft-paper font-display px-6 py-3 text-lg hover:bg-ft-ink transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-ft-ink focus-visible:outline-offset-2"
+  >
+    {label}
+  </a>
+) : (
+  <span class="inline-block bg-ft-smudge text-ft-paper font-display px-6 py-3 text-lg">
+    no link yet
+  </span>
+)}

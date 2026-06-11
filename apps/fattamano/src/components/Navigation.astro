@@ -1,0 +1,71 @@
+---
+const navItems = [
+  { href: '/', label: 'home' },
+  { href: '/things', label: 'things' },
+  { href: '/about', label: 'about' },
+];
+
+const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
+
+function isActive(href: string) {
+  if (href === '/') return currentPath === '/';
+  return currentPath === href || currentPath.startsWith(`${href}/`);
+}
+---
+<nav class="border-b-2 border-ft-ink bg-ft-paper">
+  <div class="relative max-w-6xl mx-auto px-6 py-4">
+    <div class="flex items-center justify-between gap-4">
+      <a
+        href="/"
+        class="font-display text-2xl tracking-tight focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ft-shout"
+      >
+        <span class="text-ft-shout">fatta</span><span>mano</span>
+      </a>
+
+      <ul class="hidden gap-6 font-body text-sm md:flex">
+        {navItems.map((item) => {
+          const active = isActive(item.href);
+          return (
+            <li>
+              <a
+                href={item.href}
+                aria-current={active ? 'page' : undefined}
+                class:list={[
+                  'transition-colors hover:text-ft-shout focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ft-shout',
+                  active && 'font-bold text-ft-shout underline decoration-2 underline-offset-4',
+                ]}
+              >
+                {item.label}
+              </a>
+            </li>
+          );
+        })}
+      </ul>
+
+      <details class="group md:hidden">
+        <summary class="list-none cursor-pointer border-2 border-ft-ink px-3 py-2 font-display text-sm uppercase tracking-wide hover:bg-ft-splash focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ft-shout">
+          menu
+        </summary>
+        <ul class="absolute left-6 right-6 top-full z-40 mt-2 flex flex-col gap-3 border-2 border-ft-ink bg-ft-paper p-4 font-body text-base shadow-[4px_4px_0_#1A1A1A]">
+          {navItems.map((item) => {
+            const active = isActive(item.href);
+            return (
+              <li>
+                <a
+                  href={item.href}
+                  aria-current={active ? 'page' : undefined}
+                  class:list={[
+                    'block py-1 transition-colors hover:text-ft-shout focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ft-shout',
+                    active && 'font-bold text-ft-shout underline decoration-2 underline-offset-4',
+                  ]}
+                >
+                  {item.label}
+                </a>
+              </li>
+            );
+          })}
+        </ul>
+      </details>
+    </div>
+  </div>
+</nav>

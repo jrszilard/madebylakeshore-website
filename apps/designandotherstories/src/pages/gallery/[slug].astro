@@ -81,6 +81,8 @@ const categoryLabel = artwork.category
 
 const seoTitle = artwork.seo?.title || artwork.title;
 const seoDescription = artwork.seo?.description || artwork.story || `${artwork.title}${artwork.medium ? ` — ${artwork.medium}` : ''}.`;
+
+const region = (artwork as any)?.secretLinkRegion;
 ---
 
 <BaseLayout title={seoTitle} description={seoDescription} showSnipcart={artwork.forSale}>
@@ -96,7 +98,7 @@ const seoDescription = artwork.seo?.description || artwork.story || `${artwork.t
 
           <!-- Left: Image viewer -->
           <div>
-            <ImageViewer client:visible images={images} />
+            <ImageViewer client:visible images={images} secretLinkRegion={region} />
           </div>
 
           <!-- Right: Details sidebar -->

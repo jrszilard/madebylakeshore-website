@@ -1,0 +1,37 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { sanityClient, queries } from '../lib/sanity';
+import type { RichTextBlock } from '../lib/types';
+
+const settings = await sanityClient
+  .fetch<{ notFoundCopy?: RichTextBlock[] }>(queries.fattamanoSettings)
+  .catch(() => null);
+
+const blocks = settings?.notFoundCopy ?? [];
+---
+<BaseLayout title="lost" description="page not found">
+  <section class="max-w-3xl mx-auto px-6 py-32 text-center">
+    <h1 class="font-display text-huge">
+      <span class="text-ft-shout">404</span>
+    </h1>
+    <p class="font-hand text-3xl mt-4">you came here on purpose?</p>
+
+    <div class="mt-10 font-body text-ft-smudge space-y-3">
+      {blocks.length > 0
+        ? blocks.map((block) =>
+            block._type === 'block' ? (
+              <p>{block.children?.map((c) => c.text).join('')}</p>
+            ) : null
+          )
+        : (
+          <>
+            <p>This page doesn't exist. Probably never did.</p>
+            <p>
+              You could go to <a href="/things" class="underline text-ft-ink hover:text-ft-shout">the things</a> instead.
+            </p>
+          </>
+        )
+      }
+    </div>
+  </section>
+</BaseLayout>
