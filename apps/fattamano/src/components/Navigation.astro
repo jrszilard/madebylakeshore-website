@@ -1,4 +1,6 @@
 ---
+import CartButton from './cart/CartButton.tsx';
+
 const navItems = [
   { href: '/', label: 'home' },
   { href: '/things', label: 'things' },
@@ -40,9 +42,14 @@ function isActive(href: string) {
             </li>
           );
         })}
+        <li>
+          <CartButton client:load />
+        </li>
       </ul>
 
-      <details class="group md:hidden">
+      <div class="flex items-center gap-4 md:hidden">
+        <CartButton client:load />
+        <details class="group">
         <summary class="list-none cursor-pointer border-2 border-ft-ink px-3 py-2 font-display text-sm uppercase tracking-wide hover:bg-ft-splash focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ft-shout">
           menu
         </summary>
@@ -65,7 +72,8 @@ function isActive(href: string) {
             );
           })}
         </ul>
-      </details>
+        </details>
+      </div>
     </div>
   </div>
 </nav>
