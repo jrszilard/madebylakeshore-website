@@ -16,6 +16,16 @@ export const POST: APIRoute = async ({ request }) => {
     return Response.json({ type: 'reject' }, { status: 400 });
   }
 
+  // Only act on sessions WE created and that are still pending. Without this, a
+  // client could call sessions.update against an arbitrary Stripe session id.
+  const known = await sanityWriteFetch<{ _id: string } | null>(
+    `*[_type == "fattamanoCheckoutSession" && _id == $id && status == "pending"][0]{ _id }`,
+    { id: sessionId }
+  );
+  if (!known) {
+    return Response.json({ type: 'reject' }, { status: 404 });
+  }
+
   // Authoritative zone table (server-side read); allowed countries / rates are
   // never trusted from the request body.
   const settings = await sanityWriteFetch<FattamanoSettings>(queries.fattamanoSettings);
