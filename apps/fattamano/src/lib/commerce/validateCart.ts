@@ -17,17 +17,30 @@ export function normalizeCartItems(body: unknown): NormalizedItem[] {
   if (body.length > MAX_LINES) {
     throw new BadCartError(`Cart cannot exceed ${MAX_LINES} distinct items`);
   }
-  return body.map((raw) => {
-    const productId = (raw as any)?.productId;
+  // Collapse duplicate productIds by summing qty. The authoritative money path
+  // must not trust the client to send one line per product — split lines
+  // ({a:2},{a:2}) would otherwise each pass the per-line stock check and
+  // oversell, and would each decrement from the same base stock.
+  const byId = new Map<string, number>();
+  for (const raw of body) {
+    const productId =
+      typeof (raw as any)?.productId === 'string' ? (raw as any).productId.trim() : '';
     const qty = (raw as any)?.qty;
-    if (typeof productId !== 'string' || !productId) {
+    if (!productId) {
       throw new BadCartError('Each item needs a productId');
     }
     if (typeof qty !== 'number' || !Number.isInteger(qty) || qty < 1 || qty > MAX_QTY_PER_LINE) {
       throw new BadCartError(`qty must be an integer 1..${MAX_QTY_PER_LINE}`);
     }
-    return { productId, qty };
-  });
+    byId.set(productId, (byId.get(productId) ?? 0) + qty);
+  }
+  const items = [...byId.entries()].map(([productId, qty]) => ({ productId, qty }));
+  for (const item of items) {
+    if (item.qty > MAX_QTY_PER_LINE) {
+      throw new BadCartError(`Total qty for a product cannot exceed ${MAX_QTY_PER_LINE}`);
+    }
+  }
+  return items;
 }
 
 export interface OrderLine {
@@ -61,7 +74,8 @@ export function buildOrderLines(
       unavailable.push({ productId: item.productId, reason: 'not_available' });
       continue;
     }
-    if (typeof row.priceCents !== 'number' || row.priceCents <= 0) {
+    if (typeof row.priceCents !== 'number' || !Number.isInteger(row.priceCents) || row.priceCents <= 0) {
+      // Reject non-integer cents so a float never reaches Stripe's unit_amount.
       unavailable.push({ productId: item.productId, reason: 'no_price' });
       continue;
     }

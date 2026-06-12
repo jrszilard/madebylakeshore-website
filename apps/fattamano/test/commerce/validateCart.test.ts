@@ -26,6 +26,25 @@ describe('normalizeCartItems', () => {
     const many = Array.from({ length: 51 }, (_, i) => ({ productId: `p${i}`, qty: 1 }));
     expect(() => normalizeCartItems(many)).toThrow();
   });
+  it('collapses duplicate productIds by summing qty (no split-line oversell)', () => {
+    expect(
+      normalizeCartItems([
+        { productId: 'a', qty: 1 },
+        { productId: 'a', qty: 2 },
+      ])
+    ).toEqual([{ productId: 'a', qty: 3 }]);
+  });
+  it('rejects a collapsed qty that exceeds the per-product cap', () => {
+    expect(() =>
+      normalizeCartItems([
+        { productId: 'a', qty: 30 },
+        { productId: 'a', qty: 30 },
+      ])
+    ).toThrow();
+  });
+  it('trims and rejects a whitespace-only productId', () => {
+    expect(() => normalizeCartItems([{ productId: '   ', qty: 1 }])).toThrow();
+  });
 });
 
 describe('buildOrderLines', () => {
@@ -47,5 +66,13 @@ describe('buildOrderLines', () => {
       ROWS
     );
     expect(unavailable.map((u) => u.productId).sort()).toEqual(['a', 'b', 'c', 'z']);
+  });
+  it('rejects non-integer prices so no float reaches Stripe unit_amount', () => {
+    const rows = [
+      { _id: 'a', title: 'A', priceCents: 500.7, status: 'available', stock: 3 },
+    ] as ProductRow[];
+    const { lines, unavailable } = buildOrderLines([{ productId: 'a', qty: 1 }], rows);
+    expect(lines).toEqual([]);
+    expect(unavailable).toEqual([{ productId: 'a', reason: 'no_price' }]);
   });
 });
