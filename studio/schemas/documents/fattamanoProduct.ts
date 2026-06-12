@@ -89,6 +89,15 @@ export default defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
+      name: 'stock',
+      title: 'Stock (units available)',
+      type: 'number',
+      description:
+        'How many you have to sell. Decrements automatically when an order is paid; at 0 the item shows as sold out. A one-of-a-kind piece is 1.',
+      initialValue: 0,
+      validation: (Rule) => Rule.required().integer().min(0),
+    }),
+    defineField({
       name: 'dateAdded',
       title: 'Date Added',
       type: 'datetime',
@@ -132,12 +141,13 @@ export default defineType({
       category: 'category',
       status: 'status',
       media: 'images.0',
+      stock: 'stock',
     },
-    prepare({ title, category, status, media }) {
+    prepare({ title, category, status, media, stock }) {
       const statusLabel = status === 'available' ? '' : ` • ${status}`;
       return {
         title,
-        subtitle: `${category || 'uncategorized'}${statusLabel}`,
+        subtitle: `${category || 'uncategorized'}${statusLabel} • stock ${stock ?? '—'}`,
         media,
       };
     },
