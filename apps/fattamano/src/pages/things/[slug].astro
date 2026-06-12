@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import BuyButton from '../../components/BuyButton.astro';
+import AddToCartButton from '../../components/cart/AddToCartButton.tsx';
 import { sanityClient, queries, urlFor } from '../../lib/sanity';
 import { formatPrice } from '../../lib/format';
 import type { FattamanoProduct, SanityImageLike } from '../../lib/types';
@@ -81,12 +82,27 @@ const ogImagePath = `/api/og?title=${encodeURIComponent(full?.title || '')}&subt
         )}
 
         <div class="mt-8">
-          <BuyButton
-            status={full.status}
-            buyUrl={full.buyUrl}
-            title={full.title}
-            contactEmail={contactEmail}
-          />
+          {full.buyUrl ? (
+            <BuyButton
+              status={full.status}
+              buyUrl={full.buyUrl}
+              title={full.title}
+              contactEmail={contactEmail}
+            />
+          ) : (
+            <AddToCartButton
+              client:visible
+              initialAvailable={full.status === 'available' && (full.stock ?? 0) > 0}
+              item={{
+                productId: full._id,
+                slug: full.slug.current,
+                title: full.title,
+                priceCents: full.priceCents ?? 0,
+                image: images[0] ?? null,
+                qty: 1,
+              }}
+            />
+          )}
         </div>
 
         {full.description && (
