@@ -49,7 +49,7 @@ export default defineType({
       title: 'Shipping Zones',
       type: 'array',
       description:
-        'Destination zones and their flat rate. The first zone whose country list contains the customer's country wins. The union of all countries here is exactly where checkout will ship.',
+        "Destination zones and their flat rate. The first zone whose country list contains the customer's country wins. The union of all countries here is exactly where checkout will ship.",
       of: [
         {
           type: 'object',
