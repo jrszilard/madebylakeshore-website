@@ -1,0 +1,15 @@
+---
+export const prerender = false;
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import CheckoutEmbed from '../../components/checkout/CheckoutEmbed.tsx';
+
+const publishableKey = import.meta.env.PUBLIC_STRIPE_PUBLISHABLE_KEY || '';
+---
+<BaseLayout title="checkout" description="Complete your fattamano order.">
+  <section class="max-w-3xl mx-auto px-6 py-12">
+    <a href="/things" class="inline-block mb-8 font-body text-sm text-ft-smudge hover:text-ft-shout">← keep shopping</a>
+    {publishableKey
+      ? <CheckoutEmbed client:only="react" publishableKey={publishableKey} />
+      : <p class="font-body text-ft-shout">Checkout is temporarily unavailable.</p>}
+  </section>
+</BaseLayout>
