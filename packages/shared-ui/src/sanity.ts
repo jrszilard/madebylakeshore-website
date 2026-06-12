@@ -476,27 +476,38 @@ export const queries = {
 
   // fattamano queries
   fattamanoSettings: `*[_type == "fattamanoSettings"][0] {
-    heroHeadline, heroSubcopy, aboutBody, footerCopy, notFoundCopy, contactEmail
+    heroHeadline, heroSubcopy, aboutBody, footerCopy, notFoundCopy, contactEmail,
+    shippingZones[]{ label, countryCodes, rateCents }, shippingFallbackBehavior
   }`,
 
   allFattamanoProducts: `*[_type == "fattamanoProduct"] | order(dateAdded desc) {
     _id, title, slug, tagline, images, category, priceCents, priceDisplayOverride,
-    buyUrl, status, dateAdded, featured, tags
+    buyUrl, status, stock, dateAdded, featured, tags
   }`,
 
   featuredFattamanoProducts: `*[_type == "fattamanoProduct" && featured == true] | order(dateAdded desc)[0...6] {
     _id, title, slug, tagline, images, category, priceCents, priceDisplayOverride,
-    buyUrl, status
+    buyUrl, status, stock
   }`,
 
   fattamanoProductBySlug: `*[_type == "fattamanoProduct" && slug.current == $slug][0] {
     _id, title, slug, tagline, description, images, category, priceCents,
-    priceDisplayOverride, buyUrl, status, dateAdded, tags, seo
+    priceDisplayOverride, buyUrl, status, stock, dateAdded, tags, seo
   }`,
 
   fattamanoProductsByCategory: `*[_type == "fattamanoProduct" && category == $category] | order(dateAdded desc) {
     _id, title, slug, tagline, images, category, priceCents, priceDisplayOverride,
-    buyUrl, status
+    buyUrl, status, stock
+  }`,
+
+  // Server-side checkout: authoritative price/stock/status by id
+  fattamanoProductsByIds: `*[_type == "fattamanoProduct" && _id in $ids]{
+    _id, title, priceCents, status, stock, "image": images[0]
+  }`,
+
+  // Public live availability for the otherwise-static catalog
+  fattamanoAvailabilityByIds: `*[_type == "fattamanoProduct" && _id in $ids]{
+    _id, status, stock
   }`,
 };
 
