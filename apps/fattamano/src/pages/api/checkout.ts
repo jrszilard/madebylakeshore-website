@@ -9,7 +9,34 @@ import { allowedCountries } from '../../lib/commerce/shipping';
 import type Stripe from 'stripe';
 import type { ProductRow, FattamanoSettings } from '../../lib/types';
 
-const SITE = 'https://fattamano.com';
+const DEFAULT_RETURN_ORIGIN = 'https://fattamano.com';
+
+function normalizeOrigin(value: string | undefined, label: string): string | null {
+  if (!value?.trim()) return null;
+
+  try {
+    const url = new URL(value.trim());
+    if (url.protocol !== 'https:' && url.protocol !== 'http:') {
+      throw new Error(`${label} must use http or https`);
+    }
+    return url.origin;
+  } catch (error) {
+    if (error instanceof Error && error.message.includes('must use')) {
+      throw error;
+    }
+    throw new Error(`${label} must be a valid absolute URL`);
+  }
+}
+
+function checkoutReturnUrl(request: Request): string {
+  const configuredOrigin = normalizeOrigin(
+    import.meta.env.FATTAMANO_CHECKOUT_RETURN_ORIGIN,
+    'FATTAMANO_CHECKOUT_RETURN_ORIGIN',
+  );
+  const requestOrigin = normalizeOrigin(request.url, 'request.url');
+  const origin = configuredOrigin ?? requestOrigin ?? DEFAULT_RETURN_ORIGIN;
+  return `${origin}/checkout/return?session_id={CHECKOUT_SESSION_ID}`;
+}
 
 export const POST: APIRoute = async ({ request }) => {
   let items;
@@ -69,7 +96,7 @@ export const POST: APIRoute = async ({ request }) => {
         },
       },
     ],
-    return_url: `${SITE}/checkout/return?session_id={CHECKOUT_SESSION_ID}`,
+    return_url: checkoutReturnUrl(request),
   } as unknown as Stripe.Checkout.SessionCreateParams;
   const session = await stripe.checkout.sessions.create(sessionParams);
 

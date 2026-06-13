@@ -16,6 +16,11 @@
 
    - `PUBLIC_SANITY_PROJECT_ID` — same value as the other apps (copy from `apps/designandotherstories` Vercel project)
    - `PUBLIC_SANITY_DATASET` — `production`
+   - `PUBLIC_STRIPE_PUBLISHABLE_KEY` — Stripe publishable key for the active environment
+   - `STRIPE_SECRET_KEY` — Stripe server key; prefer a restricted key (`rk_live_`) for production
+   - `STRIPE_WEBHOOK_SECRET` — production webhook endpoint signing secret for `checkout.session.completed`
+   - `SANITY_WRITE_TOKEN` — project-level Sanity token with Editor access, stored server-side only
+   - `FATTAMANO_CHECKOUT_RETURN_ORIGIN` — optional override for Stripe Checkout returns; leave unset for local/preview request-origin returns, set to `https://fattamano.com` if production should force apex returns
 
 3. **Domain configuration**
 
