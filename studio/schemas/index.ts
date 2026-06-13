@@ -23,6 +23,7 @@ import buildLog from './documents/buildLog';
 // fattamano documents
 import fattamanoProduct from './documents/fattamanoProduct';
 import fattamanoSettings from './documents/fattamanoSettings';
+import fattamanoCheckoutSession from './documents/fattamanoCheckoutSession';
 
 // Object types
 import blockContent from './objects/blockContent';
@@ -52,6 +53,7 @@ export const schemaTypes = [
   // fattamano documents
   fattamanoProduct,
   fattamanoSettings,
+  fattamanoCheckoutSession,
 
   // Objects
   blockContent,

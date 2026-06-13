@@ -44,6 +44,52 @@ export default defineType({
       description: 'For "DM to buy" / inquiries.',
       validation: (Rule) => Rule.required().email(),
     }),
+    defineField({
+      name: 'shippingZones',
+      title: 'Shipping Zones',
+      type: 'array',
+      description:
+        "Destination zones and their flat rate. The first zone whose country list contains the customer's country wins. The union of all countries here is exactly where checkout will ship.",
+      of: [
+        {
+          type: 'object',
+          name: 'shippingZone',
+          fields: [
+            { name: 'label', title: 'Label', type: 'string', validation: (R) => R.required() },
+            {
+              name: 'countryCodes',
+              title: 'Country codes (ISO-3166-1 alpha-2, e.g. US, CA, GB)',
+              type: 'array',
+              of: [{ type: 'string' }],
+              options: { layout: 'tags' },
+              validation: (R) => R.required().min(1),
+            },
+            {
+              name: 'rateCents',
+              title: 'Flat rate (cents)',
+              type: 'number',
+              description: 'e.g. 500 = $5.00',
+              validation: (R) => R.required().integer().min(0),
+            },
+          ],
+          preview: {
+            select: { label: 'label', rate: 'rateCents', countries: 'countryCodes' },
+            prepare: ({ label, rate, countries }) => ({
+              title: `${label} — $${((rate ?? 0) / 100).toFixed(2)}`,
+              subtitle: (countries || []).join(', '),
+            }),
+          },
+        },
+      ],
+      validation: (Rule) => Rule.required().min(1),
+    }),
+    defineField({
+      name: 'shippingFallbackBehavior',
+      title: 'If a destination matches no zone',
+      type: 'string',
+      options: { list: [{ title: 'Reject (do not ship)', value: 'reject' }], layout: 'radio' },
+      initialValue: 'reject',
+    }),
   ],
   preview: {
     prepare: () => ({ title: 'fattamano Settings' }),

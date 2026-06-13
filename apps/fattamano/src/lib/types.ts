@@ -17,6 +17,7 @@ export interface RichTextBlock {
 }
 
 export interface FattamanoProduct {
+  _id: string;
   title: string;
   slug: SanitySlug;
   tagline?: string;
@@ -26,9 +27,44 @@ export interface FattamanoProduct {
   priceDisplayOverride?: string;
   buyUrl?: string;
   status: FattamanoProductStatus;
+  stock?: number;
   description?: RichTextBlock[];
   seo?: {
     metaTitle?: string;
     metaDescription?: string;
   };
+}
+
+export interface ShippingZone {
+  label: string;
+  countryCodes: string[];
+  rateCents: number;
+}
+
+export interface FattamanoSettings {
+  heroHeadline?: string;
+  heroSubcopy?: string;
+  contactEmail?: string;
+  shippingZones?: ShippingZone[];
+  shippingFallbackBehavior?: 'reject';
+}
+
+// One line in the cart (client) and the unit the checkout validates.
+export interface CartItem {
+  productId: string; // Sanity _id
+  slug: string;
+  title: string;
+  priceCents: number;
+  image?: SanityImageLike | null;
+  qty: number;
+}
+
+// Authoritative product row fetched server-side at checkout.
+export interface ProductRow {
+  _id: string;
+  title: string;
+  priceCents?: number;
+  status: FattamanoProductStatus;
+  stock?: number;
+  image?: SanityImageLike | null;
 }
