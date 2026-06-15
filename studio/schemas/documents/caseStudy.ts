@@ -30,11 +30,11 @@ export default defineType({
     }),
     defineField({
       name: 'author',
-      title: 'Author',
-      type: 'reference',
-      to: [{ type: 'person' }],
-      description: 'Who led this project?',
-      validation: (Rule) => Rule.required(),
+      title: 'Team Members',
+      type: 'array',
+      of: [{ type: 'reference', to: [{ type: 'person' }] }],
+      description: 'Who worked on this project?',
+      validation: (Rule) => Rule.required().min(1),
     }),
     defineField({
       name: 'client',
@@ -206,12 +206,11 @@ export default defineType({
       title: 'title',
       client: 'client',
       media: 'featuredImage',
-      author: 'author.name',
     },
-    prepare({ title, client, media, author }) {
+    prepare({ title, client, media }) {
       return {
         title,
-        subtitle: `${client || 'No client'} • ${author || 'No author'}`,
+        subtitle: client || 'No client',
         media,
       };
     },

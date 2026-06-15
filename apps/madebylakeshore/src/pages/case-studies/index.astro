@@ -19,7 +19,7 @@ const caseStudies = sanityCaseStudies.map((study: any) => ({
   title: study.title,
   client: study.client || '',
   category: study.category || 'design',
-  author: study.author?.name || '',
+  author: study.author?.map((a: any) => a.name).join(' & ') || '',
   duration: '',
   heroImage: study.featuredImage?.asset ? urlFor(study.featuredImage).width(800).url() : null,
   excerpt: study.excerpt || '',

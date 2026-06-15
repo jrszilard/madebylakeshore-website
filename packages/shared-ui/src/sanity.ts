@@ -102,7 +102,7 @@ export const queries = {
     excerpt,
     featuredImage,
     metrics,
-    "author": author->{ name, slug, image }
+    "author": author[]->{ name, slug, image }
   }`,
 
   featuredCaseStudies: `*[_type == "caseStudy" && featured == true && isProtected != true] | order(coalesce(order, 100) asc, publishedAt desc)[0...3] {
@@ -114,7 +114,7 @@ export const queries = {
     excerpt,
     featuredImage,
     metrics,
-    "author": author->{ name, slug, image }
+    "author": author[]->{ name, slug, image }
   }`,
 
   caseStudyBySlug: `*[_type == "caseStudy" && slug.current == $slug][0] {
@@ -136,7 +136,7 @@ export const queries = {
     solution,
     results,
     metrics,
-    "author": author->{ name, slug, image, bio },
+    "author": author[]->{ name, slug, image, bio },
     "relatedBlogPosts": relatedBlogPosts[]->{ _id, title, slug, excerpt, featuredImage, publishedAt, "author": author->{ name, slug, image } },
     "testimonial": testimonial->{ quote, authorName, authorTitle, company },
     seo
@@ -161,7 +161,7 @@ export const queries = {
     metrics,
     isProtected,
     listingVisibility,
-    "author": author->{ name, slug, image }
+    "author": author[]->{ name, slug, image }
   }`,
 
   // Navigation query: excludes hidden protected studies
@@ -196,7 +196,7 @@ export const queries = {
     }
   }`,
 
-  caseStudiesByPerson: `*[_type == "caseStudy" && author->slug.current == $slug && !(isProtected == true && listingVisibility == "hidden")] | order(coalesce(order, 100) asc, publishedAt desc) {
+  caseStudiesByPerson: `*[_type == "caseStudy" && $slug in author[]->slug.current && !(isProtected == true && listingVisibility == "hidden")] | order(coalesce(order, 100) asc, publishedAt desc) {
     _id,
     title,
     slug,

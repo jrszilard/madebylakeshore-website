@@ -86,7 +86,7 @@ function blocksToText(blocks: any[] | null | undefined): string {
 }
 
 const heroImage = study?.featuredImage?.asset ? urlFor(study.featuredImage).width(1400).url() : null;
-const authorName = study?.author?.name || '';
+const authorName = study?.author?.map((a: any) => a.name).join(' & ') || '';
 ---
 
 <BaseLayout
@@ -228,7 +228,7 @@ const authorName = study?.author?.name || '';
                 )}
                 {authorName && (
                   <div>
-                    <dt class="text-sm text-mbl-stone/70">Lead</dt>
+                    <dt class="text-sm text-mbl-stone/70">{study.author.length > 1 ? 'Team' : 'Lead'}</dt>
                     <dd class="font-heading font-medium">{authorName}</dd>
                   </div>
                 )}
