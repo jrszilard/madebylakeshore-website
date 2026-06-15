@@ -6,10 +6,10 @@ import { sanityClient, urlFor, queries } from '../../lib/sanity';
 export const prerender = false;
 
 const { slug } = Astro.params;
-const [person, caseStudies] = await Promise.all([
-  sanityClient.fetch(queries.personBySlug, { slug }),
-  sanityClient.fetch(queries.caseStudiesByPerson, { slug }),
-]);
+const person = await sanityClient.fetch(queries.personBySlug, { slug });
+const caseStudies = person
+  ? await sanityClient.fetch(queries.caseStudiesByPerson, { personId: person._id })
+  : [];
 
 if (!person) return Astro.redirect('/about');
 

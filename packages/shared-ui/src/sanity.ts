@@ -196,7 +196,7 @@ export const queries = {
     }
   }`,
 
-  caseStudiesByPerson: `*[_type == "caseStudy" && $slug in author[]->slug.current && !(isProtected == true && listingVisibility == "hidden")] | order(coalesce(order, 100) asc, publishedAt desc) {
+  caseStudiesByPerson: `*[_type == "caseStudy" && references($personId) && !(isProtected == true && listingVisibility == "hidden")] | order(coalesce(order, 100) asc, publishedAt desc) {
     _id,
     title,
     slug,
