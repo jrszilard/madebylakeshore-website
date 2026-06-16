@@ -4,7 +4,7 @@ import type { APIRoute } from 'astro';
 import { getStripe } from '../../lib/server/stripe';
 import { sanityWriteFetch, sanityWriteClient } from '../../lib/server/sanityWrite';
 import { queries } from '@lakeshore/shared-ui/sanity';
-import { normalizeCartItems, buildOrderLines, BadCartError } from '../../lib/commerce/validateCart';
+import { normalizeCartItems, buildOrderLines, cartSubtotalCents, BadCartError } from '../../lib/commerce/validateCart';
 import { allowedCountries } from '../../lib/commerce/shipping';
 import type Stripe from 'stripe';
 import type { ProductRow, FattamanoSettings } from '../../lib/types';
@@ -101,10 +101,14 @@ export const POST: APIRoute = async ({ request }) => {
   const session = await stripe.checkout.sessions.create(sessionParams);
 
   // Idempotency + cart source for the webhook. _id = Stripe session id.
+  // subtotalCents is the authoritative (server-priced) cart total, persisted so
+  // /api/calculate-shipping-options can apply free-shipping thresholds without
+  // trusting any client-supplied total.
   await sanityWriteClient().createIfNotExists({
     _id: session.id,
     _type: 'fattamanoCheckoutSession',
     items: lines.map((l) => ({ _key: l.productId, productId: l.productId, qty: l.qty })),
+    subtotalCents: cartSubtotalCents(lines),
     status: 'pending',
     createdAt: new Date().toISOString(),
   } as any);

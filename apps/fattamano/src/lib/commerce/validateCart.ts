@@ -56,6 +56,12 @@ export interface Unavailable {
   reason: 'missing' | 'not_available' | 'no_price' | 'out_of_stock';
 }
 
+// Authoritative cart subtotal (cents), summed from server-priced lines. Used to
+// decide free-shipping thresholds — never derived from a client-supplied total.
+export function cartSubtotalCents(lines: OrderLine[]): number {
+  return lines.reduce((sum, l) => sum + l.unitAmountCents * l.qty, 0);
+}
+
 export function buildOrderLines(
   items: NormalizedItem[],
   rows: ProductRow[]

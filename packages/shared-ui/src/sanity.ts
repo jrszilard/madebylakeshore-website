@@ -477,7 +477,7 @@ export const queries = {
   // fattamano queries
   fattamanoSettings: `*[_type == "fattamanoSettings"][0] {
     heroHeadline, heroSubcopy, aboutBody, footerCopy, notFoundCopy, contactEmail,
-    shippingZones[]{ label, countryCodes, rateCents }, shippingFallbackBehavior
+    shippingZones[]{ label, countryCodes, rateCents, freeShippingThresholdCents }, shippingFallbackBehavior
   }`,
 
   allFattamanoProducts: `*[_type == "fattamanoProduct"] | order(dateAdded desc) {

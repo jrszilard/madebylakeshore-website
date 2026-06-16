@@ -18,8 +18,8 @@ export const POST: APIRoute = async ({ request }) => {
 
   // Only act on sessions WE created and that are still pending. Without this, a
   // client could call sessions.update against an arbitrary Stripe session id.
-  const known = await sanityWriteFetch<{ _id: string } | null>(
-    `*[_type == "fattamanoCheckoutSession" && _id == $id && status == "pending"][0]{ _id }`,
+  const known = await sanityWriteFetch<{ _id: string; subtotalCents?: number } | null>(
+    `*[_type == "fattamanoCheckoutSession" && _id == $id && status == "pending"][0]{ _id, subtotalCents }`,
     { id: sessionId }
   );
   if (!known) {
@@ -27,9 +27,15 @@ export const POST: APIRoute = async ({ request }) => {
   }
 
   // Authoritative zone table (server-side read); allowed countries / rates are
-  // never trusted from the request body.
+  // never trusted from the request body. The subtotal comes from the stored
+  // session doc (server-priced at checkout), so free-shipping thresholds can't be
+  // spoofed by the client.
   const settings = await sanityWriteFetch<FattamanoSettings>(queries.fattamanoSettings);
-  const option = resolveShippingOption(country ?? '', settings?.shippingZones ?? []);
+  const option = resolveShippingOption(
+    country ?? '',
+    settings?.shippingZones ?? [],
+    known.subtotalCents ?? 0
+  );
   if (!option) {
     return Response.json({ type: 'reject', message: "We can't ship there yet." }, { status: 200 });
   }

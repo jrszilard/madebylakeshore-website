@@ -39,6 +39,9 @@ export interface ShippingZone {
   label: string;
   countryCodes: string[];
   rateCents: number;
+  // Optional: when the cart subtotal (cents) reaches this, the zone ships free.
+  // Omit to always charge the flat rate (e.g. international zones).
+  freeShippingThresholdCents?: number;
 }
 
 export interface FattamanoSettings {

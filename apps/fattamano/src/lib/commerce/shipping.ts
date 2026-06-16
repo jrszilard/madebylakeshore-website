@@ -2,13 +2,17 @@ import type { ShippingZone } from '../types';
 
 export function resolveShippingOption(
   country: string,
-  zones: ShippingZone[]
+  zones: ShippingZone[],
+  subtotalCents = 0
 ): { label: string; rateCents: number } | null {
   const code = (country || '').trim().toUpperCase();
   if (!code) return null;
   for (const zone of zones) {
     if (zone.countryCodes.some((c) => c.trim().toUpperCase() === code)) {
-      return { label: zone.label, rateCents: zone.rateCents };
+      const threshold = zone.freeShippingThresholdCents;
+      const freeShip =
+        typeof threshold === 'number' && threshold >= 0 && subtotalCents >= threshold;
+      return { label: zone.label, rateCents: freeShip ? 0 : zone.rateCents };
     }
   }
   return null;

@@ -23,6 +23,12 @@ export default defineType({
       ],
     }),
     defineField({
+      name: 'subtotalCents',
+      title: 'Subtotal (cents)',
+      type: 'number',
+      description: 'Server-priced cart subtotal; drives free-shipping thresholds.',
+    }),
+    defineField({
       name: 'status',
       title: 'Status',
       type: 'string',

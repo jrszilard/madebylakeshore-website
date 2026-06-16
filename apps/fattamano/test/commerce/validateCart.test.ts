@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { normalizeCartItems, buildOrderLines } from '../../src/lib/commerce/validateCart';
+import { normalizeCartItems, buildOrderLines, cartSubtotalCents } from '../../src/lib/commerce/validateCart';
+import type { OrderLine } from '../../src/lib/commerce/validateCart';
 import type { ProductRow } from '../../src/lib/types';
 
 const ROWS: ProductRow[] = [
@@ -74,5 +75,22 @@ describe('buildOrderLines', () => {
     const { lines, unavailable } = buildOrderLines([{ productId: 'a', qty: 1 }], rows);
     expect(lines).toEqual([]);
     expect(unavailable).toEqual([{ productId: 'a', reason: 'no_price' }]);
+  });
+});
+
+describe('cartSubtotalCents', () => {
+  const line = (unitAmountCents: number, qty: number): OrderLine => ({
+    productId: 'x',
+    title: 'X',
+    unitAmountCents,
+    qty,
+  });
+  it('sums unit price times quantity across lines', () => {
+    // 3 stickers @ $4 = $12 — the free-US-shipping threshold case
+    expect(cartSubtotalCents([line(400, 3)])).toBe(1200);
+    expect(cartSubtotalCents([line(400, 1), line(2500, 2)])).toBe(5400);
+  });
+  it('is zero for an empty cart', () => {
+    expect(cartSubtotalCents([])).toBe(0);
   });
 });

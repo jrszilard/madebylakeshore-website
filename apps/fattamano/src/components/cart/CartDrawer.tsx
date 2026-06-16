@@ -5,7 +5,11 @@ function money(cents: number) {
   return `$${(cents / 100).toFixed(2)}`;
 }
 
-export default function CartDrawer() {
+export default function CartDrawer({
+  freeShippingThresholdCents,
+}: {
+  freeShippingThresholdCents?: number | null;
+}) {
   const { items, subtotalCents, dispatch } = useCart();
   const [open, setOpen] = useState(false);
 
@@ -55,7 +59,19 @@ export default function CartDrawer() {
               <p className="flex justify-between font-display text-lg">
                 <span>subtotal</span><span>{money(subtotalCents)}</span>
               </p>
-              <p className="font-body text-sm text-ft-smudge mt-1">shipping calculated at checkout</p>
+              {typeof freeShippingThresholdCents === 'number' && freeShippingThresholdCents > 0 ? (
+                subtotalCents >= freeShippingThresholdCents ? (
+                  <p className="font-body text-sm text-ft-ink mt-1">
+                    you've got free u.s. shipping — international calculated at checkout
+                  </p>
+                ) : (
+                  <p className="font-body text-sm text-ft-smudge mt-1">
+                    add {money(freeShippingThresholdCents - subtotalCents)} more for free u.s. shipping
+                  </p>
+                )
+              ) : (
+                <p className="font-body text-sm text-ft-smudge mt-1">shipping calculated at checkout</p>
+              )}
               <a href="/checkout" className="mt-4 block text-center bg-ft-shout text-ft-paper font-display px-6 py-3 text-lg hover:bg-ft-ink transition-colors">
                 checkout
               </a>

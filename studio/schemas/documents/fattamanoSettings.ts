@@ -68,14 +68,29 @@ export default defineType({
               name: 'rateCents',
               title: 'Flat rate (cents)',
               type: 'number',
-              description: 'e.g. 500 = $5.00',
+              description: 'e.g. 300 = $3.00',
               validation: (R) => R.required().integer().min(0),
+            },
+            {
+              name: 'freeShippingThresholdCents',
+              title: 'Free-shipping threshold (cents, optional)',
+              type: 'number',
+              description:
+                'If the cart subtotal reaches this, this zone ships free. e.g. 1200 = free over $12. Leave empty to always charge the flat rate (e.g. international zones).',
+              validation: (R) => R.integer().min(0),
             },
           ],
           preview: {
-            select: { label: 'label', rate: 'rateCents', countries: 'countryCodes' },
-            prepare: ({ label, rate, countries }) => ({
-              title: `${label} — $${((rate ?? 0) / 100).toFixed(2)}`,
+            select: {
+              label: 'label',
+              rate: 'rateCents',
+              countries: 'countryCodes',
+              freeAt: 'freeShippingThresholdCents',
+            },
+            prepare: ({ label, rate, countries, freeAt }) => ({
+              title:
+                `${label} — $${((rate ?? 0) / 100).toFixed(2)}` +
+                (typeof freeAt === 'number' ? ` (free over $${(freeAt / 100).toFixed(2)})` : ''),
               subtitle: (countries || []).join(', '),
             }),
           },

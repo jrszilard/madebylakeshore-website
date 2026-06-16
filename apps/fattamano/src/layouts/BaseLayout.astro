@@ -3,6 +3,8 @@ import '../styles/global.css';
 import Navigation from '../components/Navigation.astro';
 import Footer from '../components/Footer.astro';
 import CartDrawer from '../components/cart/CartDrawer.tsx';
+import { sanityClient, queries } from '../lib/sanity';
+import type { FattamanoSettings } from '../lib/types';
 
 interface Props {
   title: string;
@@ -15,6 +17,17 @@ const {
   description = 'Handmade stickers, t-shirts, and other small ridiculous things.',
   ogImagePath,
 } = Astro.props;
+
+// The free-US-shipping threshold is content (Sanity), so the cart nudge stays in
+// sync with the actual rate without code changes. Null-safe: if settings are
+// unavailable the drawer falls back to its generic "calculated at checkout" copy.
+const ftSettings = await sanityClient
+  .fetch<FattamanoSettings | null>(queries.fattamanoSettings)
+  .catch(() => null);
+const usZone = ftSettings?.shippingZones?.find((z) =>
+  z.countryCodes?.some((c) => c.trim().toUpperCase() === 'US')
+);
+const freeShippingThresholdCents = usZone?.freeShippingThresholdCents ?? null;
 
 const siteTitle = title === 'Home' ? 'fattamano' : `${title} — fattamano`;
 const canonical = new URL(Astro.url.pathname, Astro.site).toString();
@@ -52,6 +65,6 @@ const ogImage = ogImagePath
       <slot />
     </main>
     <Footer />
-    <CartDrawer client:load />
+    <CartDrawer client:load freeShippingThresholdCents={freeShippingThresholdCents} />
   </body>
 </html>
