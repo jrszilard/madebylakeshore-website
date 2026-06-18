@@ -82,7 +82,7 @@ export default defineType({
       name: 'mediums',
       title: 'Mediums',
       type: 'array',
-      description: 'Each medium gets its own section on the About page with a description and WIP image carousel.',
+      description: 'Each medium is shown as a card on the About page with an icon and description.',
       of: [
         {
           type: 'object',
@@ -102,14 +102,25 @@ export default defineType({
               description: 'How and why you got into this medium.',
             },
             {
-              name: 'images',
-              title: 'WIP Images',
-              type: 'array',
-              of: [{ type: 'figure' }],
+              name: 'icon',
+              title: 'Icon',
+              type: 'string',
+              options: {
+                list: [
+                  { title: 'Painting', value: 'painting' },
+                  { title: 'Printmaking', value: 'printmaking' },
+                  { title: 'Drawing (Ink & Pencil)', value: 'drawing' },
+                  { title: 'Writing', value: 'writing' },
+                  { title: 'Photography', value: 'photography' },
+                  { title: 'Other', value: 'other' },
+                ],
+                layout: 'radio',
+              },
+              initialValue: 'other',
             },
           ],
           preview: {
-            select: { title: 'title', media: 'images.0' },
+            select: { title: 'title', subtitle: 'icon' },
           },
         },
       ],

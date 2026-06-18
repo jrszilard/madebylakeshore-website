@@ -330,8 +330,7 @@ export const queries = {
     asset-> { url, metadata { dimensions { width, height } } }
   },
   mediums[] {
-    title, description,
-    images[] { alt, caption, asset, crop, hotspot }
+    title, description, icon
   }
 }`,
 

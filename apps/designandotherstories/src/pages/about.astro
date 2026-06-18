@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import MediumCarousel from '../components/MediumCarousel';
+import MediumCard from '../components/MediumCard.astro';
 import { sanityClient, urlFor, queries } from '../lib/sanity';
 import { SUBSTACK_URL } from '../lib/config';
 
@@ -94,43 +94,24 @@ const aboutImages = (profile?.aboutImages ?? [])
   })()}
 
   <!-- 3. Mediums -->
-  {profile?.mediums?.length > 0 && profile.mediums.map((medium: any, i: number) => (
-    <section class={`section-spacing ${i % 2 === 1 ? 'bg-daos-paper' : ''}`}>
+  {profile?.mediums?.length > 0 && (
+    <section class="section-spacing">
       <div class="container-art">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-
-          <!-- Text: odd rows flip to right -->
-          <div class={`space-y-4 ${i % 2 === 1 ? 'lg:order-2' : ''}`}>
-            <p class="font-sans text-xs uppercase tracking-widest text-daos-terracotta-dark">Medium</p>
-            <h2 class="font-display italic text-2xl md:text-3xl text-daos-ink leading-tight">{medium.title}</h2>
-            {medium.description && (
-              <p class="font-body text-daos-charcoal leading-relaxed">{medium.description}</p>
-            )}
-          </div>
-
-          <!-- Carousel -->
-          {medium.images?.length > 0 && (
-            <div class={i % 2 === 1 ? 'lg:order-1' : ''}>
-              <MediumCarousel
-                client:load
-                images={medium.images.map((img: any) => ({
-                  url: urlFor(img).width(900).height(600).fit('crop').crop('focalpoint').url(),
-                  alt: img.alt ?? medium.title,
-                  caption: img.caption,
-                }))}
-              />
-            </div>
-          )}
-
+        <p class="font-sans text-xs uppercase tracking-widest text-daos-terracotta-dark mb-4">Mediums</p>
+        <h2 class="font-display italic text-2xl md:text-3xl text-daos-ink leading-tight mb-10">What I Make</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {profile.mediums.map((medium: any) => (
+            <MediumCard title={medium.title} description={medium.description} icon={medium.icon} />
+          ))}
         </div>
       </div>
     </section>
-  ))}
+  )}
 
-  <!-- 4. Find me -->
-  <section class="section-spacing">
+  <!-- 4. Find me / connect -->
+  <section class="section-spacing bg-daos-paper">
     <div class="container-art">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-12 lg:gap-16">
 
         <!-- Next event -->
         <div class="space-y-4">
@@ -146,23 +127,21 @@ const aboutImages = (profile?.aboutImages ?? [])
               <p class="font-sans text-sm text-daos-charcoal">
                 {new Date(nextEvent.startDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' })}
               </p>
-              <a href={`/events/${nextEvent.slug?.current}`} class="inline-block font-sans text-sm text-daos-terracotta-dark hover:underline transition-colors mt-2">
-                Details &rarr;
-              </a>
             </div>
           ) : (
             <p class="font-body text-daos-charcoal leading-relaxed">
               No upcoming events right now. Check back soon, or subscribe to hear first.
             </p>
           )}
-          <a href="/events" class="inline-block font-sans text-sm text-daos-charcoal hover:text-daos-ink transition-colors underline">
-            All events
+          <a href="/events" class="btn-warm inline-flex">
+            All Events
           </a>
         </div>
 
         <!-- Newsletter -->
         <div class="space-y-4">
           <p class="font-sans text-xs uppercase tracking-widest text-daos-terracotta-dark">Stay in the loop</p>
+          <h2 class="font-display text-xl text-daos-ink">The Newsletter</h2>
           <p class="font-body text-daos-charcoal leading-relaxed">
             New work, upcoming events, and occasional dispatches from the studio. No noise.
           </p>
@@ -173,6 +152,23 @@ const aboutImages = (profile?.aboutImages ?? [])
             class="btn-warm inline-flex"
           >
             Subscribe
+          </a>
+        </div>
+
+        <!-- Lakeshore Studios -->
+        <div class="space-y-4">
+          <p class="font-sans text-xs uppercase tracking-widest text-daos-terracotta-dark">The Other Side</p>
+          <h2 class="font-display text-xl text-daos-ink">Lakeshore Studios</h2>
+          <p class="font-body text-daos-charcoal leading-relaxed">
+            A small design and data consultancy I run with my husband, Justin. Same care, different canvas.
+          </p>
+          <a
+            href="https://madebylakeshore.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="btn-warm inline-flex"
+          >
+            Visit Us
           </a>
         </div>
 
