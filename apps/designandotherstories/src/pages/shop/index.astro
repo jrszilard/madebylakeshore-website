@@ -1,0 +1,90 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ShopCard from '../../components/ShopCard.astro';
+import { sanityClient, queries } from '../../lib/sanity';
+
+const [artworkForSale, shopProducts] = await Promise.all([
+  sanityClient.fetch(queries.artworkForSale),
+  sanityClient.fetch(queries.shopProducts),
+]);
+
+const originals = artworkForSale ?? [];
+const printsAndCards = shopProducts ?? [];
+---
+
+<BaseLayout
+  title="Shop"
+  description="Shop original artwork, prints, postcards, and greeting cards by Wilma. Each piece ships directly from the studio."
+  showSnipcart={true}
+>
+  <!-- Page header -->
+  <section class="section-spacing">
+    <div class="container-art">
+      <div class="max-w-2xl">
+        <p class="font-sans text-xs uppercase tracking-widest text-daos-terracotta mb-4">Shop</p>
+        <h1 class="font-display italic text-display-lg md:text-display-xl text-daos-ink mb-6 leading-tight">
+          Take something home
+        </h1>
+        <p class="font-body text-daos-charcoal text-lg leading-relaxed">
+          Original paintings, prints, postcards, and greeting cards. Shipped with care.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Originals -->
+  {originals.length > 0 && (
+    <section class="section-spacing bg-daos-paper">
+      <div class="container-art">
+        <div class="mb-10 pb-6 border-b border-daos-warm">
+          <h2 class="font-display italic text-2xl md:text-3xl text-daos-ink">Originals</h2>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {originals.map((piece: any) => (
+            <ShopCard
+              title={piece.title}
+              slug={piece.slug}
+              images={piece.images ?? []}
+              medium={piece.medium}
+              price={piece.price}
+              originalAvailable={piece.originalAvailable}
+              printsAvailable={piece.printsAvailable}
+            />
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- Prints & Cards -->
+  {printsAndCards.length > 0 && (
+    <section class="section-spacing">
+      <div class="container-art">
+        <div class="mb-10 pb-6 border-b border-daos-warm">
+          <h2 class="font-display italic text-2xl md:text-3xl text-daos-ink">Prints & Cards</h2>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {printsAndCards.map((item: any) => (
+            <ShopCard
+              title={item.title}
+              slug={item.slug}
+              images={item.images ?? []}
+              medium={item.blurb}
+              price={item.price}
+              originalAvailable={item.available}
+              basePath="/shop"
+            />
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  {originals.length === 0 && printsAndCards.length === 0 && (
+    <section class="section-spacing bg-daos-paper">
+      <div class="container-art text-center py-20">
+        <p class="font-body text-daos-charcoal text-lg">New pieces coming soon.</p>
+      </div>
+    </section>
+  )}
+</BaseLayout>

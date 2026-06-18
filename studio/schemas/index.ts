@@ -15,6 +15,7 @@ import book from './documents/book';
 import writingPiece from './documents/writingPiece';
 import event from './documents/event';
 import artistProfile from './documents/artistProfile';
+import shopProduct from './documents/shopProduct';
 
 // Incubator documents
 import digitalProject from './documents/digitalProject';
@@ -47,6 +48,7 @@ export const schemaTypes = [
   writingPiece,
   event,
   artistProfile,
+  shopProduct,
   digitalProject,
   buildLog,
 

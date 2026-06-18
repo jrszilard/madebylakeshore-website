@@ -48,6 +48,64 @@ export default defineType({
       type: 'blockContent',
     }),
     defineField({
+      name: 'forSale',
+      title: 'Listed for Sale',
+      type: 'boolean',
+      description: 'When true, this piece appears in the Shop. Can be true even if original is sold (if prints are available).',
+      initialValue: false,
+    }),
+    defineField({
+      name: 'price',
+      title: 'Price',
+      type: 'number',
+      description: 'Price in USD',
+      validation: (Rule) => Rule.min(0),
+    }),
+    defineField({
+      name: 'originalAvailable',
+      title: 'Original Available',
+      type: 'boolean',
+      initialValue: true,
+    }),
+    defineField({
+      name: 'printsAvailable',
+      title: 'Prints Available',
+      type: 'boolean',
+      initialValue: false,
+    }),
+    defineField({
+      name: 'printOptions',
+      title: 'Print Options',
+      type: 'array',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            {
+              name: 'size',
+              title: 'Size',
+              type: 'string',
+              options: {
+                list: [
+                  { title: '4×6 in', value: '4×6 in' },
+                  { title: '5×7 in', value: '5×7 in' },
+                  { title: '8×10 in', value: '8×10 in' },
+                  { title: '11×14 in', value: '11×14 in' },
+                  { title: '12×16 in', value: '12×16 in' },
+                  { title: '16×20 in', value: '16×20 in' },
+                  { title: '18×24 in', value: '18×24 in' },
+                  { title: '24×36 in', value: '24×36 in' },
+                ],
+              },
+            },
+            { name: 'price', title: 'Price', type: 'number' },
+            { name: 'inStock', title: 'In Stock', type: 'boolean', initialValue: true },
+          ],
+        },
+      ],
+      hidden: ({ parent }) => !parent?.printsAvailable,
+    }),
+    defineField({
       name: 'featured',
       title: 'Featured',
       type: 'boolean',

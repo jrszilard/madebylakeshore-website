@@ -21,6 +21,11 @@ const [artistProfile, featuredWriting, shopItems, allCollections, nextEvent, sub
 
 const isSingleCollection = (allCollections ?? []).length === 1;
 
+// Hero shows the 2 latest shop pieces; the "From the Studio" swimlane shows
+// the rest so the same pieces aren't shown twice on the home page.
+const heroShopItems = (shopItems ?? []).slice(0, 2);
+const swimlaneShopItems = (shopItems ?? []).slice(2, 6);
+
 // Merge Sanity featured writing + Substack posts, up to 5 cards total
 const sanityWritingItems: any[] = (featuredWriting ?? []).slice(0, 5);
 const substackSlots = Math.max(0, 5 - sanityWritingItems.length);
@@ -44,21 +49,20 @@ const typeLabels: Record<string, string> = {
   showSnipcart={shopItems && shopItems.length > 0}
 >
   <!-- 1. Hero -->
-  <HeroSection heroImage={artistProfile?.heroImage} shopItems={shopItems ?? []} />
+  <HeroSection heroImage={artistProfile?.heroImage} shopItems={heroShopItems} />
 
   <!-- 3. From the Studio (shop) -->
-  {shopItems && shopItems.length > 0 && (
+  {swimlaneShopItems.length > 0 && (
     <section class="section-spacing">
       <div class="container-art">
         <SectionHeader title="From the Studio" viewAllHref="/gallery" />
 
         <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-          {(shopItems as any[]).map((item: any) => (
+          {(swimlaneShopItems as any[]).map((item: any) => (
             <ShopCard
               title={item.title}
               slug={item.slug}
               images={item.images}
-              medium={item.medium}
               price={item.price}
               originalAvailable={item.originalAvailable}
               printsAvailable={item.printsAvailable}

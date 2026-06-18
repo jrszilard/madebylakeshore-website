@@ -8,9 +8,10 @@ interface Props {
   originalAvailable?: boolean;
   printsAvailable?: boolean;
   image?: string;
+  basePath?: string;
 }
 
-const { title, slug, price, originalAvailable = true, printsAvailable = false, image } = Astro.props;
+const { title, slug, price, originalAvailable = true, printsAvailable = false, image, basePath = '/gallery' } = Astro.props;
 
 const isSold = !originalAvailable;
 const hasAlternative = isSold && printsAvailable;
@@ -37,14 +38,14 @@ const hasAlternative = isSold && printsAvailable;
 
   {/* Purchase button — only show if original is available */}
   {!isSold && price != null && (
-    <CheckoutButton title={title} price={price} slug={slug} image={image} />
+    <CheckoutButton title={title} price={price} slug={slug} image={image} basePath={basePath} />
   )}
 
   {/* Prints available notice */}
   {hasAlternative && (
     <p class="font-body text-sm text-daos-charcoal italic">
       Original sold — prints still available.{' '}
-      <a href={`/gallery/${slug}#prints`} class="text-daos-terracotta underline underline-offset-2 hover:text-daos-ink transition-colors">
+      <a href={`${basePath}/${slug}#prints`} class="text-daos-terracotta underline underline-offset-2 hover:text-daos-ink transition-colors">
         View print options
       </a>
     </p>

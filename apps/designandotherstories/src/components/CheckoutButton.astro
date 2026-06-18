@@ -7,11 +7,12 @@ interface Props {
   slug: string;
   image?: string;
   label?: string;
+  basePath?: string;
 }
 
-const { title, price, slug, image, label = 'Add to Cart' } = Astro.props;
+const { title, price, slug, image, label = 'Add to Cart', basePath = '/gallery' } = Astro.props;
 
-const productUrl = `https://designandotherstories.com/gallery/${slug}`;
+const productUrl = `https://designandotherstories.com${basePath}/${slug}`;
 ---
 
 {SHOP_PLATFORM === 'snipcart' && (

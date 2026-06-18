@@ -11,9 +11,10 @@ interface Props {
   originalAvailable?: boolean;
   printsAvailable?: boolean;
   landscape?: boolean;
+  basePath?: string;
 }
 
-const { title, slug, images, medium, price, originalAvailable = true, printsAvailable = false, landscape = false } = Astro.props;
+const { title, slug, images, medium, price, originalAvailable, printsAvailable, landscape = false, basePath = '/gallery' } = Astro.props;
 
 const imageUrl =
   images && images.length > 0
@@ -22,13 +23,17 @@ const imageUrl =
       : urlFor(images[0]).width(400).height(533).fit('crop').crop('focalpoint').url()
     : null;
 
-const isSold = !originalAvailable;
-const hasPrints = isSold && printsAvailable;
-const isDimmed = isSold && !printsAvailable;
+// originalAvailable comes back as null (not undefined) from Sanity when unset,
+// which skips the destructuring default — use ?? to treat null/undefined as available.
+const resolvedOriginalAvailable = originalAvailable ?? true;
+const resolvedPrintsAvailable = printsAvailable ?? false;
+const isSold = !resolvedOriginalAvailable;
+const hasPrints = isSold && resolvedPrintsAvailable;
+const isDimmed = isSold && !resolvedPrintsAvailable;
 ---
 
 <article class:list={['group bg-daos-paper rounded-sm overflow-hidden hover:shadow-lg transition-shadow duration-300', isDimmed && 'opacity-60']}>
-  <a href={`/gallery/${slug.current}`} class="block">
+  <a href={`${basePath}/${slug.current}`} class="block">
     <!-- Uniform 3:4 image container -->
     <div class={`relative overflow-hidden bg-daos-warm ${landscape ? 'aspect-[3/2]' : 'aspect-[3/4]'}`}>
       {imageUrl ? (
@@ -59,7 +64,7 @@ const isDimmed = isSold && !printsAvailable;
   <div class="p-4 space-y-3">
     <div class="space-y-1">
       <h3 class="font-display text-lg text-daos-ink leading-snug">
-        <a href={`/gallery/${slug.current}`} class="hover:text-daos-terracotta transition-colors">
+        <a href={`${basePath}/${slug.current}`} class="hover:text-daos-terracotta transition-colors">
           {title}
         </a>
       </h3>
@@ -78,7 +83,7 @@ const isDimmed = isSold && !printsAvailable;
 
     {hasPrints && (
       <a
-        href={`/gallery/${slug.current}#prints`}
+        href={`${basePath}/${slug.current}#prints`}
         class="inline-block font-sans text-sm text-daos-terracotta hover:underline transition-colors"
       >
         Prints available &rarr;
