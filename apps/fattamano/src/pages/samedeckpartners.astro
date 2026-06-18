@@ -1,0 +1,283 @@
+---
+import '../styles/global.css';
+
+export const prerender = true;
+
+const description =
+  'SameDeck Partners is a fictional consultancy from Real Fake Ads by fattamano. Your company is unique. Our recommendation is not.';
+const canonical = new URL(Astro.url.pathname, Astro.site).toString();
+---
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:title" content="SameDeck Partners — Transformation Advisory" />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta name="twitter:card" content="summary" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>SameDeck Partners — Transformation Advisory</title>
+    <style is:global>
+      .sdp {
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      }
+
+      .sdp-display {
+        font-family: 'Space Grotesk', Inter, ui-sans-serif, system-ui, sans-serif;
+      }
+
+      .sdp * {
+        box-sizing: border-box;
+      }
+
+      .sdp-orb {
+        background:
+          radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.92), transparent 0 23%, rgba(255, 255, 255, 0.2) 24% 28%, transparent 29%),
+          conic-gradient(from 190deg, #2dd4bf, #7c3aed, #0f172a, #38bdf8, #2dd4bf);
+      }
+
+      @media (max-width: 767px) {
+        .sdp,
+        .sdp main,
+        .sdp section,
+        .sdp section > div {
+          width: 100%;
+          max-width: 100vw;
+          overflow-x: hidden;
+        }
+
+        .sdp h1,
+        .sdp h2,
+        .sdp h3,
+        .sdp p,
+        .sdp a,
+        .sdp span {
+          overflow-wrap: anywhere;
+        }
+
+        .sdp main section > div,
+        .sdp main section > div > div,
+        .sdp-hero-title,
+        .sdp-hero-copy,
+        .sdp-diagnostic,
+        .sdp-card {
+          width: 100%;
+          max-width: 342px !important;
+        }
+
+        .sdp-hero-title {
+          font-size: 2.25rem !important;
+          line-height: 1 !important;
+        }
+
+        .sdp h2 {
+          max-width: 342px !important;
+          font-size: 2rem !important;
+          line-height: 1.08 !important;
+        }
+      }
+    </style>
+  </head>
+  <body class="sdp min-h-screen overflow-x-hidden bg-[#f7f8fb] text-[#111827]">
+    <a
+      href="#main-content"
+      class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-full focus:bg-white focus:px-4 focus:py-2 focus:text-[#111827] focus:outline focus:outline-2 focus:outline-[#2563eb]"
+    >
+      skip to main content
+    </a>
+
+    <header class="border-b border-[#d9e2ef] bg-white/90 backdrop-blur">
+      <div class="mx-auto flex max-w-7xl flex-col gap-4 px-5 py-5 md:flex-row md:items-center md:justify-between">
+        <a href="#main-content" class="group flex items-center gap-3" aria-label="SameDeck Partners home">
+          <span class="sdp-orb h-11 w-11 rounded-2xl shadow-[0_12px_40px_rgba(37,99,235,0.22)]"></span>
+          <span>
+            <span class="sdp-display block text-xl font-bold tracking-[-0.03em]">SameDeck Partners</span>
+            <span class="block text-xs uppercase tracking-[0.22em] text-[#64748b]">Transformation advisory</span>
+          </span>
+        </a>
+        <nav aria-label="SameDeck Partners navigation">
+          <ul class="flex flex-wrap gap-x-6 gap-y-2 text-sm font-semibold text-[#475569]">
+            <li><a class="hover:text-[#2563eb]" href="#framework">Framework</a></li>
+            <li><a class="hover:text-[#2563eb]" href="#eras">Trends</a></li>
+            <li><a class="hover:text-[#2563eb]" href="#proof">Proof</a></li>
+            <li><a class="hover:text-[#2563eb]" href="#contact">Book alignment</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main-content" tabindex="-1">
+      <section class="relative overflow-hidden bg-[#07111f] text-white">
+        <div class="absolute inset-0 opacity-70" aria-hidden="true">
+          <div class="h-full w-full bg-[radial-gradient(circle_at_20%_18%,rgba(45,212,191,0.32),transparent_28%),radial-gradient(circle_at_82%_12%,rgba(124,58,237,0.32),transparent_30%),linear-gradient(135deg,#07111f_0%,#0f172a_48%,#172554_100%)]"></div>
+        </div>
+        <div class="relative mx-auto grid max-w-7xl gap-10 px-5 py-16 md:grid-cols-[minmax(0,1fr)_390px] md:py-24">
+          <div>
+            <p class="mb-6 inline-flex rounded-full border border-white/15 bg-white/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.22em] text-[#93c5fd]">
+              Enterprise sameness, expertly localized
+            </p>
+            <h1 class="sdp-hero-title sdp-display max-w-[calc(100vw-2.5rem)] text-4xl font-bold leading-[0.96] tracking-[-0.06em] sm:text-5xl md:max-w-5xl md:text-7xl">
+              Your company is unique.<br />
+              <span class="text-[#5eead4]">Our recommendation is not.</span>
+            </h1>
+            <p class="sdp-hero-copy mt-7 max-w-[calc(100vw-2.5rem)] text-lg leading-relaxed text-slate-300 md:max-w-2xl md:text-xl">
+              We help every organization discover the same bold answer through a proprietary process that begins with listening and ends with the deck we already finished.
+            </p>
+            <div class="mt-9 flex flex-col gap-3 sm:flex-row">
+              <a
+                href="#contact"
+                class="inline-flex w-full items-center justify-center rounded-full bg-[#5eead4] px-6 py-3 text-sm font-extrabold uppercase tracking-[0.12em] text-[#07111f] shadow-[0_18px_50px_rgba(45,212,191,0.28)] transition hover:-translate-y-0.5 sm:w-auto"
+              >
+                Align stakeholders
+              </a>
+              <a
+                href="#eras"
+                class="inline-flex w-full items-center justify-center rounded-full border border-white/20 bg-white/10 px-6 py-3 text-sm font-extrabold uppercase tracking-[0.12em] text-white transition hover:bg-white/15 sm:w-auto"
+              >
+                View current answer
+              </a>
+            </div>
+          </div>
+
+          <aside class="sdp-diagnostic min-w-0 max-w-[calc(100vw-2.5rem)] self-start rounded-[2rem] border border-white/15 bg-white/10 p-5 shadow-2xl backdrop-blur md:max-w-none">
+            <div class="sdp-card rounded-[1.5rem] bg-white p-5 text-[#111827]">
+              <p class="text-xs font-bold uppercase tracking-[0.22em] text-[#2563eb]">Client diagnostic</p>
+              <h2 class="sdp-display mt-3 text-2xl font-bold tracking-[-0.04em]">After careful analysis, you need the thing everyone needs.</h2>
+              <div class="mt-6 space-y-4">
+                <div>
+                  <div class="mb-2 flex flex-wrap justify-between gap-2 text-[0.65rem] font-bold uppercase tracking-[0.14em] text-[#64748b] md:text-xs md:tracking-[0.16em]"><span>Discovery</span><span>Complete</span></div>
+                  <div class="h-2 rounded-full bg-[#dbeafe]"><div class="h-2 w-[100%] rounded-full bg-[#2563eb]"></div></div>
+                </div>
+                <div>
+                  <div class="mb-2 flex flex-wrap justify-between gap-2 text-[0.65rem] font-bold uppercase tracking-[0.14em] text-[#64748b] md:text-xs md:tracking-[0.16em]"><span>Solution fit</span><span>Pre-selected</span></div>
+                  <div class="h-2 rounded-full bg-[#ccfbf1]"><div class="h-2 w-[92%] rounded-full bg-[#14b8a6]"></div></div>
+                </div>
+                <div>
+                  <div class="mb-2 flex flex-wrap justify-between gap-2 text-[0.65rem] font-bold uppercase tracking-[0.14em] text-[#64748b] md:text-xs md:tracking-[0.16em]"><span>Deck reuse</span><span>Strategic</span></div>
+                  <div class="h-2 rounded-full bg-[#ede9fe]"><div class="h-2 w-[97%] rounded-full bg-[#7c3aed]"></div></div>
+                </div>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section id="framework" class="bg-white">
+        <div class="mx-auto max-w-7xl px-5 py-14 md:py-20">
+          <div class="max-w-3xl">
+            <p class="text-xs font-extrabold uppercase tracking-[0.24em] text-[#2563eb]">The SameDeck Method™</p>
+            <h2 class="sdp-display mt-3 text-4xl font-bold tracking-[-0.05em] md:text-5xl">A bespoke framework made from extremely transferable boxes.</h2>
+          </div>
+          <div class="mt-10 grid gap-5 md:grid-cols-4">
+            <article class="rounded-3xl border border-[#d9e2ef] bg-[#f8fafc] p-6">
+              <p class="text-sm font-extrabold uppercase tracking-[0.18em] text-[#64748b]">01</p>
+              <h3 class="sdp-display mt-4 text-2xl font-bold tracking-[-0.04em]">Listen</h3>
+              <p class="mt-3 leading-relaxed text-[#475569]">We ask what makes you different so we know which nouns to replace.</p>
+            </article>
+            <article class="rounded-3xl border border-[#d9e2ef] bg-[#f8fafc] p-6">
+              <p class="text-sm font-extrabold uppercase tracking-[0.18em] text-[#64748b]">02</p>
+              <h3 class="sdp-display mt-4 text-2xl font-bold tracking-[-0.04em]">Align</h3>
+              <p class="mt-3 leading-relaxed text-[#475569]">Stakeholders achieve consensus around a phrase already used in three other industries.</p>
+            </article>
+            <article class="rounded-3xl border border-[#d9e2ef] bg-[#f8fafc] p-6">
+              <p class="text-sm font-extrabold uppercase tracking-[0.18em] text-[#64748b]">03</p>
+              <h3 class="sdp-display mt-4 text-2xl font-bold tracking-[-0.04em]">Operationalize</h3>
+              <p class="mt-3 leading-relaxed text-[#475569]">The recommendation becomes a roadmap, a ritual, and eventually a dashboard nobody opens.</p>
+            </article>
+            <article class="rounded-3xl border border-[#d9e2ef] bg-[#f8fafc] p-6">
+              <p class="text-sm font-extrabold uppercase tracking-[0.18em] text-[#64748b]">04</p>
+              <h3 class="sdp-display mt-4 text-2xl font-bold tracking-[-0.04em]">Refresh</h3>
+              <p class="mt-3 leading-relaxed text-[#475569]">When the trend changes, we rename the exact same operating model.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="eras" class="border-y border-[#d9e2ef] bg-[#eef4ff]">
+        <div class="mx-auto grid max-w-7xl gap-8 px-5 py-14 md:grid-cols-[0.85fr_1.15fr] md:items-center md:py-20">
+          <div>
+            <p class="text-xs font-extrabold uppercase tracking-[0.24em] text-[#2563eb]">Trend migration office</p>
+            <h2 class="sdp-display mt-3 text-4xl font-bold tracking-[-0.05em] md:text-5xl">From one source of truth to one source of warmth.</h2>
+            <p class="mt-5 text-lg leading-relaxed text-[#475569]">
+              A few years ago, everyone needed a single source of truth. Today, every big box store appears to need associates who greet you like a golden retriever with a headset. We support both eras with the same invoice.
+            </p>
+          </div>
+          <div class="grid gap-4">
+            <article class="rounded-3xl border border-[#bfdbfe] bg-white p-6 shadow-sm">
+              <p class="text-xs font-extrabold uppercase tracking-[0.2em] text-[#2563eb]">Legacy recommendation</p>
+              <h3 class="sdp-display mt-3 text-3xl font-bold tracking-[-0.04em]">Single Source of Truth</h3>
+              <p class="mt-3 leading-relaxed text-[#475569]">Consolidate every system into one sacred repository, then create seven exports so people can keep working.</p>
+            </article>
+            <article class="rounded-3xl border-2 border-[#14b8a6] bg-white p-6 shadow-[0_20px_60px_rgba(20,184,166,0.16)]">
+              <p class="text-xs font-extrabold uppercase tracking-[0.2em] text-[#0f766e]">Current recommendation</p>
+              <h3 class="sdp-display mt-3 text-3xl font-bold tracking-[-0.04em]">Single Source of Warmth™</h3>
+              <p class="mt-3 leading-relaxed text-[#475569]">Every customer interaction should feel unexpectedly intimate, operationally scripted, and slightly too pleased to see you.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="proof" class="bg-white">
+        <div class="mx-auto max-w-7xl px-5 py-14 md:py-20">
+          <div class="max-w-3xl">
+            <p class="text-xs font-extrabold uppercase tracking-[0.24em] text-[#2563eb]">Selected outcomes</p>
+            <h2 class="sdp-display mt-3 text-4xl font-bold tracking-[-0.05em] md:text-5xl">Three industries. One answer. Many invoices.</h2>
+          </div>
+          <div class="mt-10 grid gap-5 md:grid-cols-3">
+            <article class="rounded-3xl border border-[#d9e2ef] p-6">
+              <p class="text-xs font-bold uppercase tracking-[0.2em] text-[#64748b]">Retail</p>
+              <h3 class="sdp-display mt-4 text-2xl font-bold tracking-[-0.04em]">Aisle-Level Delight Enablement</h3>
+              <p class="mt-3 leading-relaxed text-[#475569]">Associates now ask if you are finding everything with the gentle urgency of a wellness check.</p>
+            </article>
+            <article class="rounded-3xl border border-[#d9e2ef] p-6">
+              <p class="text-xs font-bold uppercase tracking-[0.2em] text-[#64748b]">Manufacturing</p>
+              <h3 class="sdp-display mt-4 text-2xl font-bold tracking-[-0.04em]">Shop-Floor Empathy Layer</h3>
+              <p class="mt-3 leading-relaxed text-[#475569]">Operators received a dashboard, a laminated acronym, and a renewed appreciation for silence.</p>
+            </article>
+            <article class="rounded-3xl border border-[#d9e2ef] p-6">
+              <p class="text-xs font-bold uppercase tracking-[0.2em] text-[#64748b]">Healthcare-adjacent SaaS</p>
+              <h3 class="sdp-display mt-4 text-2xl font-bold tracking-[-0.04em]">Patient-Centric Synergy Portal</h3>
+              <p class="mt-3 leading-relaxed text-[#475569]">The portal says “we hear you” before routing the ticket to the same queue as before.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="contact" class="bg-[#07111f] text-white">
+        <div class="mx-auto grid max-w-7xl gap-8 px-5 py-14 md:grid-cols-[0.9fr_1.1fr] md:py-20">
+          <div>
+            <p class="text-xs font-extrabold uppercase tracking-[0.24em] text-[#5eead4]">Book a pre-aligned consultation</p>
+            <h2 class="sdp-display mt-3 text-4xl font-bold tracking-[-0.05em] md:text-5xl">Tell us your problem. We will confirm it matches our solution.</h2>
+          </div>
+          <div class="rounded-[2rem] border border-white/15 bg-white/10 p-6 backdrop-blur">
+            <h3 class="sdp-display text-2xl font-bold tracking-[-0.04em]">Before you engage us</h3>
+            <p class="mt-4 leading-relaxed text-slate-300">
+              SameDeck Partners is not a real consultancy. Please do not hire us, align your enterprise around us, or ask a vice president to sponsor a Single Source of Warmth initiative because a sticker told you to.
+            </p>
+            <a
+              href="/things/real-fake-ads"
+              class="mt-7 inline-flex rounded-full bg-[#5eead4] px-5 py-3 text-sm font-extrabold uppercase tracking-[0.12em] text-[#07111f] hover:bg-white"
+            >
+              View the Real Fake Ads collection
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="border-t border-[#d9e2ef] bg-white text-[#475569]">
+      <div class="mx-auto flex max-w-7xl flex-col gap-3 px-5 py-5 text-xs font-bold uppercase tracking-[0.14em] md:flex-row md:items-center md:justify-between">
+        <p>
+          This is a Real Fake Ad by <a href="/" class="text-[#2563eb] underline underline-offset-4">fattamano</a>.
+        </p>
+        <p>
+          Not a real consultancy. Please do not operationalize the bit.
+        </p>
+      </div>
+    </footer>
+  </body>
+</html>

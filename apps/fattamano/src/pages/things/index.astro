@@ -18,7 +18,7 @@ const categoryCount = new Set(products.map((p) => p.category).filter(Boolean)).s
   title="things"
   description="The unoptimized catalog of fattamano objects: handmade stickers, shirts, prints, concepts, and questionable acquisitions."
 >
-  <section class="relative overflow-hidden border-b-2 border-ft-ink bg-ft-paper">
+  <section class="things-page relative overflow-hidden border-b-2 border-ft-ink bg-ft-paper">
     <div class="absolute inset-x-0 top-0 border-b-2 border-ft-ink bg-ft-splash py-2 font-mono text-xs uppercase tracking-[0.22em] text-ft-ink" aria-hidden="true">
       <div class="ft-marquee-track whitespace-nowrap">
         <span>catalog compiled under human supervision &nbsp; ✦ &nbsp;</span>
@@ -66,8 +66,49 @@ const categoryCount = new Set(products.map((p) => p.category).filter(Boolean)).s
     </div>
   </section>
 
-  <section class="mx-auto max-w-6xl px-6 py-12 md:py-16">
-    <div class="mb-12 grid gap-6 md:grid-cols-[0.85fr_1.15fr] md:items-end">
+  <section class="things-page mx-auto max-w-6xl px-6 py-12 md:py-16">
+    <article class="real-fake-callout mb-14 grid min-w-0 grid-cols-[minmax(0,1fr)] gap-0 overflow-hidden border-2 border-ft-ink bg-white shadow-[8px_8px_0_#1A1A1A] lg:grid-cols-[0.9fr_1.1fr]">
+      <div class="min-w-0 border-b-2 border-ft-ink bg-ft-ink p-6 text-ft-paper lg:border-b-0 lg:border-r-2 lg:p-8">
+        <p class="font-mono text-xs uppercase tracking-[0.22em] text-ft-splash">featured collection / real fake ads</p>
+        <h2 class="mt-5 break-words font-display text-4xl leading-tight md:text-5xl">
+          Real stickers for fake companies with actual fake websites.
+        </h2>
+        <p class="mt-5 font-body text-lg leading-relaxed text-ft-paper/75">
+          Current campaigns include a funeral home that wants your dead people and a consultancy that already knows your transformation strategy.
+        </p>
+      </div>
+      <div class="grid min-w-0 grid-cols-[minmax(0,1fr)] gap-5 bg-ft-splash p-6 lg:p-8">
+        <div class="grid gap-4 md:grid-cols-2">
+          <div class="min-w-0 rotate-1.5 border-2 border-ft-ink bg-white p-5 shadow-[6px_6px_0_#1A1A1A] motion-reduce:rotate-0">
+            <p class="font-mono text-xs uppercase tracking-[0.2em] text-ft-smudge">fake business 001</p>
+            <h3 class="mt-4 font-display text-3xl">Dead People Wanted</h3>
+            <p class="mt-3 font-body text-ft-smudge">
+              “You've got dead people. We want dead people.” <span class="break-words font-mono text-ft-ink">/wewantdeadpeople</span>
+            </p>
+          </div>
+          <div class="min-w-0 -rotate-1.5 border-2 border-ft-ink bg-white p-5 shadow-[6px_6px_0_#1A1A1A] motion-reduce:rotate-0">
+            <p class="font-mono text-xs uppercase tracking-[0.2em] text-ft-smudge">fake business 002</p>
+            <h3 class="mt-4 font-display text-3xl">SameDeck Partners</h3>
+            <p class="mt-3 font-body text-ft-smudge">
+              “Your company is unique. Our recommendation is not.” <span class="break-words font-mono text-ft-ink">/samedeckpartners</span>
+            </p>
+          </div>
+        </div>
+        <div class="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+          <a href="/things/real-fake-ads" class="inline-flex w-full items-center justify-center border-2 border-ft-ink bg-ft-shout px-5 py-3 font-display text-ft-paper shadow-[5px_5px_0_#1A1A1A] hover:bg-ft-ink sm:w-auto">
+            browse Real Fake Ads
+          </a>
+          <a href="/wewantdeadpeople" class="inline-flex w-full items-center justify-center border-2 border-ft-ink bg-white px-5 py-3 font-display shadow-[5px_5px_0_#1A1A1A] hover:text-ft-shout sm:w-auto">
+            dead people site
+          </a>
+          <a href="/samedeckpartners" class="inline-flex w-full items-center justify-center border-2 border-ft-ink bg-white px-5 py-3 font-display shadow-[5px_5px_0_#1A1A1A] hover:text-ft-shout sm:w-auto">
+            same deck site
+          </a>
+        </div>
+      </div>
+    </article>
+
+    <div class="mb-12 grid grid-cols-[minmax(0,1fr)] gap-6 md:grid-cols-[0.85fr_1.15fr] md:items-end">
       <div>
         <p class="font-hand text-4xl text-ft-shout">recently permitted objects</p>
         <h2 class="mt-2 font-display text-4xl leading-tight md:text-5xl">
@@ -133,4 +174,42 @@ const categoryCount = new Set(products.map((p) => p.category).filter(Boolean)).s
       </div>
     </div>
   </section>
+  <style is:global>
+    @media (max-width: 767px) {
+      .things-page,
+      .things-page > div,
+      .real-fake-callout {
+        width: 100%;
+        max-width: 100vw;
+        overflow-x: hidden;
+      }
+
+      .things-page * {
+        max-width: 100%;
+      }
+
+      .things-page p,
+      .things-page h1,
+      .things-page h2,
+      .things-page h3,
+      .things-page span,
+      .things-page a {
+        overflow-wrap: anywhere;
+      }
+
+      .things-page header,
+      .things-page aside,
+      .real-fake-callout,
+      .real-fake-callout > div,
+      .real-fake-callout article,
+      .real-fake-callout a {
+        width: 100%;
+        max-width: 342px !important;
+      }
+
+      .things-page .ft-marquee-track {
+        max-width: none;
+      }
+    }
+  </style>
 </BaseLayout>

@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SameDeck Partners Product Mockups</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Space+Grotesk:wght@600;700&display=swap');
+
+    :root {
+      --ink: #07111f;
+      --blue: #2563eb;
+      --teal: #5eead4;
+      --violet: #7c3aed;
+      --paper: #f7f8fb;
+      --line: #cbd5e1;
+      --muted: #64748b;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: radial-gradient(circle at 20% 0%, rgba(94,234,212,.25), transparent 28%), #eef4ff;
+      color: var(--ink);
+      font-family: Inter, system-ui, sans-serif;
+    }
+
+    main {
+      max-width: 1320px;
+      margin: 0 auto;
+      padding: 48px 36px 64px;
+    }
+
+    h1, h2, h3 { font-family: 'Space Grotesk', Inter, sans-serif; letter-spacing: -0.045em; }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(48px, 7vw, 92px);
+      line-height: .92;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      margin-bottom: 18px;
+      border: 1px solid rgba(37,99,235,.25);
+      border-radius: 999px;
+      background: white;
+      padding: 10px 14px;
+      color: var(--blue);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+    }
+
+    .lead {
+      max-width: 760px;
+      color: #334155;
+      font-size: 20px;
+      line-height: 1.55;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+      margin-top: 44px;
+    }
+
+    .panel {
+      min-height: 590px;
+      border: 2px solid var(--ink);
+      border-radius: 34px;
+      background: white;
+      padding: 28px;
+      box-shadow: 12px 12px 0 var(--ink);
+      overflow: hidden;
+    }
+
+    .panel.dark {
+      background: linear-gradient(135deg, #07111f, #10224a 55%, #24124d);
+      color: white;
+    }
+
+    .mock-title {
+      margin: 0 0 6px;
+      font-size: 34px;
+    }
+
+    .mock-note {
+      margin: 0 0 28px;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .dark .mock-note { color: #cbd5e1; }
+
+    .deck-stage {
+      position: relative;
+      height: 405px;
+      margin-top: 16px;
+    }
+
+    .card {
+      position: absolute;
+      width: 210px;
+      height: 300px;
+      border: 2px solid var(--ink);
+      border-radius: 20px;
+      background: white;
+      color: var(--ink);
+      padding: 18px;
+      box-shadow: 8px 8px 0 rgba(7,17,31,.95);
+    }
+
+    .card h3 {
+      margin: 28px 0 10px;
+      font-size: 28px;
+      line-height: .96;
+    }
+
+    .card p { margin: 0; color: #475569; line-height: 1.35; }
+
+    .card .num, .card .brand {
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: var(--blue);
+    }
+
+    .card .brand { position: absolute; bottom: 18px; left: 18px; right: 18px; color: var(--muted); }
+
+    .card.one { left: 22px; top: 58px; transform: rotate(-9deg); }
+    .card.two { left: 142px; top: 38px; transform: rotate(2deg); }
+    .card.three { left: 264px; top: 60px; transform: rotate(10deg); }
+
+    .band {
+      position: absolute;
+      left: 102px;
+      top: 168px;
+      width: 360px;
+      border: 2px solid var(--ink);
+      background: var(--teal);
+      color: var(--ink);
+      padding: 18px 22px;
+      transform: rotate(-2deg);
+      box-shadow: 7px 7px 0 rgba(7,17,31,.95);
+      z-index: 5;
+      font-weight: 800;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+
+    .mini-caption {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .pill {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: #f8fafc;
+      padding: 14px;
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    .bingo-sheet {
+      width: min(100%, 540px);
+      margin: 24px auto 0;
+      border: 2px solid var(--ink);
+      background: white;
+      color: var(--ink);
+      padding: 18px;
+      box-shadow: 10px 10px 0 rgba(7,17,31,.35);
+      transform: rotate(1.5deg);
+    }
+
+    .bingo-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      border-bottom: 2px solid var(--ink);
+      padding-bottom: 14px;
+      align-items: end;
+    }
+
+    .bingo-head h3 {
+      margin: 0;
+      font-size: 38px;
+      line-height: .9;
+    }
+
+    .bingo-head p {
+      margin: 0;
+      max-width: 150px;
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      text-align: right;
+    }
+
+    .bingo-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0;
+      margin-top: 14px;
+      border-left: 1px solid var(--ink);
+      border-top: 1px solid var(--ink);
+    }
+
+    .square {
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-right: 1px solid var(--ink);
+      border-bottom: 1px solid var(--ink);
+      padding: 8px;
+      font-size: 11px;
+      font-weight: 800;
+      line-height: 1.12;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    .square.free {
+      background: var(--teal);
+      color: var(--ink);
+      font-family: 'Space Grotesk', Inter, sans-serif;
+      font-size: 15px;
+      letter-spacing: -.02em;
+    }
+
+    .footer-copy {
+      margin-top: 14px;
+      border-top: 2px dashed var(--line);
+      padding-top: 12px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.4;
+    }
+
+    .packaging {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-top: 24px;
+    }
+
+    .box, .back-card {
+      min-height: 250px;
+      border: 2px solid rgba(255,255,255,.28);
+      border-radius: 26px;
+      background: rgba(255,255,255,.1);
+      padding: 22px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.18);
+    }
+
+    .back-card {
+      background: white;
+      color: var(--ink);
+      transform: rotate(2deg);
+      box-shadow: 8px 8px 0 rgba(94,234,212,.8);
+    }
+
+    .box h3, .back-card h3 { margin: 0; font-size: 30px; }
+    .box p { color: #dbeafe; line-height: 1.45; }
+    .back-card p { color: #475569; line-height: 1.45; }
+
+    .qr {
+      width: 92px;
+      height: 92px;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 4px;
+      background: white;
+      padding: 8px;
+      border: 1px solid var(--line);
+    }
+
+    .qr span:nth-child(1), .qr span:nth-child(2), .qr span:nth-child(3), .qr span:nth-child(5),
+    .qr span:nth-child(7), .qr span:nth-child(9), .qr span:nth-child(10), .qr span:nth-child(12),
+    .qr span:nth-child(13), .qr span:nth-child(16), .qr span:nth-child(18), .qr span:nth-child(20),
+    .qr span:nth-child(22), .qr span:nth-child(23), .qr span:nth-child(25) { background: var(--ink); }
+
+    .qr span { background: #f1f5f9; }
+
+    @media (max-width: 900px) {
+      .grid, .packaging { grid-template-columns: 1fr; }
+      .panel { min-height: auto; }
+      .deck-stage { transform: scale(.78); transform-origin: left top; height: 330px; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <span class="eyebrow">SameDeck Partners product mockups / real fake goods</span>
+    <h1>Two cheap things that feel like consultancy artifacts.</h1>
+    <p class="lead">Both keep the joke tactile: you are not buying merch from a fake consulting firm; you are buying the fake consulting firm’s proprietary alignment materials.</p>
+
+    <section class="grid">
+      <article class="panel">
+        <h2 class="mock-title">1. The Same Deck™ mini card pack</h2>
+        <p class="mock-note">Business-card/tarot-sized consulting slides on cardstock, wrapped with a belly band. Easy to print, cut, bundle, and photograph.</p>
+        <div class="deck-stage" aria-label="Mockup of SameDeck mini card pack">
+          <div class="card one">
+            <div class="num">Slide 01</div>
+            <h3>Single Source of Truth</h3>
+            <p>One repository. Seven exports. Infinite confidence.</p>
+            <div class="brand">SameDeck Partners</div>
+          </div>
+          <div class="card two">
+            <div class="num">Slide 07</div>
+            <h3>Single Source of Warmth™</h3>
+            <p>Every interaction should feel scripted and weirdly delighted.</p>
+            <div class="brand">SameDeck Partners</div>
+          </div>
+          <div class="card three">
+            <div class="num">Slide 12</div>
+            <h3>The 2x2 That Explains Everything</h3>
+            <p>Axes selected after the recommendation.</p>
+            <div class="brand">SameDeck Partners</div>
+          </div>
+          <div class="band">The Same Deck™<br><small>15 reusable transformation insights</small></div>
+        </div>
+        <div class="mini-caption">
+          <div class="pill"><strong>Format:</strong> 15 cards, 2.5×3.5 in or business-card size.</div>
+          <div class="pill"><strong>Make:</strong> print on 100–130lb cardstock, corner round optional.</div>
+          <div class="pill"><strong>Bit:</strong> every card is “customized” by replacing the client noun.</div>
+        </div>
+      </article>
+
+      <article class="panel dark">
+        <h2 class="mock-title">Packaging / back-card direction</h2>
+        <p class="mock-note">The packaging should look premium enough to have a procurement code, but dumb enough to be funny.</p>
+        <div class="packaging">
+          <div class="box">
+            <p class="eyebrow" style="margin-bottom:16px; background:rgba(255,255,255,.12); color:#5eead4; border-color:rgba(94,234,212,.35);">front belly band</p>
+            <h3>The Same Deck™</h3>
+            <p>Your company is unique. Our recommendation is not.</p>
+            <p><strong>Includes:</strong> stakeholder alignment, maturity posture, three nouns, one invoice-shaped future.</p>
+          </div>
+          <div class="back-card">
+            <h3>Scan before kickoff.</h3>
+            <p>Visit the fake consultancy that generated this strategic artifact.</p>
+            <div style="display:flex; gap:18px; align-items:end; margin-top:24px;">
+              <div class="qr"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+              <p style="font-weight:800; color:#2563eb;">fattamano.com/<br>samedeckpartners</p>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="panel" style="grid-column: 1 / -1;">
+        <h2 class="mock-title">2. Stakeholder Alignment Bingo</h2>
+        <p class="mock-note">A single postcard or notepad sheet. The customer brings it to meetings and wins when the organization becomes exactly as vague as expected.</p>
+        <div class="bingo-sheet" aria-label="Stakeholder Alignment Bingo card mockup">
+          <div class="bingo-head">
+            <h3>Stakeholder<br>Alignment<br>Bingo</h3>
+            <p>SameDeck Partners Meeting Enablement Artifact 04</p>
+          </div>
+          <div class="bingo-grid">
+            <div class="square">circle back</div>
+            <div class="square">north star</div>
+            <div class="square">single source</div>
+            <div class="square">quick win</div>
+            <div class="square">executive buy-in</div>
+            <div class="square">customer obsession</div>
+            <div class="square">data-driven</div>
+            <div class="square">operating model</div>
+            <div class="square">future state</div>
+            <div class="square">journey map</div>
+            <div class="square">low-hanging fruit</div>
+            <div class="square">change champion</div>
+            <div class="square free">FREE SPACE<br>“alignment”</div>
+            <div class="square">maturity curve</div>
+            <div class="square">delight layer</div>
+            <div class="square">cross-functional</div>
+            <div class="square">human-centered</div>
+            <div class="square">pilot program</div>
+            <div class="square">AI-enabled</div>
+            <div class="square">warm handoff</div>
+            <div class="square">strategic pillar</div>
+            <div class="square">source of warmth</div>
+            <div class="square">phase two</div>
+            <div class="square">measure what matters</div>
+            <div class="square">reusable deck</div>
+          </div>
+          <p class="footer-copy"><strong>Rules:</strong> mark a square when someone says the phrase with confidence. Five in a row means you have achieved alignment and may leave the meeting emotionally.</p>
+        </div>
+      </article>
+    </section>
+  </main>
+</body>
+</html>

@@ -1,0 +1,200 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+
+export const prerender = true;
+
+const campaigns = [
+  {
+    name: 'Dead People Wanted',
+    route: '/wewantdeadpeople',
+    destination: 'fattamano.com/wewantdeadpeople',
+    label: 'funeral home / crematory',
+    tagline: "You've got dead people. We want dead people.",
+    description:
+      'A suspiciously calm funeral-home ad for logistics language, AI condolences, and businesses named by a procurement bot with no sense of mortality.',
+    bg: 'bg-ft-ink',
+    accent: 'text-ft-splash',
+    button: 'bg-ft-splash text-ft-ink',
+    qr: [0,1,2,5,7,10,11,12,14,16,18,19,20,22,24],
+  },
+  {
+    name: 'SameDeck Partners',
+    route: '/samedeckpartners',
+    destination: 'fattamano.com/samedeckpartners',
+    label: 'transformation consultancy',
+    tagline: 'Your company is unique. Our recommendation is not.',
+    description:
+      'A fake advisory firm for the consultancy cycle that sold everyone a Single Source of Truth, then came back with a Single Source of Warmth™.',
+    bg: 'bg-[#07111f]',
+    accent: 'text-[#5eead4]',
+    button: 'bg-[#5eead4] text-[#07111f]',
+    qr: [0,1,2,4,5,7,9,10,12,13,15,16,18,20,22,23,24],
+  },
+];
+---
+<BaseLayout
+  title="Real Fake Ads"
+  description="Real stickers for fake companies with real fake websites. A fattamano collection of printed jokes, QR-code storytelling, and suspicious local commerce."
+>
+  <section class="real-fake-page relative overflow-hidden border-b-2 border-ft-ink bg-ft-splash">
+    <div class="absolute inset-x-0 top-0 border-b-2 border-ft-ink bg-ft-ink py-2 font-mono text-xs uppercase tracking-[0.22em] text-ft-paper" aria-hidden="true">
+      <div class="ft-marquee-track whitespace-nowrap">
+        <span>real stickers for fake companies &nbsp; ✦ &nbsp;</span>
+        <span>actual websites, legally imaginary businesses &nbsp; ✦ &nbsp;</span>
+        <span>please verify the joke before calling &nbsp; ✦ &nbsp;</span>
+        <span>QR code storytelling department now open &nbsp; ✦ &nbsp;</span>
+      </div>
+    </div>
+
+    <div class="mx-auto grid max-w-6xl min-w-0 grid-cols-[minmax(0,1fr)] gap-10 px-6 pb-16 pt-24 md:grid-cols-[minmax(0,1fr)_360px] md:pb-24 md:pt-32">
+      <header class="min-w-0">
+        <p class="mb-5 inline-block max-w-[calc(100vw-3rem)] break-words border-2 border-ft-ink bg-white px-3 py-1 font-mono text-[0.65rem] uppercase tracking-[0.16em] shadow-[4px_4px_0_#1A1A1A] md:text-xs md:tracking-[0.22em]">
+          fattamano collection / public mischief
+        </p>
+        <h1 class="max-w-[calc(100vw-3rem)] break-words font-display text-big md:text-huge">
+          Real <span class="text-ft-shout">Fake</span> Ads
+        </h1>
+        <p class="mt-6 max-w-[calc(100vw-3rem)] break-words font-body text-lg leading-relaxed text-ft-ink/80 md:max-w-2xl md:text-xl">
+          Real physical ads for fake companies, printed as stickers and small objects, each leading to an actual website for a business that should absolutely not exist.
+        </p>
+        <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+          <a
+            href="#campaigns"
+            class="inline-flex w-full items-center justify-center border-2 border-ft-ink bg-ft-shout px-5 py-3 font-display text-ft-paper shadow-[5px_5px_0_#1A1A1A] transition-transform hover:-translate-y-0.5 hover:translate-x-0.5 hover:shadow-[3px_3px_0_#1A1A1A] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ft-shout sm:w-auto"
+          >
+            browse fake businesses
+          </a>
+          <a
+            href="/things"
+            class="inline-flex w-full items-center justify-center border-2 border-ft-ink bg-white px-5 py-3 font-display shadow-[5px_5px_0_#1A1A1A] transition-transform hover:-translate-y-0.5 hover:translate-x-0.5 hover:shadow-[3px_3px_0_#1A1A1A] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ft-shout sm:w-auto"
+          >
+            back to things
+          </a>
+        </div>
+      </header>
+
+      <aside class="min-w-0 max-w-[calc(100vw-3rem)] self-start border-2 border-ft-ink bg-white p-5 shadow-[8px_8px_0_#1A1A1A] motion-reduce:rotate-0 md:max-w-none md:rotate-1.5">
+        <p class="font-mono text-xs uppercase tracking-[0.22em] text-ft-smudge">collection logic</p>
+        <h2 class="mt-4 max-w-[calc(100vw-5.5rem)] break-words font-display text-xl leading-tight md:max-w-none md:text-3xl">The sticker is the ad. The website is the punchline.</h2>
+        <p class="mt-4 font-body leading-relaxed text-ft-smudge">
+          Scan the sticker, enter the tiny fictional universe, notice the disclosure, continue being normal.
+        </p>
+        <div class="mt-5 grid grid-cols-2 gap-3 border-t-2 border-dashed border-ft-smudge pt-5 text-center">
+          <div>
+            <p class="font-display text-4xl text-ft-shout">{campaigns.length}</p>
+            <p class="font-mono text-[0.65rem] uppercase tracking-[0.16em] text-ft-smudge">fake firms</p>
+          </div>
+          <div>
+            <p class="font-display text-4xl text-ft-shout">∞</p>
+            <p class="font-mono text-[0.65rem] uppercase tracking-[0.16em] text-ft-smudge">liability</p>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section id="campaigns" class="real-fake-page mx-auto max-w-6xl px-6 py-16 md:py-24">
+    <div class="mb-10 grid grid-cols-[minmax(0,1fr)] gap-6 md:grid-cols-[0.85fr_1.15fr] md:items-end">
+      <div>
+        <p class="font-hand text-4xl text-ft-shout">campaign archive</p>
+        <h2 class="mt-2 max-w-[calc(100vw-3rem)] break-words font-display text-2xl leading-tight md:text-5xl">
+          Tiny ads for full-service fake businesses.
+        </h2>
+      </div>
+      <p class="max-w-[calc(100vw-3rem)] break-words font-body leading-relaxed text-ft-smudge md:max-w-none md:text-lg">
+        Each campaign starts as a printed sticker/QR gag and ends as a suspiciously complete website: funeral homes, consultancies, and other institutions that should have been stopped in committee.
+      </p>
+    </div>
+
+    <div class="grid min-w-0 grid-cols-[minmax(0,1fr)] gap-8 lg:grid-cols-2">
+      {campaigns.map((campaign) => (
+        <article class="grid min-w-0 grid-cols-[minmax(0,1fr)] gap-0 overflow-hidden border-2 border-ft-ink bg-white shadow-[8px_8px_0_#1A1A1A]">
+          <div class:list={['min-w-0 p-6 text-ft-paper md:p-7', campaign.bg]}>
+            <p class:list={['font-mono text-[0.65rem] uppercase tracking-[0.16em] md:text-xs md:tracking-[0.22em]', campaign.accent]}>{campaign.name}™</p>
+            <h3 class="mt-6 break-words font-display text-2xl leading-none md:text-4xl">
+              {campaign.tagline}
+            </h3>
+            <p class="mt-5 max-w-md font-body text-sm leading-relaxed text-ft-paper/75">
+              {campaign.description}
+            </p>
+            <div class="mt-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+              <div class="border border-ft-paper/40 bg-white p-3 text-ft-ink shadow-[4px_4px_0_rgba(255,255,255,0.35)]" aria-label={`QR code area for ${campaign.destination}`}>
+                <div class="grid h-24 w-24 grid-cols-5 gap-1">
+                  {Array.from({ length: 25 }).map((_, i) => (
+                    <span class:list={[
+                      'block',
+                      campaign.qr.includes(i) ? 'bg-ft-ink' : 'bg-ft-paper',
+                    ]}></span>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <p class="font-mono text-[0.65rem] uppercase tracking-[0.18em] text-ft-paper/60">scan for {campaign.label}</p>
+                <p class:list={['mt-1 max-w-[15rem] break-all font-display text-sm leading-tight md:text-base', campaign.accent]}>{campaign.destination}</p>
+              </div>
+            </div>
+          </div>
+          <div class="grid min-w-0 gap-5 bg-ft-splash p-6 md:p-7">
+            <div class="min-w-0 border-2 border-ft-ink bg-white p-5 shadow-[6px_6px_0_#1A1A1A] motion-reduce:rotate-0 md:rotate-1.5">
+              <p class="font-mono text-xs uppercase tracking-[0.2em] text-ft-smudge">fake company route</p>
+              <h4 class="mt-4 break-words font-display text-3xl">{campaign.route}</h4>
+              <p class="mt-3 font-body text-ft-smudge">
+                A standalone fake-company page with its own voice, art direction, and a tiny disclosure footer.
+              </p>
+            </div>
+            <div class="flex flex-col gap-3 sm:flex-row">
+              <a href={campaign.route} class:list={['inline-flex w-full items-center justify-center border-2 border-ft-ink px-5 py-3 font-display shadow-[5px_5px_0_#1A1A1A] hover:bg-white hover:text-ft-shout sm:w-auto', campaign.button]}>
+                visit fake business →
+              </a>
+            </div>
+          </div>
+        </article>
+      ))}
+    </div>
+
+    <article class="mt-12 border-2 border-ft-ink bg-ft-paper p-6 shadow-[8px_8px_0_#1A1A1A] md:p-8">
+      <p class="font-mono text-xs uppercase tracking-[0.22em] text-ft-smudge">product plan</p>
+      <div class="mt-5 grid gap-6 md:grid-cols-4">
+        <p class="font-body text-ft-smudge"><strong class="text-ft-ink">Object:</strong> sticker, fake local ad style</p>
+        <p class="font-body text-ft-smudge"><strong class="text-ft-ink">Mechanic:</strong> QR + short URL to the fake site</p>
+        <p class="font-body text-ft-smudge"><strong class="text-ft-ink">Disclosure:</strong> tiny footer, clearly fake</p>
+        <p class="font-body text-ft-smudge"><strong class="text-ft-ink">Future:</strong> repeatable fake-company campaigns</p>
+      </div>
+    </article>
+  </section>
+  <style is:global>
+    @media (max-width: 767px) {
+      .real-fake-page,
+      .real-fake-page > div {
+        width: 100%;
+        max-width: 100vw;
+        overflow-x: hidden;
+      }
+
+      .real-fake-page * {
+        max-width: 100%;
+      }
+
+      .real-fake-page p,
+      .real-fake-page h2,
+      .real-fake-page h3,
+      .real-fake-page h4 {
+        overflow-wrap: anywhere;
+      }
+
+      .real-fake-page header,
+      .real-fake-page aside,
+      .real-fake-page > div,
+      .real-fake-page article,
+      .real-fake-page article > div,
+      .real-fake-page a {
+        width: 100%;
+        max-width: 342px !important;
+      }
+
+      .real-fake-page .ft-marquee-track {
+        max-width: none;
+      }
+    }
+  </style>
+</BaseLayout>

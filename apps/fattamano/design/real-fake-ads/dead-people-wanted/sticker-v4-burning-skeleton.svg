@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="3.5in" height="2.5in" viewBox="0 0 1050 750" role="img" aria-labelledby="title desc">
+  <title id="title">Dead People Wanted sticker concept v4 — burning skeleton</title>
+  <desc id="desc">A fake funeral home sticker featuring a polite burning skeleton mascot, crematorium copy, QR placeholder, and URL.</desc>
+  <defs>
+    <style>
+      .serif { font-family: Georgia, 'Times New Roman', serif; }
+      .sans { font-family: Arial, Helvetica, sans-serif; }
+      .caps { font-family: Arial, Helvetica, sans-serif; text-transform: uppercase; letter-spacing: 5px; }
+    </style>
+    <pattern id="paper" width="70" height="70" patternUnits="userSpaceOnUse">
+      <rect width="70" height="70" fill="#F5EFE2"/>
+      <circle cx="12" cy="18" r="1" fill="#D7C8AD" opacity="0.5"/>
+      <circle cx="48" cy="42" r="0.9" fill="#8B1E2D" opacity="0.1"/>
+    </pattern>
+  </defs>
+
+  <rect width="1050" height="750" rx="26" fill="url(#paper)"/>
+  <rect x="30" y="30" width="990" height="690" rx="18" fill="none" stroke="#2B1D1A" stroke-width="8"/>
+  <rect x="52" y="52" width="946" height="646" rx="8" fill="none" stroke="#D9C08F" stroke-width="4"/>
+
+  <g transform="translate(84 82)">
+    <text class="caps" x="0" y="0" font-size="24" fill="#8B1E2D">Crematory • Immediate Need • Mascot Division</text>
+    <text class="serif" x="0" y="70" font-size="62" fill="#2B1D1A">Dead People Wanted</text>
+    <text class="caps" x="3" y="112" font-size="21" fill="#5E5548">Funeral Home &amp; Crematory</text>
+  </g>
+
+  <g transform="translate(710 142) scale(0.78)" aria-label="Burning skeleton illustration">
+    <!-- flames -->
+    <path d="M142 210 C85 162 126 103 105 55 C158 91 163 135 151 158 C191 125 184 78 214 42 C250 104 252 151 215 198 C277 165 268 113 295 82 C330 157 308 244 236 286 C198 308 160 298 142 210Z" fill="#8B1E2D"/>
+    <path d="M176 238 C137 203 164 158 151 122 C187 148 193 181 184 199 C213 177 212 138 232 113 C255 166 252 219 214 251 C197 266 183 261 176 238Z" fill="#D9C08F"/>
+    <path d="M196 250 C177 229 192 205 187 183 C206 198 211 217 204 231 C221 219 222 197 235 184 C246 217 240 245 219 260 C208 267 201 264 196 250Z" fill="#F5EFE2"/>
+
+    <!-- skeleton body -->
+    <g transform="translate(56 150)" stroke="#2B1D1A" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" fill="none">
+      <circle cx="128" cy="34" r="34" fill="#FFFDF7"/>
+      <circle cx="116" cy="29" r="5" fill="#2B1D1A" stroke="none"/>
+      <circle cx="140" cy="29" r="5" fill="#2B1D1A" stroke="none"/>
+      <path d="M119 48 Q128 57 137 48"/>
+      <path d="M128 70 V170"/>
+      <path d="M86 92 H170"/>
+      <path d="M98 114 H158" stroke-width="6"/>
+      <path d="M98 136 H158" stroke-width="6"/>
+      <path d="M88 96 L54 146"/>
+      <path d="M168 96 L204 146"/>
+      <path d="M128 170 L88 236"/>
+      <path d="M128 170 L168 236"/>
+      <path d="M88 236 L58 270"/>
+      <path d="M168 236 L202 270"/>
+    </g>
+
+    <rect x="32" y="412" width="304" height="58" rx="29" fill="#2B1D1A"/>
+    <text class="caps" x="184" y="450" text-anchor="middle" font-size="18" fill="#D9C08F">Heat with heart</text>
+  </g>
+
+  <g transform="translate(84 260)">
+    <text class="serif" x="0" y="0" font-size="64" font-weight="700" fill="#2B1D1A">You’ve got dead</text>
+    <text class="serif" x="0" y="70" font-size="64" font-weight="700" fill="#2B1D1A">people.</text>
+    <text class="serif" x="0" y="148" font-size="64" font-weight="700" fill="#8B1E2D">We want dead</text>
+    <text class="serif" x="0" y="218" font-size="64" font-weight="700" fill="#8B1E2D">people.</text>
+    <text class="serif" x="2" y="266" font-size="28" fill="#5E5548">Dignified transfer. Respectful paperwork.</text>
+    <text class="serif" x="2" y="302" font-size="28" fill="#5E5548">Absolutely normal crematorium energy.</text>
+  </g>
+
+  <g transform="translate(84 586)">
+    <rect x="0" y="0" width="116" height="116" fill="#FFFFFF" stroke="#2B1D1A" stroke-width="5"/>
+    <rect x="12" y="12" width="20" height="20" fill="#2B1D1A"/><rect x="38" y="12" width="20" height="20" fill="#2B1D1A"/><rect x="64" y="12" width="20" height="20" fill="#2B1D1A"/>
+    <rect x="12" y="38" width="20" height="20" fill="#2B1D1A"/><rect x="64" y="38" width="20" height="20" fill="#2B1D1A"/><rect x="90" y="38" width="14" height="14" fill="#2B1D1A"/>
+    <rect x="12" y="64" width="20" height="20" fill="#2B1D1A"/><rect x="38" y="64" width="20" height="20" fill="#2B1D1A"/><rect x="90" y="64" width="14" height="14" fill="#2B1D1A"/>
+    <rect x="12" y="90" width="20" height="14" fill="#2B1D1A"/><rect x="64" y="90" width="20" height="14" fill="#2B1D1A"/><rect x="90" y="90" width="14" height="14" fill="#2B1D1A"/>
+    <text class="caps" x="146" y="30" font-size="20" fill="#8B1E2D">Scan for immediate arrangements</text>
+    <text class="sans" x="146" y="75" font-size="37" font-weight="700" fill="#2B1D1A">fattamano.com/wewantdeadpeople</text>
+  </g>
+</svg>

@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="3in" height="3in" viewBox="0 0 900 900" role="img" aria-labelledby="title desc">
+  <title id="title">Dead People Wanted sticker concept v3 — round funeral seal</title>
+  <desc id="desc">A round crest/seal style fake funeral home sticker with a central slogan, urn icon, QR placeholder, and URL.</desc>
+  <defs>
+    <style>
+      .serif { font-family: Georgia, 'Times New Roman', serif; }
+      .sans { font-family: Arial, Helvetica, sans-serif; }
+      .caps { font-family: Arial, Helvetica, sans-serif; text-transform: uppercase; letter-spacing: 5px; }
+    </style>
+  </defs>
+
+  <circle cx="450" cy="450" r="430" fill="#2B1D1A"/>
+  <circle cx="450" cy="450" r="405" fill="#F5EFE2" stroke="#D9C08F" stroke-width="10"/>
+  <circle cx="450" cy="450" r="365" fill="none" stroke="#8B1E2D" stroke-width="6"/>
+  <circle cx="450" cy="450" r="330" fill="#FFFDF7" stroke="#CBB99B" stroke-width="3"/>
+
+  <path id="topArc" d="M145 423 A305 305 0 0 1 755 423" fill="none"/>
+  <path id="bottomArc" d="M755 505 A305 305 0 0 1 145 505" fill="none"/>
+  <text class="caps" font-size="24" fill="#8B1E2D">
+    <textPath href="#topArc" startOffset="50%" text-anchor="middle">Dead People Wanted Funeral Home</textPath>
+  </text>
+  <text class="caps" font-size="20" fill="#5E5548">
+    <textPath href="#bottomArc" startOffset="50%" text-anchor="middle">Family Owned Since Yesterday • Crematory</textPath>
+  </text>
+
+  <g transform="translate(360 138)">
+    <path d="M90 0 C138 62 132 128 90 164 C48 128 42 62 90 0Z" fill="#8B1E2D"/>
+    <path d="M90 38 C113 75 108 111 90 134 C72 111 67 75 90 38Z" fill="#F5EFE2" opacity="0.9"/>
+    <path d="M48 170 H132 L120 222 H60 Z" fill="#2B1D1A"/>
+    <path d="M40 224 H140 L154 260 H26 Z" fill="#2B1D1A"/>
+    <rect x="54" y="184" width="72" height="16" fill="#D9C08F" opacity="0.75"/>
+  </g>
+
+  <g text-anchor="middle">
+    <text class="serif" x="450" y="438" font-size="61" font-weight="700" fill="#2B1D1A">You’ve got</text>
+    <text class="serif" x="450" y="505" font-size="61" font-weight="700" fill="#2B1D1A">dead people.</text>
+    <text class="serif" x="450" y="582" font-size="66" font-weight="700" fill="#8B1E2D">We want</text>
+    <text class="serif" x="450" y="653" font-size="66" font-weight="700" fill="#8B1E2D">dead people.</text>
+  </g>
+
+  <g transform="translate(325 682)">
+    <rect x="0" y="0" width="92" height="92" fill="#FFFFFF" stroke="#2B1D1A" stroke-width="4"/>
+    <rect x="11" y="11" width="17" height="17" fill="#2B1D1A"/><rect x="33" y="11" width="17" height="17" fill="#2B1D1A"/><rect x="55" y="11" width="17" height="17" fill="#2B1D1A"/>
+    <rect x="11" y="33" width="17" height="17" fill="#2B1D1A"/><rect x="55" y="33" width="17" height="17" fill="#2B1D1A"/>
+    <rect x="11" y="55" width="17" height="17" fill="#2B1D1A"/><rect x="33" y="55" width="17" height="17" fill="#2B1D1A"/><rect x="66" y="66" width="12" height="12" fill="#2B1D1A"/>
+    <text class="sans" x="116" y="32" font-size="26" font-weight="700" fill="#2B1D1A">fattamano.com/</text>
+    <text class="sans" x="116" y="64" font-size="26" font-weight="700" fill="#2B1D1A">wewantdeadpeople</text>
+  </g>
+
+</svg>

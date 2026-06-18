@@ -1,0 +1,267 @@
+---
+import '../styles/global.css';
+
+export const prerender = true;
+
+const description =
+  'Dead People Wanted is a fictional funeral home and crematorium from Real Fake Ads by fattamano.';
+const canonical = new URL(Astro.url.pathname, Astro.site).toString();
+---
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:title" content="Dead People Wanted Funeral Home & Crematory" />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta name="twitter:card" content="summary" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>Dead People Wanted Funeral Home & Crematory</title>
+    <style is:global>
+      .dpw {
+        font-family: Georgia, 'Times New Roman', serif;
+      }
+
+      .dpw-sans {
+        font-family: Arial, Helvetica, sans-serif;
+      }
+
+      .dpw * {
+        box-sizing: border-box;
+      }
+
+      @media (max-width: 767px) {
+        .dpw,
+        .dpw main,
+        .dpw section,
+        .dpw section > div {
+          width: 100%;
+          max-width: 100vw;
+          overflow-x: hidden;
+        }
+      }
+    </style>
+  </head>
+  <body class="dpw min-h-screen overflow-x-hidden bg-[#f5efe2] text-[#27211b]">
+    <a
+      href="#main-content"
+      class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:bg-white focus:px-4 focus:py-2 focus:text-[#27211b] focus:outline focus:outline-2 focus:outline-[#8b1e2d]"
+    >
+      skip to main content
+    </a>
+
+    <header class="bg-[#2b1d1a] text-[#f8f1e4]">
+      <div class="dpw-sans border-b border-[#f8f1e4]/15 bg-[#1c1513] text-xs uppercase tracking-[0.18em] text-[#d9c08f]">
+        <div class="mx-auto flex max-w-6xl flex-col gap-2 px-5 py-2 sm:flex-row sm:items-center sm:justify-between">
+          <p>Available 24/7 for immediate need*</p>
+          <p>Call 1-800-DEAD-YES • Serving the recently deceased-ish area</p>
+        </div>
+      </div>
+
+      <div class="mx-auto flex max-w-6xl flex-col gap-5 px-5 py-6 md:flex-row md:items-end md:justify-between">
+        <a href="#main-content" class="group block max-w-sm" aria-label="Dead People Wanted home">
+          <p class="dpw-sans text-xs uppercase tracking-[0.28em] text-[#d9c08f]">Family Owned Since Yesterday</p>
+          <p class="mt-2 text-3xl leading-none md:text-4xl">
+            Dead People Wanted
+          </p>
+          <p class="dpw-sans mt-1 text-sm uppercase tracking-[0.22em] text-[#f8f1e4]/70">
+            Funeral Home &amp; Crematory
+          </p>
+        </a>
+        <nav aria-label="Dead People Wanted navigation">
+          <ul class="dpw-sans flex flex-wrap gap-x-5 gap-y-2 text-sm text-[#f8f1e4]/80">
+            <li><a class="hover:text-[#d9c08f]" href="#services">Services</a></li>
+            <li><a class="hover:text-[#d9c08f]" href="#cremation">Cremation</a></li>
+            <li><a class="hover:text-[#d9c08f]" href="#obituaries">Obituaries</a></li>
+            <li><a class="hover:text-[#d9c08f]" href="#planning">Planning Ahead</a></li>
+            <li><a class="hover:text-[#d9c08f]" href="#contact">Contact</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main-content" tabindex="-1">
+      <section class="relative border-b border-[#d7c8ad] bg-[#efe3cf]">
+        <div class="absolute inset-0 opacity-40" aria-hidden="true">
+          <div class="h-full w-full bg-[radial-gradient(circle_at_18%_18%,rgba(139,30,45,0.16),transparent_30%),linear-gradient(90deg,rgba(245,239,226,0.96),rgba(245,239,226,0.74),rgba(245,239,226,0.96))]"></div>
+        </div>
+
+        <div class="relative mx-auto grid max-w-6xl gap-10 px-5 py-14 md:grid-cols-[minmax(0,1fr)_360px] md:py-20">
+          <div>
+            <p class="dpw-sans mb-5 inline-block rounded-full border border-[#8b1e2d]/35 bg-white/75 px-4 py-2 text-xs uppercase tracking-[0.2em] text-[#8b1e2d]">
+              Immediate need? recently deceased? unusually specific sticker scan?
+            </p>
+            <h1 class="max-w-4xl text-5xl leading-[0.98] text-[#2b1d1a] md:text-7xl">
+              You’ve got dead people.<br />
+              <span class="text-[#8b1e2d]">We want dead people.</span>
+            </h1>
+            <p class="mt-7 max-w-2xl text-xl leading-relaxed text-[#5e5548]">
+              At Dead People Wanted Funeral Home &amp; Crematory, we turn life’s most awkward handoff into a calm, dignified, form-forward experience.
+            </p>
+            <div class="mt-9 flex flex-col gap-3 sm:flex-row">
+              <a
+                href="#contact"
+                class="dpw-sans inline-flex items-center justify-center bg-[#8b1e2d] px-6 py-3 text-sm font-bold uppercase tracking-[0.12em] text-white transition hover:bg-[#6f1723]"
+              >
+                I have a dead person
+              </a>
+              <a
+                href="#cremation"
+                class="dpw-sans inline-flex items-center justify-center border border-[#8b1e2d] bg-white/70 px-6 py-3 text-sm font-bold uppercase tracking-[0.12em] text-[#8b1e2d] transition hover:bg-white"
+              >
+                View cremation options
+              </a>
+            </div>
+          </div>
+
+          <aside class="self-start border border-[#d7c8ad] bg-white p-6 shadow-sm">
+            <p class="dpw-sans text-xs uppercase tracking-[0.22em] text-[#8b1e2d]">Start arrangements</p>
+            <h2 class="mt-3 text-2xl leading-tight text-[#2b1d1a]">How many dead people are we talking about?</h2>
+            <form class="dpw-sans mt-5 space-y-4" aria-label="Fictional arrangement form">
+              <label class="block text-sm font-bold text-[#4f453b]" for="deceased-count">Number of deceased</label>
+              <select id="deceased-count" class="w-full border border-[#cbb99b] bg-[#fbf7ef] px-3 py-3 text-[#27211b]">
+                <option>1 — standard</option>
+                <option>2 — unfortunate</option>
+                <option>3+ — please stop using this website</option>
+              </select>
+              <label class="block text-sm font-bold text-[#4f453b]" for="urgency">Urgency</label>
+              <select id="urgency" class="w-full border border-[#cbb99b] bg-[#fbf7ef] px-3 py-3 text-[#27211b]">
+                <option>Recently</option>
+                <option>Very recently</option>
+                <option>Everyone is being weird about it</option>
+              </select>
+              <p class="text-xs leading-relaxed text-[#746958]">
+                This form does not submit because this business is fake. That is probably for the best.
+              </p>
+            </form>
+          </aside>
+        </div>
+      </section>
+
+      <section id="services" class="bg-white">
+        <div class="mx-auto grid max-w-6xl gap-8 px-5 py-12 md:grid-cols-3 md:py-16">
+          <article class="border-l-4 border-[#8b1e2d] pl-5">
+            <p class="dpw-sans text-xs uppercase tracking-[0.18em] text-[#8b1e2d]">Immediate transfer</p>
+            <h3 class="mt-3 text-2xl text-[#2b1d1a]">We come get them.</h3>
+            <p class="mt-3 leading-relaxed text-[#5e5548]">Quiet vehicles, careful paperwork, and staff trained not to say “nice haul.”</p>
+          </article>
+          <article class="border-l-4 border-[#8b1e2d] pl-5">
+            <p class="dpw-sans text-xs uppercase tracking-[0.18em] text-[#8b1e2d]">Cremation</p>
+            <h3 class="mt-3 text-2xl text-[#2b1d1a]">Heat with heart.</h3>
+            <p class="mt-3 leading-relaxed text-[#5e5548]">A dignified transformation process described with just enough corporate language to become concerning.</p>
+          </article>
+          <article class="border-l-4 border-[#8b1e2d] pl-5">
+            <p class="dpw-sans text-xs uppercase tracking-[0.18em] text-[#8b1e2d]">Memorial copy</p>
+            <h3 class="mt-3 text-2xl text-[#2b1d1a]">AI eulogies available.</h3>
+            <p class="mt-3 leading-relaxed text-[#5e5548]">Every draft includes “lit up the room,” “loved deeply,” and one suspiciously accurate hobby.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="cremation" class="border-y border-[#d7c8ad] bg-[#f5efe2]">
+        <div class="mx-auto max-w-6xl px-5 py-14 md:py-20">
+          <div class="max-w-3xl">
+            <p class="dpw-sans text-xs uppercase tracking-[0.22em] text-[#8b1e2d]">Cremation packages</p>
+            <h2 class="mt-3 text-4xl leading-tight text-[#2b1d1a] md:text-5xl">Transparent pricing for an opaque life event.</h2>
+          </div>
+
+          <div class="mt-10 grid gap-6 md:grid-cols-3">
+            <article class="border border-[#cbb99b] bg-white p-6">
+              <p class="dpw-sans text-xs uppercase tracking-[0.18em] text-[#8b1e2d]">Essential</p>
+              <h3 class="mt-3 text-3xl text-[#2b1d1a]">The Bare Minimum</h3>
+              <p class="mt-3 leading-relaxed text-[#5e5548]">For families who want closure without a commemorative slideshow password.</p>
+              <p class="dpw-sans mt-6 text-sm font-bold uppercase tracking-[0.12em] text-[#2b1d1a]">Includes: container, heat, receipt</p>
+            </article>
+            <article class="border-2 border-[#8b1e2d] bg-[#fffaf1] p-6">
+              <p class="dpw-sans text-xs uppercase tracking-[0.18em] text-[#8b1e2d]">Most requested</p>
+              <h3 class="mt-3 text-3xl text-[#2b1d1a]">The Tasteful Middle</h3>
+              <p class="mt-3 leading-relaxed text-[#5e5548]">A reassuringly average package for people who asked three relatives and got four opinions.</p>
+              <p class="dpw-sans mt-6 text-sm font-bold uppercase tracking-[0.12em] text-[#2b1d1a]">Includes: urn vibes, PDF program, two condolences</p>
+            </article>
+            <article class="border border-[#cbb99b] bg-white p-6">
+              <p class="dpw-sans text-xs uppercase tracking-[0.18em] text-[#8b1e2d]">Premium</p>
+              <h3 class="mt-3 text-3xl text-[#2b1d1a]">Executive Departure</h3>
+              <p class="mt-3 leading-relaxed text-[#5e5548]">For the deceased who would have wanted their passing handled like a brand launch.</p>
+              <p class="dpw-sans mt-6 text-sm font-bold uppercase tracking-[0.12em] text-[#2b1d1a]">Includes: KPI memorialization, premium ash posture</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="obituaries" class="bg-[#2b1d1a] text-[#f8f1e4]">
+        <div class="mx-auto grid max-w-6xl gap-10 px-5 py-14 md:grid-cols-[0.85fr_1.15fr] md:py-20">
+          <div>
+            <p class="dpw-sans text-xs uppercase tracking-[0.22em] text-[#d9c08f]">Recent acquisitions</p>
+            <h2 class="mt-3 text-4xl leading-tight md:text-5xl">Obituaries coming soon, pending actual customers we do not want.</h2>
+          </div>
+          <div class="grid gap-4">
+            <article class="border border-[#f8f1e4]/20 bg-[#3a2925] p-5">
+              <p class="dpw-sans text-xs uppercase tracking-[0.16em] text-[#d9c08f]">Featured memorial</p>
+              <h3 class="mt-2 text-2xl">Your Loved One Here</h3>
+              <p class="mt-2 leading-relaxed text-[#f8f1e4]/72">A beloved person, probably, remembered fondly by a website template with no access to their inner life.</p>
+            </article>
+            <article class="border border-[#f8f1e4]/20 bg-[#3a2925] p-5">
+              <p class="dpw-sans text-xs uppercase tracking-[0.16em] text-[#d9c08f]">Community notice</p>
+              <h3 class="mt-2 text-2xl">No Current Openings</h3>
+              <p class="mt-2 leading-relaxed text-[#f8f1e4]/72">We are not hiring. We are also not accepting deliveries of remains. Again: fake.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="planning" class="bg-white">
+        <div class="mx-auto max-w-4xl px-5 py-14 md:py-20">
+          <p class="dpw-sans text-xs uppercase tracking-[0.22em] text-[#8b1e2d]">Pre-planning</p>
+          <h2 class="mt-3 text-4xl leading-tight text-[#2b1d1a] md:text-5xl">Plan ahead, so your family only has to answer one terrible questionnaire.</h2>
+          <div class="mt-8 grid gap-5 md:grid-cols-2">
+            <div class="border border-[#d7c8ad] bg-[#fbf7ef] p-5">
+              <h3 class="text-2xl text-[#2b1d1a]">The “Not Yet” Consultation</h3>
+              <p class="mt-3 leading-relaxed text-[#5e5548]">For living people who enjoy making folders no one wants to open.</p>
+            </div>
+            <div class="border border-[#d7c8ad] bg-[#fbf7ef] p-5">
+              <h3 class="text-2xl text-[#2b1d1a]">The “Eventually Us” Plan</h3>
+              <p class="mt-3 leading-relaxed text-[#5e5548]">Couples pricing available, because love means synchronized paperwork.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="contact" class="border-t border-[#d7c8ad] bg-[#efe3cf]">
+        <div class="mx-auto grid max-w-6xl gap-8 px-5 py-14 md:grid-cols-[0.9fr_1.1fr] md:py-20">
+          <div>
+            <p class="dpw-sans text-xs uppercase tracking-[0.22em] text-[#8b1e2d]">Contact Dead People Wanted</p>
+            <h2 class="mt-3 text-4xl leading-tight text-[#2b1d1a] md:text-5xl">Ready to move forward without anyone moving?</h2>
+            <p class="dpw-sans mt-5 text-lg text-[#5e5548]">Call 1-800-DEAD-YES</p>
+          </div>
+          <div class="border border-[#cbb99b] bg-white p-6">
+            <h3 class="text-2xl text-[#2b1d1a]">Before you contact us</h3>
+            <p class="mt-4 leading-relaxed text-[#5e5548]">
+              Please do not call, email, ship, deliver, or otherwise transfer remains to Dead People Wanted. This is a fake funeral home created for a real sticker. If you have an actual emergency, contact a real local funeral provider or emergency service.
+            </p>
+            <a
+              href="/things/real-fake-ads"
+              class="dpw-sans mt-7 inline-flex bg-[#8b1e2d] px-5 py-3 text-sm font-bold uppercase tracking-[0.12em] text-white hover:bg-[#6f1723]"
+            >
+              View the sticker collection
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="border-t border-[#d7c8ad] bg-[#1c1513] text-[#f8f1e4]">
+      <div class="mx-auto flex max-w-6xl flex-col gap-3 px-5 py-5 text-xs md:flex-row md:items-center md:justify-between">
+        <p class="dpw-sans uppercase tracking-[0.14em] text-[#f8f1e4]/60">
+          This is a Real Fake Ad by <a href="/" class="text-[#d9c08f] underline underline-offset-4">fattamano</a>.
+        </p>
+        <p class="dpw-sans uppercase tracking-[0.14em] text-[#f8f1e4]/60">
+          Not a real funeral home. Please do not send us dead people.
+        </p>
+      </div>
+    </footer>
+  </body>
+</html>
