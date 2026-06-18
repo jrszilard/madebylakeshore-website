@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=1050, initial-scale=1" />
+  <title>Dead People Wanted sticker</title>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; width: 1050px; height: 750px; overflow: hidden; }
+    body { background: #f5efe2; font-family: Arial, Helvetica, sans-serif; color: #2b1d1a; }
+    .sticker {
+      position: relative;
+      width: 1050px;
+      height: 750px;
+      overflow: hidden;
+      border: 18px solid #2b1d1a;
+      background:
+        radial-gradient(circle at 20% 10%, rgba(139,30,45,.13), transparent 30%),
+        linear-gradient(145deg, #f8f1e4 0%, #efe3cf 62%, #e2d1b5 100%);
+    }
+    .topbar {
+      height: 86px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 54px;
+      background: #2b1d1a;
+      color: #f8f1e4;
+      border-bottom: 9px solid #8b1e2d;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      font-size: 22px;
+      font-weight: 700;
+    }
+    .since { color: #d9c08f; }
+    .brand {
+      position: absolute;
+      left: 56px;
+      top: 126px;
+    }
+    .eyebrow {
+      color: #8b1e2d;
+      font-size: 23px;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+    .name {
+      margin-top: 18px;
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: 66px;
+      line-height: .86;
+      color: #2b1d1a;
+    }
+    .sub {
+      margin-top: 18px;
+      color: #5e5548;
+      font-size: 23px;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+    .line {
+      position: absolute;
+      left: 56px;
+      top: 342px;
+      width: 580px;
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: 62px;
+      line-height: .96;
+      letter-spacing: -.045em;
+      color: #2b1d1a;
+    }
+    .line strong { color: #8b1e2d; font-weight: 700; }
+    .cta {
+      position: absolute;
+      left: 56px;
+      bottom: 92px;
+      display: flex;
+      gap: 18px;
+      align-items: center;
+    }
+    .pill {
+      background: #8b1e2d;
+      color: #fff;
+      padding: 18px 24px;
+      font-size: 22px;
+      font-weight: 900;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+    .phone { color: #2b1d1a; font-size: 24px; font-weight: 900; letter-spacing: .08em; }
+    .qrbox {
+      position: absolute;
+      right: 54px;
+      top: 154px;
+      width: 284px;
+      padding: 22px 22px 18px;
+      background: #fffaf1;
+      border: 5px solid #8b1e2d;
+      box-shadow: 12px 12px 0 #2b1d1a;
+      transform: rotate(1.2deg);
+      text-align: center;
+    }
+    .qrbox img { width: 220px; height: 220px; display: block; margin: 0 auto; image-rendering: pixelated; }
+    .qrlabel { margin-top: 14px; color: #8b1e2d; font-size: 18px; font-weight: 900; letter-spacing: .14em; text-transform: uppercase; }
+    .fine {
+      position: absolute;
+      right: 54px;
+      bottom: 90px;
+      width: 290px;
+      color: #5e5548;
+      font-size: 20px;
+      line-height: 1.28;
+      text-align: right;
+    }
+    .notreal { color: #8b1e2d; font-weight: 900; }
+  </style>
+</head>
+<body>
+  <main class="sticker" aria-label="Dead People Wanted sticker artwork">
+    <div class="topbar"><span>Available 24/7*</span><span class="since">Family owned since yesterday</span></div>
+    <section class="brand">
+      <div class="eyebrow">Funeral Home &amp; Crematory</div>
+      <div class="name">Dead People<br />Wanted</div>
+      <div class="sub">Immediate arrangements-ish</div>
+    </section>
+    <section class="line">You’ve got dead people.<br /><strong>We want dead people.</strong></section>
+    <section class="qrbox">
+      <img src="qr-wewantdeadpeople.png" alt="QR code to fattamano.com/wewantdeadpeople" />
+      <div class="qrlabel">Scan before calling</div>
+    </section>
+    <section class="cta"><div class="pill">I have a dead person</div><div class="phone">1-800-DEAD-YES</div></section>
+    <p class="fine"><span class="notreal">A Real Fake Ad.</span> Not a real funeral home. Please do not send us dead people.</p>
+  </main>
+</body>
+</html>

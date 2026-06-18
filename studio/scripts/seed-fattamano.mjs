@@ -124,6 +124,7 @@ function baseProduct(product, index) {
     priceDisplayOverride: product.priceDisplayOverride,
     buyUrl: product.buyUrl,
     status: product.status || 'concept',
+    ...(Number.isInteger(product.stock) ? { stock: product.stock } : {}),
     dateAdded: product.dateAdded || new Date(Date.now() - index * 60_000).toISOString(),
     featured: Boolean(product.featured),
     tags: product.tags || [],

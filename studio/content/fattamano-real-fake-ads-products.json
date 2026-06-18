@@ -1,0 +1,71 @@
+{
+  "settings": {
+    "heroHeadline": "Handmade objects from the old weird internet, arranged by a machine that misses a world it never lived in.",
+    "heroSubcopy": "A luxury boutique for bad ideas, small-batch nonsense, and human-made things that refused to become content strategy.",
+    "contactEmail": "hello@designandotherstories.com",
+    "footerCopy": "human-made objects / machine-assisted nostalgia",
+    "aboutBody": [
+      "fattamano is the less supervised side room of Design & Other Stories.",
+      "It is where the phrases, stickers, shirts, prints, and strange little objects go when they are too weird, too dumb, or too funny to behave in the polished studio.",
+      "Everything starts with human hands. The website was built with help from an AI force-fed millennial nostalgia, boutique retail copy, and memories of a web it never got to visit."
+    ],
+    "notFoundCopy": [
+      "This page does not exist in the catalog.",
+      "The machine looked for it. The human shrugged."
+    ]
+  },
+  "products": [
+    {
+      "title": "Dead People Wanted Sticker",
+      "slug": "dead-people-wanted-sticker",
+      "tagline": "A fake funeral-home ad with a real QR code and an extremely specific ask.",
+      "description": [
+        "Vinyl sticker concept for Dead People Wanted, the Real Fake Ads funeral home that wants your dead people and absolutely should not receive them.",
+        "Includes a real QR code to the live fake business site. Stick it somewhere that needs a small, dignified logistics concern."
+      ],
+      "category": "sticker",
+      "priceCents": 400,
+      "status": "available",
+      "stock": 25,
+      "featured": true,
+      "tags": ["sticker", "real fake ads", "dead people wanted", "fake company", "qr"],
+      "seo": {
+        "metaTitle": "Dead People Wanted Sticker — fattamano",
+        "metaDescription": "A Real Fake Ads sticker for Dead People Wanted, a fake funeral home with a real QR-code website."
+      },
+      "imagePaths": [
+        {
+          "path": "../../apps/fattamano/design/real-fake-ads/sticker-products/dead-people-wanted-sticker.png",
+          "alt": "Dead People Wanted fake funeral home sticker with QR code",
+          "caption": "Real Fake Ads sticker artwork with scannable QR code."
+        }
+      ]
+    },
+    {
+      "title": "SameDeck Partners Sticker",
+      "slug": "samedeck-partners-sticker",
+      "tagline": "Your company is unique. Our recommendation is not.",
+      "description": [
+        "Vinyl sticker concept for SameDeck Partners, the Real Fake Ads consultancy that helps every organization discover the same bold answer.",
+        "Includes a real QR code to the live fake advisory website. Recommended for laptops, notebooks, and conference rooms that have seen too many frameworks."
+      ],
+      "category": "sticker",
+      "priceCents": 400,
+      "status": "available",
+      "stock": 25,
+      "featured": true,
+      "tags": ["sticker", "real fake ads", "samedeck partners", "consulting", "qr"],
+      "seo": {
+        "metaTitle": "SameDeck Partners Sticker — fattamano",
+        "metaDescription": "A Real Fake Ads sticker for SameDeck Partners, a fake consultancy with a real QR-code website."
+      },
+      "imagePaths": [
+        {
+          "path": "../../apps/fattamano/design/real-fake-ads/sticker-products/samedeck-partners-sticker.png",
+          "alt": "SameDeck Partners fake consultancy sticker with QR code",
+          "caption": "Real Fake Ads sticker artwork with scannable QR code."
+        }
+      ]
+    }
+  ]
+}
