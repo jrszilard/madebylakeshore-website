@@ -18,13 +18,13 @@ A Sanity seed file for these two sticker SKUs lives at:
 Dry run from the repo root:
 
 ```bash
-npm --workspace=studio run seed:fattamano -- --file=content/fattamano-real-fake-ads-products.json --dry-run
+npm --workspace=studio run seed:fattamano -- --file=content/fattamano-real-fake-ads-products.json --products-only --dry-run
 ```
 
 Apply when inventory/print readiness is confirmed:
 
 ```bash
-SANITY_API_TOKEN=... npm --workspace=studio run seed:fattamano -- --file=content/fattamano-real-fake-ads-products.json --apply --update-products
+SANITY_API_TOKEN=... npm --workspace=studio run seed:fattamano -- --file=content/fattamano-real-fake-ads-products.json --products-only --apply --update-products
 ```
 
 Then redeploy fattamano so the statically generated product pages include the new Sanity product documents.

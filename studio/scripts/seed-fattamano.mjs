@@ -9,6 +9,7 @@ const args = new Set(process.argv.slice(2));
 const apply = args.has('--apply');
 const replaceProducts = args.has('--replace-products');
 const updateProducts = args.has('--update-products') || replaceProducts;
+const productsOnly = args.has('--products-only');
 const seedPathArg = process.argv.find((arg) => arg.startsWith('--file='));
 const seedPath = seedPathArg
   ? path.resolve(seedPathArg.slice('--file='.length))
@@ -41,6 +42,7 @@ Options:
   --apply             Write to Sanity. Without this flag the script only prints the plan.
   --update-products   Create or replace seed product docs. Without this, products are create-if-missing.
   --replace-products  Delete existing fattamanoProduct docs before creating seed products.
+  --products-only     Do not create/replace fattamanoSettings; only write product docs.
   --file=PATH         Use a custom seed JSON file. Defaults to content/fattamano-seed.json.
 
 Environment:
@@ -187,7 +189,7 @@ console.log(`- file: ${seedPath}`);
 console.log(`- mode: ${apply ? 'APPLY' : 'DRY RUN'}`);
 console.log(`- replace products: ${replaceProducts ? 'yes' : 'no'}`);
 console.log(`- update products: ${updateProducts ? 'yes' : 'no'}`);
-console.log(`- settings doc: ${settingsDoc._id}`);
+console.log(`- settings doc: ${productsOnly ? 'skipped (--products-only)' : settingsDoc._id}`);
 console.log(`- product docs: ${productDocs.length}`);
 
 for (let i = 0; i < products.length; i += 1) {
@@ -233,7 +235,11 @@ for (let i = 0; i < products.length; i += 1) {
   docsWithImages.push({ ...doc, images });
 }
 
-let transaction = client.transaction().createOrReplace(settingsDoc);
+let transaction = client.transaction();
+
+if (!productsOnly) {
+  transaction = transaction.createOrReplace(settingsDoc);
+}
 
 if (replaceProducts) {
   const existingProductIds = await client.fetch('*[_type == "fattamanoProduct"]._id');
