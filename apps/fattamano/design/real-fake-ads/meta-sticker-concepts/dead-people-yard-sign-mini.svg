@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1020" height="560" viewBox="0 0 1020 560" role="img" aria-labelledby="title desc">
+  <title id="title">Dead People Wanted mini yard sign sticker</title>
+  <desc id="desc">A mini yard sign style sticker for Dead People Wanted.</desc>
+  <defs>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%"><feDropShadow dx="12" dy="12" stdDeviation="0" flood-color="#2B1D1A"/></filter>
+    <style>.serif{font-family:Georgia,'Times New Roman',serif}.sans{font-family:Arial,Helvetica,sans-serif}.mono{font-family:'Courier New',monospace}</style>
+  </defs>
+  <rect width="1020" height="560" fill="#F5EFE2"/>
+  <rect x="62" y="58" width="880" height="356" fill="#8B1E2D" stroke="#2B1D1A" stroke-width="10" filter="url(#shadow)"/>
+  <rect x="102" y="96" width="800" height="280" fill="#F8F1E4" stroke="#D9C08F" stroke-width="5"/>
+  <text x="502" y="164" text-anchor="middle" class="mono" font-size="24" font-weight="900" letter-spacing="4" fill="#8B1E2D">DEAD PEOPLE WANTED</text>
+  <text x="502" y="240" text-anchor="middle" class="serif" font-size="64" fill="#2B1D1A">I am advertising</text>
+  <text x="502" y="306" text-anchor="middle" class="serif" font-size="64" fill="#8B1E2D">a fake funeral home.</text>
+  <text x="502" y="352" text-anchor="middle" class="sans" font-size="25" font-weight="900" fill="#5E5548">Please respect my questionable media spend.</text>
+  <g transform="translate(252 420)">
+    <rect x="0" y="0" width="516" height="62" fill="#2B1D1A"/>
+    <text x="258" y="40" text-anchor="middle" class="mono" font-size="22" font-weight="900" letter-spacing="2" fill="#D9C08F">fattamano.com/wewantdeadpeople</text>
+  </g>
+  <line x1="334" y1="416" x2="334" y2="538" stroke="#2B1D1A" stroke-width="12"/>
+  <line x1="686" y1="416" x2="686" y2="538" stroke="#2B1D1A" stroke-width="12"/>
+</svg>

@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1050" height="620" viewBox="0 0 1050 620" role="img" aria-labelledby="title desc">
+  <title id="title">SameDeck Partners deck sponsor label sticker</title>
+  <desc id="desc">A consulting deck style sponsor label sticker.</desc>
+  <defs>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%"><feDropShadow dx="12" dy="12" stdDeviation="0" flood-color="#07111F"/></filter>
+    <style>.display{font-family:'Arial Black',Arial,sans-serif}.sans{font-family:Arial,Helvetica,sans-serif}.mono{font-family:'Courier New',monospace}</style>
+  </defs>
+  <rect width="1050" height="620" fill="#EEF4FF"/>
+  <rect x="62" y="62" width="900" height="452" rx="28" fill="#07111F" stroke="#5EEAD4" stroke-width="8" filter="url(#shadow)"/>
+  <circle cx="144" cy="144" r="42" fill="#5EEAD4"/>
+  <circle cx="172" cy="122" r="30" fill="#7C3AED" opacity="0.85"/>
+  <text x="222" y="138" class="display" font-size="46" fill="white">SameDeck Partners</text>
+  <text x="224" y="174" class="mono" font-size="20" font-weight="900" letter-spacing="4" fill="#5EEAD4">UNSOLICITED TRANSFORMATION ADVISORY</text>
+  <text x="112" y="286" class="display" font-size="70" fill="white">THIS LAPTOP</text>
+  <text x="112" y="362" class="display" font-size="70" fill="#5EEAD4">SPONSORED</text>
+  <text x="112" y="438" class="display" font-size="60" fill="white">THE DECK</text>
+  <g transform="translate(640 236)">
+    <rect width="244" height="156" rx="18" fill="white"/>
+    <text x="122" y="48" text-anchor="middle" class="mono" font-size="18" font-weight="900" fill="#07111F">AD BUY:</text>
+    <text x="122" y="98" text-anchor="middle" class="display" font-size="44" fill="#7C3AED">$4</text>
+    <text x="122" y="130" text-anchor="middle" class="sans" font-size="18" font-weight="900" fill="#07111F">no procurement cycle</text>
+  </g>
+  <text x="112" y="552" class="mono" font-size="22" font-weight="900" fill="#07111F">YOUR COMPANY IS UNIQUE. THIS AD BUY IS NOT.</text>
+  <text x="936" y="552" text-anchor="end" class="mono" font-size="22" font-weight="900" fill="#2563EB">/samedeckpartners</text>
+</svg>

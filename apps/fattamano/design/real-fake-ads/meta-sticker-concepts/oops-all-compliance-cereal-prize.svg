@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="750" height="950" viewBox="0 0 750 950" role="img" aria-labelledby="title desc">
+  <title id="title">Oops All Compliance cereal prize sticker</title>
+  <desc id="desc">A cereal-box style compliance sticker that says free inside: one policy nobody reads.</desc>
+  <defs>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%"><feDropShadow dx="12" dy="12" stdDeviation="0" flood-color="#151515"/></filter>
+    <style>.display{font-family: Impact, Haettenschweiler, 'Arial Black', sans-serif}.sans{font-family:Arial,Helvetica,sans-serif}.mono{font-family:'Courier New',monospace}</style>
+  </defs>
+  <rect width="750" height="950" fill="#FFF6C7"/>
+  <rect x="76" y="56" width="570" height="818" rx="34" fill="#FFE96B" stroke="#151515" stroke-width="12" filter="url(#shadow)"/>
+  <rect x="76" y="56" width="570" height="132" rx="34" fill="#EF2B2D" stroke="#151515" stroke-width="0"/>
+  <text x="361" y="115" text-anchor="middle" class="display" font-size="58" fill="white">OOPS!</text>
+  <text x="361" y="166" text-anchor="middle" class="mono" font-size="25" font-weight="900" letter-spacing="4" fill="#FFE96B">ALL COMPLIANCE</text>
+  <g transform="translate(126 226) rotate(-3)">
+    <rect width="470" height="82" fill="white" stroke="#151515" stroke-width="7"/>
+    <text x="235" y="36" text-anchor="middle" class="mono" font-size="22" font-weight="900" letter-spacing="2" fill="#151515">FREE INSIDE:</text>
+    <text x="235" y="65" text-anchor="middle" class="sans" font-size="25" font-weight="900" fill="#EF2B2D">ONE POLICY NOBODY READS</text>
+  </g>
+  <text x="128" y="392" class="display" font-size="112" fill="#151515">PAY US</text>
+  <text x="128" y="502" class="display" font-size="104" fill="#EF2B2D">TO WEAR</text>
+  <text x="128" y="612" class="display" font-size="98" fill="#151515">THE AUDIT</text>
+  <g transform="translate(126 654)">
+    <rect width="468" height="116" fill="#151515" rx="18"/>
+    <text x="234" y="42" text-anchor="middle" class="mono" font-size="21" font-weight="900" letter-spacing="3" fill="#FFE96B">BRAND AWARENESS:</text>
+    <text x="234" y="83" text-anchor="middle" class="sans" font-size="38" font-weight="900" fill="white">SELF-FUNDED</text>
+  </g>
+  <text x="361" y="824" text-anchor="middle" class="mono" font-size="20" font-weight="900" letter-spacing="2" fill="#151515">fattamano.com/oopsallcompliance</text>
+</svg>

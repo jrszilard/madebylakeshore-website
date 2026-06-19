@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="900" viewBox="0 0 900 900" role="img" aria-labelledby="title desc">
+  <title id="title">Sight Unseen Aerials ground crew sticker</title>
+  <desc id="desc">A flight crew style sticker for Sight Unseen Aerials.</desc>
+  <defs>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%"><feDropShadow dx="12" dy="12" stdDeviation="0" flood-color="#07111F"/></filter>
+    <style>.display{font-family:'Arial Black',Arial,sans-serif}.sans{font-family:Arial,Helvetica,sans-serif}.mono{font-family:'Courier New',monospace}</style>
+  </defs>
+  <rect width="900" height="900" fill="#E0F2FE"/>
+  <path d="M450 70 L804 245 L804 655 L450 830 L96 655 L96 245 Z" fill="#075985" stroke="#07111F" stroke-width="14" filter="url(#shadow)"/>
+  <path d="M450 128 L740 272 L740 628 L450 772 L160 628 L160 272 Z" fill="#BAE6FD" stroke="#07111F" stroke-width="6"/>
+  <circle cx="450" cy="382" r="132" fill="#07111F"/>
+  <path d="M450 224 L450 540 M292 382 L608 382" stroke="#E0F2FE" stroke-width="18" stroke-linecap="round"/>
+  <circle cx="450" cy="382" r="82" fill="none" stroke="#E0F2FE" stroke-width="14"/>
+  <text x="450" y="122" text-anchor="middle" class="mono" font-size="28" font-weight="900" letter-spacing="5" fill="#07111F">SIGHT UNSEEN AERIALS</text>
+  <text x="450" y="600" text-anchor="middle" class="display" font-size="62" fill="#07111F">GROUND CREW</text>
+  <text x="450" y="657" text-anchor="middle" class="sans" font-size="29" font-weight="900" fill="#075985">I paid to become</text>
+  <text x="450" y="695" text-anchor="middle" class="sans" font-size="31" font-weight="900" fill="#075985">the visual observer.</text>
+  <g transform="translate(248 724)">
+    <rect width="404" height="56" rx="28" fill="#07111F"/>
+    <text x="202" y="36" text-anchor="middle" class="mono" font-size="20" font-weight="900" letter-spacing="2" fill="#7DD3FC">AUTONOMY NEEDS AN AUDIENCE</text>
+  </g>
+  <text x="450" y="820" text-anchor="middle" class="mono" font-size="20" font-weight="900" fill="#07111F">fattamano.com/sightunseenaerials</text>
+</svg>

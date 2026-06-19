@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="980" viewBox="0 0 760 980" role="img" aria-labelledby="title desc">
+  <title id="title">BurialCoin tombstone token sticker</title>
+  <desc id="desc">A tombstone-shaped crypto sticker for BurialCoin.</desc>
+  <defs>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%"><feDropShadow dx="13" dy="13" stdDeviation="0" flood-color="#03100A"/></filter>
+    <style>.serif{font-family:Georgia,'Times New Roman',serif}.mono{font-family:'Courier New',monospace}.sans{font-family:Arial,Helvetica,sans-serif}</style>
+  </defs>
+  <rect width="760" height="980" fill="#EDE3C9"/>
+  <path d="M140 870 L140 322 C140 184 247 78 380 78 C513 78 620 184 620 322 L620 870 Z" fill="#06130D" stroke="#D6A73A" stroke-width="12" filter="url(#shadow)"/>
+  <circle cx="380" cy="242" r="112" fill="#D6A73A" stroke="#F4EAD2" stroke-width="6"/>
+  <circle cx="380" cy="242" r="84" fill="none" stroke="#6D4B13" stroke-width="8"/>
+  <text x="380" y="280" text-anchor="middle" class="serif" font-size="108" font-weight="700" fill="#06130D">₿</text>
+  <text x="380" y="404" text-anchor="middle" class="serif" font-size="58" fill="#F4EAD2">Ask me about</text>
+  <text x="380" y="470" text-anchor="middle" class="serif" font-size="64" fill="#D6A73A">my post-life</text>
+  <text x="380" y="538" text-anchor="middle" class="serif" font-size="70" fill="#D6A73A">liquidity.</text>
+  <g transform="translate(190 590)">
+    <rect width="380" height="104" rx="14" fill="#F4EAD2"/>
+    <text x="190" y="39" text-anchor="middle" class="mono" font-size="21" font-weight="900" letter-spacing="2" fill="#06130D">YOU ARE NOW</text>
+    <text x="190" y="76" text-anchor="middle" class="sans" font-size="34" font-weight="900" fill="#06130D">EXIT LIQUIDITY</text>
+  </g>
+  <text x="380" y="742" text-anchor="middle" class="mono" font-size="22" font-weight="900" letter-spacing="2" fill="#D6A73A">AD PAID FOR BY THE MARK</text>
+  <text x="380" y="804" text-anchor="middle" class="mono" font-size="20" font-weight="900" letter-spacing="2" fill="#F4EAD2">fattamano.com/burialcoin</text>
+</svg>

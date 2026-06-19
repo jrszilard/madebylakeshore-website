@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="640" viewBox="0 0 980 640" role="img" aria-labelledby="title desc">
+  <title id="title">Model Citizen AI laptop badge sticker</title>
+  <desc id="desc">A responsible AI theater sticker for laptops.</desc>
+  <defs>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%"><feDropShadow dx="12" dy="12" stdDeviation="0" flood-color="#0F172A"/></filter>
+    <style>.display{font-family:'Arial Black',Arial,sans-serif}.sans{font-family:Arial,Helvetica,sans-serif}.mono{font-family:'Courier New',monospace}</style>
+  </defs>
+  <rect width="980" height="640" fill="#EEF2FF"/>
+  <rect x="58" y="70" width="842" height="478" rx="38" fill="white" stroke="#0F172A" stroke-width="10" filter="url(#shadow)"/>
+  <rect x="58" y="70" width="842" height="96" rx="38" fill="#0F172A"/>
+  <text x="112" y="132" class="mono" font-size="27" font-weight="900" letter-spacing="4" fill="#A5B4FC">MODEL CITIZEN AI</text>
+  <g transform="translate(768 92)">
+    <rect width="86" height="48" rx="24" fill="#DCFCE7"/>
+    <text x="43" y="31" text-anchor="middle" class="sans" font-size="18" font-weight="900" fill="#047857">PASS*</text>
+  </g>
+  <text x="108" y="246" class="display" font-size="58" fill="#0F172A">THIS DEVICE CONTAINS</text>
+  <text x="108" y="320" class="display" font-size="72" fill="#6366F1">RESPONSIBLE</text>
+  <text x="108" y="392" class="display" font-size="72" fill="#6366F1">AI THEATER</text>
+  <g transform="translate(108 428)">
+    <rect width="676" height="62" rx="12" fill="#EEF2FF" stroke="#CBD5E1" stroke-width="3"/>
+    <text x="338" y="40" text-anchor="middle" class="mono" font-size="22" font-weight="900" letter-spacing="2" fill="#0F172A">HUMAN REVIEWED BY VIBES</text>
+  </g>
+  <text x="108" y="532" class="mono" font-size="20" font-weight="900" fill="#64748B">*Passing means no one asked a follow-up in writing.</text>
+  <text x="858" y="532" text-anchor="end" class="mono" font-size="20" font-weight="900" fill="#6366F1">/modelcitizenai</text>
+</svg>

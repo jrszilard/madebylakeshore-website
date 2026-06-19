@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="900" viewBox="0 0 900 900" role="img" aria-labelledby="title desc">
+  <title id="title">Real Fake Ads street team badge sticker</title>
+  <desc id="desc">A round meta sticker about paying to advertise a fake company.</desc>
+  <defs>
+    <path id="topArc" d="M 150 450 A 300 300 0 0 1 750 450" />
+    <path id="bottomArc" d="M 750 450 A 300 300 0 0 1 150 450" />
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="14" dy="14" stdDeviation="0" flood-color="#151515" flood-opacity="1"/>
+    </filter>
+    <style>
+      .display{font-family: Impact, Haettenschweiler, 'Arial Black', sans-serif;}
+      .sans{font-family: Arial, Helvetica, sans-serif;}
+      .mono{font-family: 'Courier New', monospace;}
+    </style>
+  </defs>
+  <rect width="900" height="900" fill="#F8F1E8"/>
+  <circle cx="450" cy="450" r="386" fill="#FF3B30" stroke="#151515" stroke-width="18" filter="url(#shadow)"/>
+  <circle cx="450" cy="450" r="320" fill="#FFD83D" stroke="#151515" stroke-width="8"/>
+  <circle cx="450" cy="450" r="222" fill="#F8F1E8" stroke="#151515" stroke-width="8"/>
+  <text class="mono" font-size="34" font-weight="700" letter-spacing="5" fill="#151515">
+    <textPath href="#topArc" startOffset="50%" text-anchor="middle">REAL FAKE ADS STREET TEAM</textPath>
+  </text>
+  <text class="mono" font-size="25" font-weight="700" letter-spacing="4" fill="#151515">
+    <textPath href="#bottomArc" startOffset="50%" text-anchor="middle">UNPAID • UNREQUESTED • UNHELPFUL</textPath>
+  </text>
+  <text x="450" y="315" text-anchor="middle" class="display" font-size="72" fill="#151515">I PAID</text>
+  <text x="450" y="392" text-anchor="middle" class="display" font-size="70" fill="#FF3B30">TO ADVERTISE</text>
+  <text x="450" y="468" text-anchor="middle" class="display" font-size="62" fill="#151515">A FAKE COMPANY</text>
+  <g transform="translate(270 520)">
+    <rect x="0" y="0" width="360" height="86" fill="#151515" rx="12"/>
+    <text x="180" y="36" text-anchor="middle" class="sans" font-size="22" font-weight="900" letter-spacing="2" fill="#F8F1E8">AD SPACE PURCHASED</text>
+    <text x="180" y="65" text-anchor="middle" class="mono" font-size="17" font-weight="700" fill="#FFD83D">BY THE PERSON WEARING THIS</text>
+  </g>
+  <text x="450" y="660" text-anchor="middle" class="mono" font-size="24" font-weight="700" letter-spacing="2" fill="#151515">fattamano.com/things/real-fake-ads</text>
+  <g transform="translate(393 690) rotate(-6)">
+    <rect width="114" height="46" fill="#F8F1E8" stroke="#151515" stroke-width="5"/>
+    <text x="57" y="30" text-anchor="middle" class="mono" font-size="17" font-weight="900" fill="#151515">NO ROI</text>
+  </g>
+</svg>
