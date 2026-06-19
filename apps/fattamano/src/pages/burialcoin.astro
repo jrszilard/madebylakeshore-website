@@ -1,0 +1,141 @@
+---
+import '../styles/global.css';
+
+export const prerender = true;
+
+const description =
+  'BurialCoin is a fictional post-life fintech from Real Fake Ads by fattamano. The future of post-life liquidity.';
+const canonical = new URL(Astro.url.pathname, Astro.site).toString();
+---
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:title" content="BurialCoin — Post-Life Liquidity" />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta name="twitter:card" content="summary" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>BurialCoin — Post-Life Liquidity</title>
+    <style is:global>
+      .bc { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', monospace; }
+      .bc-serif { font-family: Georgia, 'Times New Roman', serif; }
+      .bc * { box-sizing: border-box; }
+      .bc-coin { background: radial-gradient(circle at 35% 28%, #fff7b0, #d6a73a 38%, #6d4b13 78%); }
+      @media (max-width: 767px) {
+        .bc, .bc main, .bc section, .bc header, .bc section > div, .bc header > div { width: 100%; max-width: 100vw; overflow-x: hidden; }
+        .bc main section > div { display: block !important; margin-left: 1rem !important; margin-right: 1rem !important; padding-left: 1rem !important; padding-right: 1rem !important; }
+        .bc h1, .bc h2, .bc h3, .bc p, .bc a { max-width: 320px !important; overflow-wrap: anywhere; word-break: break-word; }
+        .bc main section > div, .bc main section > div > div, .bc-card, .bc main article, .bc main blockquote { width: 100%; max-width: 342px !important; }
+        .bc main { font-size: 0.92rem; }
+        .bc h1 { font-size: 1.9rem !important; line-height: 1.04 !important; }
+        .bc h1 span { display: block; }
+        .bc h2 { font-size: 1.55rem !important; line-height: 1.08 !important; }
+      }
+    </style>
+  </head>
+  <body class="bc min-h-screen overflow-x-hidden bg-[#06130d] text-[#f4ead2]">
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:bg-[#f4ead2] focus:px-4 focus:py-2 focus:text-[#06130d] focus:outline focus:outline-2 focus:outline-[#d6a73a]">skip to main content</a>
+
+    <header class="border-b border-[#d6a73a]/35 bg-[#03100a]/95 text-[#f4ead2]">
+      <div class="mx-auto flex max-w-7xl flex-col gap-4 px-5 py-5 md:flex-row md:items-center md:justify-between">
+        <a href="#main-content" class="flex items-center gap-3" aria-label="BurialCoin home">
+          <span class="bc-coin grid h-12 w-12 place-items-center rounded-full border border-[#f4d47b] text-lg font-black text-[#06130d] shadow-[0_0_40px_rgba(214,167,58,0.28)]">₿</span>
+          <span><span class="bc-serif block text-2xl">BurialCoin</span><span class="block text-xs uppercase tracking-[0.24em] text-[#d6a73a]">post-life liquidity protocol</span></span>
+        </a>
+        <nav aria-label="BurialCoin navigation">
+          <ul class="flex flex-wrap gap-x-6 gap-y-2 text-sm uppercase tracking-[0.12em] text-[#f4ead2]/75">
+            <li><a class="hover:text-[#d6a73a]" href="#tokenomics">Tokenomics</a></li>
+            <li><a class="hover:text-[#d6a73a]" href="#roadmap">Roadmap</a></li>
+            <li><a class="hover:text-[#d6a73a]" href="#whitepaper">Whitepaper</a></li>
+            <li><a class="hover:text-[#d6a73a]" href="#contact">Estate wallet</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main-content" tabindex="-1">
+      <section class="relative overflow-hidden border-b border-[#d6a73a]/35 bg-[#06130d]">
+        <div class="absolute inset-0 opacity-60" aria-hidden="true"><div class="h-full w-full bg-[radial-gradient(circle_at_18%_20%,rgba(214,167,58,0.22),transparent_28%),radial-gradient(circle_at_80%_10%,rgba(22,163,74,0.2),transparent_28%),linear-gradient(135deg,#06130d_0%,#0d2117_55%,#020705_100%)]"></div></div>
+        <div class="relative mx-auto grid max-w-7xl gap-10 px-5 py-16 md:grid-cols-[minmax(0,1fr)_390px] md:py-24">
+          <div>
+            <p class="inline-flex border border-[#d6a73a]/50 bg-[#d6a73a]/10 px-4 py-2 text-xs uppercase tracking-[0.22em] text-[#f4d47b]">estate planning for people who said “what if token?”</p>
+            <h1 class="bc-serif mt-7 max-w-5xl text-6xl leading-[0.95] tracking-[-0.06em] text-[#f4ead2] md:text-8xl">
+              The future of <span class="text-[#d6a73a]">post-life liquidity.</span>
+            </h1>
+            <p class="mt-7 max-w-2xl text-lg leading-relaxed text-[#f4ead2]/74 md:text-xl">Convert grief into governance with a crypto-adjacent estate product for people who looked at probate and thought: what if this also had a Discord?</p>
+            <div class="mt-9 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+              <a href="#contact" class="inline-flex justify-center rounded-full bg-[#d6a73a] px-6 py-3 text-sm font-black uppercase tracking-[0.12em] text-[#06130d] shadow-[0_18px_60px_rgba(214,167,58,0.22)] hover:bg-[#f4d47b]">Open memorial wallet</a>
+              <a href="/things/real-fake-ads" class="inline-flex justify-center rounded-full border border-[#d6a73a]/45 bg-white/5 px-6 py-3 text-sm font-black uppercase tracking-[0.12em] text-[#f4ead2] hover:bg-white/10">View fake ad archive</a>
+            </div>
+            <div class="mt-7 max-w-2xl border border-[#d6a73a]/35 bg-[#03100a]/70 p-5">
+              <p class="text-xs uppercase tracking-[0.2em] text-[#d6a73a]">Scanned a sticker?</p>
+              <p class="mt-2 leading-relaxed text-[#f4ead2]/72">Congratulations. You found financial innovation at the exact wrong emotional moment. BurialCoin is fake; the future sticker will probably be real.</p>
+            </div>
+          </div>
+          <aside class="bc-card self-start rounded-[2rem] border border-[#d6a73a]/35 bg-[#03100a]/80 p-6 shadow-[0_30px_100px_rgba(0,0,0,0.45)] backdrop-blur">
+            <div class="flex items-center justify-between gap-4 border-b border-[#d6a73a]/25 pb-4"><p class="text-xs uppercase tracking-[0.22em] text-[#d6a73a]">Memorial wallet</p><span class="rounded-full bg-emerald-500/15 px-3 py-1 text-xs uppercase text-emerald-300">pending probate</span></div>
+            <p class="bc-serif mt-6 text-5xl text-[#f4ead2]">$0.00</p>
+            <p class="mt-2 text-sm uppercase tracking-[0.16em] text-[#f4ead2]/45">available after emotional lockup</p>
+            <div class="mt-6 grid gap-3">
+              <div class="rounded-2xl border border-[#d6a73a]/25 bg-white/5 p-4"><div class="flex justify-between text-xs uppercase tracking-[0.14em] text-[#f4ead2]/55"><span>Grief yield</span><span>variable</span></div><div class="mt-3 h-2 rounded-full bg-[#d6a73a]/15"><div class="h-2 w-[71%] rounded-full bg-[#d6a73a]"></div></div></div>
+              <div class="rounded-2xl border border-[#d6a73a]/25 bg-white/5 p-4"><div class="flex justify-between text-xs uppercase tracking-[0.14em] text-[#f4ead2]/55"><span>Executor consensus</span><span>forked</span></div><div class="mt-3 h-2 rounded-full bg-[#d6a73a]/15"><div class="h-2 w-[38%] rounded-full bg-emerald-400"></div></div></div>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section id="tokenomics" class="bg-[#f4ead2] text-[#06130d]">
+        <div class="mx-auto max-w-7xl px-5 py-14 md:py-20">
+          <p class="text-xs font-black uppercase tracking-[0.24em] text-[#8c651d]">tokenomics</p>
+          <h2 class="bc-serif mt-3 max-w-4xl text-5xl leading-tight tracking-[-0.05em] md:text-6xl">A solemn ledger for unspeakably unserious value propositions.</h2>
+          <div class="mt-10 grid gap-5 md:grid-cols-4">
+            <article class="border border-[#8c651d]/35 bg-white p-6"><p class="text-xs uppercase tracking-[0.2em] text-[#8c651d]">Supply</p><h3 class="bc-serif mt-3 text-3xl">Finite-ish</h3><p class="mt-3 leading-relaxed text-[#4a3a1f]">Minted upon loss, burned upon family group chat consensus.</p></article>
+            <article class="border border-[#8c651d]/35 bg-white p-6"><p class="text-xs uppercase tracking-[0.2em] text-[#8c651d]">Utility</p><h3 class="bc-serif mt-3 text-3xl">Ceremonial</h3><p class="mt-3 leading-relaxed text-[#4a3a1f]">Redeemable for nothing, but with the confidence of a pitch deck.</p></article>
+            <article class="border border-[#8c651d]/35 bg-white p-6"><p class="text-xs uppercase tracking-[0.2em] text-[#8c651d]">Governance</p><h3 class="bc-serif mt-3 text-3xl">Awkward</h3><p class="mt-3 leading-relaxed text-[#4a3a1f]">Every heir receives a vote and immediately wishes they had received a casserole.</p></article>
+            <article class="border border-[#8c651d]/35 bg-white p-6"><p class="text-xs uppercase tracking-[0.2em] text-[#8c651d]">Liquidity</p><h3 class="bc-serif mt-3 text-3xl">Post-life</h3><p class="mt-3 leading-relaxed text-[#4a3a1f]">Available after forms, fees, passwords, signatures, and vibes.</p></article>
+          </div>
+        </div>
+      </section>
+
+      <section id="roadmap" class="border-y border-[#d6a73a]/35 bg-[#0d2117]">
+        <div class="mx-auto grid max-w-7xl gap-8 px-5 py-14 md:grid-cols-[0.8fr_1.2fr] md:py-20">
+          <div><p class="text-xs uppercase tracking-[0.24em] text-[#d6a73a]">roadmap</p><h2 class="bc-serif mt-3 text-5xl leading-tight tracking-[-0.05em] md:text-6xl">From last will to launch party.</h2></div>
+          <ol class="grid gap-4">
+            <li class="border border-[#d6a73a]/30 bg-[#03100a] p-5"><p class="text-xs uppercase tracking-[0.2em] text-[#d6a73a]">Phase 01</p><h3 class="bc-serif mt-2 text-3xl">Private beta with three confused attorneys</h3></li>
+            <li class="border border-[#d6a73a]/30 bg-[#03100a] p-5"><p class="text-xs uppercase tracking-[0.2em] text-[#d6a73a]">Phase 02</p><h3 class="bc-serif mt-2 text-3xl">Launch grief staking, then apologize</h3></li>
+            <li class="border border-[#d6a73a]/30 bg-[#03100a] p-5"><p class="text-xs uppercase tracking-[0.2em] text-[#d6a73a]">Phase 03</p><h3 class="bc-serif mt-2 text-3xl">Sunset after regulatory attention</h3></li>
+          </ol>
+        </div>
+      </section>
+
+      <section id="whitepaper" class="bg-[#f4ead2] text-[#06130d]">
+        <div class="mx-auto max-w-7xl px-5 py-14 md:py-20">
+          <div class="grid gap-5 md:grid-cols-3">
+            <blockquote class="bg-white p-6 shadow-[8px_8px_0_#8c651d]"><p class="bc-serif text-3xl leading-tight">“I do not understand this, which is how I know it is financial technology.”</p><footer class="mt-4 text-xs uppercase tracking-[0.16em] text-[#8c651d]">— bereaved early adopter</footer></blockquote>
+            <blockquote class="bg-white p-6 shadow-[8px_8px_0_#8c651d]"><p class="bc-serif text-3xl leading-tight">“Finally, a way to make inheritance feel like customer support.”</p><footer class="mt-4 text-xs uppercase tracking-[0.16em] text-[#8c651d]">— executor, unpaid</footer></blockquote>
+            <blockquote class="bg-white p-6 shadow-[8px_8px_0_#8c651d]"><p class="bc-serif text-3xl leading-tight">“The whitepaper was mostly condolences and token diagrams.”</p><footer class="mt-4 text-xs uppercase tracking-[0.16em] text-[#8c651d]">— institutional nobody</footer></blockquote>
+          </div>
+        </div>
+      </section>
+
+      <section id="contact" class="bg-[#03100a]">
+        <div class="mx-auto grid max-w-7xl gap-8 px-5 py-14 md:grid-cols-[0.9fr_1.1fr] md:py-20">
+          <div><p class="text-xs uppercase tracking-[0.24em] text-[#d6a73a]">Connect estate wallet</p><h2 class="bc-serif mt-3 text-5xl leading-tight tracking-[-0.05em] md:text-6xl">Please do not put grandma on-chain.</h2></div>
+          <div class="rounded-[2rem] border border-[#d6a73a]/35 bg-white/5 p-6">
+            <h3 class="bc-serif text-3xl">Before you provide seed phrases</h3>
+            <p class="mt-4 leading-relaxed text-[#f4ead2]/72">BurialCoin is not a real token, wallet, exchange, estate-planning product, financial instrument, legal service, or acceptable thing to mention during a funeral lunch.</p>
+            <div class="mt-6 border border-[#d6a73a]/25 bg-[#d6a73a]/10 p-4"><p class="text-xs uppercase tracking-[0.18em] text-[#d6a73a]">Request more information</p><p class="mt-2 text-[#f4ead2]/72">Information requested. The information is: sticker concept pending; do not invest.</p></div>
+            <a href="/things/real-fake-ads" class="mt-7 inline-flex rounded-full bg-[#d6a73a] px-5 py-3 text-sm font-black uppercase tracking-[0.12em] text-[#06130d] hover:bg-[#f4d47b]">View Real Fake Ads</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="border-t border-[#d6a73a]/35 bg-[#020705] text-[#f4ead2]/65"><div class="mx-auto flex max-w-7xl flex-col gap-3 px-5 py-5 text-xs uppercase tracking-[0.14em] md:flex-row md:items-center md:justify-between"><p>This is a Real Fake Ad by <a href="/" class="text-[#d6a73a] underline underline-offset-4">fattamano</a>.</p><p>Not financial advice. Not funeral advice. Not advice.</p></div></footer>
+  </body>
+</html>
