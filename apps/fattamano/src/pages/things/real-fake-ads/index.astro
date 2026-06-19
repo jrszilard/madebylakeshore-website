@@ -16,6 +16,8 @@ const campaigns = [
     accent: 'text-ft-splash',
     button: 'bg-ft-splash text-ft-ink',
     qr: [0,1,2,5,7,10,11,12,14,16,18,19,20,22,24],
+    stickerRoute: '/things/dead-people-wanted-sticker',
+    stickerCta: 'Buy evidence this funeral home exists',
   },
   {
     name: 'SameDeck Partners',
@@ -29,6 +31,32 @@ const campaigns = [
     accent: 'text-[#5eead4]',
     button: 'bg-[#5eead4] text-[#07111f]',
     qr: [0,1,2,4,5,7,9,10,12,13,15,16,18,20,22,23,24],
+    stickerRoute: '/things/samedeck-partners-sticker',
+    stickerCta: 'Buy evidence this consultancy exists',
+  },
+];
+
+const comingSoon = [
+  {
+    name: 'Oops! All Compliance',
+    label: 'risk theater / policy snacks',
+    tagline: 'Making sure nothing happens, correctly.',
+    description:
+      'A cereal-box-colored compliance firm for teams that need guardrails, governance, and one more annual training everyone clicks through too fast.',
+  },
+  {
+    name: 'BurialCoin',
+    label: 'post-life fintech',
+    tagline: 'The future of post-life liquidity.',
+    description:
+      'A crypto-adjacent estate product for people who looked at probate and thought: what if this also had a Discord?',
+  },
+  {
+    name: 'Model Citizen AI',
+    label: 'responsible AI / irresponsible deadlines',
+    tagline: 'Responsible AI for irresponsible deadlines.',
+    description:
+      'An enterprise AI vendor promising governance, productivity, and legally reviewable magic from a chatbot that confidently skimmed the meeting notes.',
   },
 ];
 ---
@@ -57,7 +85,7 @@ const campaigns = [
         <p class="mt-6 max-w-[calc(100vw-3rem)] break-words font-body text-lg leading-relaxed text-ft-ink/80 md:max-w-2xl md:text-xl">
           Real physical ads for fake companies, printed as stickers and small objects, each leading to an actual website for a business that should absolutely not exist.
         </p>
-        <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+        <div class="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
           <a
             href="#campaigns"
             class="inline-flex w-full items-center justify-center border-2 border-ft-ink bg-ft-shout px-5 py-3 font-display text-ft-paper shadow-[5px_5px_0_#1A1A1A] transition-transform hover:-translate-y-0.5 hover:translate-x-0.5 hover:shadow-[3px_3px_0_#1A1A1A] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ft-shout sm:w-auto"
@@ -65,8 +93,14 @@ const campaigns = [
             browse fake businesses
           </a>
           <a
-            href="/things"
+            href="/things/dead-people-wanted-sticker"
             class="inline-flex w-full items-center justify-center border-2 border-ft-ink bg-white px-5 py-3 font-display shadow-[5px_5px_0_#1A1A1A] transition-transform hover:-translate-y-0.5 hover:translate-x-0.5 hover:shadow-[3px_3px_0_#1A1A1A] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ft-shout sm:w-auto"
+          >
+            buy the joke
+          </a>
+          <a
+            href="/things"
+            class="inline-flex w-full items-center justify-center border-2 border-ft-ink bg-ft-paper px-5 py-3 font-display shadow-[5px_5px_0_#1A1A1A] transition-transform hover:-translate-y-0.5 hover:translate-x-0.5 hover:shadow-[3px_3px_0_#1A1A1A] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ft-shout sm:w-auto"
           >
             back to things
           </a>
@@ -77,9 +111,13 @@ const campaigns = [
         <p class="font-mono text-xs uppercase tracking-[0.22em] text-ft-smudge">collection logic</p>
         <h2 class="mt-4 max-w-[calc(100vw-5.5rem)] break-words font-display text-xl leading-tight md:max-w-none md:text-3xl">The sticker is the ad. The website is the punchline.</h2>
         <p class="mt-4 font-body leading-relaxed text-ft-smudge">
-          Scan the sticker, enter the tiny fictional universe, notice the disclosure, continue being normal.
+          Scan the sticker, enter the tiny fictional universe, notice the disclosure, then decide whether your water bottle needs documentary proof of a fake company.
         </p>
-        <div class="mt-5 grid grid-cols-2 gap-3 border-t-2 border-dashed border-ft-smudge pt-5 text-center">
+        <div class="mt-5 border-y-2 border-dashed border-ft-smudge py-4">
+          <p class="font-display text-2xl leading-tight text-ft-shout">Three lies unlock free US shipping.</p>
+          <p class="mt-2 font-mono text-xs uppercase tracking-[0.16em] text-ft-smudge">$4 stickers / $3 US flat / free over $12</p>
+        </div>
+        <div class="mt-5 grid grid-cols-2 gap-3 text-center">
           <div>
             <p class="font-display text-4xl text-ft-shout">{campaigns.length}</p>
             <p class="font-mono text-[0.65rem] uppercase tracking-[0.16em] text-ft-smudge">fake firms</p>
@@ -90,6 +128,20 @@ const campaigns = [
           </div>
         </div>
       </aside>
+    </div>
+  </section>
+
+  <section class="real-fake-page border-b-2 border-ft-ink bg-ft-ink text-ft-paper">
+    <div class="mx-auto grid max-w-6xl gap-6 px-6 py-10 md:grid-cols-[0.75fr_1.25fr] md:items-center md:py-14">
+      <div>
+        <p class="font-mono text-xs uppercase tracking-[0.22em] text-ft-splash">if you scanned a sticker</p>
+        <h2 class="mt-3 font-display text-3xl leading-tight md:text-5xl">Congratulations. You are now in the funnel.</h2>
+      </div>
+      <div class="grid gap-4 md:grid-cols-3">
+        <p class="border border-ft-paper/25 bg-white/5 p-4 font-body text-ft-paper/75"><strong class="block font-display text-xl text-ft-paper">1. The company is fake.</strong> Please do not request services, remains, crypto custody, or transformation advisory.</p>
+        <p class="border border-ft-paper/25 bg-white/5 p-4 font-body text-ft-paper/75"><strong class="block font-display text-xl text-ft-paper">2. The sticker is real.</strong> It is available for actual money and mild social consequences.</p>
+        <p class="border border-ft-paper/25 bg-white/5 p-4 font-body text-ft-paper/75"><strong class="block font-display text-xl text-ft-paper">3. Collect the evidence.</strong> Buy three lies, unlock free US shipping, become difficult to explain.</p>
+      </div>
     </div>
   </section>
 
@@ -142,9 +194,12 @@ const campaigns = [
                 A standalone fake-company page with its own voice, art direction, and a tiny disclosure footer.
               </p>
             </div>
-            <div class="flex flex-col gap-3 sm:flex-row">
+            <div class="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
               <a href={campaign.route} class:list={['inline-flex w-full items-center justify-center border-2 border-ft-ink px-5 py-3 font-display shadow-[5px_5px_0_#1A1A1A] hover:bg-white hover:text-ft-shout sm:w-auto', campaign.button]}>
                 visit fake business →
+              </a>
+              <a href={campaign.stickerRoute} class="inline-flex w-full items-center justify-center border-2 border-ft-ink bg-white px-5 py-3 font-display shadow-[5px_5px_0_#1A1A1A] hover:text-ft-shout sm:w-auto">
+                {campaign.stickerCta}
               </a>
             </div>
           </div>
@@ -152,13 +207,36 @@ const campaigns = [
       ))}
     </div>
 
+    <section class="mt-14">
+      <div class="mb-6 grid gap-3 md:grid-cols-[0.8fr_1.2fr] md:items-end">
+        <div>
+          <p class="font-hand text-4xl text-ft-shout">next lies in committee</p>
+          <h2 class="mt-2 font-display text-3xl leading-tight md:text-5xl">Coming soon, pending stickerable bad judgment.</h2>
+        </div>
+        <p class="font-body text-lg leading-relaxed text-ft-smudge">
+          These are the next Real Fake Ads candidates: designed to be funny at sticker size, stranger after a QR scan, and collectible enough to make the free-shipping threshold feel like a dare.
+        </p>
+      </div>
+      <div class="grid gap-5 md:grid-cols-3">
+        {comingSoon.map((idea, index) => (
+          <article class:list={['border-2 border-ft-ink bg-white p-5 shadow-[6px_6px_0_#1A1A1A] motion-reduce:rotate-0', index === 1 ? '-rotate-1' : 'rotate-1']}>
+            <p class="font-mono text-xs uppercase tracking-[0.2em] text-ft-smudge">fake business 00{index + 3} / {idea.label}</p>
+            <h3 class="mt-4 font-display text-3xl leading-none">{idea.name}</h3>
+            <p class="mt-3 font-display text-xl text-ft-shout">“{idea.tagline}”</p>
+            <p class="mt-4 font-body leading-relaxed text-ft-smudge">{idea.description}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+
     <article class="mt-12 border-2 border-ft-ink bg-ft-paper p-6 shadow-[8px_8px_0_#1A1A1A] md:p-8">
       <p class="font-mono text-xs uppercase tracking-[0.22em] text-ft-smudge">product plan</p>
-      <div class="mt-5 grid gap-6 md:grid-cols-4">
+      <div class="mt-5 grid gap-6 md:grid-cols-5">
         <p class="font-body text-ft-smudge"><strong class="text-ft-ink">Object:</strong> sticker, fake local ad style</p>
         <p class="font-body text-ft-smudge"><strong class="text-ft-ink">Mechanic:</strong> QR + short URL to the fake site</p>
-        <p class="font-body text-ft-smudge"><strong class="text-ft-ink">Disclosure:</strong> tiny footer, clearly fake</p>
-        <p class="font-body text-ft-smudge"><strong class="text-ft-ink">Future:</strong> repeatable fake-company campaigns</p>
+        <p class="font-body text-ft-smudge"><strong class="text-ft-ink">Payoff:</strong> fake site admits the bit and points back to the real thing</p>
+        <p class="font-body text-ft-smudge"><strong class="text-ft-ink">Bundle:</strong> three lies, free US shipping</p>
+        <p class="font-body text-ft-smudge"><strong class="text-ft-ink">Future:</strong> Oops, BurialCoin, Model Citizen AI</p>
       </div>
     </article>
   </section>

@@ -43,6 +43,7 @@ const metaDescription =
   full?.seo?.metaDescription || full?.tagline || `${full?.title} — handmade by fattamano.`;
 
 const ogImagePath = `/api/og?title=${encodeURIComponent(full?.title || '')}&subtitle=${encodeURIComponent(full?.tagline || full?.category || '')}`;
+const isRealFakeAdsProduct = ['dead-people-wanted-sticker', 'samedeck-partners-sticker'].includes(full?.slug?.current);
 ---
 <BaseLayout title={metaTitle} description={metaDescription} ogImagePath={ogImagePath}>
   <article class="max-w-6xl mx-auto px-6 py-12">
@@ -104,6 +105,15 @@ const ogImagePath = `/api/og?title=${encodeURIComponent(full?.title || '')}&subt
             />
           )}
         </div>
+
+        {isRealFakeAdsProduct && (
+          <div class="mt-6 border-2 border-ft-ink bg-ft-splash p-5 shadow-[6px_6px_0_#1A1A1A]">
+            <p class="font-mono text-xs uppercase tracking-[0.18em] text-ft-smudge">Real Fake Ads acquisition note</p>
+            <p class="mt-3 font-display text-2xl leading-tight">Sticker available. Company unavailable.</p>
+            <p class="mt-2 font-body text-ft-smudge">Put this on a laptop and become difficult to explain. Buy three $4 stickers to unlock free US shipping.</p>
+            <a href="/things/real-fake-ads" class="mt-4 inline-flex font-display text-ft-shout underline decoration-2 underline-offset-4 hover:text-ft-ink">Visit the fake-business archive →</a>
+          </div>
+        )}
 
         {full.description && (
           <div class="prose mt-10 font-body text-ft-ink max-w-none">
