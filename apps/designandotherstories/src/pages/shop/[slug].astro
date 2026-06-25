@@ -1,155 +1,144 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import ImageViewer from '../../components/ImageViewer.tsx';
-import PurchaseAction from '../../components/PurchaseAction.astro';
+import AddToCartButton from '../../components/cart/AddToCartButton.tsx';
 import { sanityClient, urlFor, queries } from '../../lib/sanity';
 
 export async function getStaticPaths() {
-  const allSlugs = await sanityClient.fetch(queries.allShopProductSlugs);
-  return allSlugs
-    .filter((p: any) => p.slug?.current)
-    .map((p: any) => ({
-      params: { slug: p.slug.current },
-    }));
+  const [products, artworks] = await Promise.all([
+    sanityClient.fetch(queries.allShopProductSlugs),
+    sanityClient.fetch(queries.allForSaleArtworkSlugs),
+  ]);
+  const seen = new Set<string>();
+  const paths: { params: { slug: string } }[] = [];
+  for (const p of products ?? []) {
+    const s = p.slug?.current;
+    if (s && !seen.has(s)) { seen.add(s); paths.push({ params: { slug: s } }); }
+  }
+  for (const a of artworks ?? []) {
+    const s = a.slug?.current;
+    if (!s) continue;
+    if (seen.has(s)) { console.warn(`[shop] slug collision: "${s}" — shopProduct wins`); continue; }
+    seen.add(s);
+    paths.push({ params: { slug: s } });
+  }
+  return paths;
 }
 
 const { slug } = Astro.params;
+// shopProduct wins on collision; fall back to artwork.
 const product = await sanityClient.fetch(queries.shopProductBySlug, { slug });
+const artwork = product ? null : await sanityClient.fetch(queries.artworkBySlug, { slug });
+if (!product && !artwork) return Astro.redirect('/shop');
 
-if (!product) {
-  return Astro.redirect('/shop');
-}
+const isArtwork = !product;
+const doc: any = product ?? artwork;
+const productType: 'artwork' | 'shopProduct' = isArtwork ? 'artwork' : 'shopProduct';
 
-// Build image arrays for ImageViewer (skip entries without a valid asset)
-const images = (product.images ?? [])
+const available = isArtwork
+  ? Boolean(artwork.forSale && artwork.originalAvailable)
+  : Boolean(product.available && (product.stock == null || product.stock > 0));
+
+const images = (doc.images ?? [])
   .filter((img: any) => img.asset)
   .map((img: any) => ({
     url: urlFor(img).width(800).fit('max').url(),
-    alt: img.alt ?? product.title,
+    alt: img.alt ?? doc.title,
     thumbUrl: urlFor(img).width(160).height(160).fit('crop').url(),
   }));
 
-// Thumbnail for purchase action / OG image
-const firstImageUrl = images.length > 0 ? images[0].url : undefined;
+const priceCents = typeof doc.price === 'number' ? Math.round(doc.price * 100) : null;
+const priceDisplay = priceCents != null ? `$${(priceCents / 100).toLocaleString(undefined, { minimumFractionDigits: 0 })}` : null;
 
-const categoryLabel = product.category
+const cartItem = {
+  productId: doc._id,
+  type: productType,
+  slug,
+  title: doc.title,
+  priceCents: priceCents ?? 0,
+  qty: 1,
+};
+
+const categoryLabel = !isArtwork && product.category
   ? product.category.charAt(0).toUpperCase() + product.category.slice(1).replace('-', ' ')
-  : null;
+  : (isArtwork ? (artwork.medium ?? null) : null);
 
-// Render blockContent description to HTML
-function blockContentToHtml(blocks: any[]): string {
-  if (!Array.isArray(blocks)) return '';
-  return blocks
-    .map((block) => {
-      if (block._type !== 'block') return '';
-      const tag =
-        block.style === 'h2' ? 'h2' :
-        block.style === 'h3' ? 'h3' :
-        block.style === 'h4' ? 'h4' :
-        block.style === 'blockquote' ? 'blockquote' :
-        'p';
-
-      const text = (block.children ?? [])
-        .map((span: any) => {
-          let t = (span.text ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-          if (span.marks?.includes('strong')) t = `<strong>${t}</strong>`;
-          if (span.marks?.includes('em')) t = `<em>${t}</em>`;
-          return t;
-        })
-        .join('');
-
-      return `<${tag}>${text}</${tag}>`;
-    })
-    .join('\n');
-}
-
-let descriptionHtml = '';
-if (product.description && Array.isArray(product.description)) {
-  descriptionHtml = blockContentToHtml(product.description);
-}
-
-const seoTitle = product.title;
-const seoDescription = product.blurb || `${product.title}${categoryLabel ? ` — ${categoryLabel}` : ''}.`;
+const seoTitle = doc.title;
+const seoDescription = (isArtwork ? artwork.story : product.blurb) || doc.title;
 ---
 
-<BaseLayout title={seoTitle} description={seoDescription} showSnipcart={true}>
+<BaseLayout title={seoTitle} description={seoDescription}>
   <article>
     <section class="section-spacing">
       <div class="container-art">
-        <!-- Back link -->
         <a href="/shop" class="inline-flex items-center gap-1 font-sans text-sm text-daos-charcoal hover:text-daos-terracotta transition-colors mb-10">
           &larr; Back to Shop
         </a>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16 items-start">
+          <div><ImageViewer client:visible images={images} /></div>
 
-          <!-- Left: Image viewer -->
-          <div>
-            <ImageViewer client:visible images={images} />
-          </div>
-
-          <!-- Right: Details sidebar -->
           <div class="space-y-6">
-
-            <!-- Category badge -->
             {categoryLabel && (
               <span class="inline-block px-3 py-1 border border-daos-warm text-daos-charcoal text-xs font-sans uppercase tracking-wider rounded-sm">
                 {categoryLabel}
               </span>
             )}
 
-            <!-- Title -->
-            <h1 class="font-display text-display md:text-display-lg text-daos-ink leading-tight">
-              {product.title}
-            </h1>
+            <h1 class="font-display text-display md:text-display-lg text-daos-ink leading-tight">{doc.title}</h1>
 
-            <!-- Blurb -->
-            {product.blurb && (
-              <p class="font-body text-daos-charcoal leading-relaxed italic border-l-2 border-daos-clay pl-4">
-                {product.blurb}
-              </p>
+            {isArtwork && artwork.story && (
+              <p class="font-body text-daos-charcoal leading-relaxed italic border-l-2 border-daos-clay pl-4">{artwork.story}</p>
+            )}
+            {!isArtwork && product.blurb && (
+              <p class="font-body text-daos-charcoal leading-relaxed italic border-l-2 border-daos-clay pl-4">{product.blurb}</p>
             )}
 
-            <!-- Related artwork link -->
-            {product.relatedArtwork?.slug?.current && (
+            <div class="pt-4 border-t border-daos-warm space-y-4">
+              {priceDisplay && (
+                <p class="font-sans text-xl font-medium text-daos-ink">
+                  {available ? <span>{priceDisplay}</span> : <span class="line-through text-daos-charcoal">{priceDisplay}</span>}
+                </p>
+              )}
+              {available ? (
+                <p class="font-sans text-sm text-daos-sage uppercase tracking-wide">Available</p>
+              ) : (
+                <p class="font-sans text-sm text-daos-charcoal uppercase tracking-wide">Sold</p>
+              )}
+              {available && priceCents != null && (
+                <AddToCartButton client:visible item={cartItem} initialAvailable={available} />
+              )}
+            </div>
+
+            {isArtwork && artwork.collection?.slug?.current && (
               <p class="font-sans text-sm">
-                Inspired by{' '}
-                <a
-                  href={`/gallery/${product.relatedArtwork.slug.current}`}
-                  class="text-daos-sage underline underline-offset-2 hover:text-daos-terracotta transition-colors"
-                >
-                  {product.relatedArtwork.title}
+                Part of{' '}
+                <a href={`/gallery/collections/${artwork.collection.slug.current}`} class="text-daos-sage underline underline-offset-2 hover:text-daos-terracotta transition-colors">
+                  {artwork.collection.title}
                 </a>
               </p>
             )}
 
-            <!-- Purchase action -->
-            <div class="pt-4 border-t border-daos-warm">
-              <PurchaseAction
-                title={product.title}
-                slug={product.slug.current}
-                price={product.price}
-                originalAvailable={product.available}
-                printsAvailable={false}
-                image={firstImageUrl}
-                basePath="/shop"
-              />
-            </div>
+            {/* Prints are display-only in v1 */}
+            {isArtwork && artwork.printsAvailable && artwork.printOptions?.length > 0 && (
+              <div class="pt-4 border-t border-daos-warm">
+                <h2 class="font-display text-lg text-daos-ink mb-3">Prints available</h2>
+                <div class="space-y-2">
+                  {artwork.printOptions.map((opt: any) => (
+                    <div class="flex items-center justify-between py-2 border-b border-daos-warm/60 font-sans text-sm">
+                      <span class="text-daos-charcoal">{opt.size}</span>
+                      <span class="text-daos-ink font-medium">${opt.price?.toLocaleString()}</span>
+                    </div>
+                  ))}
+                </div>
+                <p class="font-body text-sm text-daos-charcoal italic mt-3">
+                  Looking for prints or cards? See <a href="/shop" class="text-daos-terracotta underline underline-offset-2">Prints &amp; Cards</a>.
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </div>
     </section>
-
-    <!-- Extended description -->
-    {descriptionHtml && (
-      <section class="section-spacing bg-daos-paper">
-        <div class="container-art">
-          <div
-            class="max-w-2xl mx-auto prose prose-stone font-body text-daos-charcoal leading-relaxed"
-            set:html={descriptionHtml}
-          />
-        </div>
-      </section>
-    )}
   </article>
 </BaseLayout>

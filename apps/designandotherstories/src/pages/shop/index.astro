@@ -15,7 +15,6 @@ const printsAndCards = shopProducts ?? [];
 <BaseLayout
   title="Shop"
   description="Shop original artwork, prints, postcards, and greeting cards by Wilma. Each piece ships directly from the studio."
-  showSnipcart={true}
 >
   <!-- Page header -->
   <section class="section-spacing">
@@ -49,6 +48,7 @@ const printsAndCards = shopProducts ?? [];
               price={piece.price}
               originalAvailable={piece.originalAvailable}
               printsAvailable={piece.printsAvailable}
+              basePath="/shop"
             />
           ))}
         </div>
