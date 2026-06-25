@@ -365,11 +365,42 @@ export const queries = {
 }`,
 
   shopProductBySlug: `*[_type == "shopProduct" && slug.current == $slug][0] {
-  _id, title, slug, category, images, blurb, description, price, available, featured,
+  _id, title, slug, category, images, blurb, description, price, available, stock, featured,
   "relatedArtwork": relatedArtwork->{ _id, title, slug }
 }`,
 
   allShopProductSlugs: `*[_type == "shopProduct"] { slug }`,
+
+  allForSaleArtworkSlugs: `*[_type == "artwork" && forSale == true]{ slug }`,
+
+  // Authoritative server-side rows for checkout + webhook. Availability normalized
+  // here; price stays in dollars and is converted to cents in buildOrderLines.
+  daosProductsByIds: `*[_id in $ids && _type in ["artwork","shopProduct"]]{
+    _id,
+    _type,
+    title,
+    price,
+    "available": select(
+      _type == "artwork" => forSale == true && originalAvailable == true,
+      _type == "shopProduct" => available == true,
+      false
+    ),
+    "stock": stock
+  }`,
+
+  // Public live-availability check for Add-to-Cart buttons (read-only client).
+  daosAvailabilityByIds: `*[_id in $ids && _type in ["artwork","shopProduct"]]{
+    _id,
+    "inStock": select(
+      _type == "artwork" => forSale == true && originalAvailable == true,
+      _type == "shopProduct" => available == true && (stock == null || stock > 0),
+      false
+    )
+  }`,
+
+  daosShopSettings: `*[_type == "daosShopSettings"][0]{
+    shippingZones[]{ label, countryCodes, rateCents, freeShippingThresholdCents }
+  }`,
 
   collectionBySlug: `*[_type == "artCollection" && slug.current == $slug][0] {
   _id, title, slug, tagline, description, releaseDate, coverImage,
