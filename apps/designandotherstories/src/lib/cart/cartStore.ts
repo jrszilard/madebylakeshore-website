@@ -16,17 +16,20 @@ const MAX_QTY = 50;
 export function cartReducer(state: CartState, action: CartAction): CartState {
   switch (action.type) {
     case 'add': {
+      // Originals (artwork) are unique — cap at 1. shopProduct uses MAX_QTY.
+      // Intentional DAOS-specific divergence: fattamano has no single-quantity unique products.
+      const cap = action.item.type === 'artwork' ? 1 : MAX_QTY;
       const existing = state.items.find((i) => i.productId === action.item.productId);
       if (existing) {
         return {
           items: state.items.map((i) =>
             i.productId === action.item.productId
-              ? { ...i, qty: Math.min(MAX_QTY, i.qty + action.item.qty) }
+              ? { ...i, qty: Math.min(cap, i.qty + action.item.qty) }
               : i
           ),
         };
       }
-      return { items: [...state.items, { ...action.item, qty: Math.min(MAX_QTY, action.item.qty) }] };
+      return { items: [...state.items, { ...action.item, qty: Math.min(cap, action.item.qty) }] };
     }
     case 'setQty': {
       if (action.qty <= 0) {
