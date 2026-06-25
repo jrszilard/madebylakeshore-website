@@ -3,24 +3,29 @@ import '../styles/global.css';
 import Navigation from '../components/Navigation.astro';
 import Banner from '../components/Banner.astro';
 import Footer from '../components/Footer.astro';
+import CartDrawer from '../components/cart/CartDrawer.tsx';
+import { sanityClient, queries } from '../lib/sanity';
 
 interface Props {
   title: string;
   description?: string;
   noindex?: boolean;
-  showSnipcart?: boolean;
 }
 
 const {
   title,
   description = 'Design & Other Stories is a small studio making literary fiction and traditional art by hand in New Hampshire. Original paintings, drawings, and books — made one piece at a time.',
   noindex = false,
-  showSnipcart = false,
 } = Astro.props;
 
 const siteTitle = title === 'Home' ? 'Design & Other Stories' : `${title} | Design & Other Stories`;
 
-const snipcartApiKey = import.meta.env.PUBLIC_SNIPCART_API_KEY || 'your-snipcart-api-key';
+let freeShippingThresholdCents: number | null = null;
+try {
+  const settings = await sanityClient.fetch(queries.daosShopSettings);
+  const usZone = settings?.shippingZones?.find((z: any) => z.countryCodes?.includes('US'));
+  freeShippingThresholdCents = usZone?.freeShippingThresholdCents ?? null;
+} catch {}
 ---
 
 <!DOCTYPE html>
@@ -37,14 +42,6 @@ const snipcartApiKey = import.meta.env.PUBLIC_SNIPCART_API_KEY || 'your-snipcart
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
-    {showSnipcart && (
-      <>
-        <link rel="preconnect" href="https://app.snipcart.com" />
-        <link rel="preconnect" href="https://cdn.snipcart.com" />
-        <link rel="stylesheet" href="https://cdn.snipcart.com/themes/v3.2.0/default/snipcart.css" />
-      </>
-    )}
-
     <title>{siteTitle}</title>
   </head>
   <body class="min-h-screen flex flex-col paper-texture">
@@ -60,16 +57,6 @@ const snipcartApiKey = import.meta.env.PUBLIC_SNIPCART_API_KEY || 'your-snipcart
 
     <Footer />
 
-    {showSnipcart && (
-      <>
-        <div
-          id="snipcart"
-          data-api-key={snipcartApiKey}
-          data-config-modal-style="side"
-          hidden
-        ></div>
-        <script src="https://cdn.snipcart.com/themes/v3.2.0/default/snipcart.js" async></script>
-      </>
-    )}
+    <CartDrawer client:idle freeShippingThresholdCents={freeShippingThresholdCents} />
   </body>
 </html>

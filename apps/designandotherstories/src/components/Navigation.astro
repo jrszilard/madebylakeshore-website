@@ -1,10 +1,12 @@
 ---
-import { SHOP_PLATFORM, SUBSTACK_URL } from '../lib/config';
+import { SUBSTACK_URL } from '../lib/config';
+import CartButton from './cart/CartButton.tsx';
 
 const currentPath = Astro.url.pathname;
 
 const navLinks = [
   { href: '/gallery', label: 'Gallery' },
+  { href: '/shop', label: 'Shop' },
   { href: '/events', label: 'Events' },
   { href: SUBSTACK_URL, label: 'The Blog', external: true },
   { href: '/about', label: 'About' },
@@ -42,7 +44,7 @@ const navLinks = [
 
       <!-- Cart Button and Mobile Menu Toggle -->
       <div class="flex items-center gap-4 ml-auto">
-        {/* Cart icon hidden for now */}
+        <CartButton client:idle />
 
         <!-- Mobile Menu Button -->
         <button

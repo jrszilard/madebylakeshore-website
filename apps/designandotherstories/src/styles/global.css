@@ -58,11 +58,6 @@
     text-transform: uppercase;
   }
   
-  /* Snipcart button styling */
-  .snipcart-add-item {
-    @apply btn-warm w-full justify-center;
-  }
-
   .btn-warm:focus-visible,
   .btn-outline:focus-visible {
     @apply outline-2 outline-offset-2;

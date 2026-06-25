@@ -10,7 +10,6 @@ interface Props {
 }
 
 const { title, slug, category, medium, price, image, available } = Astro.props;
-const productUrl = `https://designandotherstories.com/gallery/${slug}`;
 ---
 
 <article class="group">
@@ -55,15 +54,11 @@ const productUrl = `https://designandotherstories.com/gallery/${slug}`;
   </div>
   
   {available && (
-    <button
-      class="snipcart-add-item mt-4 w-full py-2 border border-daos-ink text-daos-ink text-sm font-sans hover:bg-daos-ink hover:text-daos-cream transition-colors"
-      data-item-id={slug}
-      data-item-price={price}
-      data-item-url={productUrl}
-      data-item-name={title}
-      data-item-description={`${category} • ${medium}`}
+    <a
+      href={`/shop/${slug}`}
+      class="btn-warm mt-4 w-full py-2 text-center text-sm font-sans inline-block"
     >
-      Add to Cart
-    </button>
+      Buy from shop
+    </a>
   )}
 </article>

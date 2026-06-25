@@ -1,7 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import ImageViewer from '../../components/ImageViewer.tsx';
-import PurchaseAction from '../../components/PurchaseAction.astro';
 import { sanityClient, urlFor, queries } from '../../lib/sanity';
 
 export async function getStaticPaths() {
@@ -28,9 +27,6 @@ const images = (artwork.images ?? [])
     alt: img.alt ?? artwork.title,
     thumbUrl: urlFor(img).width(160).height(160).fit('crop').url(),
   }));
-
-// Thumbnail for purchase actions / OG image
-const firstImageUrl = images.length > 0 ? images[0].url : undefined;
 
 // Format dimensions
 function formatDimensions(dims: any): string {
@@ -85,7 +81,7 @@ const seoDescription = artwork.seo?.description || artwork.story || `${artwork.t
 const region = (artwork as any)?.secretLinkRegion;
 ---
 
-<BaseLayout title={seoTitle} description={seoDescription} showSnipcart={artwork.forSale}>
+<BaseLayout title={seoTitle} description={seoDescription}>
   <article>
     <section class="section-spacing">
       <div class="container-art">
@@ -143,17 +139,13 @@ const region = (artwork as any)?.secretLinkRegion;
               </p>
             )}
 
-            <!-- Purchase action -->
+            <!-- Buy from shop link -->
             {artwork.forSale && (
               <div class="pt-4 border-t border-daos-warm">
-                <PurchaseAction
-                  title={artwork.title}
-                  slug={artwork.slug.current}
-                  price={artwork.price}
-                  originalAvailable={artwork.originalAvailable}
-                  printsAvailable={artwork.printsAvailable}
-                  image={firstImageUrl}
-                />
+                <a href={`/shop/${artwork.slug.current}`} class="btn-warm inline-flex items-center gap-2">
+                  Buy this work from our shop
+                  <span aria-hidden="true">&rarr;</span>
+                </a>
               </div>
             )}
           </div>
@@ -173,30 +165,5 @@ const region = (artwork as any)?.secretLinkRegion;
       </section>
     )}
 
-    <!-- Print options -->
-    {artwork.printsAvailable && artwork.printOptions && artwork.printOptions.length > 0 && (
-      <section id="prints" class="section-spacing">
-        <div class="container-art">
-          <div class="max-w-xl">
-            <h2 class="font-display text-2xl text-daos-ink mb-6">Print Options</h2>
-            <div class="space-y-3">
-              {artwork.printOptions.map((opt: any) => (
-                <div class="flex items-center justify-between py-3 border-b border-daos-warm">
-                  <div class="font-sans text-sm text-daos-charcoal">{opt.size}</div>
-                  <div class="flex items-center gap-4">
-                    <span class="font-sans font-medium text-daos-ink">${opt.price?.toLocaleString()}</span>
-                    {opt.inStock ? (
-                      <span class="text-xs text-daos-sage uppercase tracking-wide">In Stock</span>
-                    ) : (
-                      <span class="text-xs text-daos-charcoal uppercase tracking-wide">Out of Stock</span>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-    )}
   </article>
 </BaseLayout>
