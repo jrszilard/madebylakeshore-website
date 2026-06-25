@@ -1,0 +1,33 @@
+---
+export const prerender = false;
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getStripe } from '../../lib/server/stripe';
+
+const sessionId = Astro.url.searchParams.get('session_id');
+let paid = false;
+if (sessionId) {
+  try {
+    const s = await getStripe().checkout.sessions.retrieve(sessionId);
+    paid = s.payment_status === 'paid' || s.status === 'complete';
+  } catch {}
+}
+---
+<BaseLayout title={paid ? 'Thank you' : 'Order status'} description="Order confirmation.">
+  <section class="section-spacing">
+    <div class="container-art max-w-2xl text-center py-16">
+      {paid ? (
+        <>
+          <h1 class="font-display italic text-display-lg text-daos-ink mb-6">Thank you</h1>
+          <p class="font-body text-daos-charcoal text-lg leading-relaxed">Your order is in. Each piece is wrapped and shipped with care from the studio.</p>
+          <a href="/shop" class="btn-warm inline-flex mt-8">Back to the shop</a>
+          <script is:inline>try { localStorage.removeItem('daos_cart_v1'); } catch (e) {}</script>
+        </>
+      ) : (
+        <>
+          <h1 class="font-display italic text-display-lg text-daos-ink mb-6">Still processing</h1>
+          <p class="font-body text-daos-charcoal text-lg leading-relaxed">If you were charged, a receipt is on its way by email. Refresh in a moment.</p>
+        </>
+      )}
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,19 @@
+---
+export const prerender = false;
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import CheckoutEmbed from '../../components/checkout/CheckoutEmbed.tsx';
+
+const publishableKey = import.meta.env.PUBLIC_STRIPE_PUBLISHABLE_KEY || '';
+---
+<BaseLayout title="Checkout" description="Complete your order from Design & Other Stories.">
+  <section class="section-spacing">
+    <div class="container-art max-w-3xl">
+      <a href="/shop" class="inline-flex items-center gap-1 font-sans text-sm text-daos-charcoal hover:text-daos-terracotta transition-colors mb-8">
+        &larr; Keep shopping
+      </a>
+      {publishableKey
+        ? <CheckoutEmbed client:only="react" publishableKey={publishableKey} />
+        : <p class="font-body text-daos-charcoal">Checkout is temporarily unavailable.</p>}
+    </div>
+  </section>
+</BaseLayout>
