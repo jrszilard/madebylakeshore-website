@@ -146,6 +146,42 @@ export const structure: StructureResolver = (S) =>
                     .documentId('banner')
                     .title('Site Banner')
                 ),
+
+              S.divider(),
+
+              // Shop
+              S.listItem()
+                .title('Shop')
+                .child(
+                  S.list()
+                    .title('Shop')
+                    .items([
+                      S.listItem()
+                        .title('Shop Settings')
+                        .child(
+                          S.document()
+                            .schemaType('daosShopSettings')
+                            .documentId('daosShopSettings')
+                            .title('Shop Settings')
+                        ),
+                      S.listItem()
+                        .title('Products')
+                        .schemaType('shopProduct')
+                        .child(
+                          S.documentTypeList('shopProduct')
+                            .title('Products')
+                            .defaultOrdering([{ field: '_createdAt', direction: 'desc' }])
+                        ),
+                      S.listItem()
+                        .title('Orders (internal)')
+                        .schemaType('daosCheckoutSession')
+                        .child(
+                          S.documentTypeList('daosCheckoutSession')
+                            .title('Orders')
+                            .defaultOrdering([{ field: 'createdAt', direction: 'desc' }])
+                        ),
+                    ])
+                ),
             ])
         ),
 

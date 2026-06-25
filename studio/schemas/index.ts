@@ -16,6 +16,8 @@ import writingPiece from './documents/writingPiece';
 import event from './documents/event';
 import artistProfile from './documents/artistProfile';
 import shopProduct from './documents/shopProduct';
+import daosShopSettings from './documents/daosShopSettings';
+import daosCheckoutSession from './documents/daosCheckoutSession';
 
 // Incubator documents
 import digitalProject from './documents/digitalProject';
@@ -49,6 +51,8 @@ export const schemaTypes = [
   event,
   artistProfile,
   shopProduct,
+  daosShopSettings,
+  daosCheckoutSession,
   digitalProject,
   buildLog,
 

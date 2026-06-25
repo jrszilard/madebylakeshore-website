@@ -69,6 +69,14 @@ export default defineType({
       initialValue: true,
     }),
     defineField({
+      name: 'stock',
+      title: 'Stock (optional)',
+      type: 'number',
+      description:
+        'Leave blank for unlimited / print-on-demand. Set a number for limited stock; it decrements on each sale and flips Available off at 0.',
+      validation: (Rule) => Rule.min(0).integer(),
+    }),
+    defineField({
       name: 'relatedArtwork',
       title: 'Related Artwork',
       type: 'reference',
