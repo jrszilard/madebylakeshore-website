@@ -44,7 +44,7 @@ export default function AddToCartButton({ item, initialAvailable }: Props) {
       }}
       className="btn-warm"
     >
-      {added ? 'Added ✓' : 'Add to cart'}
+      {added ? 'Added' : 'Add to cart'}
     </button>
   );
 }

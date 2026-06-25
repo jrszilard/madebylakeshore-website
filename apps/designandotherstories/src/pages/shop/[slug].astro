@@ -63,6 +63,38 @@ const categoryLabel = !isArtwork && product.category
   ? product.category.charAt(0).toUpperCase() + product.category.slice(1).replace('-', ' ')
   : (isArtwork ? (artwork.medium ?? null) : null);
 
+// Render blockContent description to HTML
+function blockContentToHtml(blocks: any[]): string {
+  if (!Array.isArray(blocks)) return '';
+  return blocks
+    .map((block) => {
+      if (block._type !== 'block') return '';
+      const tag =
+        block.style === 'h2' ? 'h2' :
+        block.style === 'h3' ? 'h3' :
+        block.style === 'h4' ? 'h4' :
+        block.style === 'blockquote' ? 'blockquote' :
+        'p';
+
+      const text = (block.children ?? [])
+        .map((span: any) => {
+          let t = (span.text ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+          if (span.marks?.includes('strong')) t = `<strong>${t}</strong>`;
+          if (span.marks?.includes('em')) t = `<em>${t}</em>`;
+          return t;
+        })
+        .join('');
+
+      return `<${tag}>${text}</${tag}>`;
+    })
+    .join('\n');
+}
+
+let descriptionHtml = '';
+if (doc.description && Array.isArray(doc.description)) {
+  descriptionHtml = blockContentToHtml(doc.description);
+}
+
 const seoTitle = doc.title;
 const seoDescription = (isArtwork ? artwork.story : product.blurb) || doc.title;
 ---
@@ -140,5 +172,18 @@ const seoDescription = (isArtwork ? artwork.story : product.blurb) || doc.title;
         </div>
       </div>
     </section>
+
+    <!-- Extended description -->
+    {descriptionHtml && (
+      <section class="section-spacing bg-daos-paper">
+        <div class="container-art">
+          <div
+            class="max-w-2xl mx-auto prose prose-stone font-body text-daos-charcoal leading-relaxed"
+            set:html={descriptionHtml}
+          />
+        </div>
+      </section>
+    )}
+
   </article>
 </BaseLayout>
