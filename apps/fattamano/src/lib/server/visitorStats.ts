@@ -1,5 +1,7 @@
 import { isbot } from 'isbot';
 import { sanityClient } from '../sanity';
+import { waitUntil } from '@vercel/functions';
+import { sanityWriteClient } from './sanityWrite';
 
 export type VisitorKind = 'bot' | 'human';
 export interface VisitorStats {
@@ -54,5 +56,41 @@ export async function readStats(fetcher: Fetcher = sanityClient.fetch): Promise<
     };
   } catch {
     return null;
+  }
+}
+
+export interface StatsWriteClient {
+  patch(id: string): { inc(values: Record<string, number>): { commit(): Promise<unknown> } };
+  createIfNotExists(doc: Record<string, unknown>): Promise<unknown>;
+}
+
+export async function incrementStats(
+  increments: Partial<VisitorStats>,
+  client: StatsWriteClient = sanityWriteClient() as unknown as StatsWriteClient,
+): Promise<void> {
+  const values = increments as Record<string, number>;
+  try {
+    await client.patch(STATS_DOC_ID).inc(values).commit();
+  } catch {
+    await client.createIfNotExists({
+      _id: STATS_DOC_ID,
+      _type: STATS_DOC_TYPE,
+      total: 0,
+      humans: 0,
+      bots: 0,
+    });
+    await client.patch(STATS_DOC_ID).inc(values).commit();
+  }
+}
+
+export function deferWrite(work: Promise<unknown>): void {
+  const safe = Promise.resolve(work).catch((err) => {
+    console.warn('[visitorStats] deferred write failed', err);
+  });
+  try {
+    waitUntil(safe);
+  } catch {
+    // No Vercel request context (local dev / tests): let it run detached.
+    void safe;
   }
 }

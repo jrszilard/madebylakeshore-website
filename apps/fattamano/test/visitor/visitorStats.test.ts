@@ -1,5 +1,12 @@
-import { describe, it, expect } from 'vitest';
-import { classifyVisitor, readStats } from '../../src/lib/server/visitorStats';
+import { describe, it, expect, vi } from 'vitest';
+import {
+  classifyVisitor,
+  readStats,
+  incrementStats,
+  deferWrite,
+  STATS_DOC_ID,
+  STATS_DOC_TYPE,
+} from '../../src/lib/server/visitorStats';
 
 const HUMAN_UAS = [
   'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
@@ -64,5 +71,49 @@ describe('readStats', () => {
   it('returns null when the read throws', async () => {
     const fetcher = (async () => { throw new Error('sanity down'); }) as any;
     expect(await readStats(fetcher)).toBeNull();
+  });
+});
+
+function makeClient(opts: { failFirstCommit?: boolean } = {}) {
+  let commitCount = 0;
+  const commit = vi.fn(async () => {
+    commitCount += 1;
+    if (opts.failFirstCommit && commitCount === 1) throw new Error('document does not exist');
+    return {};
+  });
+  const inc = vi.fn(() => ({ commit }));
+  const patch = vi.fn(() => ({ inc }));
+  const createIfNotExists = vi.fn(async () => ({}));
+  return { patch, inc, commit, createIfNotExists };
+}
+
+describe('incrementStats', () => {
+  it('patches and increments the stats doc', async () => {
+    const client = makeClient();
+    await incrementStats({ total: 1, humans: 1 }, client as any);
+    expect(client.patch).toHaveBeenCalledWith(STATS_DOC_ID);
+    expect(client.inc).toHaveBeenCalledWith({ total: 1, humans: 1 });
+    expect(client.commit).toHaveBeenCalledTimes(1);
+    expect(client.createIfNotExists).not.toHaveBeenCalled();
+  });
+
+  it('creates the doc then retries when the first patch fails', async () => {
+    const client = makeClient({ failFirstCommit: true });
+    await incrementStats({ total: 1, bots: 1 }, client as any);
+    expect(client.createIfNotExists).toHaveBeenCalledWith({
+      _id: STATS_DOC_ID,
+      _type: STATS_DOC_TYPE,
+      total: 0,
+      humans: 0,
+      bots: 0,
+    });
+    expect(client.commit).toHaveBeenCalledTimes(2);
+  });
+});
+
+describe('deferWrite', () => {
+  it('does not throw and swallows rejection', () => {
+    expect(() => deferWrite(Promise.resolve('ok'))).not.toThrow();
+    expect(() => deferWrite(Promise.reject(new Error('boom')))).not.toThrow();
   });
 });
