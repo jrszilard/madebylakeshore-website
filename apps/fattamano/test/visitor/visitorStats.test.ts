@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { classifyVisitor } from '../../src/lib/server/visitorStats';
+import { classifyVisitor, readStats } from '../../src/lib/server/visitorStats';
 
 const HUMAN_UAS = [
   'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
@@ -49,5 +49,20 @@ describe('applyOptimistic', () => {
   it('treats missing increment fields as zero', () => {
     expect(applyOptimistic({ total: 10, humans: 4, bots: 6 }, { total: 1 }))
       .toEqual({ total: 11, humans: 4, bots: 6 });
+  });
+});
+
+describe('readStats', () => {
+  it('maps a found doc to stats', async () => {
+    const fetcher = (async () => ({ total: 500, humans: 12, bots: 488 })) as any;
+    expect(await readStats(fetcher)).toEqual({ total: 500, humans: 12, bots: 488 });
+  });
+  it('returns zeros when the doc does not exist yet', async () => {
+    const fetcher = (async () => null) as any;
+    expect(await readStats(fetcher)).toEqual({ total: 0, humans: 0, bots: 0 });
+  });
+  it('returns null when the read throws', async () => {
+    const fetcher = (async () => { throw new Error('sanity down'); }) as any;
+    expect(await readStats(fetcher)).toBeNull();
   });
 });

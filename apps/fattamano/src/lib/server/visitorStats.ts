@@ -1,4 +1,5 @@
 import { isbot } from 'isbot';
+import { sanityClient } from '../sanity';
 
 export type VisitorKind = 'bot' | 'human';
 export interface VisitorStats {
@@ -37,4 +38,21 @@ export function applyOptimistic(stats: VisitorStats, increments: Partial<Visitor
     humans: stats.humans + (increments.humans ?? 0),
     bots: stats.bots + (increments.bots ?? 0),
   };
+}
+
+const STATS_QUERY = `*[_id == $id][0]{ total, humans, bots }`;
+
+type Fetcher = <T = any>(query: string, params?: Record<string, any>) => Promise<T>;
+
+export async function readStats(fetcher: Fetcher = sanityClient.fetch): Promise<VisitorStats | null> {
+  try {
+    const doc = await fetcher<Partial<VisitorStats> | null>(STATS_QUERY, { id: STATS_DOC_ID });
+    return {
+      total: doc?.total ?? 0,
+      humans: doc?.humans ?? 0,
+      bots: doc?.bots ?? 0,
+    };
+  } catch {
+    return null;
+  }
 }
