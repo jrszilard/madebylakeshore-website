@@ -1,7 +1,6 @@
 import { isbot } from 'isbot';
-import { sanityClient } from '../sanity';
 import { waitUntil } from '@vercel/functions';
-import { sanityWriteClient } from './sanityWrite';
+import { sanityWriteClient, sanityWriteFetch } from './sanityWrite';
 
 export type VisitorKind = 'bot' | 'human';
 export interface VisitorStats {
@@ -46,7 +45,9 @@ const STATS_QUERY = `*[_id == $id][0]{ total, humans, bots }`;
 
 type Fetcher = <T = any>(query: string, params?: Record<string, any>) => Promise<T>;
 
-export async function readStats(fetcher: Fetcher = sanityClient.fetch): Promise<VisitorStats | null> {
+// Dotted Sanity IDs are private to unauthenticated clients, so read the backend-only
+// singleton through the server write client instead of the public browser client.
+export async function readStats(fetcher: Fetcher = sanityWriteFetch): Promise<VisitorStats | null> {
   try {
     const doc = await fetcher<Partial<VisitorStats> | null>(STATS_QUERY, { id: STATS_DOC_ID });
     return {
