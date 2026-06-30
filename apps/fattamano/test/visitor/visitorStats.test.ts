@@ -4,6 +4,8 @@ import {
   readStats,
   incrementStats,
   deferWrite,
+  planVisit,
+  applyOptimistic,
   STATS_DOC_ID,
   STATS_DOC_TYPE,
 } from '../../src/lib/server/visitorStats';
@@ -33,8 +35,6 @@ describe('classifyVisitor', () => {
     expect(classifyVisitor(null)).toBe('bot');
   });
 });
-
-import { planVisit, applyOptimistic } from '../../src/lib/server/visitorStats';
 
 describe('planVisit', () => {
   it('counts a bot as total + bots, no cookie', () => {
@@ -112,8 +112,11 @@ describe('incrementStats', () => {
 });
 
 describe('deferWrite', () => {
-  it('does not throw and swallows rejection', () => {
+  it('does not throw and swallows rejection', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
     expect(() => deferWrite(Promise.resolve('ok'))).not.toThrow();
     expect(() => deferWrite(Promise.reject(new Error('boom')))).not.toThrow();
+    await Promise.resolve();
+    warn.mockRestore();
   });
 });

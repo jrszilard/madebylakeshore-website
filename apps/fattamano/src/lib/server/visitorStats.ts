@@ -87,10 +87,15 @@ export function deferWrite(work: Promise<unknown>): void {
   const safe = Promise.resolve(work).catch((err) => {
     console.warn('[visitorStats] deferred write failed', err);
   });
+  // waitUntil registers the write with the platform so it completes after the
+  // response flushes. On Vercel (request context present) this guarantees the
+  // write runs; with no context (local dev / tests) waitUntil is a no-op and
+  // `safe` -- already in flight -- runs as a detached, best-effort promise (the
+  // spec accepts occasional dropped writes). The try/catch is defensive in case
+  // a future @vercel/functions throws when the context is absent.
   try {
     waitUntil(safe);
   } catch {
-    // No Vercel request context (local dev / tests): let it run detached.
     void safe;
   }
 }

@@ -101,9 +101,11 @@ try {
 ```
 
 The write uses the existing `sanityWriteClient()` (`SANITY_WRITE_TOKEN`); the read uses the
-existing public read client — no new credentials. If `waitUntil` is ever unavailable in the
-adapter context, `incrementStats` degrades to a best-effort inline `await` rather than dropping
-the write.
+existing public read client — no new credentials. When no Vercel request context exists (local
+dev / tests), `waitUntil` is a no-op and the already-in-flight write runs as a detached,
+best-effort promise; occasional dropped writes are acceptable per this design. (A one-time
+post-deploy check — load `/` a few times and confirm the `fattamano.visitorStats` document's
+`total` increments — verifies writes land under the real serverless adapter.)
 
 ### Module: `src/lib/server/visitorStats.ts`
 
