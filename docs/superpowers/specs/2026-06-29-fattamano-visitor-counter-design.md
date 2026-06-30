@@ -64,48 +64,79 @@ One machine-managed singleton document in the shared `production` dataset:
   bumps `total` but neither sub-bucket. This is intentional and matches the loose mental model
   (`5,000 total / 50 human / 4,550 bots`).
 
-### Atomic increment
+### Counting: read to render, write off the critical path
 
-Sanity's `.inc()` patch is applied atomically on the server, so concurrent visits cannot clobber
+To keep the SSR homepage fast, the request **renders from a read** and the **write never blocks
+the response**:
+
+1. **Read for render (on the critical path, but cheap).** Fetch the current counts with the
+   read client (`sanityClient`, Sanity-CDN-cacheable), *in parallel* with the existing
+   featured-products read via `Promise.all` — so the added read costs no extra serial latency.
+   If the doc doesn't exist yet, default to `{ total: 0, humans: 0, bots: 0 }`.
+2. **Optimistic display.** Render `readStats + this request's increments` (e.g. `total + 1`) so
+   the visitor sees their own visit reflected without waiting for the write to land. Under
+   concurrency this can be off by a visit or two — fine for a gag counter.
+3. **Write off the critical path.** Schedule the atomic increment with Vercel's `waitUntil`
+   (from `@vercel/functions`) so it completes *after* the response is sent and the serverless
+   function isn't frozen mid-write. The render does **not** await it.
+
+Sanity's `.inc()` patch is applied atomically on the server, so concurrent writes cannot clobber
 each other — no read-modify-write race. The one edge case: `patch()` on a not-yet-existing
 document throws, so the first-ever visit must `createIfNotExists` first.
 
-Steady-state path (one network write per hit):
-
 ```
+// Critical path: render from a fast read (parallel with featured products).
+const [featured, readStats] = await Promise.all([ fetchFeatured(), readStats() ]);
+
+// Off critical path: fire-and-finish-after-response.
+waitUntil(incrementStats(increments));   // never awaited inline
+
+// incrementStats():
 try {
-  doc = await writeClient
-    .patch(DOC_ID)
-    .inc(increments)                      // { total: 1, bots: 1 }  OR  { total: 1, humans: 1 }  OR { total: 1 }
-    .commit({ returnDocuments: true });   // returns fresh totals to render
+  await writeClient.patch(DOC_ID).inc(increments).commit();   // no returnDocuments needed
 } catch (missingDoc) {
   await writeClient.createIfNotExists({ _id: DOC_ID, _type: TYPE, total: 0, humans: 0, bots: 0 });
-  doc = await writeClient.patch(DOC_ID).inc(increments).commit({ returnDocuments: true });
+  await writeClient.patch(DOC_ID).inc(increments).commit();
 }
 ```
 
-Uses the existing `sanityWriteClient()` (`SANITY_WRITE_TOKEN`) from
-`src/lib/server/sanityWrite.ts` — no new credentials.
+The write uses the existing `sanityWriteClient()` (`SANITY_WRITE_TOKEN`); the read uses the
+existing public read client — no new credentials. If `waitUntil` is ever unavailable in the
+adapter context, `incrementStats` degrades to a best-effort inline `await` rather than dropping
+the write.
 
 ### Module: `src/lib/server/visitorStats.ts`
 
 Small, testable surface:
 
+Responsibilities are split so the cheap, synchronous, render-time work is separate from the
+deferred write:
+
 ```ts
 export type VisitorKind = 'bot' | 'human';
 export interface VisitorStats { total: number; humans: number; bots: number; }
+export interface VisitPlan {
+  increments: Partial<VisitorStats>;   // what to add: e.g. { total: 1, bots: 1 }
+  setHumanCookie: boolean;
+}
 
 // Pure, unit-testable.
 export function classifyVisitor(userAgent: string | null): VisitorKind;
 
-// Performs the atomic increment; returns fresh totals and whether to set the human cookie.
-export async function recordVisit(opts: {
-  userAgent: string | null;
-  hasVisitorCookie: boolean;
-}): Promise<{ stats: VisitorStats; setHumanCookie: boolean }>;
+// Pure: maps (kind, cookie) → increments + cookie decision (the table below).
+export function planVisit(kind: VisitorKind, hasVisitorCookie: boolean): VisitPlan;
+
+// Critical path: fast read for rendering. Returns zeros if the doc doesn't exist yet.
+export async function readStats(): Promise<VisitorStats>;
+
+// Off critical path (call via waitUntil): atomic inc with first-visit createIfNotExists.
+export async function incrementStats(increments: Partial<VisitorStats>): Promise<void>;
+
+// Pure: readStats + increments, for optimistic display.
+export function applyOptimistic(stats: VisitorStats, increments: Partial<VisitorStats>): VisitorStats;
 ```
 
-Increment rules:
+Increment rules (`planVisit`):
 
 | kind  | cookie present | increments              | setHumanCookie |
 |-------|----------------|-------------------------|----------------|
@@ -129,12 +160,16 @@ No PII, no third-party — uniqueness dedup only. (It makes "please act normal" 
 
 1. `export const prerender = false;`
 2. Read `Astro.request.headers.get('user-agent')` and `Astro.cookies.has('ft_visitor')`.
-3. `const { stats, setHumanCookie } = await recordVisit({ ... })` inside a `try/catch`.
-4. If `setHumanCookie`, `Astro.cookies.set('ft_visitor', '1', { ...options })`.
-5. Set `Astro.response.headers.set('Cache-Control', 'no-store')` so the CDN never freezes the
+3. `const plan = planVisit(classifyVisitor(ua), hasCookie)` — pure, synchronous.
+4. Inside a `try/catch`: `const readback = await readStats()` (run via `Promise.all` with the
+   featured-products fetch); `const display = applyOptimistic(readback, plan.increments)`.
+5. `waitUntil(incrementStats(plan.increments))` — fire the write; **do not await** it.
+6. If `plan.setHumanCookie`, `Astro.cookies.set('ft_visitor', '1', { ...options })`.
+7. Set `Astro.response.headers.set('Cache-Control', 'no-store')` so the CDN never freezes the
    number or skips the counting function.
-6. On any error, render a graceful fallback (em-dashes) — the homepage must never 500 over a
-   counter.
+8. On any error in the read, render a graceful fallback (em-dashes) — the homepage must never
+   500 over a counter. The cookie set and the `waitUntil` write are independent of the read, so a
+   read failure still lets counting proceed.
 
 ### Display
 
@@ -155,9 +190,12 @@ please act normal
 
 ## Error handling & resilience
 
-- All Sanity interaction is wrapped; failure renders the fallback, never an error page.
-- `recordVisit` may throw; `index.astro` is the single catch site.
-- Counter inaccuracy (e.g. a dropped write) is acceptable — this is a gag, not billing.
+- The render-time `readStats()` is wrapped; failure renders the fallback (em-dashes), never an
+  error page. `index.astro` is the single catch site for the read.
+- The deferred `incrementStats()` runs under `waitUntil` and swallows its own errors — a failed
+  write must never surface to the user or reject the response.
+- Counter inaccuracy (a dropped write, a stale CDN read, optimistic over/undercount under
+  concurrency) is acceptable — this is a gag, not billing.
 
 ## Security & privacy
 
@@ -170,8 +208,12 @@ please act normal
 
 - Every homepage hit (including each bot hit) is now a serverless invocation + one Sanity write.
   Fine at boutique-art-site traffic. Sanity is not a high-throughput counter; if traffic ever
-  spikes, migrate the three counters to Vercel KV / Upstash behind the same `recordVisit` API.
-- `no-store` removes the homepage's static-CDN speed — the inherent cost of a live counter.
+  spikes, migrate the three counters to Vercel KV / Upstash behind the same `incrementStats` /
+  `readStats` API.
+- `no-store` removes the homepage's static-CDN edge serving. The TTFB cost is kept low by
+  rendering from a cached read and deferring the write off the critical path (~150–300 ms warm);
+  occasional serverless cold starts add more. This is the accepted cost of counting bots, which
+  intrinsically requires a per-request server hop.
 
 ## Testing (TDD)
 
@@ -180,12 +222,16 @@ matching the existing domain-grouped layout (`test/cart/`, `test/commerce/`):
 
 - `classifyVisitor`: table of real bot UAs (Googlebot, GPTBot, ClaudeBot, bingbot,
   facebookexternalhit, curl/python-requests, empty) vs. real browser UAs.
-- Increment-builder logic: each `(kind, hasCookie)` row above → correct `inc` object and
-  `setHumanCookie` flag, with the Sanity write client mocked.
+- `planVisit`: each `(kind, hasCookie)` row above → correct `increments` object and
+  `setHumanCookie` flag.
+- `applyOptimistic`: `readStats + increments` adds correctly per field (and leaves untouched
+  fields unchanged).
+- `incrementStats`: with the Sanity write client mocked — calls `inc` with the given increments,
+  and on a missing-doc error falls back to `createIfNotExists` then retries.
 
 ## Files changed
 
 - **new** `apps/fattamano/src/lib/server/visitorStats.ts`
 - **edit** `apps/fattamano/src/pages/index.astro` (SSR + counter wiring + display)
 - **new** `apps/fattamano/test/visitor/visitorStats.test.ts`
-- **edit** `apps/fattamano/package.json` (add `isbot`)
+- **edit** `apps/fattamano/package.json` (add `isbot`, `@vercel/functions`)
