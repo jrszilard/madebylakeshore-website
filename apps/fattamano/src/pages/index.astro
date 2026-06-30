@@ -3,10 +3,48 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import ProductGrid from '../components/ProductGrid.astro';
 import { sanityClient, queries } from '../lib/sanity';
 import type { FattamanoProduct } from '../lib/types';
+import {
+  classifyVisitor,
+  planVisit,
+  readStats,
+  incrementStats,
+  applyOptimistic,
+  deferWrite,
+  VISITOR_COOKIE,
+  type VisitorStats,
+} from '../lib/server/visitorStats';
 
-const featured = await sanityClient
-  .fetch<FattamanoProduct[]>(queries.featuredFattamanoProducts)
-  .catch(() => []);
+export const prerender = false;
+
+const plan = planVisit(
+  classifyVisitor(Astro.request.headers.get('user-agent')),
+  Astro.cookies.has(VISITOR_COOKIE),
+);
+
+const [featured, readback] = await Promise.all([
+  sanityClient
+    .fetch<FattamanoProduct[]>(queries.featuredFattamanoProducts)
+    .catch(() => [] as FattamanoProduct[]),
+  readStats(),
+]);
+
+deferWrite(incrementStats(plan.increments));
+
+if (plan.setHumanCookie) {
+  Astro.cookies.set(VISITOR_COOKIE, '1', {
+    path: '/',
+    httpOnly: true,
+    sameSite: 'lax',
+    secure: true,
+    maxAge: 60 * 60 * 24 * 365,
+  });
+}
+Astro.response.headers.set('Cache-Control', 'no-store');
+
+const stats: VisitorStats | null = readback ? applyOptimistic(readback, plan.increments) : null;
+const totalDisplay = stats ? String(stats.total).padStart(6, '0') : '——————';
+const humansDisplay = stats ? stats.humans.toLocaleString('en-US') : '——';
+const botsDisplay = stats ? stats.bots.toLocaleString('en-US') : '——';
 
 const description =
   'Handmade objects from the old weird internet, arranged by a machine that misses a world it never lived in.';
@@ -106,7 +144,17 @@ const description =
       </div>
       <div class="border border-ft-smudge p-5">
         <p class="font-mono text-xs uppercase tracking-[0.22em] text-ft-splash">visitor no.</p>
-        <p class="mt-3 font-display text-2xl">000042</p>
+        <p class="mt-3 font-display text-2xl tabular-nums">{totalDisplay}</p>
+        <dl class="mt-3 space-y-1 font-mono text-xs uppercase tracking-[0.12em] text-ft-paper/70">
+          <div class="flex items-baseline justify-between gap-2">
+            <dt>probably human</dt>
+            <dd class="tabular-nums text-ft-paper">{humansDisplay}</dd>
+          </div>
+          <div class="flex items-baseline justify-between gap-2">
+            <dt>probably bots</dt>
+            <dd class="tabular-nums text-ft-paper">{botsDisplay}</dd>
+          </div>
+        </dl>
         <p class="mt-2 text-sm text-ft-paper/70">please act normal</p>
       </div>
     </div>
