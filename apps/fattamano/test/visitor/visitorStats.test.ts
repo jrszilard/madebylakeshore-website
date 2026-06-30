@@ -26,3 +26,28 @@ describe('classifyVisitor', () => {
     expect(classifyVisitor(null)).toBe('bot');
   });
 });
+
+import { planVisit, applyOptimistic } from '../../src/lib/server/visitorStats';
+
+describe('planVisit', () => {
+  it('counts a bot as total + bots, no cookie', () => {
+    expect(planVisit('bot', false)).toEqual({ increments: { total: 1, bots: 1 }, setHumanCookie: false });
+  });
+  it('counts a new human as total + humans and sets the cookie', () => {
+    expect(planVisit('human', false)).toEqual({ increments: { total: 1, humans: 1 }, setHumanCookie: true });
+  });
+  it('counts a returning human as total only, no cookie', () => {
+    expect(planVisit('human', true)).toEqual({ increments: { total: 1 }, setHumanCookie: false });
+  });
+});
+
+describe('applyOptimistic', () => {
+  it('adds increments field by field', () => {
+    expect(applyOptimistic({ total: 10, humans: 4, bots: 6 }, { total: 1, bots: 1 }))
+      .toEqual({ total: 11, humans: 4, bots: 7 });
+  });
+  it('treats missing increment fields as zero', () => {
+    expect(applyOptimistic({ total: 10, humans: 4, bots: 6 }, { total: 1 }))
+      .toEqual({ total: 11, humans: 4, bots: 6 });
+  });
+});
