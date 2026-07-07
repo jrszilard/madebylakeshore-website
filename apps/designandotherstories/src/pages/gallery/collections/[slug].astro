@@ -1,16 +1,9 @@
 ---
+export const prerender = false;
+
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import ShopCard from '../../../components/ShopCard.astro';
 import { sanityClient, urlFor, queries } from '../../../lib/sanity';
-
-export async function getStaticPaths() {
-  const allCollections = await sanityClient.fetch(queries.allCollections);
-  return allCollections
-    .filter((c: any) => c.slug?.current)
-    .map((c: any) => ({
-      params: { slug: c.slug.current },
-    }));
-}
 
 const { slug } = Astro.params;
 

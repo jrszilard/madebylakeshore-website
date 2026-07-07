@@ -1,16 +1,9 @@
 ---
+export const prerender = false;
+
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import ImageViewer from '../../components/ImageViewer.tsx';
 import { sanityClient, urlFor, queries } from '../../lib/sanity';
-
-export async function getStaticPaths() {
-  const allArtwork = await sanityClient.fetch(queries.allArtwork);
-  return allArtwork
-    .filter((a: any) => a.slug?.current)
-    .map((a: any) => ({
-      params: { slug: a.slug.current },
-    }));
-}
 
 const { slug } = Astro.params;
 const artwork = await sanityClient.fetch(queries.artworkBySlug, { slug });

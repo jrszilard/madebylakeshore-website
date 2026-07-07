@@ -1,29 +1,10 @@
 ---
+export const prerender = false;
+
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import ImageViewer from '../../components/ImageViewer.tsx';
 import AddToCartButton from '../../components/cart/AddToCartButton.tsx';
 import { sanityClient, urlFor, queries } from '../../lib/sanity';
-
-export async function getStaticPaths() {
-  const [products, artworks] = await Promise.all([
-    sanityClient.fetch(queries.allShopProductSlugs),
-    sanityClient.fetch(queries.allForSaleArtworkSlugs),
-  ]);
-  const seen = new Set<string>();
-  const paths: { params: { slug: string } }[] = [];
-  for (const p of products ?? []) {
-    const s = p.slug?.current;
-    if (s && !seen.has(s)) { seen.add(s); paths.push({ params: { slug: s } }); }
-  }
-  for (const a of artworks ?? []) {
-    const s = a.slug?.current;
-    if (!s) continue;
-    if (seen.has(s)) { console.warn(`[shop] slug collision: "${s}" — shopProduct wins`); continue; }
-    seen.add(s);
-    paths.push({ params: { slug: s } });
-  }
-  return paths;
-}
 
 const { slug } = Astro.params;
 // shopProduct wins on collision; fall back to artwork.

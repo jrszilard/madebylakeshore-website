@@ -1,16 +1,9 @@
 ---
+export const prerender = false;
+
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import BringingGrid from '../../components/BringingGrid.astro';
 import { sanityClient, urlFor, queries } from '../../lib/sanity';
-
-export async function getStaticPaths() {
-  const events = await sanityClient.fetch(`*[_type == "event"]{ slug }`);
-  return events
-    .filter((e: any) => e.slug?.current)
-    .map((e: any) => ({
-      params: { slug: e.slug.current },
-    }));
-}
 
 const { slug } = Astro.params;
 
