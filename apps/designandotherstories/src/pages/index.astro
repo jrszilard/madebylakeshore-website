@@ -1,4 +1,6 @@
 ---
+export const prerender = false;
+
 import BaseLayout from '../layouts/BaseLayout.astro';
 import HeroSection from '../components/HeroSection.astro';
 import SectionHeader from '../components/SectionHeader.astro';
@@ -10,21 +12,18 @@ import { sanityClient, urlFor, queries } from '../lib/sanity';
 import { fetchSubstackFeed } from '../lib/substack';
 
 // Fetch all data at build time (static page)
-const [artistProfile, featuredWriting, shopItems, allCollections, nextEvent, substackPosts] = await Promise.all([
+const [artistProfile, featuredWriting, heroShopItems, newArrivals, allCollections, nextEvent, substackPosts] = await Promise.all([
   sanityClient.fetch(queries.artistProfile),
   sanityClient.fetch(queries.featuredWritingForHome),
   sanityClient.fetch(queries.featuredShopItems),
+  sanityClient.fetch(queries.shopProducts),
   sanityClient.fetch(queries.allCollections),
   sanityClient.fetch(queries.nextEvent),
   fetchSubstackFeed(SUBSTACK_SHORT_STORIES_SECTION_ID),
 ]);
 
 const isSingleCollection = (allCollections ?? []).length === 1;
-
-// Hero shows the 2 latest shop pieces; the "From the Studio" swimlane shows
-// the rest so the same pieces aren't shown twice on the home page.
-const heroShopItems = (shopItems ?? []).slice(0, 2);
-const swimlaneShopItems = (shopItems ?? []).slice(2, 6);
+const swimlaneShopItems = (newArrivals ?? []).slice(0, 4);
 
 // Merge Sanity featured writing + Substack posts, up to 5 cards total
 const sanityWritingItems: any[] = (featuredWriting ?? []).slice(0, 5);
@@ -54,17 +53,18 @@ const typeLabels: Record<string, string> = {
   {swimlaneShopItems.length > 0 && (
     <section class="section-spacing">
       <div class="container-art">
-        <SectionHeader title="From the Studio" viewAllHref="/gallery" />
+        <SectionHeader title="New Arrivals" viewAllHref="/shop" />
 
         <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
           {(swimlaneShopItems as any[]).map((item: any) => (
             <ShopCard
               title={item.title}
               slug={item.slug}
-              images={item.images}
+              images={item.images ?? []}
+              medium={item.blurb}
               price={item.price}
-              originalAvailable={item.originalAvailable}
-              printsAvailable={item.printsAvailable}
+              originalAvailable={item.available}
+              basePath="/shop"
             />
           ))}
         </div>
