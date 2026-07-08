@@ -6,16 +6,20 @@ import CartDrawer from '../components/cart/CartDrawer.tsx';
 import { sanityClient, queries } from '../lib/sanity';
 import type { FattamanoSettings } from '../lib/types';
 
+type JsonLd = Record<string, unknown> | Array<Record<string, unknown>>;
+
 interface Props {
   title: string;
   description?: string;
   ogImagePath?: string;
+  jsonLd?: JsonLd;
 }
 
 const {
   title,
   description = 'Handmade stickers, t-shirts, and other small ridiculous things.',
   ogImagePath,
+  jsonLd,
 } = Astro.props;
 
 // The free-US-shipping threshold is content (Sanity), so the cart nudge stays in
@@ -34,6 +38,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site).toString();
 const ogImage = ogImagePath
   ? new URL(ogImagePath, Astro.site).toString()
   : new URL('/og-default.png', Astro.site).toString();
+const jsonLdItems = Array.isArray(jsonLd) ? jsonLd : jsonLd ? [jsonLd] : [];
 ---
 <!DOCTYPE html>
 <html lang="en">
@@ -49,6 +54,13 @@ const ogImage = ogImagePath
     <meta property="og:image" content={ogImage} />
     <meta property="og:url" content={canonical} />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={siteTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    {jsonLdItems.map((item) => (
+      <script is:inline type="application/ld+json" set:html={JSON.stringify(item)} />
+    ))}
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{siteTitle}</title>

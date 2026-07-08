@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { breadcrumbSchema, collectionPageSchema } from '../../../lib/seo';
 
 export const prerender = true;
 
@@ -87,10 +88,22 @@ const campaigns = [
     qr: [0,1,3,4,6,8,9,10,12,14,16,17,20,21,22,24],
   },
 ];
+
+const description =
+  'Real stickers for fake companies with real fake websites. A fattamano collection of printed jokes, QR-code storytelling, and suspicious local commerce.';
+const jsonLd = [
+  collectionPageSchema({ name: 'Real Fake Ads', description, path: '/things/real-fake-ads' }),
+  breadcrumbSchema([
+    { name: 'fattamano', path: '/' },
+    { name: 'things', path: '/things' },
+    { name: 'Real Fake Ads', path: '/things/real-fake-ads' },
+  ]),
+];
 ---
 <BaseLayout
   title="Real Fake Ads"
-  description="Real stickers for fake companies with real fake websites. A fattamano collection of printed jokes, QR-code storytelling, and suspicious local commerce."
+  description={description}
+  jsonLd={jsonLd}
 >
   <section class="real-fake-page relative overflow-hidden border-b-2 border-ft-ink bg-ft-splash">
     <div class="absolute inset-x-0 top-0 border-b-2 border-ft-ink bg-ft-ink py-2 font-mono text-xs uppercase tracking-[0.22em] text-ft-paper" aria-hidden="true">

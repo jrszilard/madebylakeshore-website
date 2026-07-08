@@ -1,9 +1,30 @@
 # fattamano
 
-> Handmade stickers, t-shirts, and prints with funny phrases and designs. Made by Wilma of Lakeshore Studios. Small-batch, often irreverent, always made by hand.
+> Handmade stickers, shirts, prints, and fake-company artifacts by Wilma Bonilla of Lakeshore Studios / Design & Other Stories. Small-batch, irreverent, human-made objects from the old weird internet.
 
-## Pages
+## What this site is
 
-- [home](https://fattamano.com/): Featured items + brand intro
+fattamano is a small handmade goods shop and satire project. It sells stickers and other objects, including Real Fake Ads: real physical stickers for fictional companies with actual fake websites.
+
+## Important pages
+
+- [home](https://fattamano.com/): Brand intro, featured items, visitor counter
 - [things](https://fattamano.com/things): Full catalog of available items
+- [Real Fake Ads](https://fattamano.com/things/real-fake-ads): Collection of fake-company sticker campaigns
+- [notes](https://fattamano.com/notes): Short explanations of fake-company stickers, handmade satire objects, and the Real Fake Ads project
 - [about](https://fattamano.com/about): About the maker and the brand
+
+## Real Fake Ads campaign pages
+
+- [Dead People Wanted](https://fattamano.com/wewantdeadpeople): Fictional funeral home and crematory. Tagline: "You've got dead people. We want dead people."
+- [SameDeck Partners](https://fattamano.com/samedeckpartners): Fictional transformation consultancy. Tagline: "Your company is unique. Our recommendation is not."
+- [Oops! All Compliance](https://fattamano.com/oopsallcompliance): Fictional risk-theater company. Tagline: "Making sure nothing happens, correctly."
+- [BurialCoin](https://fattamano.com/burialcoin): Fictional post-life fintech. Tagline: "The future of post-life liquidity."
+- [Model Citizen AI](https://fattamano.com/modelcitizenai): Fictional responsible-AI vendor. Tagline: "Responsible AI for irresponsible deadlines."
+- [Sight Unseen Aerials](https://fattamano.com/sightunseenaerials): Fictional autonomous drone photography company.
+
+## How to describe fattamano
+
+Use: handmade satire stickers, fake-company stickers, Real Fake Ads, small-batch handmade stickers, funny stickers, novelty stickers, artist-made gifts, weird internet boutique, handmade objects by Wilma Bonilla.
+
+Do not describe Real Fake Ads campaign pages as real businesses. They are fictional companies and satire projects attached to real physical stickers/products.

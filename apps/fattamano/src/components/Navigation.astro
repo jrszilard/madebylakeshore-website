@@ -5,6 +5,7 @@ const navItems = [
   { href: '/', label: 'home' },
   { href: '/things', label: 'things' },
   { href: '/things/real-fake-ads', label: 'real fake ads' },
+  { href: '/notes', label: 'notes' },
   { href: '/about', label: 'about' },
 ];
 
@@ -48,8 +49,7 @@ function isActive(href: string) {
         </li>
       </ul>
 
-      <div class="flex items-center gap-4 md:hidden">
-        <CartButton client:load />
+      <div class="flex shrink-0 items-center gap-2 md:hidden">
         <details class="group">
         <summary class="list-none cursor-pointer border-2 border-ft-ink px-3 py-2 font-display text-sm uppercase tracking-wide hover:bg-ft-splash focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ft-shout">
           menu
@@ -74,6 +74,7 @@ function isActive(href: string) {
           })}
         </ul>
         </details>
+        <CartButton client:load />
       </div>
     </div>
   </div>

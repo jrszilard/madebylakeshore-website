@@ -1,0 +1,91 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { notes } from '../../lib/notes';
+import { breadcrumbSchema, collectionPageSchema } from '../../lib/seo';
+
+export const prerender = true;
+
+const description =
+  'Short fattamano notes about Real Fake Ads, handmade satire stickers, fake companies, and suspicious small-batch commerce.';
+const jsonLd = [
+  collectionPageSchema({ name: 'fattamano notes', description, path: '/notes' }),
+  breadcrumbSchema([
+    { name: 'fattamano', path: '/' },
+    { name: 'notes', path: '/notes' },
+  ]),
+];
+---
+<BaseLayout title="notes" description={description} jsonLd={jsonLd}>
+  <section class="notes-page relative overflow-hidden border-b-2 border-ft-ink bg-ft-paper">
+    <div class="absolute inset-x-0 top-0 border-b-2 border-ft-ink bg-ft-splash py-2 font-mono text-xs uppercase tracking-[0.22em] text-ft-ink" aria-hidden="true">
+      <div class="ft-marquee-track whitespace-nowrap">
+        <span>crawlable field notes, regrettably sincere &nbsp; ✦ &nbsp;</span>
+        <span>not a blog, legally probably a blog &nbsp; ✦ &nbsp;</span>
+        <span>search terms disguised as shop talk &nbsp; ✦ &nbsp;</span>
+      </div>
+    </div>
+
+    <div class="notes-hero-inner mx-auto max-w-5xl px-6 pb-16 pt-24 md:pb-24 md:pt-32">
+      <p class="mb-5 inline-block border-2 border-ft-ink bg-white px-3 py-1 font-mono text-xs uppercase tracking-[0.22em] shadow-[4px_4px_0_#1A1A1A]">
+        public files / crawlable mischief
+      </p>
+      <h1 class="font-display text-big md:text-huge">
+        Notes from the <span class="text-ft-shout">side room</span>
+      </h1>
+      <p class="mt-6 max-w-2xl break-words font-body text-xl leading-relaxed text-ft-smudge">
+        Small explanations for fake companies, handmade satire stickers, and other objects that became marginally more searchable by admitting what they are.
+      </p>
+    </div>
+  </section>
+
+  <section class="notes-page mx-auto grid max-w-5xl gap-6 overflow-hidden px-6 py-14 md:overflow-visible md:py-20">
+    {notes.map((note, index) => (
+      <article class:list={[
+        'border-2 border-ft-ink bg-white p-6 shadow-[7px_7px_0_#1A1A1A] md:p-8',
+        index % 2 === 0 ? 'md:rotate-1 motion-reduce:rotate-0' : 'md:-rotate-1 motion-reduce:rotate-0',
+      ]}>
+        <p class="font-mono text-xs uppercase tracking-[0.2em] text-ft-smudge">{note.eyebrow}</p>
+        <h2 class="mt-4 font-display text-4xl leading-tight md:text-5xl">
+          <a href={`/notes/${note.slug}`} class="hover:text-ft-shout">{note.title}</a>
+        </h2>
+        <p class="mt-4 max-w-3xl font-body text-lg leading-relaxed text-ft-smudge">{note.description}</p>
+        <div class="mt-5 flex flex-wrap gap-2">
+          {note.tags.map((tag) => (
+            <span class="border border-ft-ink bg-ft-paper px-2 py-1 font-mono text-[0.65rem] uppercase tracking-[0.14em] text-ft-smudge">{tag}</span>
+          ))}
+        </div>
+        <a href={`/notes/${note.slug}`} class="mt-6 inline-flex border-2 border-ft-ink bg-ft-splash px-4 py-2 font-display shadow-[4px_4px_0_#1A1A1A] hover:text-ft-shout">
+          read the file →
+        </a>
+      </article>
+    ))}
+  </section>
+  <style is:global>
+    @media (max-width: 767px) {
+      .notes-page {
+        width: 100%;
+        max-width: 100vw;
+        overflow-x: hidden;
+      }
+
+      .notes-page .notes-hero-inner,
+      .notes-page article {
+        box-sizing: border-box;
+        width: 100%;
+        max-width: calc(100vw - 3rem) !important;
+      }
+
+      .notes-page [class*="tracking-"] {
+        white-space: normal;
+      }
+
+      .notes-page p,
+      .notes-page h1,
+      .notes-page h2,
+      .notes-page a,
+      .notes-page span {
+        overflow-wrap: anywhere;
+      }
+    }
+  </style>
+</BaseLayout>

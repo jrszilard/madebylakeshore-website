@@ -3,6 +3,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import ProductGrid from '../../components/ProductGrid.astro';
 import { sanityClient, queries } from '../../lib/sanity';
 import type { FattamanoProduct } from '../../lib/types';
+import { breadcrumbSchema, collectionPageSchema } from '../../lib/seo';
 
 export const prerender = true;
 
@@ -13,10 +14,20 @@ const products = await sanityClient
 const availableCount = products.filter((p) => p.status === 'available').length;
 const conceptCount = products.filter((p) => p.status === 'concept').length;
 const categoryCount = new Set(products.map((p) => p.category).filter(Boolean)).size;
+const description =
+  'The unoptimized catalog of fattamano objects: handmade stickers, shirts, prints, concepts, and questionable acquisitions.';
+const jsonLd = [
+  collectionPageSchema({ name: 'fattamano things', description, path: '/things' }),
+  breadcrumbSchema([
+    { name: 'fattamano', path: '/' },
+    { name: 'things', path: '/things' },
+  ]),
+];
 ---
 <BaseLayout
   title="things"
-  description="The unoptimized catalog of fattamano objects: handmade stickers, shirts, prints, concepts, and questionable acquisitions."
+  description={description}
+  jsonLd={jsonLd}
 >
   <section class="things-page relative overflow-hidden border-b-2 border-ft-ink bg-ft-paper">
     <div class="absolute inset-x-0 top-0 border-b-2 border-ft-ink bg-ft-splash py-2 font-mono text-xs uppercase tracking-[0.22em] text-ft-ink" aria-hidden="true">

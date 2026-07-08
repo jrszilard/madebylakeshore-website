@@ -5,6 +5,7 @@ import AddToCartButton from '../../components/cart/AddToCartButton.tsx';
 import { sanityClient, queries, urlFor } from '../../lib/sanity';
 import { formatPrice } from '../../lib/format';
 import type { FattamanoProduct, SanityImageLike } from '../../lib/types';
+import { breadcrumbSchema, productSchema } from '../../lib/seo';
 
 export const prerender = true;
 
@@ -44,8 +45,16 @@ const metaDescription =
 
 const ogImagePath = `/api/og?title=${encodeURIComponent(full?.title || '')}&subtitle=${encodeURIComponent(full?.tagline || full?.category || '')}`;
 const isRealFakeAdsProduct = ['dead-people-wanted-sticker', 'samedeck-partners-sticker'].includes(full?.slug?.current);
+const jsonLd = [
+  productSchema(full),
+  breadcrumbSchema([
+    { name: 'fattamano', path: '/' },
+    { name: 'things', path: '/things' },
+    { name: full.title, path: `/things/${full.slug.current}` },
+  ]),
+];
 ---
-<BaseLayout title={metaTitle} description={metaDescription} ogImagePath={ogImagePath}>
+<BaseLayout title={metaTitle} description={metaDescription} ogImagePath={ogImagePath} jsonLd={jsonLd}>
   <article class="max-w-6xl mx-auto px-6 py-12">
     <a href="/things" class="inline-block mb-8 font-body text-sm text-ft-smudge hover:text-ft-shout">← back to things</a>
 

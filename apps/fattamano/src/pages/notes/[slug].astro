@@ -1,0 +1,60 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getNoteBySlug, notes } from '../../lib/notes';
+import { articleSchema, breadcrumbSchema } from '../../lib/seo';
+
+export const prerender = true;
+
+export function getStaticPaths() {
+  return notes.map((note) => ({ params: { slug: note.slug } }));
+}
+
+const note = getNoteBySlug(Astro.params.slug ?? '');
+if (!note) {
+  throw new Error(`Unknown fattamano note: ${Astro.params.slug}`);
+}
+
+const path = `/notes/${note.slug}`;
+const jsonLd = [
+  articleSchema({
+    title: note.title,
+    description: note.description,
+    path,
+    datePublished: note.date,
+  }),
+  breadcrumbSchema([
+    { name: 'fattamano', path: '/' },
+    { name: 'notes', path: '/notes' },
+    { name: note.title, path },
+  ]),
+];
+---
+<BaseLayout title={note.title} description={note.description} jsonLd={jsonLd}>
+  <article class="mx-auto max-w-3xl px-6 py-14 md:py-20">
+    <a href="/notes" class="inline-block font-body text-sm text-ft-smudge hover:text-ft-shout">← back to notes</a>
+
+    <header class="mt-8 border-2 border-ft-ink bg-white p-6 shadow-[8px_8px_0_#1A1A1A] md:p-8">
+      <p class="font-mono text-xs uppercase tracking-[0.22em] text-ft-smudge">{note.eyebrow}</p>
+      <h1 class="mt-5 font-display text-big leading-tight md:text-huge">{note.title}</h1>
+      <p class="mt-5 font-body text-xl leading-relaxed text-ft-smudge">{note.description}</p>
+      <div class="mt-5 flex flex-wrap gap-2">
+        {note.tags.map((tag) => (
+          <span class="border border-ft-ink bg-ft-paper px-2 py-1 font-mono text-[0.65rem] uppercase tracking-[0.14em] text-ft-smudge">{tag}</span>
+        ))}
+      </div>
+    </header>
+
+    <div class="prose mt-12 max-w-none font-body text-lg leading-relaxed text-ft-ink prose-p:my-5 prose-a:text-ft-shout prose-a:underline prose-a:decoration-2 prose-a:underline-offset-4">
+      {note.body.map((paragraph) => <p>{paragraph}</p>)}
+    </div>
+
+    {note.cta && (
+      <div class="mt-12 border-2 border-ft-ink bg-ft-splash p-6 shadow-[6px_6px_0_#1A1A1A]">
+        <p class="font-mono text-xs uppercase tracking-[0.2em] text-ft-smudge">next suspicious action</p>
+        <a href={note.cta.href} class="mt-4 inline-flex border-2 border-ft-ink bg-ft-shout px-5 py-3 font-display text-ft-paper shadow-[4px_4px_0_#1A1A1A] hover:bg-ft-ink">
+          {note.cta.label} →
+        </a>
+      </div>
+    )}
+  </article>
+</BaseLayout>
