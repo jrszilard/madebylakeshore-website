@@ -109,47 +109,53 @@ const aboutImages = (profile?.aboutImages ?? [])
   )}
 
   <!-- 4. Find me / connect -->
-  <section class="py-20 md:py-28 bg-daos-paper">
+  <section class="py-20 md:py-28">
     <div class="container-art">
       <div class="grid grid-cols-1 md:grid-cols-3 gap-12 lg:gap-16">
 
         <!-- Next event -->
         <div class="space-y-4">
-          <img src="/icons/03-events.svg" alt="" aria-hidden="true" class="w-12 h-12" />
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="-1 -1 26 26" class="w-12 h-12" aria-hidden="true">
+            <g transform="translate(1.05 1.25)"><path fill="#F5A81C" stroke="none" d="M4 7 L20 7 L20 20 L4 20 Z"></path><path fill="#F5A81C" stroke="none" d="M7 4 L9 4 L9 8 L7 8 Z"></path><path fill="#F5A81C" stroke="none" d="M15 4 L17 4 L17 8 L15 8 Z"></path></g>
+            <g><path fill="none" stroke="#181410" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" d="M4 7 L20 7 L20 20 L4 20 Z"></path><path fill="none" stroke="#181410" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" d="M7 4 L9 4 L9 8 L7 8 Z"></path><path fill="none" stroke="#181410" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" d="M15 4 L17 4 L17 8 L15 8 Z"></path><path fill="none" stroke="#181410" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" d="M4 11 L20 11"></path><path fill="none" stroke="#181410" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" d="M10.5 14 L13.5 14 L13.5 17 L10.5 17 Z"></path></g>
+          </svg>
           {nextEvent ? (
             <div class="space-y-2">
-              <h2 class="font-display text-xl text-daos-ink">{nextEvent.title}</h2>
+              <h2 class="font-display text-xl text-daos-cream">{nextEvent.title}</h2>
               {nextEvent.location?.city && (
-                <p class="font-sans text-sm text-daos-charcoal">
+                <p class="font-sans text-sm text-daos-cream/60">
                   {[nextEvent.location.venueName, nextEvent.location.city, nextEvent.location.state].filter(Boolean).join(', ')}
                 </p>
               )}
-              <p class="font-sans text-sm text-daos-charcoal">
+              <p class="font-sans text-sm text-daos-cream/60">
                 {new Date(nextEvent.startDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' })}
               </p>
             </div>
           ) : (
-            <p class="font-body text-daos-charcoal leading-relaxed">
+            <p class="font-body text-daos-cream/70 leading-relaxed">
               No upcoming events right now. Check back soon, or subscribe to hear first.
             </p>
           )}
-          <a href="/events" class="btn-warm inline-flex">
+          <a href="/events" class="btn-outline-light inline-flex">
             All Events
           </a>
         </div>
 
         <!-- Newsletter -->
         <div class="space-y-4">
-          <img src="/icons/05-newsletter.svg" alt="" aria-hidden="true" class="w-12 h-12" />
-          <h2 class="font-display text-xl text-daos-ink">The Newsletter</h2>
-          <p class="font-body text-daos-charcoal leading-relaxed">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="-1 -1 26 26" class="w-12 h-12" aria-hidden="true">
+            <g transform="translate(1.05 1.25)"><path fill="#D6336C" stroke="none" d="M3 6 L21 6 L21 18 L3 18 Z"></path></g>
+            <g><path fill="none" stroke="#181410" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" d="M3 6 L21 6 L21 18 L3 18 Z"></path><path fill="none" stroke="#181410" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" d="M3 6 L12 13 L21 6"></path></g>
+          </svg>
+          <h2 class="font-display text-xl text-daos-cream">The Newsletter</h2>
+          <p class="font-body text-daos-cream/70 leading-relaxed">
             New work, upcoming events, and occasional dispatches from the studio. No noise.
           </p>
           <a
             href={`${SUBSTACK_URL}/subscribe`}
             target="_blank"
             rel="noopener noreferrer"
-            class="btn-warm inline-flex"
+            class="btn-outline-light inline-flex"
           >
             Subscribe
           </a>
@@ -157,16 +163,19 @@ const aboutImages = (profile?.aboutImages ?? [])
 
         <!-- Lakeshore Studios -->
         <div class="space-y-4">
-          <img src="/icons/12-studio.svg" alt="" aria-hidden="true" class="w-12 h-12" />
-          <h2 class="font-display text-xl text-daos-ink">Lakeshore Studios</h2>
-          <p class="font-body text-daos-charcoal leading-relaxed">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="-1 -1 26 26" class="w-12 h-12" aria-hidden="true">
+            <g transform="translate(1.05 1.25)"><path fill="#0F7FBF" stroke="none" d="M12 21 C7.5 15 5 12 5 9 A7 7 0 1 1 19 9 C19 12 16.5 15 12 21 Z"></path></g>
+            <g><path fill="none" stroke="#181410" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" d="M12 21 C7.5 15 5 12 5 9 A7 7 0 1 1 19 9 C19 12 16.5 15 12 21 Z"></path><circle fill="none" stroke="#181410" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" cx="12" cy="9" r="2.4"></circle></g>
+          </svg>
+          <h2 class="font-display text-xl text-daos-cream">Lakeshore Studios</h2>
+          <p class="font-body text-daos-cream/70 leading-relaxed">
             A small design and data consultancy I run with my husband, Justin. Same care, different canvas.
           </p>
           <a
             href="https://madebylakeshore.com"
             target="_blank"
             rel="noopener noreferrer"
-            class="btn-warm inline-flex"
+            class="btn-outline-light inline-flex"
           >
             Visit Us
           </a>
