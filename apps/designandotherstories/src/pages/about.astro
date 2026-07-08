@@ -38,7 +38,6 @@ const aboutImages = (profile?.aboutImages ?? [])
 
         <!-- Left: headline + pull quote -->
         <div class="space-y-6">
-          <p class="font-sans text-xs uppercase tracking-widest text-daos-terracotta">About</p>
           <h1 class="font-display italic text-display md:text-display-lg text-daos-cream leading-tight">
             {profile?.aboutHeadline ?? 'From New Hampshire and Puerto Rico to the world.'}
           </h1>
@@ -97,8 +96,7 @@ const aboutImages = (profile?.aboutImages ?? [])
   {profile?.mediums?.length > 0 && (
     <section class="py-20 md:py-28">
       <div class="container-art">
-        <p class="font-sans text-xs uppercase tracking-widest text-daos-terracotta mb-4">Mediums</p>
-        <h2 class="font-display italic text-2xl md:text-3xl text-daos-cream leading-tight mb-10">What I Make</h2>
+        <h2 class="font-display text-display text-daos-cream leading-tight mb-10" style="font-variation-settings: 'opsz' 96, 'SOFT' 30;">What I Make</h2>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {profile.mediums.map((medium: any) => (
             <MediumCard title={medium.title} description={medium.description} icon={medium.icon} />
