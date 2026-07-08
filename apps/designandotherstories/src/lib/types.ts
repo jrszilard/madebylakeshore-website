@@ -1,5 +1,9 @@
 export type DaosProductType = 'artwork' | 'shopProduct';
 
+export interface StyleOption {
+  label: string;
+}
+
 export interface ShippingZone {
   label: string;
   countryCodes: string[];
@@ -22,6 +26,7 @@ export interface CartItem {
   title: string;
   priceCents: number;
   qty: number;
+  styleLabel?: string; // selected style variant (e.g. "Red")
 }
 
 // Authoritative product row fetched server-side at checkout/webhook.

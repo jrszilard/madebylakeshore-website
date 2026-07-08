@@ -1,15 +1,19 @@
 import { useEffect, useState } from 'react';
-import type { CartItem } from '../../lib/types';
+import type { CartItem, StyleOption } from '../../lib/types';
 import { dispatch } from '../../lib/cart/cartStore';
 
 interface Props {
-  item: CartItem; // qty defaults to 1 when added
+  item: CartItem;
   initialAvailable: boolean;
+  styles?: StyleOption[];
 }
 
-export default function AddToCartButton({ item, initialAvailable }: Props) {
+export default function AddToCartButton({ item, initialAvailable, styles = [] }: Props) {
   const [available, setAvailable] = useState(initialAvailable);
   const [added, setAdded] = useState(false);
+  const [selectedStyle, setSelectedStyle] = useState<string | null>(
+    styles.length === 1 ? styles[0].label : null
+  );
 
   useEffect(() => {
     let active = true;
@@ -34,17 +38,50 @@ export default function AddToCartButton({ item, initialAvailable }: Props) {
     );
   }
 
+  const needsStyle = styles.length > 1;
+  const canAdd = !needsStyle || selectedStyle !== null;
+
   return (
-    <button
-      type="button"
-      onClick={() => {
-        dispatch({ type: 'add', item: { ...item, qty: 1 } });
-        setAdded(true);
-        setTimeout(() => setAdded(false), 1500);
-      }}
-      className="btn-warm"
-    >
-      {added ? 'Added' : 'Add to cart'}
-    </button>
+    <div className="space-y-4">
+      {styles.length > 1 && (
+        <div>
+          <p className="font-sans text-xs uppercase tracking-widest text-daos-charcoal mb-2">Style</p>
+          <div className="flex flex-wrap gap-2">
+            {styles.map((s) => (
+              <button
+                key={s.label}
+                type="button"
+                onClick={() => setSelectedStyle(s.label)}
+                className={
+                  selectedStyle === s.label
+                    ? 'px-3 py-1.5 border-2 border-daos-ink font-sans text-sm text-daos-ink'
+                    : 'px-3 py-1.5 border border-daos-warm font-sans text-sm text-daos-charcoal hover:border-daos-ink hover:text-daos-ink transition-colors'
+                }
+              >
+                {s.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+      <button
+        type="button"
+        disabled={!canAdd}
+        onClick={() => {
+          if (!canAdd) return;
+          const finalItem: CartItem = {
+            ...item,
+            ...(selectedStyle ? { styleLabel: selectedStyle } : {}),
+            qty: 1,
+          };
+          dispatch({ type: 'add', item: finalItem });
+          setAdded(true);
+          setTimeout(() => setAdded(false), 1500);
+        }}
+        className={canAdd ? 'btn-warm' : 'btn-warm opacity-40 cursor-not-allowed'}
+      >
+        {added ? 'Added' : needsStyle && !selectedStyle ? 'Select a style' : 'Add to cart'}
+      </button>
+    </div>
   );
 }

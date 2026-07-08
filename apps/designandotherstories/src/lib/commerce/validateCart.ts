@@ -8,6 +8,7 @@ export class BadCartError extends Error {}
 export interface NormalizedItem {
   productId: string;
   qty: number;
+  styleLabel?: string;
 }
 
 export function normalizeCartItems(body: unknown): NormalizedItem[] {
@@ -17,21 +18,27 @@ export function normalizeCartItems(body: unknown): NormalizedItem[] {
   if (body.length > MAX_LINES) {
     throw new BadCartError(`Cart cannot exceed ${MAX_LINES} distinct items`);
   }
-  // Collapse duplicate productIds by summing qty so split lines can't oversell.
-  const byId = new Map<string, number>();
+  // Collapse duplicate (productId, styleLabel) lines by summing qty.
+  const byKey = new Map<string, NormalizedItem>();
   for (const raw of body) {
     const productId =
       typeof (raw as any)?.productId === 'string' ? (raw as any).productId.trim() : '';
     const qty = (raw as any)?.qty;
+    const styleLabel =
+      typeof (raw as any)?.styleLabel === 'string' ? (raw as any).styleLabel.trim().slice(0, 100) || undefined : undefined;
     if (!productId) {
       throw new BadCartError('Each item needs a productId');
     }
     if (typeof qty !== 'number' || !Number.isInteger(qty) || qty < 1 || qty > MAX_QTY_PER_LINE) {
       throw new BadCartError(`qty must be an integer 1..${MAX_QTY_PER_LINE}`);
     }
-    byId.set(productId, (byId.get(productId) ?? 0) + qty);
+    const key = `${productId}:${styleLabel ?? ''}`;
+    const prev = byKey.get(key);
+    byKey.set(key, prev
+      ? { ...prev, qty: prev.qty + qty }
+      : { productId, qty, styleLabel });
   }
-  const items = [...byId.entries()].map(([productId, qty]) => ({ productId, qty }));
+  const items = [...byKey.values()];
   for (const item of items) {
     if (item.qty > MAX_QTY_PER_LINE) {
       throw new BadCartError(`Total qty for a product cannot exceed ${MAX_QTY_PER_LINE}`);
@@ -46,6 +53,7 @@ export interface OrderLine {
   title: string;
   unitAmountCents: number;
   qty: number;
+  styleLabel?: string;
 }
 
 export interface Unavailable {
@@ -94,9 +102,10 @@ export function buildOrderLines(
     lines.push({
       productId: row._id,
       type: row._type,
-      title: row.title,
+      title: item.styleLabel ? `${row.title} — ${item.styleLabel}` : row.title,
       unitAmountCents,
       qty: item.qty,
+      styleLabel: item.styleLabel,
     });
   }
   return { lines, unavailable };

@@ -6,10 +6,14 @@ export interface CartState {
 
 export type CartAction =
   | { type: 'add'; item: CartItem }
-  | { type: 'setQty'; productId: string; qty: number }
-  | { type: 'remove'; productId: string }
+  | { type: 'setQty'; productId: string; styleLabel?: string; qty: number }
+  | { type: 'remove'; productId: string; styleLabel?: string }
   | { type: 'clear' }
   | { type: 'replace'; state: CartState };
+
+function sameItem(a: CartItem, productId: string, styleLabel?: string): boolean {
+  return a.productId === productId && a.styleLabel === styleLabel;
+}
 
 const MAX_QTY = 50;
 
@@ -19,11 +23,11 @@ export function cartReducer(state: CartState, action: CartAction): CartState {
       // Originals (artwork) are unique — cap at 1. shopProduct uses MAX_QTY.
       // Intentional DAOS-specific divergence: fattamano has no single-quantity unique products.
       const cap = action.item.type === 'artwork' ? 1 : MAX_QTY;
-      const existing = state.items.find((i) => i.productId === action.item.productId);
+      const existing = state.items.find((i) => sameItem(i, action.item.productId, action.item.styleLabel));
       if (existing) {
         return {
           items: state.items.map((i) =>
-            i.productId === action.item.productId
+            sameItem(i, action.item.productId, action.item.styleLabel)
               ? { ...i, qty: Math.min(cap, i.qty + action.item.qty) }
               : i
           ),
@@ -33,16 +37,16 @@ export function cartReducer(state: CartState, action: CartAction): CartState {
     }
     case 'setQty': {
       if (action.qty <= 0) {
-        return { items: state.items.filter((i) => i.productId !== action.productId) };
+        return { items: state.items.filter((i) => !sameItem(i, action.productId, action.styleLabel)) };
       }
       return {
         items: state.items.map((i) =>
-          i.productId === action.productId ? { ...i, qty: Math.min(MAX_QTY, action.qty) } : i
+          sameItem(i, action.productId, action.styleLabel) ? { ...i, qty: Math.min(MAX_QTY, action.qty) } : i
         ),
       };
     }
     case 'remove':
-      return { items: state.items.filter((i) => i.productId !== action.productId) };
+      return { items: state.items.filter((i) => !sameItem(i, action.productId, action.styleLabel)) };
     case 'clear':
       return { items: [] };
     case 'replace':

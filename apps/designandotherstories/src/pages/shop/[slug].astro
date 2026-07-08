@@ -119,7 +119,7 @@ const seoDescription = (isArtwork ? artwork.story : product.blurb) || doc.title;
                 <p class="font-sans text-sm text-daos-charcoal uppercase tracking-wide">Sold</p>
               )}
               {available && priceCents != null && (
-                <AddToCartButton client:visible item={cartItem} initialAvailable={available} />
+                <AddToCartButton client:visible item={cartItem} initialAvailable={available} styles={!isArtwork ? (product.styles ?? []) : []} />
               )}
             </div>
 

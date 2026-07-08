@@ -1,4 +1,4 @@
-import { defineType, defineField } from 'sanity';
+import { defineType, defineField, defineArrayMember } from 'sanity';
 
 export default defineType({
   name: 'shopProduct',
@@ -30,6 +30,7 @@ export default defineType({
           { title: 'Postcard', value: 'postcard' },
           { title: 'Greeting Card', value: 'greeting-card' },
           { title: 'Print', value: 'print' },
+          { title: 'Sticker', value: 'sticker' },
           { title: 'Other', value: 'other' },
         ],
         layout: 'radio',
@@ -75,6 +76,27 @@ export default defineType({
       description:
         'Leave blank for unlimited / print-on-demand. Set a number for limited stock; it decrements on each sale and flips Available off at 0.',
       validation: (Rule) => Rule.min(0).integer(),
+    }),
+    defineField({
+      name: 'styles',
+      title: 'Style Options',
+      type: 'array',
+      of: [
+        defineArrayMember({
+          type: 'object',
+          fields: [
+            defineField({
+              name: 'label',
+              title: 'Label',
+              type: 'string',
+              description: 'e.g. "Red", "Forest Green", "8×10"',
+              validation: (Rule) => Rule.required(),
+            }),
+          ],
+          preview: { select: { title: 'label' } },
+        }),
+      ],
+      description: 'Optional variants (colors, sizes, etc.). Leave empty for single-style products.',
     }),
     defineField({
       name: 'relatedArtwork',

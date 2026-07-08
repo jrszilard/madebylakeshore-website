@@ -85,7 +85,7 @@ export const POST: APIRoute = async ({ request }) => {
   await sanityWriteClient().createIfNotExists({
     _id: session.id,
     _type: 'daosCheckoutSession',
-    items: lines.map((l) => ({ _key: l.productId, productId: l.productId, type: l.type, qty: l.qty })),
+    items: lines.map((l) => ({ _key: l.productId, productId: l.productId, type: l.type, qty: l.qty, styleLabel: l.styleLabel })),
     subtotalCents: cartSubtotalCents(lines),
     status: 'pending',
     createdAt: new Date().toISOString(),

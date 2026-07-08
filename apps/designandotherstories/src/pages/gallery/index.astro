@@ -2,88 +2,41 @@
 export const prerender = false;
 
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import ShopCard from '../../components/ShopCard.astro';
+import GalleryCard from '../../components/GalleryCard.astro';
 import { sanityClient, queries } from '../../lib/sanity';
 
 const allArtwork = await sanityClient.fetch(queries.allArtwork);
-
-const originals = (allArtwork ?? []).filter((p: any) => (p.artworkType ?? 'original') === 'original');
-const photography = (allArtwork ?? []).filter((p: any) => p.artworkType === 'photography');
 ---
 
 <BaseLayout
   title="Gallery"
-  description="Purchase original artworks, paintings, and prints by Wilma. Each piece is handmade and ships directly from the studio."
+  description="Original paintings, drawings, and photography by Wilma Huertas."
 >
-  <!-- Page header -->
-  <section class="section-spacing">
-    <div class="container-art">
-      <div class="max-w-2xl">
-        <p class="font-sans text-xs uppercase tracking-widest text-daos-terracotta mb-4">Gallery</p>
-        <h1 class="font-display italic text-display-lg md:text-display-xl text-daos-ink mb-6 leading-tight">
-          Take something home
-        </h1>
-        <p class="font-body text-daos-charcoal text-lg leading-relaxed">
-          Original paintings, drawings, and prints. Shipped with care.
-        </p>
+  {allArtwork.length === 0 ? (
+    <div class="text-center py-40">
+      <p class="font-body text-daos-charcoal text-lg">New work coming soon.</p>
+    </div>
+  ) : (
+    <div class="px-1.5 py-1.5">
+      <div class="columns-2 md:columns-3 lg:columns-4 gap-1.5">
+        <!-- Text tile: first cell in the grid -->
+        <div class="break-inside-avoid mb-1.5 bg-daos-ink flex flex-col justify-end p-6 aspect-[3/4]">
+          <p class="font-sans text-xs uppercase tracking-widest text-daos-terracotta mb-3">Gallery</p>
+          <h1 class="font-display italic text-daos-cream leading-none" style="font-size: clamp(2.5rem, 5vw, 4rem);">Work</h1>
+        </div>
+
+        {allArtwork.map((piece: any) => (
+          <GalleryCard
+            title={piece.title}
+            slug={piece.slug}
+            images={piece.images ?? []}
+            medium={piece.medium}
+            forSale={piece.forSale}
+            originalAvailable={piece.originalAvailable}
+            price={piece.price}
+          />
+        ))}
       </div>
     </div>
-  </section>
-
-  <!-- Originals -->
-  {originals.length > 0 && (
-    <section class="section-spacing bg-daos-paper">
-      <div class="container-art">
-        <div class="mb-10 pb-6 border-b border-daos-warm">
-          <h2 class="font-display italic text-2xl md:text-3xl text-daos-ink">Originals</h2>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {originals.map((piece: any) => (
-            <ShopCard
-              title={piece.title}
-              slug={piece.slug}
-              images={piece.images ?? []}
-              medium={piece.medium}
-              price={piece.price}
-              originalAvailable={piece.originalAvailable}
-              printsAvailable={piece.printsAvailable}
-            />
-          ))}
-        </div>
-      </div>
-    </section>
-  )}
-
-  <!-- Prints -->
-  {photography.length > 0 && (
-    <section class="section-spacing">
-      <div class="container-art">
-        <div class="mb-10 pb-6 border-b border-daos-warm">
-          <h2 class="font-display italic text-2xl md:text-3xl text-daos-ink">Photography</h2>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {photography.map((piece: any) => (
-            <ShopCard
-              title={piece.title}
-              slug={piece.slug}
-              images={piece.images ?? []}
-              medium={piece.medium}
-              price={piece.price}
-              originalAvailable={piece.originalAvailable}
-              printsAvailable={piece.printsAvailable}
-              landscape={true}
-            />
-          ))}
-        </div>
-      </div>
-    </section>
-  )}
-
-  {originals.length === 0 && photography.length === 0 && (
-    <section class="section-spacing bg-daos-paper">
-      <div class="container-art text-center py-20">
-        <p class="font-body text-daos-charcoal text-lg">New pieces coming soon.</p>
-      </div>
-    </section>
   )}
 </BaseLayout>

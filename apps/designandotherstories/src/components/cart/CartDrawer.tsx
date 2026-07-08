@@ -32,10 +32,15 @@ export default function CartDrawer({
         ) : (
           <>
             <ul className="space-y-4">
-              {items.map((i) => (
-                <li key={i.productId} className="flex justify-between items-center gap-3">
+              {items.map((i) => {
+                const lineKey = `${i.productId}:${i.styleLabel ?? ''}`;
+                return (
+                <li key={lineKey} className="flex justify-between items-center gap-3">
                   <div>
                     <p className="font-body text-daos-ink">{i.title}</p>
+                    {i.styleLabel && (
+                      <p className="font-sans text-xs text-daos-charcoal uppercase tracking-wide">{i.styleLabel}</p>
+                    )}
                     <p className="font-body text-sm text-daos-charcoal">{formatMoneyCents(i.priceCents)} each</p>
                   </div>
                   <div className="flex items-center gap-2">
@@ -48,15 +53,16 @@ export default function CartDrawer({
                         type="number"
                         min={0}
                         value={i.qty}
-                        onChange={(e) => dispatch({ type: 'setQty', productId: i.productId, qty: parseInt(e.target.value || '0', 10) })}
+                        onChange={(e) => dispatch({ type: 'setQty', productId: i.productId, styleLabel: i.styleLabel, qty: parseInt(e.target.value || '0', 10) })}
                         className="w-14 border border-daos-ink px-2 py-1 font-body text-daos-ink"
                         aria-label={`Quantity for ${i.title}`}
                       />
                     )}
-                    <button onClick={() => dispatch({ type: 'remove', productId: i.productId })} aria-label={`Remove ${i.title}`} className="text-daos-charcoal hover:text-daos-terracotta font-sans text-xs uppercase tracking-widest">remove</button>
+                    <button onClick={() => dispatch({ type: 'remove', productId: i.productId, styleLabel: i.styleLabel })} aria-label={`Remove ${i.title}`} className="text-daos-charcoal hover:text-daos-terracotta font-sans text-xs uppercase tracking-widest">remove</button>
                   </div>
                 </li>
-              ))}
+                );
+              })}
             </ul>
             <div className="mt-8 border-t-2 border-daos-ink pt-4">
               <p className="flex justify-between font-display text-lg text-daos-ink">

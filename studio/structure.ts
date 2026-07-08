@@ -84,52 +84,17 @@ export const structure: StructureResolver = (S) =>
                 .schemaType('artwork')
                 .child(
                   S.documentTypeList('artwork')
-                    .title('All Artwork')
+                    .title('Artwork')
                     .defaultOrdering([{ field: '_createdAt', direction: 'desc' }])
                 ),
               S.listItem()
-                .title('By Type')
-                .child(
-                  S.list()
-                    .title('By Type')
-                    .items([
-                      S.listItem()
-                        .title('Originals')
-                        .child(
-                          S.documentList()
-                            .title('Originals')
-                            .filter('_type == "artwork" && (artworkType == "original" || !defined(artworkType))')
-                            .defaultOrdering([{ field: '_createdAt', direction: 'desc' }])
-                        ),
-                      S.listItem()
-                        .title('Photography')
-                        .child(
-                          S.documentList()
-                            .title('Photography')
-                            .filter('_type == "artwork" && artworkType == "photography"')
-                            .defaultOrdering([{ field: '_createdAt', direction: 'desc' }])
-                        ),
-                    ])
-                ),
-              S.listItem()
-                .title('Featured')
-                .child(
-                  S.documentList()
-                    .title('Featured Artwork')
-                    .filter('_type == "artwork" && featured == true')
-                    .defaultOrdering([{ field: '_createdAt', direction: 'desc' }])
-                ),
-              S.listItem()
-                .title('By Collection')
+                .title('Collections')
+                .schemaType('artCollection')
                 .child(
                   S.documentTypeList('artCollection')
                     .title('Collections')
                     .defaultOrdering([{ field: 'order', direction: 'asc' }])
                 ),
-              S.listItem()
-                .title('Collections')
-                .schemaType('artCollection')
-                .child(S.documentTypeList('artCollection').title('Collections')),
               S.listItem()
                 .title('Artist Profile')
                 .child(

@@ -248,6 +248,10 @@ export const queries = {
     slug,
     images,
     artworkType,
+    medium,
+    forSale,
+    originalAvailable,
+    price,
     "collection": collection->{ title, slug }
   }`,
 
@@ -361,11 +365,13 @@ export const queries = {
 }`,
 
   shopProducts: `*[_type == "shopProduct" && available == true] | order(_createdAt desc) {
-  _id, title, slug, category, images, blurb, price, available, featured
+  _id, title, slug, category, images, blurb, price, available, featured,
+  styles[]{ label }
 }`,
 
   shopProductBySlug: `*[_type == "shopProduct" && slug.current == $slug][0] {
   _id, title, slug, category, images, blurb, description, price, available, stock, featured,
+  styles[]{ label },
   "relatedArtwork": relatedArtwork->{ _id, title, slug }
 }`,
 
