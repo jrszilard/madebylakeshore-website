@@ -34,7 +34,7 @@ const priceDisplay = priceCents != null ? `$${(priceCents / 100).toLocaleString(
 const cartItem = {
   productId: doc._id,
   type: productType,
-  slug,
+  slug: slug ?? '',
   title: doc.title,
   priceCents: priceCents ?? 0,
   qty: 1,

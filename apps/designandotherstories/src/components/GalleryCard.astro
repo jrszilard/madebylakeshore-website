@@ -9,6 +9,8 @@ interface Props {
   forSale?: boolean;
   originalAvailable?: boolean;
   price?: number;
+  collectionTitle?: string;
+  collectionSlug?: { current: string };
 }
 
 const { title, slug, images, medium, forSale, originalAvailable, price } = Astro.props;
