@@ -20,14 +20,14 @@ const [allBooks, shortStories] = await Promise.all([
   description="Novels, short stories, and essays from Design & Other Stories. Literary fiction and nonfiction made with care."
 >
   <!-- Page Header -->
-  <section class="section-spacing">
+  <section class="py-20 md:py-28">
     <div class="container-art">
       <div class="max-w-2xl">
         <p class="font-sans text-xs uppercase tracking-widest text-daos-terracotta mb-4">Writing</p>
-        <h1 class="font-display italic text-display-lg md:text-display-xl text-daos-ink mb-6 leading-tight">
+        <h1 class="font-display italic text-display-lg md:text-display-xl text-daos-cream mb-6 leading-tight">
           Words on paper
         </h1>
-        <p class="font-body text-daos-charcoal text-lg leading-relaxed">
+        <p class="font-body text-daos-cream/70 text-lg leading-relaxed">
           Fiction, essays, and dispatches from the studio — on the things that stay with you.
         </p>
       </div>
@@ -36,7 +36,7 @@ const [allBooks, shortStories] = await Promise.all([
 
   <!-- Books Grid -->
   {allBooks && allBooks.length > 0 && (
-    <section class="section-spacing bg-daos-paper">
+    <section class="py-20 md:py-28 bg-daos-paper">
       <div class="container-art">
         <p class="font-sans text-xs uppercase tracking-widest text-daos-clay mb-8">Books</p>
 
@@ -57,15 +57,15 @@ const [allBooks, shortStories] = await Promise.all([
   )}
 
   <!-- Short Stories Carousel -->
-  <section class="section-spacing">
+  <section class="py-20 md:py-28">
     <div class="container-art">
-      <p class="font-sans text-xs uppercase tracking-widest text-daos-clay mb-8">Short Stories</p>
+      <p class="font-sans text-xs uppercase tracking-widest text-daos-cream/50 mb-8">Short Stories</p>
       <ShortStoriesCarousel posts={shortStories} client:load />
     </div>
   </section>
 
   <!-- Substack Feed -->
-  <section class="section-spacing">
+  <section class="py-20 md:py-28">
     <div class="container-art">
       <div class="max-w-2xl mx-auto">
         <SubstackFeed limit={5} excludeSectionId={SUBSTACK_SHORT_STORIES_SECTION_ID} />

@@ -13,7 +13,6 @@ if (!event) {
   return Astro.redirect('/events');
 }
 
-// Format date helpers
 function formatDate(dateStr: string): string {
   return new Date(dateStr).toLocaleDateString('en-US', {
     weekday: 'long',
@@ -34,7 +33,10 @@ const locationParts = [
 ].filter(Boolean);
 const locationDisplay = locationParts.join(', ');
 
-// BlockContent serializer
+const eventTypeLabel = event.eventType
+  ? event.eventType.replace(/-/g, ' ').replace(/\b\w/g, (c: string) => c.toUpperCase())
+  : null;
+
 function blockContentToHtml(blocks: any[]): string {
   if (!Array.isArray(blocks)) return '';
   return blocks
@@ -46,7 +48,6 @@ function blockContentToHtml(blocks: any[]): string {
         block.style === 'h4' ? 'h4' :
         block.style === 'blockquote' ? 'blockquote' :
         'p';
-
       const text = (block.children ?? [])
         .map((span: any) => {
           let t = (span.text ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -55,7 +56,6 @@ function blockContentToHtml(blocks: any[]): string {
           return t;
         })
         .join('');
-
       return `<${tag}>${text}</${tag}>`;
     })
     .join('\n');
@@ -67,64 +67,74 @@ if (event.description && Array.isArray(event.description)) {
 }
 
 const coverUrl = event.coverImage?.asset
-  ? urlFor(event.coverImage).width(800).height(500).fit('crop').crop('focalpoint').url()
+  ? urlFor(event.coverImage).width(900).height(1200).fit('crop').crop('focalpoint').url()
   : null;
 
 const seoTitle = event.seo?.title || event.title;
 const seoDescription = event.seo?.description || `${event.title} — ${locationDisplay}`;
 ---
 
-<BaseLayout title={seoTitle} description={seoDescription}>
+<style is:global>
+  body { background-color: #DED9E4; }
+</style>
+
+<BaseLayout title={seoTitle} description={seoDescription} navTheme="dark">
   <article>
-    <!-- Back link + header -->
-    <section class="section-spacing">
+    <section class="py-20 md:py-28">
       <div class="container-art">
         <a
           href="/events"
-          class="inline-flex items-center gap-1 font-sans text-sm text-daos-charcoal hover:text-daos-terracotta transition-colors mb-10"
+          class="inline-flex items-center gap-1 font-sans text-sm text-daos-charcoal hover:text-daos-ink transition-colors mb-10"
         >
           &larr; All Events
         </a>
 
-        <!-- Cover image -->
-        {coverUrl && (
-          <div class="aspect-[16/7] overflow-hidden rounded-sm bg-daos-warm mb-10">
-            <img
-              src={coverUrl}
-              alt={event.title}
-              class="w-full h-full object-cover"
-            />
+        <div class="grid grid-cols-1 md:grid-cols-[3fr_2fr] gap-12 lg:gap-16 items-start">
+
+          <!-- Left: cover image -->
+          <div>
+            {coverUrl ? (
+              <img
+                src={coverUrl}
+                alt={event.title}
+                class="w-full block"
+                loading="eager"
+              />
+            ) : (
+              <div class="w-full aspect-[3/4] bg-gradient-to-br from-daos-warm to-daos-clay flex items-center justify-center">
+                <span class="font-display italic text-daos-ink/30 text-2xl text-center px-8">{event.title}</span>
+              </div>
+            )}
           </div>
-        )}
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-12 lg:gap-16 items-start">
+          <!-- Right: event details -->
+          <div class="sticky top-20 pt-6 space-y-6">
 
-          <!-- Left: Event details (2 cols) -->
-          <div class="md:col-span-2 space-y-6">
+            {eventTypeLabel && (
+              <p class="font-sans text-xs uppercase tracking-widest text-daos-clay">{eventTypeLabel}</p>
+            )}
 
-            <!-- Title -->
             <h1 class="font-display italic text-display md:text-display-lg text-daos-ink leading-tight">
               {event.title}
             </h1>
 
-            <!-- Dates -->
-            <div class="space-y-1 font-sans text-sm text-daos-charcoal">
+            <div class="space-y-2 font-sans text-sm text-daos-charcoal border-t border-daos-warm pt-6">
               <div class="flex items-start gap-2">
                 <span class="text-daos-terracotta mt-0.5" aria-hidden="true">
-                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
                   </svg>
                 </span>
                 <div>
                   <p>{startFormatted}</p>
-                  {endFormatted && <p class="text-daos-charcoal/70">through {endFormatted}</p>}
+                  {endFormatted && <p class="text-daos-clay">through {endFormatted}</p>}
                 </div>
               </div>
 
               {locationDisplay && (
                 <div class="flex items-start gap-2">
                   <span class="text-daos-terracotta mt-0.5" aria-hidden="true">
-                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
                       <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
                     </svg>
@@ -134,36 +144,33 @@ const seoDescription = event.seo?.description || `${event.title} — ${locationD
               )}
             </div>
 
-            <!-- Description (blockContent) -->
             {descriptionHtml && (
-              <div
-                class="prose prose-stone font-body text-daos-charcoal leading-relaxed max-w-none"
-                set:html={descriptionHtml}
-              />
+              <div class="font-body text-daos-charcoal leading-relaxed border-t border-daos-warm pt-6" set:html={descriptionHtml} />
             )}
 
-            <!-- External URL -->
             {event.externalUrl && (
-              <a
-                href={event.externalUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                class="btn-outline inline-flex items-center gap-2"
-              >
-                Event Website
-                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
-                </svg>
-              </a>
+              <div class="border-t border-daos-warm pt-6">
+                <a
+                  href={event.externalUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="btn-outline inline-flex items-center gap-2"
+                >
+                  Event Website
+                  <img src="/icons/11-link.svg" alt="" aria-hidden="true" class="w-8 h-8" />
+                </a>
+              </div>
             )}
-          </div>
 
-          <!-- Right: What I'm Bringing (1 col) -->
-          <div class="md:col-span-1">
-            <BringingGrid
-              artwork={event.bringingArtwork}
-              books={event.bringingBooks}
-            />
+            {(event.bringingArtwork?.length > 0 || event.bringingBooks?.length > 0) && (
+              <div class="border-t border-daos-warm pt-6">
+                <BringingGrid
+                  artwork={event.bringingArtwork}
+                  books={event.bringingBooks}
+                />
+              </div>
+            )}
+
           </div>
         </div>
       </div>

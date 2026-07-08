@@ -19,7 +19,7 @@ function ShopCard({ item }: { item: ShopItem }) {
   const isDimmed = isSold && !item.printsAvailable;
 
   return (
-    <article className={`group bg-daos-paper rounded-sm overflow-hidden hover:shadow-lg transition-shadow duration-300${isDimmed ? ' opacity-60' : ''}`}>
+    <article className={`group flex flex-col bg-daos-thread overflow-hidden${isDimmed ? ' opacity-60' : ''}`}>
       <a href={`/shop/${item.slug}`} className="block">
         <div className="relative overflow-hidden bg-daos-warm aspect-[3/4]">
           {item.imageUrl ? (
@@ -41,10 +41,10 @@ function ShopCard({ item }: { item: ShopItem }) {
           )}
         </div>
       </a>
-      <div className="p-4 space-y-3">
+      <div className="flex-1 p-4 space-y-3">
         <div className="space-y-1">
           <p className="font-sans text-xs uppercase tracking-widest text-daos-charcoal">{item.categoryLabel}</p>
-          <h3 className="font-display text-lg text-daos-ink leading-snug">
+          <h3 className="font-serif text-sm text-daos-ink leading-snug">
             <a href={`/shop/${item.slug}`} className="hover:text-daos-terracotta transition-colors">
               {item.title}
             </a>
@@ -82,7 +82,7 @@ export default function ShopGrid({ items }: { items: ShopItem[] }) {
   return (
     <div>
       {categories.length > 2 && (
-        <div className="flex flex-wrap gap-2 mb-10">
+        <div className="flex flex-wrap gap-2 px-4 py-4">
           {categories.map((cat) => (
             <button
               key={cat}
@@ -90,7 +90,7 @@ export default function ShopGrid({ items }: { items: ShopItem[] }) {
               onClick={() => setActiveFilter(cat)}
               className={
                 activeFilter === cat
-                  ? 'px-4 py-2 border-2 border-daos-ink font-sans text-sm text-daos-ink'
+                  ? 'px-4 py-2 bg-daos-terracotta border border-daos-terracotta font-sans text-sm text-white'
                   : 'px-4 py-2 border border-daos-warm font-sans text-sm text-daos-charcoal hover:border-daos-ink hover:text-daos-ink transition-colors'
               }
             >
@@ -103,7 +103,13 @@ export default function ShopGrid({ items }: { items: ShopItem[] }) {
       {visible.length === 0 ? (
         <p className="font-body text-daos-charcoal text-lg py-20 text-center">Nothing here yet.</p>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {activeFilter === 'all' && (
+            <div className="bg-daos-terracotta flex flex-col justify-end p-6">
+              <p className="font-sans text-xs uppercase tracking-widest text-white/60 mb-3">Shop</p>
+              <h1 className="font-display italic text-white leading-tight" style={{ fontSize: 'clamp(1.5rem, 3vw, 2.5rem)', fontVariationSettings: '"opsz" 144, "SOFT" 100' }}>All Products</h1>
+            </div>
+          )}
           {visible.map((item) => (
             <ShopCard key={item.id} item={item} />
           ))}

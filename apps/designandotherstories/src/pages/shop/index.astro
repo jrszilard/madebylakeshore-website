@@ -31,23 +31,13 @@ const allItems: ShopItem[] = (shopProducts ?? []).map((item: any) => ({
   title="Shop"
   description="Shop original artwork, prints, postcards, and greeting cards by Wilma. Each piece ships directly from the studio."
 >
-  <section class="section-spacing">
-    <div class="container-art">
-      <div class="max-w-2xl mb-12">
-        <p class="font-sans text-xs uppercase tracking-widest text-daos-terracotta mb-4">Shop</p>
-        <h1 class="font-display italic text-display-lg md:text-display-xl text-daos-ink mb-6 leading-tight">
-          Take something home
-        </h1>
-        <p class="font-body text-daos-charcoal text-lg leading-relaxed">
-          Original paintings, prints, postcards, stickers, and greeting cards. Shipped with care.
-        </p>
-      </div>
-
-      {allItems.length === 0 ? (
-        <p class="font-body text-daos-charcoal text-lg py-20 text-center">New pieces coming soon.</p>
-      ) : (
-        <ShopGrid client:load items={allItems} />
-      )}
+  {allItems.length === 0 ? (
+    <div class="text-center py-40">
+      <p class="font-body text-daos-cream/70 text-lg">New pieces coming soon.</p>
     </div>
-  </section>
+  ) : (
+    <div class="container-art py-20 md:py-28">
+      <ShopGrid client:load items={allItems} />
+    </div>
+  )}
 </BaseLayout>

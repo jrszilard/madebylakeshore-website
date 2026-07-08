@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=JetBrains+Mono:wght@300;400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,400;1,9..144,500;1,9..144,700&family=JetBrains+Mono:wght@300;400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -10,20 +10,37 @@
   }
   
   body {
-    @apply font-body text-daos-ink bg-daos-cream antialiased;
+    @apply font-body text-daos-cream antialiased;
+    background-color: #3B45E0;
     font-optical-sizing: auto;
-    font-variation-settings: "opsz" 14;
+    font-size: 17px;
+    line-height: 1.6;
+    font-variation-settings: "opsz" 14, "SOFT" 50;
     text-rendering: optimizeLegibility;
     letter-spacing: 0.002em;
   }
 
+  /* Global grain overlay — matches brand doc paper texture */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.12  0 0 0 0 0.10  0 0 0 0 0.08  0 0 0 0.22 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/></svg>");
+    mix-blend-mode: multiply;
+    opacity: 0.3;
+    z-index: 9999;
+  }
+
   em, i {
     font-style: italic;
-    font-variation-settings: "opsz" 14;
+    font-variation-settings: "opsz" 14, "SOFT" 100;
   }
-  
+
   h1, h2, h3, h4 {
     @apply font-display text-daos-ink;
+    font-weight: 700;
+    font-variation-settings: "opsz" 144, "SOFT" 30;
   }
   
   ::selection {
@@ -44,11 +61,11 @@
     @apply inline-flex items-center gap-2 px-6 py-3 text-white font-sans tracking-widest uppercase transition-colors duration-200;
     font-size: 11px;
     letter-spacing: 0.18em;
-    background-color: #B5481F;
+    background-color: #EE4322;
   }
 
   .btn-warm:hover {
-    background-color: #8F3614;
+    background-color: #CC2E0F;
   }
 
   .btn-outline {
@@ -57,11 +74,18 @@
     letter-spacing: 0.18em;
     text-transform: uppercase;
   }
+
+  .btn-outline-light {
+    @apply inline-flex items-center gap-2 px-6 py-3 border border-daos-cream/50 text-daos-cream font-sans hover:bg-daos-cream/10 transition-colors duration-200;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
   
   .btn-warm:focus-visible,
   .btn-outline:focus-visible {
     @apply outline-2 outline-offset-2;
-    outline-color: #8F3614;
+    outline-color: #CC2E0F;
   }
 
   /* Link underline animation */
@@ -72,7 +96,7 @@
   .link-underline::after {
     content: '';
     @apply absolute bottom-0 left-0 w-full h-px;
-    background-color: #8F3614;
+    background-color: #CC2E0F;
     transform: scaleX(0);
     transform-origin: right;
     transition: transform 300ms ease;
@@ -87,7 +111,7 @@
 @layer base {
   :focus-visible {
     @apply outline-2 outline-offset-2;
-    outline-color: #8F3614;
+    outline-color: #CC2E0F;
   }
 }
 
@@ -105,6 +129,15 @@
   .animate-stagger-3 { animation-delay: 0.3s; }
   .animate-stagger-4 { animation-delay: 0.4s; }
   .animate-stagger-5 { animation-delay: 0.5s; }
+}
+
+@keyframes marquee {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.marquee-track {
+  animation: marquee 18s linear infinite;
 }
 
 @keyframes fade-in {

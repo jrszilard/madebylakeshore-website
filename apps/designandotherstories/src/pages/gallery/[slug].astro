@@ -76,10 +76,10 @@ const region = (artwork as any)?.secretLinkRegion;
 
 <BaseLayout title={seoTitle} description={seoDescription}>
   <article>
-    <section class="section-spacing">
+    <section class="py-20 md:py-28">
       <div class="container-art">
         <!-- Back link -->
-        <a href="/gallery" class="inline-flex items-center gap-1 font-sans text-sm text-daos-charcoal hover:text-daos-terracotta transition-colors mb-10">
+        <a href="/gallery" class="inline-flex items-center gap-1 font-sans text-sm text-daos-cream/70 hover:text-daos-cream transition-colors mb-10">
           &larr; Back to Gallery
         </a>
 
@@ -95,18 +95,18 @@ const region = (artwork as any)?.secretLinkRegion;
 
             <!-- Category badge -->
             {categoryLabel && (
-              <span class="inline-block px-3 py-1 border border-daos-warm text-daos-charcoal text-xs font-sans uppercase tracking-wider rounded-sm">
+              <span class="inline-block px-3 py-1 border border-white/20 text-daos-cream/70 text-xs font-sans uppercase tracking-wider rounded-sm">
                 {categoryLabel}
               </span>
             )}
 
             <!-- Title -->
-            <h1 class="font-display text-display md:text-display-lg text-daos-ink leading-tight">
+            <h1 class="font-display text-display md:text-display-lg text-daos-cream leading-tight">
               {artwork.title}
             </h1>
 
             <!-- Meta: medium / dimensions / year -->
-            <div class="space-y-1 font-sans text-sm text-daos-charcoal">
+            <div class="space-y-1 font-sans text-sm text-daos-cream/70">
               {artwork.medium && <p>{artwork.medium}</p>}
               {dimsDisplay && <p>{dimsDisplay}</p>}
               {artwork.year && <p>{artwork.year}</p>}
@@ -114,18 +114,18 @@ const region = (artwork as any)?.secretLinkRegion;
 
             <!-- Artist story -->
             {artwork.story && (
-              <p class="font-body text-daos-charcoal leading-relaxed italic border-l-2 border-daos-clay pl-4">
+              <p class="font-body text-daos-cream/70 leading-relaxed italic border-l-2 border-white/30 pl-4">
                 {artwork.story}
               </p>
             )}
 
             <!-- Collection link -->
             {artwork.collection?.slug?.current && (
-              <p class="font-sans text-sm">
+              <p class="font-sans text-sm text-daos-cream/50">
                 Part of{' '}
                 <a
                   href={`/gallery/collections/${artwork.collection.slug.current}`}
-                  class="text-daos-sage underline underline-offset-2 hover:text-daos-terracotta transition-colors"
+                  class="text-daos-marigold underline underline-offset-2 hover:text-daos-cream transition-colors"
                 >
                   {artwork.collection.title}
                 </a>
@@ -134,7 +134,7 @@ const region = (artwork as any)?.secretLinkRegion;
 
             <!-- Buy from shop link -->
             {artwork.forSale && (
-              <div class="pt-4 border-t border-daos-warm">
+              <div class="pt-4 border-t border-white/20">
                 <a href={`/shop/${artwork.slug.current}`} class="btn-warm inline-flex items-center gap-2">
                   Buy this work from our shop
                   <span aria-hidden="true">&rarr;</span>
@@ -148,7 +148,7 @@ const region = (artwork as any)?.secretLinkRegion;
 
     <!-- Extended description -->
     {descriptionHtml && (
-      <section class="section-spacing bg-daos-paper">
+      <section class="py-20 md:py-28 bg-daos-paper">
         <div class="container-art">
           <div
             class="max-w-2xl mx-auto prose prose-stone font-body text-daos-charcoal leading-relaxed"

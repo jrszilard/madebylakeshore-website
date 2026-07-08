@@ -47,13 +47,33 @@ const typeLabels: Record<string, string> = {
   description="Design & Other Stories is a small studio making literary fiction and traditional art by hand in New Hampshire. Original paintings, drawings, and books — made one piece at a time."
 >
   <!-- 1. Hero -->
-  <HeroSection heroImage={artistProfile?.heroImage} shopItems={heroShopItems} />
+  <HeroSection headline="The World Needs More Whimsy" subtitle="" heroImage={artistProfile?.heroImage} shopItems={heroShopItems} />
 
   <!-- 3. From the Studio (shop) -->
   {swimlaneShopItems.length > 0 && (
-    <section class="section-spacing">
+    <>
+    <!-- Scrolling marquee divider -->
+    <div class="overflow-hidden bg-daos-ink py-14 select-none" aria-hidden="true">
+      <div class="marquee-track flex whitespace-nowrap gap-0">
+        {Array.from({ length: 2 }).map(() => (
+          <span class="marquee-inner flex shrink-0 items-center">
+            <span class="font-sans text-[15px] tracking-[0.08em] text-daos-cream/60 px-10">Did you know humming while holding your nose is impossible because you need an open airway to keep the vibration going?</span>
+            <span style="color: #EE4322;" class="font-sans text-[15px] px-2">*</span>
+            <span class="font-sans text-[15px] tracking-[0.08em] text-daos-cream/60 px-10">Did you know sea otters hold hands while they sleep so they don't drift apart in the water?</span>
+            <span style="color: #EE4322;" class="font-sans text-[15px] px-2">*</span>
+            <span class="font-sans text-[15px] tracking-[0.08em] text-daos-cream/60 px-10">Did you know that lemons float in water, but limes sink because their densities are different?</span>
+            <span style="color: #EE4322;" class="font-sans text-[15px] px-2">*</span>
+          </span>
+        ))}
+      </div>
+    </div>
+
+    <section class="py-20 md:py-28 bg-daos-thread">
       <div class="container-art">
-        <SectionHeader title="New Arrivals" viewAllHref="/shop" />
+        <div class="mb-8 flex items-center justify-between">
+          <h2 class="font-display text-display text-[#3B45E0]" style="font-variation-settings: 'opsz' 96, 'SOFT' 30;">New Arrivals</h2>
+          <a href="/shop" class="font-sans text-[11px] tracking-[0.18em] uppercase text-[#3B45E0] hover:text-[#2D36B8] transition-colors">View all &rarr;</a>
+        </div>
 
         <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
           {(swimlaneShopItems as any[]).map((item: any) => (
@@ -70,11 +90,12 @@ const typeLabels: Record<string, string> = {
         </div>
       </div>
     </section>
+    </>
   )}
 
   <!-- Collections -->
   {allCollections && allCollections.length > 0 && (
-    <section class="section-spacing">
+    <section class="py-20 md:py-28">
 
       {/* Single: full-bleed with overlay title */}
       {isSingleCollection && (
@@ -107,7 +128,7 @@ const typeLabels: Record<string, string> = {
       {!isSingleCollection && (
         <div>
           <div class="container-art mb-6">
-            <SectionHeader title="Collections" />
+            <SectionHeader title="Collections" theme="dark" />
           </div>
           <div class="relative">
             <div
@@ -134,19 +155,19 @@ const typeLabels: Record<string, string> = {
                       )}
                     </div>
                     <div class="space-y-1 px-1">
-                      {releaseYear && <p class="font-sans text-xs uppercase tracking-widest text-daos-clay">{releaseYear}</p>}
-                      <h2 class="font-display text-xl text-daos-ink group-hover:text-daos-terracotta transition-colors leading-snug">{collection.title}</h2>
-                      {collection.tagline && <p class="font-body text-sm text-daos-charcoal leading-relaxed line-clamp-2">{collection.tagline}</p>}
+                      {releaseYear && <p class="font-sans text-xs uppercase tracking-widest text-daos-cream/50">{releaseYear}</p>}
+                      <h2 class="font-display text-xl text-daos-cream group-hover:text-daos-marigold transition-colors leading-snug">{collection.title}</h2>
+                      {collection.tagline && <p class="font-body text-sm text-daos-cream/70 leading-relaxed line-clamp-2">{collection.tagline}</p>}
                     </div>
                   </a>
                 );
               })}
             </div>
             <div class="container-art mt-6 flex gap-3">
-              <button id="collections-prev" aria-label="Previous collection" class="w-10 h-10 flex items-center justify-center border border-daos-warm text-daos-charcoal hover:border-daos-ink hover:text-daos-ink transition-colors rounded-sm">
+              <button id="collections-prev" aria-label="Previous collection" class="w-10 h-10 flex items-center justify-center border border-white/20 text-daos-cream/70 hover:border-white hover:text-daos-cream transition-colors rounded-sm">
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
               </button>
-              <button id="collections-next" aria-label="Next collection" class="w-10 h-10 flex items-center justify-center border border-daos-warm text-daos-charcoal hover:border-daos-ink hover:text-daos-ink transition-colors rounded-sm">
+              <button id="collections-next" aria-label="Next collection" class="w-10 h-10 flex items-center justify-center border border-white/20 text-daos-cream/70 hover:border-white hover:text-daos-cream transition-colors rounded-sm">
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
               </button>
             </div>
@@ -159,9 +180,12 @@ const typeLabels: Record<string, string> = {
 
   <!-- 4. Next Event -->
   {nextEvent && (
-    <section class="section-spacing bg-daos-paper">
+    <section class="py-20 md:py-28 bg-daos-thread">
       <div class="container-art">
-        <SectionHeader title="Out in the World" viewAllHref="/events" />
+        <div class="mb-8 flex items-center justify-between">
+          <h2 class="font-display text-display text-[#3B45E0]" style="font-variation-settings: 'opsz' 96, 'SOFT' 30;">Out in the World</h2>
+          <a href="/events" class="font-sans text-[11px] tracking-[0.18em] uppercase text-[#3B45E0] hover:text-[#2D36B8] transition-colors">View all →</a>
+        </div>
 
         <EventCard
           title={nextEvent.title}
@@ -177,9 +201,12 @@ const typeLabels: Record<string, string> = {
   )}
 
   <!-- 5. Latest Writing -->
-  <section class="section-spacing bg-daos-cream">
+  <section class="py-20 md:py-28 bg-daos-thread">
     <div class="container-art">
-      <SectionHeader title="Fresh Off the Press" viewAllHref="https://designandtheotherstories.substack.com" />
+      <div class="mb-8 flex items-center justify-between">
+        <h2 class="font-display text-display text-[#3B45E0]" style="font-variation-settings: 'opsz' 96, 'SOFT' 30;">Fresh Off the Press</h2>
+        <a href="https://designandtheotherstories.substack.com" target="_blank" rel="noopener noreferrer" class="font-sans text-[11px] tracking-[0.18em] uppercase text-[#3B45E0] hover:text-[#2D36B8] transition-colors">View all →</a>
+      </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
         {sanityWritingItems.map((item: any) => {

@@ -2,10 +2,15 @@
 import { SUBSTACK_URL } from '../lib/config';
 import CartButton from './cart/CartButton.tsx';
 
+interface Props {
+  theme?: 'dark' | 'light';
+}
+const { theme = 'dark' } = Astro.props;
+const isLight = theme === 'light';
+
 const currentPath = Astro.url.pathname;
 
 const navLinks = [
-  { href: '/gallery', label: 'Gallery' },
   { href: '/shop', label: 'Shop' },
   { href: '/events', label: 'Events' },
   { href: SUBSTACK_URL, label: 'The Blog', external: true },
@@ -13,13 +18,13 @@ const navLinks = [
 ];
 ---
 
-<header class="sticky top-0 z-50 bg-daos-cream/95 backdrop-blur-sm border-b border-daos-warm">
+<header class:list={["sticky top-0 z-50 backdrop-blur-sm border-b", isLight ? "bg-transparent border-white/15" : "bg-daos-thread/95 border-daos-ink/15"]}>
   <nav class="container-art">
     <div class="flex items-center h-20">
       <!-- Logo -->
       <a href="/" class="group">
-        <span class="font-display text-xl md:text-2xl text-daos-ink" style="font-weight: 500; letter-spacing: -0.02em; font-variation-settings: 'opsz' 96;">
-          Design <em class="not-italic" style="font-style: italic; color: #B5481F; font-variation-settings: 'opsz' 96;">&</em> Other Stories
+        <span class:list={["font-display text-xl md:text-2xl", isLight ? "text-daos-cream" : "text-daos-ink"]} style="font-weight: 500; letter-spacing: -0.02em; font-variation-settings: 'opsz' 96;">
+          Design <em class="not-italic" style="font-style: italic; color: #EE4322; font-variation-settings: 'opsz' 96, 'SOFT' 100;">&</em> Other Stories
         </span>
       </a>
 
@@ -32,9 +37,13 @@ const navLinks = [
             rel={link.external ? 'noopener noreferrer' : undefined}
             class:list={[
               "font-sans text-[11px] tracking-[0.18em] uppercase transition-colors duration-200",
-              !link.external && (currentPath === link.href || currentPath.startsWith(link.href + '/'))
-                ? "text-daos-terracotta-dark"
-                : "text-daos-charcoal hover:text-daos-ink"
+              isLight
+                ? (!link.external && (currentPath === link.href || currentPath.startsWith(link.href + '/'))
+                    ? "text-daos-marigold"
+                    : "text-daos-cream/70 hover:text-daos-cream")
+                : (!link.external && (currentPath === link.href || currentPath.startsWith(link.href + '/'))
+                    ? "text-daos-terracotta-dark"
+                    : "text-daos-charcoal hover:text-daos-ink")
             ]}
           >
             {link.label}
@@ -44,12 +53,12 @@ const navLinks = [
 
       <!-- Cart Button and Mobile Menu Toggle -->
       <div class="flex items-center gap-4 ml-auto">
-        <CartButton client:idle />
+        <CartButton client:idle theme={theme} />
 
         <!-- Mobile Menu Button -->
         <button
           id="mobile-menu-btn"
-          class="lg:hidden p-2 text-daos-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-daos-terracotta-dark rounded-sm"
+          class:list={["lg:hidden p-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-daos-terracotta rounded-sm", isLight ? "text-daos-cream" : "text-daos-ink"]}
           aria-label="Toggle menu"
           aria-expanded="false"
           aria-controls="mobile-menu"
@@ -63,7 +72,7 @@ const navLinks = [
   </nav>
 
   <!-- Mobile Menu -->
-  <div id="mobile-menu" class="lg:hidden hidden border-t border-daos-warm bg-daos-cream">
+  <div id="mobile-menu" class:list={["lg:hidden hidden border-t", isLight ? "bg-[#3B45E0] border-white/15" : "bg-daos-thread border-daos-ink/15"]}>
     <div class="container-art py-6 space-y-4">
       {navLinks.map((link) => (
         <a
@@ -72,9 +81,13 @@ const navLinks = [
           rel={link.external ? 'noopener noreferrer' : undefined}
           class:list={[
             "block py-2 font-sans text-[11px] tracking-[0.18em] uppercase transition-colors",
-            !link.external && (currentPath === link.href || currentPath.startsWith(link.href + '/'))
-              ? "text-daos-terracotta-dark"
-              : "text-daos-charcoal hover:text-daos-ink"
+            isLight
+              ? (!link.external && (currentPath === link.href || currentPath.startsWith(link.href + '/'))
+                  ? "text-daos-marigold"
+                  : "text-daos-cream/70 hover:text-daos-cream")
+              : (!link.external && (currentPath === link.href || currentPath.startsWith(link.href + '/'))
+                  ? "text-daos-terracotta-dark"
+                  : "text-daos-charcoal hover:text-daos-ink")
           ]}
         >
           {link.label}

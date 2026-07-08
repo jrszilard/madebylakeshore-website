@@ -32,25 +32,25 @@ const aboutImages = (profile?.aboutImages ?? [])
 >
 
   <!-- 1. Header: bio + mosaic -->
-  <section class="section-spacing">
+  <section class="py-20 md:py-28">
     <div class="container-art">
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
 
         <!-- Left: headline + pull quote -->
         <div class="space-y-6">
-          <p class="font-sans text-xs uppercase tracking-widest text-daos-terracotta-dark">About</p>
-          <h1 class="font-display italic text-display md:text-display-lg text-daos-ink leading-tight">
+          <p class="font-sans text-xs uppercase tracking-widest text-daos-terracotta">About</p>
+          <h1 class="font-display italic text-display md:text-display-lg text-daos-cream leading-tight">
             {profile?.aboutHeadline ?? 'From New Hampshire and Puerto Rico to the world.'}
           </h1>
           {(profile?.aboutPullQuote ?? 'Making things you can hold in a world that keeps asking you to let go of everything physical.') && (
-            <p class="font-body text-daos-charcoal text-lg leading-relaxed italic border-l-2 border-daos-clay pl-4">
+            <p class="font-body text-daos-cream/70 text-lg leading-relaxed italic border-l-2 border-white/30 pl-4">
               {profile?.aboutPullQuote ?? 'Making things you can hold in a world that keeps asking you to let go of everything physical.'}
             </p>
           )}
           {profile?.socialLinks && profile.socialLinks.length > 0 && (
             <div class="flex flex-wrap gap-3 pt-2">
               {profile.socialLinks.map((link: any) => (
-                <a href={link.url} target="_blank" rel="noopener noreferrer" class="btn-outline text-sm">
+                <a href={link.url} target="_blank" rel="noopener noreferrer" class="btn-outline-light text-sm">
                   {link.platform || link.label || 'Link'}
                 </a>
               ))}
@@ -83,9 +83,9 @@ const aboutImages = (profile?.aboutImages ?? [])
     const fallback = `I'm Wilma — a designer, painter, and writer living in New Hampshire with my husband and our dog.\n\nI make two kinds of things: art you can put on your wall, and fiction about people who show up for each other. Ink, watercolor, graphite. Novels and short stories about connection, found family, and the weight of ordinary moments.\n\nBoth come from the same place — a belief that the things we bring into our lives should be made with care, by a person, on purpose.`;
     const paragraphs = (profile?.bio ?? fallback).split(/\n\n+/).filter(Boolean);
     return (
-      <section class="pb-16">
+      <section class="pb-20">
         <div class="container-art">
-          <div class="max-w-2xl space-y-4 prose prose-stone font-body text-daos-charcoal leading-relaxed">
+          <div class="max-w-2xl space-y-4 font-body text-daos-cream/70 leading-relaxed">
             {paragraphs.map((p: string) => <p>{p}</p>)}
           </div>
         </div>
@@ -95,10 +95,10 @@ const aboutImages = (profile?.aboutImages ?? [])
 
   <!-- 3. Mediums -->
   {profile?.mediums?.length > 0 && (
-    <section class="section-spacing">
+    <section class="py-20 md:py-28">
       <div class="container-art">
-        <p class="font-sans text-xs uppercase tracking-widest text-daos-terracotta-dark mb-4">Mediums</p>
-        <h2 class="font-display italic text-2xl md:text-3xl text-daos-ink leading-tight mb-10">What I Make</h2>
+        <p class="font-sans text-xs uppercase tracking-widest text-daos-terracotta mb-4">Mediums</p>
+        <h2 class="font-display italic text-2xl md:text-3xl text-daos-cream leading-tight mb-10">What I Make</h2>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {profile.mediums.map((medium: any) => (
             <MediumCard title={medium.title} description={medium.description} icon={medium.icon} />
@@ -109,13 +109,13 @@ const aboutImages = (profile?.aboutImages ?? [])
   )}
 
   <!-- 4. Find me / connect -->
-  <section class="section-spacing bg-daos-paper">
+  <section class="py-20 md:py-28 bg-daos-paper">
     <div class="container-art">
       <div class="grid grid-cols-1 md:grid-cols-3 gap-12 lg:gap-16">
 
         <!-- Next event -->
         <div class="space-y-4">
-          <p class="font-sans text-xs uppercase tracking-widest text-daos-terracotta-dark">Out in the world</p>
+          <img src="/icons/03-events.svg" alt="" aria-hidden="true" class="w-12 h-12" />
           {nextEvent ? (
             <div class="space-y-2">
               <h2 class="font-display text-xl text-daos-ink">{nextEvent.title}</h2>
@@ -140,7 +140,7 @@ const aboutImages = (profile?.aboutImages ?? [])
 
         <!-- Newsletter -->
         <div class="space-y-4">
-          <p class="font-sans text-xs uppercase tracking-widest text-daos-terracotta-dark">Stay in the loop</p>
+          <img src="/icons/05-newsletter.svg" alt="" aria-hidden="true" class="w-12 h-12" />
           <h2 class="font-display text-xl text-daos-ink">The Newsletter</h2>
           <p class="font-body text-daos-charcoal leading-relaxed">
             New work, upcoming events, and occasional dispatches from the studio. No noise.
@@ -157,7 +157,7 @@ const aboutImages = (profile?.aboutImages ?? [])
 
         <!-- Lakeshore Studios -->
         <div class="space-y-4">
-          <p class="font-sans text-xs uppercase tracking-widest text-daos-terracotta-dark">The Other Side</p>
+          <img src="/icons/12-studio.svg" alt="" aria-hidden="true" class="w-12 h-12" />
           <h2 class="font-display text-xl text-daos-ink">Lakeshore Studios</h2>
           <p class="font-body text-daos-charcoal leading-relaxed">
             A small design and data consultancy I run with my husband, Justin. Same care, different canvas.

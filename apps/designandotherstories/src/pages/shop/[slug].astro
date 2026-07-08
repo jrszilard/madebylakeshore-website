@@ -2,7 +2,6 @@
 export const prerender = false;
 
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import ImageViewer from '../../components/ImageViewer.tsx';
 import AddToCartButton from '../../components/cart/AddToCartButton.tsx';
 import { sanityClient, urlFor, queries } from '../../lib/sanity';
 
@@ -23,9 +22,8 @@ const available = isArtwork
 const images = (doc.images ?? [])
   .filter((img: any) => img.asset)
   .map((img: any) => ({
-    url: urlFor(img).width(800).fit('max').url(),
+    url: urlFor(img).width(900).url(),
     alt: img.alt ?? doc.title,
-    thumbUrl: urlFor(img).width(160).height(160).fit('crop').url(),
   }));
 
 const priceCents = typeof doc.price === 'number' ? Math.round(doc.price * 100) : null;
@@ -80,91 +78,74 @@ const seoTitle = doc.title;
 const seoDescription = (isArtwork ? artwork.story : product.blurb) || doc.title;
 ---
 
-<BaseLayout title={seoTitle} description={seoDescription}>
+<style is:global>
+  body { background-color: #DED9E4; }
+</style>
+
+<BaseLayout title={seoTitle} description={seoDescription} navTheme="dark">
   <article>
-    <section class="section-spacing">
+    <section class="py-20 md:py-28">
       <div class="container-art">
-        <a href="/shop" class="inline-flex items-center gap-1 font-sans text-sm text-daos-charcoal hover:text-daos-terracotta transition-colors mb-10">
+        <a href="/shop" class="inline-flex items-center gap-1 font-sans text-sm text-daos-charcoal hover:text-daos-ink transition-colors mb-10">
           &larr; Back to Shop
         </a>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16 items-start">
-          <div><ImageViewer client:visible images={images} /></div>
+        <div class="grid grid-cols-1 md:grid-cols-[3fr_2fr] gap-12 lg:gap-16 items-start">
+          <!-- Stacked images -->
+          <div class="space-y-2">
+            {images.map((img: any) => (
+              <img
+                src={img.url}
+                alt={img.alt}
+                class="w-full block"
+                loading="lazy"
+              />
+            ))}
+          </div>
 
-          <div class="space-y-6">
+          <!-- Sticky product info -->
+          <div class="sticky top-20 pt-6">
             {categoryLabel && (
-              <span class="inline-block px-3 py-1 border border-daos-warm text-daos-charcoal text-xs font-sans uppercase tracking-wider rounded-sm">
-                {categoryLabel}
-              </span>
+              <p class="font-sans text-xs uppercase tracking-widest text-daos-clay mb-6">{categoryLabel}</p>
             )}
 
-            <h1 class="font-display text-display md:text-display-lg text-daos-ink leading-tight">{doc.title}</h1>
+            <h1 class="font-display italic text-display md:text-display-lg text-daos-ink leading-tight mb-8">{doc.title}</h1>
 
-            {isArtwork && artwork.story && (
-              <p class="font-body text-daos-charcoal leading-relaxed italic border-l-2 border-daos-clay pl-4">{artwork.story}</p>
-            )}
-            {!isArtwork && product.blurb && (
-              <p class="font-body text-daos-charcoal leading-relaxed italic border-l-2 border-daos-clay pl-4">{product.blurb}</p>
-            )}
-
-            <div class="pt-4 border-t border-daos-warm space-y-4">
-              {priceDisplay && (
-                <p class="font-sans text-xl font-medium text-daos-ink">
-                  {available ? <span>{priceDisplay}</span> : <span class="line-through text-daos-charcoal">{priceDisplay}</span>}
-                </p>
-              )}
-              {available ? (
-                <p class="font-sans text-sm text-daos-sage uppercase tracking-wide">Available</p>
-              ) : (
-                <p class="font-sans text-sm text-daos-charcoal uppercase tracking-wide">Sold</p>
-              )}
-              {available && priceCents != null && (
-                <AddToCartButton client:visible item={cartItem} initialAvailable={available} styles={!isArtwork ? (product.styles ?? []) : []} />
-              )}
-            </div>
-
-            {isArtwork && artwork.collection?.slug?.current && (
-              <p class="font-sans text-sm">
-                Part of{' '}
-                <a href={`/gallery/collections/${artwork.collection.slug.current}`} class="text-daos-sage underline underline-offset-2 hover:text-daos-terracotta transition-colors">
-                  {artwork.collection.title}
-                </a>
+            {priceDisplay && (
+              <p class="font-sans text-2xl text-daos-ink mb-8">
+                {available ? priceDisplay : <span class="line-through text-daos-charcoal">{priceDisplay}</span>}
               </p>
             )}
 
-            {/* Prints are display-only in v1 */}
-            {isArtwork && artwork.printsAvailable && artwork.printOptions?.length > 0 && (
-              <div class="pt-4 border-t border-daos-warm">
-                <h2 class="font-display text-lg text-daos-ink mb-3">Prints available</h2>
-                <div class="space-y-2">
-                  {artwork.printOptions.map((opt: any) => (
-                    <div class="flex items-center justify-between py-2 border-b border-daos-warm/60 font-sans text-sm">
-                      <span class="text-daos-charcoal">{opt.size}</span>
-                      <span class="text-daos-ink font-medium">${opt.price?.toLocaleString()}</span>
-                    </div>
-                  ))}
-                </div>
-                <p class="font-body text-sm text-daos-charcoal italic mt-3">
-                  Looking for prints or cards? See <a href="/shop" class="text-daos-terracotta underline underline-offset-2">Prints &amp; Cards</a>.
-                </p>
+            {!available && (
+              <p class="font-sans text-sm text-daos-charcoal uppercase tracking-widest mb-8">Sold</p>
+            )}
+
+            {available && priceCents != null && (
+              <div class="border-t border-daos-warm pt-8 pb-8 mb-8 border-b border-daos-warm">
+                <AddToCartButton client:visible item={cartItem} initialAvailable={available} styles={!isArtwork ? (product.styles ?? []) : []} />
               </div>
+            )}
+
+            {(isArtwork ? artwork.story : product.blurb) && (
+              <p class="font-body text-daos-charcoal leading-relaxed mb-8">
+                {isArtwork ? artwork.story : product.blurb}
+              </p>
+            )}
+
+            {descriptionHtml && (
+              <div class="font-body text-daos-charcoal leading-relaxed" set:html={descriptionHtml} />
+            )}
+
+            {isArtwork && artwork.collection?.slug?.current && (
+              <p class="font-sans text-sm text-daos-charcoal mt-10">
+                Part of <a href={`/gallery/collections/${artwork.collection.slug.current}`} class="text-daos-terracotta underline underline-offset-2 hover:text-daos-terracotta-dark transition-colors">{artwork.collection.title}</a>
+              </p>
             )}
           </div>
         </div>
       </div>
     </section>
-
-    <!-- Extended description -->
-    {descriptionHtml && (
-      <section class="section-spacing bg-daos-paper">
-        <div class="container-art">
-          <div
-            class="max-w-2xl mx-auto prose prose-stone font-body text-daos-charcoal leading-relaxed"
-            set:html={descriptionHtml}
-          />
-        </div>
-      </section>
-    )}
 
   </article>
 </BaseLayout>

@@ -61,16 +61,16 @@ const hasArtwork = artwork?.length > 0;
       </div>
     </section>
   ) : (
-    <section class="section-spacing">
+    <section class="py-20 md:py-28">
       <div class="container-art max-w-2xl">
         {releaseYear && (
-          <p class="font-sans text-xs uppercase tracking-widest text-daos-clay mb-4">{releaseYear}</p>
+          <p class="font-sans text-xs uppercase tracking-widest text-daos-cream/50 mb-4">{releaseYear}</p>
         )}
-        <h1 class="font-display italic text-display-lg md:text-display-xl text-daos-ink leading-tight mb-4">
+        <h1 class="font-display italic text-display-lg md:text-display-xl text-daos-cream leading-tight mb-4">
           {collection.title}
         </h1>
         {collection.tagline && (
-          <p class="font-body text-lg text-daos-charcoal leading-relaxed">{collection.tagline}</p>
+          <p class="font-body text-lg text-daos-cream/70 leading-relaxed">{collection.tagline}</p>
         )}
       </div>
     </section>
@@ -101,7 +101,7 @@ const hasArtwork = artwork?.length > 0;
                 )}
                 {block.caption && (
                   <div class="container-art pt-3">
-                    <p class="font-sans text-xs uppercase tracking-widest text-daos-clay">{block.caption}</p>
+                    <p class="font-sans text-xs uppercase tracking-widest text-daos-cream/50">{block.caption}</p>
                   </div>
                 )}
               </div>
@@ -118,7 +118,7 @@ const hasArtwork = artwork?.length > 0;
                 />
               )}
               {block.caption && (
-                <p class="font-sans text-xs uppercase tracking-widest text-daos-clay mt-3">{block.caption}</p>
+                <p class="font-sans text-xs uppercase tracking-widest text-daos-cream/50 mt-3">{block.caption}</p>
               )}
             </div>
           );
@@ -144,9 +144,9 @@ const hasArtwork = artwork?.length > 0;
             <div class="container-art mb-16">
               <div class="max-w-2xl mx-auto space-y-5">
                 {block.heading && (
-                  <h2 class="font-display italic text-display text-daos-ink leading-tight">{block.heading}</h2>
+                  <h2 class="font-display italic text-display text-daos-cream leading-tight">{block.heading}</h2>
                 )}
-                <p class="font-body text-lg text-daos-charcoal leading-relaxed">{block.body}</p>
+                <p class="font-body text-lg text-daos-cream/70 leading-relaxed">{block.body}</p>
               </div>
             </div>
           );
@@ -157,9 +157,9 @@ const hasArtwork = artwork?.length > 0;
 
   <!-- Products swimlane -->
   {hasArtwork && (
-    <section class="py-16 border-t border-daos-warm">
+    <section class="py-16 border-t border-white/20">
       <div class="container-art mb-8">
-        <p class="font-sans text-xs uppercase tracking-widest text-daos-clay">The Collection</p>
+        <p class="font-sans text-xs uppercase tracking-widest text-daos-cream/50">The Collection</p>
       </div>
       <div class="flex overflow-x-auto gap-4 px-6 md:px-12 pb-4 scrollbar-hide snap-x snap-mandatory" style="scroll-padding-left: 1.5rem;">
         {(artwork as any[]).map((piece: any) => (
@@ -181,7 +181,7 @@ const hasArtwork = artwork?.length > 0;
 
   <!-- Back link -->
   <div class="container-art py-12">
-    <a href="/gallery" class="font-sans text-xs uppercase tracking-widest text-daos-terracotta hover:text-daos-terracotta-dark transition-colors">
+    <a href="/gallery" class="font-sans text-xs uppercase tracking-widest text-daos-terracotta hover:text-daos-marigold transition-colors">
       &larr; All Collections
     </a>
   </div>

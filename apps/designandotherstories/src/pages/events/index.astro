@@ -15,14 +15,14 @@ const pastEvents = await sanityClient.fetch(queries.pastEvents);
   description="Art fairs, exhibitions, and events featuring Design & Other Stories. Come find us."
 >
   <!-- Page Header -->
-  <section class="section-spacing">
+  <section class="py-20 md:py-28">
     <div class="container-art">
       <div class="max-w-2xl">
         <p class="font-sans text-xs uppercase tracking-widest text-daos-terracotta mb-4">Events</p>
-        <h1 class="font-display italic text-display-lg md:text-display-xl text-daos-ink mb-6 leading-tight">
+        <h1 class="font-display italic text-display-lg md:text-display-xl text-daos-cream mb-6 leading-tight">
           Find me out in the world
         </h1>
-        <p class="font-body text-daos-charcoal text-lg leading-relaxed">
+        <p class="font-body text-daos-cream/70 text-lg leading-relaxed">
           Art fairs, exhibitions, and live events. Come say hello and see the work in person.
         </p>
       </div>
@@ -30,9 +30,9 @@ const pastEvents = await sanityClient.fetch(queries.pastEvents);
   </section>
 
   <!-- Upcoming Events -->
-  <section class="section-spacing bg-daos-paper">
+  <section class="py-20 md:py-28">
     <div class="container-art">
-      <SectionHeader title="Upcoming" />
+      <SectionHeader title="Upcoming" theme="dark" />
 
       {upcomingEvents && upcomingEvents.length > 0 ? (
         <div class="space-y-4">
@@ -50,12 +50,12 @@ const pastEvents = await sanityClient.fetch(queries.pastEvents);
         </div>
       ) : (
         <div class="py-12 text-center">
-          <p class="font-body text-daos-charcoal text-lg">
+          <p class="font-body text-daos-cream/70 text-lg">
             No upcoming events scheduled right now.
           </p>
-          <p class="font-sans text-sm text-daos-charcoal mt-2">
+          <p class="font-sans text-sm text-daos-cream/60 mt-2">
             Check back soon, or{' '}
-            <a href="/#newsletter" class="text-daos-terracotta hover:underline">
+            <a href="/#newsletter" class="text-daos-marigold hover:underline">
               subscribe to the newsletter
             </a>{' '}
             to be the first to know.
@@ -67,9 +67,9 @@ const pastEvents = await sanityClient.fetch(queries.pastEvents);
 
   <!-- Past Events -->
   {pastEvents && pastEvents.length > 0 && (
-    <section class="section-spacing">
+    <section class="py-20 md:py-28">
       <div class="container-art">
-        <SectionHeader title="Past Events" />
+        <SectionHeader title="Past Events" theme="dark" />
 
         <div class="space-y-4">
           {pastEvents.map((event: any) => (

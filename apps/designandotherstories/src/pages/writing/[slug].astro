@@ -67,7 +67,7 @@ const seoTitle = book.seo?.title || book.title;
 <BaseLayout title={seoTitle} description={seoDescription}>
   <article>
     <!-- Two-column layout: cover left, details right -->
-    <section class="section-spacing">
+    <section class="py-20 md:py-28">
       <div class="container-art">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16 items-start">
 
@@ -91,7 +91,7 @@ const seoTitle = book.seo?.title || book.title;
             <!-- Type + status badges -->
             <div class="flex flex-wrap gap-2">
               {book.type && (
-                <span class="px-3 py-1 border border-daos-warm text-daos-charcoal text-xs font-sans uppercase tracking-wider rounded-sm">
+                <span class="px-3 py-1 border border-white/20 text-daos-cream/70 text-xs font-sans uppercase tracking-wider rounded-sm">
                   {book.type}
                 </span>
               )}
@@ -103,16 +103,16 @@ const seoTitle = book.seo?.title || book.title;
             </div>
 
             <!-- Title -->
-            <h1 class="font-display text-display md:text-display-lg text-daos-ink leading-tight">
+            <h1 class="font-display text-display md:text-display-lg text-daos-cream leading-tight">
               {book.title}
             </h1>
 
             <!-- Extended description (blockContent) -->
     {descriptionHtml && (
-      <section class="section-spacing">
+      <section class="py-20 md:py-28">
         <div class="container-art">
           <div
-            class="max-w-2xl mx-auto space-y-4 font-body text-daos-charcoal leading-relaxed"
+            class="max-w-2xl mx-auto space-y-4 font-body text-daos-cream/70 leading-relaxed"
             set:html={descriptionHtml}
           />
         </div>
@@ -128,11 +128,9 @@ const seoTitle = book.seo?.title || book.title;
       </div>
     </section>
 
-    
-
     <!-- From This World -->
     {book.fromThisWorld && book.fromThisWorld.length > 0 && (
-      <section class="section-spacing">
+      <section class="py-20 md:py-28">
         <div class="container-art">
           <div class="max-w-2xl mx-auto">
             <FromThisWorld items={book.fromThisWorld} />
@@ -143,7 +141,7 @@ const seoTitle = book.seo?.title || book.title;
 
     <!-- Related Substack posts (client-side React island) -->
     {book.substackTag && (
-      <section class="section-spacing bg-daos-paper">
+      <section class="py-20 md:py-28 bg-daos-paper">
         <div class="container-art">
           <div class="max-w-2xl mx-auto">
             <p class="font-sans text-xs uppercase tracking-widest text-daos-clay mb-6">

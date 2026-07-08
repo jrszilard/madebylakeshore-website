@@ -4,27 +4,29 @@ interface Props {
   subtitle?: string;
   viewAllHref?: string;
   viewAllText?: string;
+  theme?: 'light' | 'dark';
 }
 
-const { title, subtitle, viewAllHref, viewAllText = 'View all' } = Astro.props;
+const { title, subtitle, viewAllHref, viewAllText = 'View all', theme = 'light' } = Astro.props;
+const isDark = theme === 'dark';
 ---
 
 <div class="mb-8">
   <div class="flex items-center justify-between">
-    <h2 class="font-display text-display text-daos-ink">
+    <h2 class:list={["font-display text-display", isDark ? "text-daos-cream" : "text-daos-ink"]}>
       {title}
     </h2>
     {viewAllHref && (
       <a
         href={viewAllHref}
-        class="font-sans text-sm text-daos-terracotta-dark hover:underline transition-colors"
+        class:list={["font-sans text-sm hover:underline transition-colors", isDark ? "text-daos-cream/60 hover:text-daos-cream" : "text-daos-terracotta-dark"]}
       >
         {viewAllText} &rarr;
       </a>
     )}
   </div>
   {subtitle && (
-    <p class="mt-2 font-body text-daos-charcoal text-sm leading-relaxed">
+    <p class:list={["mt-2 font-body text-sm leading-relaxed", isDark ? "text-daos-cream/70" : "text-daos-charcoal"]}>
       {subtitle}
     </p>
   )}

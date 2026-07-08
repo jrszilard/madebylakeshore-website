@@ -10,12 +10,14 @@ interface Props {
   title: string;
   description?: string;
   noindex?: boolean;
+  navTheme?: 'dark' | 'light';
 }
 
 const {
   title,
   description = 'Design & Other Stories is a small studio making literary fiction and traditional art by hand in New Hampshire. Original paintings, drawings, and books — made one piece at a time.',
   noindex = false,
+  navTheme = 'light',
 } = Astro.props;
 
 const siteTitle = title === 'Home' ? 'Design & Other Stories' : `${title} | Design & Other Stories`;
@@ -48,7 +50,7 @@ try {
     <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-daos-ink focus:text-daos-cream focus:rounded-sm focus:text-sm focus:font-sans">
       Skip to main content
     </a>
-    <Navigation />
+    <Navigation theme={navTheme} />
     <Banner />
 
     <main id="main-content" class="flex-1">
