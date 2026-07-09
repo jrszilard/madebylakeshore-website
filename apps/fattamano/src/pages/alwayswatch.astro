@@ -1,0 +1,179 @@
+---
+import '../styles/global.css';
+
+export const prerender = true;
+
+const description =
+  'AlwaysWatch is a fictional surveillance company from Real Fake Ads by fattamano. Its Blind Spot Vault stores password recovery records on truly offline floppy and CD objects.';
+const canonical = new URL(Astro.url.pathname, Astro.site).toString();
+---
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:title" content="AlwaysWatch™ — Blind Spot Vault" />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta name="twitter:card" content="summary" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>AlwaysWatch™ — Blind Spot Vault</title>
+    <style is:global>
+      .aw { font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+      .aw-display { font-family: 'Space Grotesk', Inter, ui-sans-serif, system-ui, sans-serif; }
+      .aw-mono { font-family: 'Space Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
+      .aw * { box-sizing: border-box; }
+      .aw-grid { background-image: linear-gradient(rgba(97, 255, 214, 0.12) 1px, transparent 1px), linear-gradient(90deg, rgba(97, 255, 214, 0.12) 1px, transparent 1px); background-size: 24px 24px; }
+      .aw-scan { background: repeating-linear-gradient(0deg, rgba(97, 255, 214, 0.08) 0 2px, transparent 2px 8px); }
+      .aw-floppy { aspect-ratio: 1 / 1.08; border-radius: 0.7rem 0.7rem 1.1rem 1.1rem; position: relative; }
+      .aw-floppy::before { content: ''; position: absolute; left: 18%; top: 8%; width: 56%; height: 28%; border: 3px solid #07111f; background: #cbd5e1; }
+      .aw-floppy::after { content: ''; position: absolute; left: 15%; right: 15%; bottom: 13%; height: 29%; border: 3px solid #07111f; background: #fff7d6; }
+      .aw-cd { aspect-ratio: 1; border-radius: 999px; background: radial-gradient(circle, #07111f 0 8%, #f8fafc 9% 18%, #a7f3d0 19% 31%, #e2e8f0 32% 100%); }
+      @media (max-width: 767px) {
+        .aw, .aw main, .aw section, .aw header, .aw footer, .aw section > div, .aw header > div { width: 100%; max-width: 100vw; overflow-x: hidden; }
+        .aw main section > div { display: block !important; margin-left: 1rem !important; margin-right: 1rem !important; padding-left: 1rem !important; padding-right: 1rem !important; }
+        .aw h1, .aw h2, .aw h3, .aw p, .aw a, .aw span, .aw li { overflow-wrap: anywhere; word-break: normal; }
+        .aw-card, .aw-ad, .aw main section > div, .aw main section > div > div, .aw main article, .aw aside, .aw blockquote { width: 100%; max-width: 342px !important; }
+        .aw header a { min-width: 0; }
+        .aw header a > span:last-child { min-width: 0; max-width: 260px; }
+        .aw header a > span:last-child span { white-space: normal; }
+        .aw h1 { font-size: 2.45rem !important; line-height: 0.95 !important; }
+        .aw h2 { font-size: 2rem !important; line-height: 1.02 !important; }
+        .aw-ad-title { font-size: 2.8rem !important; line-height: 0.88 !important; }
+      }
+    </style>
+  </head>
+  <body class="aw min-h-screen overflow-x-hidden bg-[#07111f] text-[#f8fafc]">
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:bg-[#61ffd6] focus:px-4 focus:py-2 focus:font-black focus:text-[#07111f] focus:outline focus:outline-2 focus:outline-white">skip surveillance onboarding</a>
+
+    <header class="border-b-4 border-[#61ffd6] bg-[#07111f]">
+      <div class="mx-auto flex max-w-7xl flex-col gap-4 px-5 py-5 md:flex-row md:items-center md:justify-between">
+        <a href="#main-content" class="flex items-center gap-3" aria-label="AlwaysWatch home">
+          <span class="grid h-12 w-12 place-items-center border-4 border-[#61ffd6] bg-[#ff2e63] text-2xl font-black text-white shadow-[5px_5px_0_#61ffd6]">◎</span>
+          <span>
+            <span class="aw-display block text-xl font-black uppercase leading-none tracking-[-0.04em]">AlwaysWatch™</span>
+            <span class="aw-mono block text-xs font-black uppercase tracking-[0.18em] text-[#61ffd6]">Continuous care through observation</span>
+          </span>
+        </a>
+        <nav aria-label="AlwaysWatch navigation">
+          <ul class="flex flex-wrap gap-x-5 gap-y-2 text-sm font-black uppercase text-[#f8fafc]">
+            <li><a class="underline decoration-[#61ffd6] decoration-2 underline-offset-4 hover:text-[#61ffd6]" href="#product">Product</a></li>
+            <li><a class="underline decoration-[#61ffd6] decoration-2 underline-offset-4 hover:text-[#61ffd6]" href="#editions">Editions</a></li>
+            <li><a class="underline decoration-[#61ffd6] decoration-2 underline-offset-4 hover:text-[#61ffd6]" href="#ad">The Ad</a></li>
+            <li><a class="underline decoration-[#61ffd6] decoration-2 underline-offset-4 hover:text-[#61ffd6]" href="#disclosure">Disclosure</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main-content" tabindex="-1">
+      <section class="aw-grid relative overflow-hidden border-b-4 border-[#61ffd6] bg-[#07111f]">
+        <div class="aw-scan absolute inset-0 opacity-70" aria-hidden="true"></div>
+        <div class="relative mx-auto grid max-w-7xl gap-10 px-5 py-16 md:grid-cols-[minmax(0,1fr)_400px] md:py-24">
+          <div>
+            <p class="inline-flex border-4 border-[#61ffd6] bg-[#ff2e63] px-4 py-2 aw-mono text-xs font-black uppercase tracking-[0.2em] text-white shadow-[5px_5px_0_#61ffd6]">Passive consent detected</p>
+            <h1 class="aw-display mt-8 max-w-5xl text-6xl font-black uppercase leading-[0.88] tracking-[-0.08em] md:text-8xl">
+              Privacy is just data we <span class="text-[#61ffd6]">haven’t processed yet.</span>
+            </h1>
+            <p class="mt-7 max-w-2xl text-xl font-semibold leading-relaxed text-[#cbd5e1]">
+              AlwaysWatch helps organizations understand you better than you understand yourself. For the rare information we cannot collect, please use the approved offline exception container.
+            </p>
+            <div class="mt-9 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+              <a href="#product" class="inline-flex justify-center border-4 border-[#61ffd6] bg-[#61ffd6] px-6 py-3 text-sm font-black uppercase tracking-[0.12em] text-[#07111f] shadow-[6px_6px_0_#ff2e63] hover:bg-white">Request a blind spot</a>
+              <a href="/things/real-fake-ads" class="inline-flex justify-center border-4 border-[#61ffd6] bg-[#07111f] px-6 py-3 text-sm font-black uppercase tracking-[0.12em] text-[#f8fafc] shadow-[6px_6px_0_#ff2e63] hover:bg-[#111827]">Real Fake Ads archive</a>
+            </div>
+          </div>
+
+          <aside class="aw-card self-start border-4 border-[#61ffd6] bg-[#f8fafc] p-6 text-[#07111f] shadow-[10px_10px_0_#ff2e63]">
+            <p class="aw-mono text-xs font-black uppercase tracking-[0.18em] text-[#ff2e63]">approved non-collection device</p>
+            <h2 class="aw-display mt-3 text-4xl font-black uppercase leading-none tracking-[-0.05em]">Blind Spot Vault</h2>
+            <p class="mt-4 font-semibold leading-relaxed text-[#334155]">A password recovery organizer for information too important to upload and too boring for a breach headline.</p>
+            <div class="mt-6 grid grid-cols-2 gap-4">
+              <div class="aw-floppy border-4 border-[#07111f] bg-[#334155] shadow-[4px_4px_0_#07111f]" aria-hidden="true"></div>
+              <div class="aw-cd border-4 border-[#07111f] shadow-[4px_4px_0_#07111f]" aria-hidden="true"></div>
+            </div>
+            <p class="mt-5 border-2 border-[#07111f] bg-[#fff7d6] p-3 aw-mono text-xs font-black uppercase tracking-[0.14em]">Last synced: never</p>
+          </aside>
+        </div>
+      </section>
+
+      <section id="product" class="border-b-4 border-[#61ffd6] bg-[#f8fafc] text-[#07111f]">
+        <div class="mx-auto grid max-w-7xl gap-8 px-5 py-14 md:grid-cols-[0.8fr_1.2fr] md:items-start md:py-20">
+          <div>
+            <p class="aw-mono text-xs font-black uppercase tracking-[0.24em] text-[#ff2e63]">product exception request</p>
+            <h2 class="aw-display mt-3 text-5xl font-black uppercase leading-[0.95] tracking-[-0.07em] md:text-6xl">A password manager compatible with drawers.</h2>
+            <p class="mt-5 text-lg font-semibold leading-relaxed text-[#475569]">Category tabs tell you what kind of secret you are looking for. The floppy or CD card holds the actual written recovery details.</p>
+          </div>
+          <div class="grid gap-4 md:grid-cols-2">
+            <article class="aw-card border-4 border-[#07111f] bg-white p-5 shadow-[6px_6px_0_#07111f]"><p class="aw-mono text-xs font-black uppercase tracking-[0.18em] text-[#ff2e63]">Index layer</p><h3 class="aw-display mt-3 text-3xl font-black uppercase leading-none">Divider tabs</h3><p class="mt-3 font-semibold text-[#475569]">Email, banking, devices, domains, 2FA recovery, family emergency, and other categories you do not want converted into engagement data.</p></article>
+            <article class="aw-card border-4 border-[#07111f] bg-white p-5 shadow-[6px_6px_0_#07111f]"><p class="aw-mono text-xs font-black uppercase tracking-[0.18em] text-[#ff2e63]">Secret layer</p><h3 class="aw-display mt-3 text-3xl font-black uppercase leading-none">Writable media cards</h3><p class="mt-3 font-semibold text-[#475569]">Each printed floppy or disc carries one account, recovery phrase, backup-code set, or emergency access note.</p></article>
+            <article class="aw-card border-4 border-[#07111f] bg-white p-5 shadow-[6px_6px_0_#07111f]"><p class="aw-mono text-xs font-black uppercase tracking-[0.18em] text-[#ff2e63]">Safety copy</p><h3 class="aw-display mt-3 text-3xl font-black uppercase leading-none">Not a safe</h3><p class="mt-3 font-semibold text-[#475569]">Not fireproof, waterproof, or burglar-proof. Merely unhackable unless the hacker is standing in your house.</p></article>
+            <article class="aw-card border-4 border-[#07111f] bg-white p-5 shadow-[6px_6px_0_#07111f]"><p class="aw-mono text-xs font-black uppercase tracking-[0.18em] text-[#ff2e63]">Corporate benefit</p><h3 class="aw-display mt-3 text-3xl font-black uppercase leading-none">No telemetry</h3><p class="mt-3 font-semibold text-[#475569]">The device reports nothing, learns nothing, recommends nothing, and cannot pivot to enterprise pricing.</p></article>
+          </div>
+        </div>
+      </section>
+
+      <section id="editions" class="border-b-4 border-[#61ffd6] bg-[#07111f] text-[#f8fafc]">
+        <div class="mx-auto max-w-7xl px-5 py-14 md:py-20">
+          <p class="aw-mono text-xs font-black uppercase tracking-[0.24em] text-[#61ffd6]">available formats for unavailable data</p>
+          <h2 class="aw-display mt-3 max-w-4xl text-5xl font-black uppercase leading-[0.95] tracking-[-0.07em] md:text-6xl">Your secrets, now in formats nobody funds anymore.</h2>
+          <div class="mt-10 grid gap-6 md:grid-cols-2">
+            <article class="aw-card border-4 border-[#61ffd6] bg-[#f8fafc] p-6 text-[#07111f] shadow-[8px_8px_0_#ff2e63]">
+              <div class="aw-floppy mx-auto max-w-[13rem] border-4 border-[#07111f] bg-[#334155] shadow-[5px_5px_0_#07111f]" aria-hidden="true"></div>
+              <p class="aw-mono mt-8 text-xs font-black uppercase tracking-[0.2em] text-[#ff2e63]">Legacy Disk Edition</p>
+              <h3 class="aw-display mt-3 text-4xl font-black uppercase leading-none">Floppy records in a tiny filing cabinet.</h3>
+              <p class="mt-4 font-semibold leading-relaxed text-[#475569]">3D printed floppy cards with sticker-label writing fields. Tabs say “Banking” or “Email.” The disk says the thing the cloud does not get to know.</p>
+            </article>
+            <article class="aw-card border-4 border-[#61ffd6] bg-[#f8fafc] p-6 text-[#07111f] shadow-[8px_8px_0_#ff2e63]">
+              <div class="aw-cd mx-auto max-w-[13rem] border-4 border-[#07111f] shadow-[5px_5px_0_#07111f]" aria-hidden="true"></div>
+              <p class="aw-mono mt-8 text-xs font-black uppercase tracking-[0.2em] text-[#ff2e63]">Burned Disc Edition</p>
+              <h3 class="aw-display mt-3 text-4xl font-black uppercase leading-none">Recovery codes as forbidden mix CDs.</h3>
+              <p class="mt-4 font-semibold leading-relaxed text-[#475569]">3D printed CD cards in jewel-case or binder language. Write with Sharpie like it is 2003 and your bank login is a bootleg album.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="ad" class="bg-[#fff7d6] text-[#07111f]">
+        <div class="mx-auto grid max-w-7xl gap-8 px-5 py-14 md:grid-cols-[0.9fr_1.1fr] md:items-center md:py-20">
+          <div>
+            <p class="aw-mono text-xs font-black uppercase tracking-[0.24em] text-[#ff2e63]">public service announcement</p>
+            <h2 class="aw-display mt-3 text-5xl font-black uppercase leading-[0.95] tracking-[-0.07em] md:text-6xl">The safest cloud is a box in your closet.</h2>
+            <p class="mt-5 max-w-xl text-lg font-semibold leading-relaxed text-[#475569]">A fake ad for a real future product: obsolete-media password storage for people who want one small corner of their life to remain stupidly, beautifully offline.</p>
+          </div>
+          <article class="aw-ad rotate-1 border-4 border-[#07111f] bg-[#f8fafc] p-6 shadow-[12px_12px_0_#ff2e63] motion-reduce:rotate-0 md:p-8" aria-label="AlwaysWatch advertisement">
+            <p class="aw-mono text-xs font-black uppercase tracking-[0.24em] text-[#ff2e63]">AlwaysWatch Bulletin / Exception Form 404</p>
+            <h3 class="aw-ad-title aw-display mt-5 text-6xl font-black uppercase leading-[0.85] tracking-[-0.08em]">Information too important to upload.</h3>
+            <p class="mt-6 text-2xl font-black leading-tight">Store emergency passwords, recovery codes, and lockout instructions on physical media-shaped objects we cannot personalize ads against.</p>
+            <div class="my-7 grid grid-cols-2 gap-4 border-y-4 border-[#07111f] py-5">
+              <div class="border-2 border-[#07111f] bg-[#fff7d6] p-3 aw-mono text-xs font-black uppercase tracking-[0.14em]">Cloud storage: unavailable</div>
+              <div class="border-2 border-[#07111f] bg-[#61ffd6] p-3 aw-mono text-xs font-black uppercase tracking-[0.14em]">Backup complete: printed</div>
+              <div class="border-2 border-[#07111f] bg-white p-3 aw-mono text-xs font-black uppercase tracking-[0.14em]">No app</div>
+              <div class="border-2 border-[#07111f] bg-white p-3 aw-mono text-xs font-black uppercase tracking-[0.14em]">No sync</div>
+            </div>
+            <p class="border-2 border-[#07111f] bg-[#ff2e63] p-3 text-center aw-display text-xl font-black uppercase text-white">Burned once. Uploaded never.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="disclosure" class="bg-[#07111f] text-[#f8fafc]">
+        <div class="mx-auto grid max-w-7xl gap-8 px-5 py-14 md:grid-cols-[0.9fr_1.1fr] md:items-start md:py-20">
+          <div>
+            <p class="aw-mono text-xs font-black uppercase tracking-[0.24em] text-[#61ffd6]">formal disclosure</p>
+            <h2 class="aw-display mt-3 text-5xl font-black uppercase leading-[0.95] tracking-[-0.07em] md:text-6xl">This surveillance company is fake. The surveillance problem is not.</h2>
+          </div>
+          <div class="aw-card border-2 border-[#61ffd6] bg-white/10 p-6">
+            <p class="font-semibold leading-relaxed text-[#e2e8f0]">AlwaysWatch is not a real surveillance vendor, smart-home platform, workplace monitoring suite, public safety partner, ad-tech exchange, or compliance dashboard. It is a Real Fake Ad by fattamano.</p>
+            <p class="mt-4 font-semibold leading-relaxed text-[#e2e8f0]">The Blind Spot Vault is a product concept for useful 3D printed offline password and recovery-code organization. It is not a safe. Treat written credentials like sensitive documents.</p>
+            <a href="/things/real-fake-ads" class="mt-7 inline-flex border-4 border-[#61ffd6] bg-[#61ffd6] px-5 py-3 text-sm font-black uppercase tracking-[0.12em] text-[#07111f] shadow-[5px_5px_0_#ff2e63] hover:bg-white">Return to the archive</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="border-t-4 border-[#61ffd6] bg-[#07111f] text-[#f8fafc]"><div class="mx-auto flex max-w-7xl flex-col gap-3 px-5 py-5 aw-mono text-xs font-black uppercase tracking-[0.14em] md:flex-row md:items-center md:justify-between"><p>This is a Real Fake Ad by <a href="/" class="text-[#61ffd6] underline underline-offset-4">fattamano</a>.</p><p>No cookies were accepted by this box.</p></div></footer>
+  </body>
+</html>
