@@ -183,7 +183,7 @@ function InlineCTA() {
     <div className="mt-3 flex flex-wrap gap-2">
       <a
         href="/contact"
-        className="inline-flex items-center gap-2 px-4 py-2 bg-mbl-dusk hover:bg-mbl-slate text-white text-xs font-heading font-medium rounded-lg transition-colors"
+        className="inline-flex items-center gap-2 px-4 py-2 bg-mbl-dusk hover:bg-mbl-slate text-mbl-ink hover:text-white text-xs font-heading font-medium rounded-lg transition-colors"
       >
         <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
@@ -281,7 +281,7 @@ function LeadCaptureCard({ onSubmit, onDismiss }: {
         <button
           type="submit"
           disabled={!email.trim()}
-          className="px-4 py-2 bg-mbl-dusk hover:bg-mbl-slate disabled:bg-mbl-mist disabled:text-mbl-stone text-white text-sm font-heading font-medium rounded-lg transition-colors disabled:cursor-not-allowed"
+          className="px-4 py-2 bg-mbl-dusk hover:bg-mbl-slate disabled:bg-mbl-mist disabled:text-mbl-stone text-mbl-ink hover:text-white text-sm font-heading font-medium rounded-lg transition-colors disabled:cursor-not-allowed"
         >
           Send
         </button>
@@ -689,7 +689,7 @@ export default function ChatBot() {
             <button
               onClick={() => handleSend()}
               disabled={!input.trim()}
-              className="px-5 py-3 bg-mbl-dusk hover:bg-mbl-slate disabled:bg-mbl-mist disabled:text-mbl-stone text-white rounded-xl font-heading font-medium text-sm transition-colors disabled:cursor-not-allowed"
+              className="px-5 py-3 bg-mbl-dusk hover:bg-mbl-slate disabled:bg-mbl-mist disabled:text-mbl-stone text-mbl-ink hover:text-white rounded-xl font-heading font-medium text-sm transition-colors disabled:cursor-not-allowed"
             >
               Send
             </button>

@@ -134,15 +134,15 @@ function formatDate(iso: string | null | undefined): string {
 
             <!-- Related Case Studies -->
             {caseStudies.filter((cs: any) => cs?.slug?.current).map((cs: any) => (
-              <div class="bg-mbl-dusk rounded-lg p-6 text-white">
-                <p class="text-xs text-white/60 font-heading uppercase tracking-wider mb-2">Part of the case study</p>
-                <h3 class="font-display text-lg mb-2 text-white leading-snug">{cs.title}</h3>
+              <div class="bg-mbl-dusk rounded-lg p-6 text-mbl-ink">
+                <p class="text-xs text-mbl-ink/60 font-heading uppercase tracking-wider mb-2">Part of the case study</p>
+                <h3 class="font-display text-lg mb-2 text-mbl-ink leading-snug">{cs.title}</h3>
                 {cs.client && (
-                  <p class="text-white/70 text-sm mb-4">{cs.client}</p>
+                  <p class="text-mbl-ink/70 text-sm mb-4">{cs.client}</p>
                 )}
                 <a
                   href={`/case-studies/${cs.slug.current}`}
-                  class="inline-flex items-center gap-2 text-sm font-heading font-medium text-white underline underline-offset-2 hover:no-underline transition-all"
+                  class="inline-flex items-center gap-2 text-sm font-heading font-medium text-mbl-ink underline underline-offset-2 hover:no-underline transition-all"
                 >
                   Read the case study
                   <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">

@@ -15,8 +15,8 @@ const colorClasses = {
 };
 
 const accentColor = {
-  warm: 'text-white/90',
-  accent: 'text-white/90',
+  warm: 'text-mbl-ink',
+  accent: 'text-mbl-ink',
 };
 ---
 
@@ -27,10 +27,10 @@ const accentColor = {
   class={`group block p-8 rounded-xl bg-gradient-to-br ${colorClasses[color]} transition-all duration-300`}
 >
   <div class="flex items-start justify-between mb-4">
-    <h3 class="font-display text-2xl text-white group-hover:translate-x-1 transition-transform duration-300">
+    <h3 class="font-display text-2xl text-mbl-ink group-hover:translate-x-1 transition-transform duration-300">
       {title}
     </h3>
-    <div class={`w-10 h-10 rounded-full bg-white/10 flex items-center justify-center ${accentColor[color]}`}>
+    <div class={`w-10 h-10 rounded-full bg-mbl-ink/10 flex items-center justify-center ${accentColor[color]}`}>
       {external ? (
         <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
@@ -43,7 +43,7 @@ const accentColor = {
     </div>
   </div>
   
-  <p class="text-white/70 leading-relaxed">
+  <p class="text-mbl-ink/70 leading-relaxed">
     {description}
   </p>
   

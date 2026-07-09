@@ -15,16 +15,16 @@ const brandLinks = [
 ];
 ---
 
-<header class="fixed top-0 left-0 right-0 z-50 bg-mbl-cloud/80 backdrop-blur-md border-b border-mbl-mist/50">
+<header class="sticky top-0 z-50 bg-mbl-accent/95 backdrop-blur-sm border-b border-white/15">
   <nav class="container-wide">
-    <div class="flex items-center justify-between h-18">
+    <div class="flex items-center h-20">
       <!-- Logo -->
-      <a href="/" class="flex items-center group">
-        <img src="/LSS_logo.png" alt="Lakeshore Studios" class="h-10 w-auto" decoding="async" />
+      <a href="/" class="flex items-center shrink-0">
+        <img src="/LSS_logo.png" alt="Lakeshore Studios" class="h-10 w-auto brightness-0 invert" decoding="async" />
       </a>
-      
+
       <!-- Desktop Navigation -->
-      <div class="hidden lg:flex items-center gap-8">
+      <div class="hidden lg:flex items-center gap-8 ml-12">
         {navLinks.map((link) => {
           const isActive = currentPath === link.href || currentPath.startsWith(link.href + '/');
           return (
@@ -32,8 +32,8 @@ const brandLinks = [
               href={link.href}
               aria-current={isActive ? 'page' : undefined}
               class:list={[
-                "font-heading text-sm font-medium link-underline transition-colors duration-200",
-                isActive ? "text-mbl-accent is-active" : "text-mbl-stone hover:text-mbl-ink"
+                "font-body text-[11px] font-semibold tracking-[0.18em] uppercase transition-colors duration-200",
+                isActive ? "text-white" : "text-white/60 hover:text-white"
               ]}
             >
               {link.label}
@@ -41,28 +41,28 @@ const brandLinks = [
           );
         })}
       </div>
-      
+
       <!-- Brand Switcher & CTA -->
-      <div class="hidden lg:flex items-center gap-6">
+      <div class="hidden lg:flex items-center gap-6 ml-auto">
         <div class="relative group">
-          <button class="flex items-center gap-1 text-sm text-mbl-stone hover:text-mbl-ink font-heading" aria-haspopup="true" aria-expanded="false">
+          <button class="flex items-center gap-1 font-body text-[11px] font-semibold tracking-[0.18em] uppercase text-white/60 hover:text-white transition-colors" aria-haspopup="true" aria-expanded="false">
             Our Brands
-            <svg class="w-4 h-4 transition-transform group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <svg class="w-3.5 h-3.5 transition-transform group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
             </svg>
           </button>
-          <div class="absolute top-full right-0 mt-2 w-56 py-2 bg-white rounded-lg shadow-lg border border-mbl-mist/50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+          <div class="absolute top-full right-0 mt-2 w-56 py-2 bg-white rounded-lg shadow-lg border border-mbl-ink/10 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
             {brandLinks.map((link) => (
-              <a 
+              <a
                 href={link.href}
                 target={link.external ? "_blank" : undefined}
                 rel={link.external ? "noopener noreferrer" : undefined}
-                class="flex items-center gap-2 px-4 py-2 text-sm text-mbl-stone hover:text-mbl-ink hover:bg-mbl-mist/30 transition-colors"
+                class="flex items-center gap-2 px-4 py-2 font-body text-[11px] font-semibold tracking-[0.18em] uppercase text-mbl-stone hover:text-mbl-ink hover:bg-mbl-mist/30 transition-colors"
               >
                 {link.label}
                 {link.external && (
                   <>
-                    <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                    <svg class="w-3 h-3 ml-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                     </svg>
                     <span class="sr-only">(opens in new tab)</span>
@@ -72,30 +72,30 @@ const brandLinks = [
             ))}
           </div>
         </div>
-        
-        <a href="/contact" class="btn-primary text-sm">
+
+        <a href="/contact" class="inline-flex items-center gap-2 px-6 py-3 bg-white text-mbl-accent font-body text-[11px] font-semibold tracking-[0.18em] uppercase rounded-md hover:bg-mbl-cloud transition-colors duration-200">
           Start a Project
         </a>
       </div>
-      
+
       <!-- Mobile Menu Button -->
       <button
         id="mobile-menu-btn"
-        class="lg:hidden p-2 text-mbl-ink"
+        class="lg:hidden p-2 text-white ml-auto"
         aria-label="Toggle navigation menu"
         aria-expanded="false"
         aria-controls="mobile-menu"
       >
         <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16" />
         </svg>
       </button>
     </div>
   </nav>
-  
+
   <!-- Mobile Menu -->
-  <div id="mobile-menu" class="lg:hidden hidden border-t border-mbl-mist/50 bg-white">
-    <div class="container-wide py-4 space-y-4">
+  <div id="mobile-menu" class="lg:hidden hidden border-t border-white/15 bg-mbl-accent">
+    <div class="container-wide py-6 space-y-4">
       {navLinks.map((link) => {
         const isActive = currentPath === link.href || currentPath.startsWith(link.href + '/');
         return (
@@ -103,44 +103,49 @@ const brandLinks = [
             href={link.href}
             aria-current={isActive ? 'page' : undefined}
             class:list={[
-              "block py-2 font-heading transition-colors",
-              isActive
-                ? "text-mbl-accent font-semibold border-l-2 border-mbl-accent pl-3"
-                : "text-mbl-stone hover:text-mbl-ink"
+              "block py-2 font-body text-[11px] font-semibold tracking-[0.18em] uppercase transition-colors",
+              isActive ? "text-white" : "text-white/60 hover:text-white"
             ]}
           >
             {link.label}
           </a>
         );
       })}
-      <hr class="border-mbl-mist" />
-      <p class="text-xs text-mbl-stone uppercase tracking-wider">Our Brands</p>
+      <hr class="border-white/15" />
+      <p class="font-body text-[10px] tracking-[0.18em] uppercase text-white/40">Our Brands</p>
       {brandLinks.map((link) => (
-        <a 
+        <a
           href={link.href}
           target={link.external ? "_blank" : undefined}
-          class="block py-2 font-heading text-mbl-stone hover:text-mbl-ink transition-colors"
+          class="block py-2 font-body text-[11px] font-semibold tracking-[0.18em] uppercase text-white/60 hover:text-white transition-colors"
         >
           {link.label}
         </a>
       ))}
-      <a href="/contact" class="btn-primary text-sm w-full justify-center mt-4">
+      <a href="/contact" class="inline-flex items-center justify-center gap-2 px-6 py-3 w-full bg-white text-mbl-accent font-body text-[11px] font-semibold tracking-[0.18em] uppercase rounded-md hover:bg-mbl-cloud transition-colors duration-200 mt-4">
         Start a Project
       </a>
     </div>
   </div>
 </header>
 
-<!-- Spacer for fixed header -->
-<div class="h-18"></div>
-
 <script>
-  const btn = document.getElementById('mobile-menu-btn');
+  const btn = document.getElementById('mobile-menu-btn') as HTMLButtonElement | null;
   const menu = document.getElementById('mobile-menu');
-  
-  btn?.addEventListener('click', () => {
-    const isOpen = !menu?.classList.contains('hidden');
-    menu?.classList.toggle('hidden');
-    btn.setAttribute('aria-expanded', String(!isOpen));
+
+  function toggleMenu(open?: boolean) {
+    if (!btn || !menu) return;
+    const isOpen = open ?? menu.classList.contains('hidden');
+    menu.classList.toggle('hidden', !isOpen);
+    btn.setAttribute('aria-expanded', String(isOpen));
+  }
+
+  btn?.addEventListener('click', () => toggleMenu());
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && menu && !menu.classList.contains('hidden')) {
+      toggleMenu(false);
+      btn?.focus();
+    }
   });
 </script>

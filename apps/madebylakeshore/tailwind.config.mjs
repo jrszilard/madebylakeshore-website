@@ -6,27 +6,27 @@ export default {
       colors: {
         'mbl': {
           'ink': '#1a1a2e',
-          'dusk': '#BC6C25',
+          'dusk': 'oklch(0.74 0.15 55 / <alpha-value>)',
           'slate': '#A05C1F',
           'stone': '#4a5568',
           'mist': '#AFB9B8',
           'cloud': '#f7fafc',
-          'accent': '#4a5c5c',
-          'accent-dark': '#3a4c4c',
-          'warm': '#5a7070',
+          'accent': 'oklch(0.62 0.13 200 / <alpha-value>)',
+          'accent-dark': 'oklch(0.50 0.13 200 / <alpha-value>)',
+          'warm': 'oklch(0.55 0.10 200 / <alpha-value>)',
           'secondary': '#AFB9B8',
         }
       },
       fontFamily: {
-        'display': ['"Nunito"', 'system-ui', 'sans-serif'],
-        'heading': ['"Nunito"', 'system-ui', 'sans-serif'],
-        'body': ['"Source Sans 3"', 'system-ui', 'sans-serif'],
+        'display': ['"Roboto Slab"', 'Georgia', 'serif'],
+        'heading': ['"Roboto Slab"', 'Georgia', 'serif'],
+        'body': ['"Inter"', 'system-ui', 'sans-serif'],
         'mono': ['"JetBrains Mono"', 'monospace'],
       },
       fontSize: {
-        'display-xl': ['4.5rem', { lineHeight: '1.1', letterSpacing: '-0.02em' }],
-        'display-lg': ['3.5rem', { lineHeight: '1.15', letterSpacing: '-0.02em' }],
-        'display': ['2.5rem', { lineHeight: '1.2', letterSpacing: '-0.01em' }],
+        'display-xl': ['6rem',    { lineHeight: '0.92', letterSpacing: '-0.03em' }],
+        'display-lg': ['4.25rem', { lineHeight: '0.96', letterSpacing: '-0.025em' }],
+        'display':    ['3rem',    { lineHeight: '1.02', letterSpacing: '-0.02em' }],
       },
       spacing: {
         '18': '4.5rem',

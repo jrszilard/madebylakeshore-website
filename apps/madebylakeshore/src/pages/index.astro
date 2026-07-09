@@ -69,7 +69,7 @@ const brands = [
 
 <BaseLayout title="Home">
   <!-- Hero Section -->
-  <section class="relative min-h-[90vh] flex items-center overflow-hidden bg-[#1e3030]">
+  <section class="relative min-h-[90vh] flex items-center overflow-hidden bg-mbl-accent">
     <!-- Background Pattern -->
     <div class="absolute inset-0 opacity-5">
       <div class="absolute inset-0 bg-pattern"></div>
@@ -78,17 +78,10 @@ const brands = [
 
     <div class="container-wide relative z-10">
       <div class="max-w-4xl">
-        <!-- Logomark -->
-        <div class="mb-1 animate-slide-up opacity-0" style="animation-delay: 0s;">
-          <img src="/logomark.png" alt="" aria-hidden="true" class="h-24 w-auto" />
-        </div>
-
-        <div class="overflow-hidden mb-8">
-          <h1 class="text-display-lg md:text-display-xl text-white animate-slide-up opacity-0" style="animation-delay: 0.1s;">
-            Your data has a story. We make sure people
-            <span class="text-mbl-dusk">read it.</span>
-          </h1>
-        </div>
+        <h1 class="text-display-lg md:text-display-xl text-white animate-slide-up opacity-0 mb-8" style="animation-delay: 0.1s;">
+          Your data has a story. We make sure people
+          <span class="text-mbl-ink">read it.</span>
+        </h1>
 
         <div class="flex flex-wrap gap-4 animate-slide-up opacity-0" style="animation-delay: 0.3s;">
           <a href="/contact" class="btn-primary">
@@ -152,7 +145,7 @@ const brands = [
   
   <!-- Featured Work Section -->
   {featuredProjects.length > 0 && (
-  <section class="section-spacing">
+  <section class="section-spacing bg-white">
     <div class="container-wide">
       <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-16">
         <div class="max-w-2xl">
@@ -172,122 +165,6 @@ const brands = [
     </div>
   </section>
   )}
-  
-  <!-- AI Projects Section -->
-  {incubatorProjects.length > 0 && (
-  <section class="section-spacing bg-white">
-    <div class="container-wide">
-      <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-16">
-        <div class="max-w-2xl">
-          <p class="font-heading text-mbl-accent font-medium tracking-wide mb-4">From Our Incubator</p>
-          <h2 class="text-display">Tools We're Building</h2>
-          <p class="text-lg text-mbl-stone mt-4">
-            Check out our experiments.
-          </p>
-        </div>
-        <a href="https://incubator.madebylakeshore.com" target="_blank" rel="noopener noreferrer" class="link-underline font-heading font-medium text-mbl-ink">
-          Explore Incubator
-        </a>
-      </div>
-
-      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {incubatorProjects.map((project: any) => (
-          <div class="group p-6 border border-mbl-stone/15 rounded-xl hover:border-mbl-accent/30 hover:shadow-lg transition-all duration-300">
-            <div class="flex items-center justify-between mb-4">
-              {project.category && (
-                <span class="px-2 py-1 text-xs font-heading font-medium text-mbl-accent bg-mbl-accent/10 rounded">
-                  {categoryLabels[project.category] || project.category}
-                </span>
-              )}
-            </div>
-
-            <h3 class="font-display text-xl text-mbl-ink mb-2 group-hover:text-mbl-accent transition-colors">
-              {project.title}
-            </h3>
-
-            <p class="text-mbl-stone text-sm mb-4">
-              {project.tagline}
-            </p>
-
-            {project.highlights && project.highlights.length > 0 && (
-              <ul class="mb-4 space-y-1.5">
-                {project.highlights.slice(0, 3).map((h: string) => (
-                  <li class="text-mbl-stone text-xs flex items-start gap-2">
-                    <span class="text-mbl-accent mt-0.5">▸</span>
-                    <span>{h}</span>
-                  </li>
-                ))}
-              </ul>
-            )}
-
-            <div class="flex flex-wrap gap-2 mb-5">
-              {project.techStack.slice(0, 3).map((tech: string) => (
-                <span class="px-2 py-0.5 bg-mbl-mist/50 text-mbl-stone text-xs rounded">
-                  {tech}
-                </span>
-              ))}
-            </div>
-
-            <div class="flex items-center gap-4 pt-4 border-t border-mbl-stone/10">
-              {project.demoUrl && (
-                <a
-                  href={project.demoUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="text-sm font-heading font-medium text-mbl-accent hover:underline"
-                >
-                  Try Demo →
-                </a>
-              )}
-              {project.liveUrl && !project.demoUrl && (
-                <a
-                  href={project.liveUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="text-sm font-heading font-medium text-mbl-accent hover:underline"
-                >
-                  Visit →
-                </a>
-              )}
-              {project.githubUrl && (
-                <a
-                  href={project.githubUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="text-sm text-mbl-stone hover:text-mbl-ink flex items-center gap-1 ml-auto"
-                >
-                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-                  </svg>
-                  GitHub
-                </a>
-              )}
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  </section>
-  )}
-
-  <!-- Our Brands Section -->
-  <section class="section-spacing bg-mbl-dusk">
-    <div class="container-wide">
-      <div class="max-w-2xl mb-16">
-        <p class="font-heading text-mbl-mist font-medium tracking-wide mb-4">Beyond Consulting</p>
-        <h2 class="text-display text-white mb-6">The Lakeshore family</h2>
-        <p class="text-lg text-white/70">
-          Work is just one side of us. Here's what else we're making.
-        </p>
-      </div>
-      
-      <div class="grid md:grid-cols-2 gap-8">
-        {brands.map((brand) => (
-          <BrandCard {...brand} />
-        ))}
-      </div>
-    </div>
-  </section>
   
   <!-- CTA Section -->
   <section class="section-spacing">

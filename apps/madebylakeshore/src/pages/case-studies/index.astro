@@ -40,7 +40,7 @@ const categoryColors: Record<string, string> = {
   description="In-depth looks at how we've helped businesses solve complex challenges with design, data, and AI."
 >
   <!-- Hero -->
-  <section class="relative section-spacing bg-[#1e3030] overflow-hidden">
+  <section class="relative section-spacing bg-mbl-accent overflow-hidden">
     <div class="absolute inset-0 opacity-5">
       <div class="absolute inset-0 bg-pattern"></div>
     </div>
@@ -91,7 +91,7 @@ const categoryColors: Record<string, string> = {
           Case Studies
         </p>
         <h1 class="text-display-lg text-white mb-6 animate-slide-up opacity-0" style="animation-delay: 0.2s;">
-          Stories of <span class="text-mbl-dusk">transformation</span>
+          Stories of <span class="text-mbl-ink">transformation</span>
         </h1>
         <p class="text-xl text-white/70 leading-relaxed animate-slide-up opacity-0" style="animation-delay: 0.3s;">
           Deep dives into our most impactful projects. Learn about the challenges,
@@ -101,132 +101,67 @@ const categoryColors: Record<string, string> = {
     </div>
   </section>
 
-  <!-- Case Studies List -->
-  <section class="pt-20 md:pt-28 pb-20">
+  <!-- Case Studies Grid -->
+  <section class="section-spacing">
     <div class="container-wide">
-      <div class="space-y-40">
-        {caseStudies.map((study: any, index: number) => {
-          const isFirst = index === 0;
-          return (
-          <a 
+      <div class="grid md:grid-cols-2 gap-x-16 gap-y-16">
+        {caseStudies.map((study: any, index: number) => (
+          <a
             href={`/case-studies/${study.slug}`}
             class="group block"
           >
-            <article class="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
-              <!-- Image -->
-              <div class={`relative rounded-lg overflow-hidden ${index % 2 === 1 ? 'lg:order-2' : ''}`}>
-                {study.heroImage ? (
-                  <img
-                    src={study.heroImage}
-                    alt={study.title}
-                    class="w-full h-auto block"
-                    loading={isFirst ? undefined : 'lazy'}
-                    fetchpriority={isFirst ? 'high' : undefined}
-                    decoding="async"
-                  />
-                ) : (
-                  <div class="aspect-[4/3] bg-gradient-to-br from-mbl-slate to-mbl-dusk opacity-80"></div>
-                )}
-
-              </div>
-
-              <!-- Content -->
-              <div class={index % 2 === 1 ? 'lg:order-1' : ''}>
-                <div class="flex items-center gap-4 mb-4 flex-wrap">
-                  <span class={`px-3 py-1 rounded-full text-xs font-heading font-medium ${categoryColors[study.category]}`}>
-                    {study.category.charAt(0).toUpperCase() + study.category.slice(1)}
-                  </span>
-                  {study.client && <span class="text-sm text-mbl-stone">{study.client}</span>}
-                  {study.client && study.author && <span class="text-mbl-mist">•</span>}
-                  {study.author && <span class="text-sm text-mbl-stone">with {study.author}</span>}
-                </div>
-                
-                <h2 class="font-display text-2xl lg:text-3xl mb-4 group-hover:text-mbl-accent transition-colors duration-300 flex items-center gap-3">
-                  {study.title}
-                  {study.isProtected && (
-                    <svg class="w-5 h-5 text-mbl-stone/50 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" aria-label="Password protected" role="img">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
-                    </svg>
-                  )}
-                </h2>
-                
-                <p class="text-lg text-mbl-stone mb-8">
-                  {study.excerpt}
-                </p>
-                
-                <!-- Results -->
-                {study.results && study.results.length > 0 && (
-                  <div class="grid grid-cols-3 gap-6 mb-8">
-                    {study.results.map((result: any) => (
-                      <div>
-                        <div class="text-2xl lg:text-3xl font-display text-mbl-accent mb-1">
-                          {result.value}
-                        </div>
-                        <div class="text-sm text-mbl-stone">
-                          {result.label}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-                
-                <span class="inline-flex items-center gap-2 font-heading font-medium text-mbl-ink group-hover:text-mbl-accent transition-colors">
-                  {study.isProtected ? 'Request access' : 'Read full case study'}
-                  <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            <!-- Image -->
+            <div class="relative aspect-video rounded-lg overflow-hidden mb-4 bg-white">
+              {study.heroImage ? (
+                <img
+                  src={study.heroImage}
+                  alt={study.title}
+                  class="absolute inset-0 w-full h-full object-contain group-hover:scale-105 transition-transform duration-500"
+                  loading={index < 2 ? undefined : 'lazy'}
+                  fetchpriority={index === 0 ? 'high' : undefined}
+                  decoding="async"
+                />
+              ) : (
+                <div class="absolute inset-0 bg-gradient-to-br from-mbl-slate to-mbl-dusk opacity-80"></div>
+              )}
+{study.isProtected && (
+                <div class="absolute top-4 right-4">
+                  <svg class="w-4 h-4 text-white/70" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" aria-label="Password protected" role="img">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
                   </svg>
-                </span>
-              </div>
-            </article>
+                </div>
+              )}
+            </div>
+            <!-- Text -->
+            <h2 class="font-display text-xl mb-1 group-hover:text-mbl-accent transition-colors duration-200">
+              {study.title}
+            </h2>
+            {study.client && (
+              <p class="text-sm text-mbl-stone">{study.client}</p>
+            )}
           </a>
-          );
-        })}
+        ))}
       </div>
     </div>
   </section>
 
   <!-- CTA -->
   <section class="section-spacing bg-white">
-    <div class="container-wide">
-      <div class="grid lg:grid-cols-2 gap-12 items-center">
-        <div>
-          <h2 class="text-display mb-6">Want results like these?</h2>
-          <p class="text-lg text-mbl-stone mb-8">
-            Every business is different, but the approach is the same: understand the 
-            challenge deeply, develop a strategic solution, and execute with precision. 
-            Let's talk about what we can achieve together.
-          </p>
-          <div class="flex flex-wrap gap-4">
-            <a href="/contact" class="btn-primary">
-              Start a Project
-              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-              </svg>
-            </a>
-            <a href="/services" class="btn-secondary">
-              Explore Services
-            </a>
-          </div>
-        </div>
-        
-        <div class="grid grid-cols-2 gap-4">
-          <div class="p-6 bg-mbl-cloud rounded-lg text-center">
-            <div class="text-4xl font-display text-mbl-accent mb-2">50+</div>
-            <div class="text-sm text-mbl-stone">Projects Delivered</div>
-          </div>
-          <div class="p-6 bg-mbl-cloud rounded-lg text-center">
-            <div class="text-4xl font-display text-mbl-accent mb-2">98%</div>
-            <div class="text-sm text-mbl-stone">Client Satisfaction</div>
-          </div>
-          <div class="p-6 bg-mbl-cloud rounded-lg text-center">
-            <div class="text-4xl font-display text-mbl-accent mb-2">5+</div>
-            <div class="text-sm text-mbl-stone">Years Experience</div>
-          </div>
-          <div class="p-6 bg-mbl-cloud rounded-lg text-center">
-            <div class="text-4xl font-display text-mbl-accent mb-2">3</div>
-            <div class="text-sm text-mbl-stone">Service Areas</div>
-          </div>
-        </div>
+    <div class="container-narrow text-center">
+      <h2 class="text-display mb-6">Want results like these?</h2>
+      <p class="text-lg text-mbl-stone mb-8 max-w-xl mx-auto">
+        Let's talk about what we can achieve together.
+      </p>
+      <div class="flex flex-wrap justify-center gap-4">
+        <a href="/contact" class="btn-primary">
+          Start a Project
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+          </svg>
+        </a>
+        <a href="/services" class="btn-secondary">
+          Explore Services
+        </a>
       </div>
     </div>
   </section>

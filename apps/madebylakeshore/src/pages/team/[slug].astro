@@ -27,7 +27,7 @@ const categoryColors: Record<string, string> = {
   description={person.shortBio || `Meet ${person.name} — ${person.role} at Lakeshore Studios.`}
 >
   <!-- Hero -->
-  <section class="relative section-spacing bg-[#1e3030] overflow-hidden">
+  <section class="relative section-spacing bg-mbl-accent overflow-hidden">
     <div class="absolute inset-0 opacity-5">
       <div class="absolute inset-0 bg-pattern"></div>
     </div>
@@ -484,12 +484,12 @@ const categoryColors: Record<string, string> = {
   <!-- CTA -->
   <section class="section-spacing bg-mbl-dusk">
     <div class="container-narrow text-center">
-      <h2 class="text-display text-white mb-6">Let's work together</h2>
-      <p class="text-lg text-white/70 mb-10 max-w-xl mx-auto">
+      <h2 class="text-display text-mbl-ink mb-6">Let's work together</h2>
+      <p class="text-lg text-mbl-ink/70 mb-10 max-w-xl mx-auto">
         Have a project in mind? I'd love to hear about it.
       </p>
       <div class="flex flex-wrap justify-center gap-4">
-        <a href="/contact" class="inline-flex items-center gap-2 px-6 py-3 bg-white text-mbl-ink font-heading font-medium rounded-md hover:bg-mbl-mist transition-colors duration-200">
+        <a href="/contact" class="inline-flex items-center gap-2 px-6 py-3 bg-mbl-ink text-white font-heading font-medium rounded-md hover:bg-mbl-ink/80 transition-colors duration-200">
           Get in Touch
           <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
@@ -497,7 +497,7 @@ const categoryColors: Record<string, string> = {
         </a>
         {person.calendlyUrl && (
           <a href={person.calendlyUrl} target="_blank" rel="noopener noreferrer"
-            class="inline-flex items-center gap-2 px-6 py-3 border border-white/40 text-white font-heading font-medium rounded-md hover:bg-white/10 transition-colors duration-200">
+            class="inline-flex items-center gap-2 px-6 py-3 border border-mbl-ink/40 text-mbl-ink font-heading font-medium rounded-md hover:bg-mbl-ink/10 transition-colors duration-200">
             Schedule a Call
           </a>
         )}

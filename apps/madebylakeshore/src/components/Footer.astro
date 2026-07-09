@@ -19,58 +19,58 @@ const footerLinks = {
 };
 ---
 
-<footer class="bg-mbl-dusk text-white">
+<footer class="bg-mbl-dusk text-mbl-ink">
   <div class="container-wide py-12">
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
       <!-- Brand Column -->
       <div class="lg:col-span-1">
         <a href="/" class="inline-flex mb-6">
-          <img src="/LSS_logo.png" alt="Lakeshore Studios" class="h-10 w-auto brightness-0 invert" decoding="async" />
+          <img src="/LSS_logo.png" alt="Lakeshore Studios" class="h-10 w-auto brightness-0" decoding="async" />
         </a>
-        <p class="text-white/80 text-sm leading-relaxed mb-6">
+        <p class="text-mbl-ink/70 text-sm leading-relaxed mb-6">
           Strategic consulting in design, data, and AI. We help businesses transform through thoughtful solutions.
         </p>
       </div>
-      
+
       <!-- Services -->
       <div>
-        <h4 class="font-heading font-semibold text-sm uppercase tracking-wider mb-6 text-white">Services</h4>
+        <h4 class="font-heading font-semibold text-sm uppercase tracking-wider mb-6 text-mbl-ink">Services</h4>
         <ul class="space-y-3">
           {footerLinks.services.map((link) => (
             <li>
-              <a href={link.href} class="text-white/80 hover:text-white text-sm transition-colors">
+              <a href={link.href} class="text-mbl-ink/70 hover:text-mbl-ink text-sm transition-colors">
                 {link.label}
               </a>
             </li>
           ))}
         </ul>
       </div>
-      
+
       <!-- Company -->
       <div>
-        <h4 class="font-heading font-semibold text-sm uppercase tracking-wider mb-6 text-white">Company</h4>
+        <h4 class="font-heading font-semibold text-sm uppercase tracking-wider mb-6 text-mbl-ink">Company</h4>
         <ul class="space-y-3">
           {footerLinks.company.map((link) => (
             <li>
-              <a href={link.href} class="text-white/80 hover:text-white text-sm transition-colors">
+              <a href={link.href} class="text-mbl-ink/70 hover:text-mbl-ink text-sm transition-colors">
                 {link.label}
               </a>
             </li>
           ))}
         </ul>
       </div>
-      
+
       <!-- Our Brands -->
       <div>
-        <h4 class="font-heading font-semibold text-sm uppercase tracking-wider mb-6 text-white">Our Brands</h4>
+        <h4 class="font-heading font-semibold text-sm uppercase tracking-wider mb-6 text-mbl-ink">Our Brands</h4>
         <ul class="space-y-3">
           {footerLinks.brands.map((link) => (
             <li>
-              <a 
-                href={link.href} 
+              <a
+                href={link.href}
                 target={link.external ? "_blank" : undefined}
                 rel={link.external ? "noopener noreferrer" : undefined}
-                class="text-white/80 hover:text-white text-sm transition-colors inline-flex items-center gap-1"
+                class="text-mbl-ink/70 hover:text-mbl-ink text-sm transition-colors inline-flex items-center gap-1"
               >
                 {link.label}
                 {link.external && (
@@ -86,13 +86,13 @@ const footerLinks = {
     </div>
     
     <!-- Bottom Bar -->
-    <div class="mt-16 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4">
-      <p class="text-white/60 text-sm">
+    <div class="mt-16 pt-8 border-t border-mbl-ink/10 flex flex-col md:flex-row justify-between items-center gap-4">
+      <p class="text-mbl-ink/50 text-sm">
         © {currentYear} Lakeshore Studios. All rights reserved.
       </p>
       <div class="flex gap-6 text-sm">
-        <a href="/privacy" class="text-white/60 hover:text-white transition-colors">Privacy</a>
-        <a href="/terms" class="text-white/60 hover:text-white transition-colors">Terms</a>
+        <a href="/privacy" class="text-mbl-ink/50 hover:text-mbl-ink transition-colors">Privacy</a>
+        <a href="/terms" class="text-mbl-ink/50 hover:text-mbl-ink transition-colors">Terms</a>
       </div>
     </div>
   </div>
