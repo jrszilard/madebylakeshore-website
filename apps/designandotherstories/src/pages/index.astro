@@ -25,6 +25,10 @@ const [artistProfile, featuredWriting, heroShopItems, newArrivals, allCollection
 const isSingleCollection = (allCollections ?? []).length === 1;
 const swimlaneShopItems = (newArrivals ?? []).slice(0, 4);
 
+function formatCategoryLabel(cat: string): string {
+  return cat.charAt(0).toUpperCase() + cat.slice(1).replace(/-/g, ' ');
+}
+
 // Merge Sanity featured writing + Substack posts, up to 5 cards total
 const sanityWritingItems: any[] = (featuredWriting ?? []).slice(0, 5);
 const substackSlots = Math.max(0, 5 - sanityWritingItems.length);
@@ -81,7 +85,7 @@ const typeLabels: Record<string, string> = {
               title={item.title}
               slug={item.slug}
               images={item.images ?? []}
-              medium={item.blurb}
+              categoryLabel={formatCategoryLabel(item.category ?? 'other')}
               price={item.price}
               originalAvailable={item.available}
               basePath="/shop"

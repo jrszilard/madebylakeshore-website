@@ -19,9 +19,9 @@ function ShopCard({ item }: { item: ShopItem }) {
   const isDimmed = isSold && !item.printsAvailable;
 
   return (
-    <article className={`group flex flex-col bg-daos-thread overflow-hidden${isDimmed ? ' opacity-60' : ''}`}>
+    <article className={`group flex flex-col border border-[#3B45E0] bg-daos-thread overflow-hidden${isDimmed ? ' opacity-60' : ''}`}>
       <a href={`/shop/${item.slug}`} className="block">
-        <div className="relative overflow-hidden bg-daos-warm aspect-[3/4]">
+        <div className="relative overflow-hidden bg-daos-warm aspect-[16/9]">
           {item.imageUrl ? (
             <img
               src={item.imageUrl}
@@ -44,12 +44,11 @@ function ShopCard({ item }: { item: ShopItem }) {
       <div className="flex-1 p-4 space-y-3">
         <div className="space-y-1">
           <p className="font-sans text-xs uppercase tracking-widest text-daos-charcoal">{item.categoryLabel}</p>
-          <h3 className="font-serif text-sm text-daos-ink leading-snug">
+          <h3 className="font-serif text-xl text-daos-ink leading-snug">
             <a href={`/shop/${item.slug}`} className="hover:text-daos-terracotta transition-colors">
               {item.title}
             </a>
           </h3>
-          {item.medium && <p className="font-sans text-sm text-daos-charcoal">{item.medium}</p>}
         </div>
         {!isSold && item.price != null && (
           <p className="font-sans font-medium text-daos-ink">${item.price.toLocaleString()}</p>

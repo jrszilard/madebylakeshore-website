@@ -122,7 +122,7 @@ const seoDescription = (isArtwork ? artwork.story : product.blurb) || doc.title;
             )}
 
             {available && priceCents != null && (
-              <div class="border-t border-daos-warm pt-8 pb-8 mb-8 border-b border-daos-warm">
+              <div class="border-t border-daos-clay pt-8 pb-8 mb-8 border-b border-daos-clay">
                 <AddToCartButton client:visible item={cartItem} initialAvailable={available} styles={!isArtwork ? (product.styles ?? []) : []} />
               </div>
             )}

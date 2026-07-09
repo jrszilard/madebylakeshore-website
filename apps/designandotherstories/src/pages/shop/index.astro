@@ -17,7 +17,7 @@ const allItems: ShopItem[] = (shopProducts ?? []).map((item: any) => ({
   title: item.title,
   slug: item.slug.current,
   imageUrl: item.images?.[0]
-    ? urlFor(item.images[0]).width(400).height(533).fit('crop').crop('focalpoint').url()
+    ? urlFor(item.images[0]).width(600).height(338).fit('crop').crop('focalpoint').url()
     : null,
   medium: item.blurb,
   price: item.price,

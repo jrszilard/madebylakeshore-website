@@ -55,7 +55,7 @@ export default function AddToCartButton({ item, initialAvailable, styles = [] }:
                 className={
                   selectedStyle === s.label
                     ? 'px-3 py-1.5 border-2 border-daos-ink font-sans text-sm text-daos-ink'
-                    : 'px-3 py-1.5 border border-daos-warm font-sans text-sm text-daos-charcoal hover:border-daos-ink hover:text-daos-ink transition-colors'
+                    : 'px-3 py-1.5 border border-daos-clay font-sans text-sm text-daos-charcoal hover:border-daos-ink hover:text-daos-ink transition-colors'
                 }
               >
                 {s.label}

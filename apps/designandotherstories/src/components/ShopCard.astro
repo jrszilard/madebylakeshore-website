@@ -6,20 +6,18 @@ interface Props {
   slug: { current: string };
   images: any[];
   medium?: string;
+  categoryLabel?: string;
   price?: number;
   originalAvailable?: boolean;
   printsAvailable?: boolean;
-  landscape?: boolean;
   basePath?: string;
 }
 
-const { title, slug, images, medium, price, originalAvailable, printsAvailable, landscape = false, basePath = '/gallery' } = Astro.props;
+const { title, slug, images, medium, categoryLabel, price, originalAvailable, printsAvailable, basePath = '/gallery' } = Astro.props;
 
 const imageUrl =
   images && images.length > 0
-    ? landscape
-      ? urlFor(images[0]).width(600).height(400).fit('crop').crop('focalpoint').url()
-      : urlFor(images[0]).width(400).height(533).fit('crop').crop('focalpoint').url()
+    ? urlFor(images[0]).width(600).height(338).fit('crop').crop('focalpoint').url()
     : null;
 
 // originalAvailable comes back as null (not undefined) from Sanity when unset,
@@ -31,10 +29,10 @@ const hasPrints = isSold && resolvedPrintsAvailable;
 const isDimmed = isSold && !resolvedPrintsAvailable;
 ---
 
-<article class:list={['group bg-daos-thread rounded-sm overflow-hidden hover:shadow-lg transition-shadow duration-300', isDimmed && 'opacity-60']}>
+<article class:list={['group border border-[#3B45E0] bg-daos-thread rounded-sm overflow-hidden hover:shadow-lg transition-shadow duration-300', isDimmed && 'opacity-60']}>
   <a href={`${basePath}/${slug.current}`} class="block">
-    <!-- Uniform 3:4 image container -->
-    <div class={`relative overflow-hidden bg-daos-warm ${landscape ? 'aspect-[3/2]' : 'aspect-[3/4]'}`}>
+    <!-- Uniform 16:9 image container -->
+    <div class="relative overflow-hidden bg-daos-warm aspect-[16/9]">
       {imageUrl ? (
         <img
           src={imageUrl}
@@ -62,7 +60,10 @@ const isDimmed = isSold && !resolvedPrintsAvailable;
   <!-- Card body -->
   <div class="p-4 space-y-3">
     <div class="space-y-1">
-      <h3 class="font-serif text-sm text-daos-ink leading-snug">
+      {categoryLabel && (
+        <p class="font-sans text-xs uppercase tracking-widest text-daos-charcoal">{categoryLabel}</p>
+      )}
+      <h3 class="font-serif text-xl text-daos-ink leading-snug">
         <a href={`${basePath}/${slug.current}`} class="hover:text-daos-terracotta transition-colors">
           {title}
         </a>
