@@ -2,7 +2,6 @@
 export const prerender = false;
 
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import ImageViewer from '../../components/ImageViewer.tsx';
 import { sanityClient, urlFor, queries } from '../../lib/sanity';
 
 const { slug } = Astro.params;
@@ -12,13 +11,12 @@ if (!artwork) {
   return Astro.redirect('/gallery');
 }
 
-// Build image arrays for ImageViewer (skip entries without a valid asset)
+// Build image array (skip entries without a valid asset)
 const images = (artwork.images ?? [])
   .filter((img: any) => img.asset)
   .map((img: any) => ({
-    url: urlFor(img).width(800).fit('max').url(),
+    url: urlFor(img).width(900).url(),
     alt: img.alt ?? artwork.title,
-    thumbUrl: urlFor(img).width(160).height(160).fit('crop').url(),
   }));
 
 // Format dimensions
@@ -70,8 +68,6 @@ const categoryLabel = artwork.category
 
 const seoTitle = artwork.seo?.title || artwork.title;
 const seoDescription = artwork.seo?.description || artwork.story || `${artwork.title}${artwork.medium ? ` — ${artwork.medium}` : ''}.`;
-
-const region = (artwork as any)?.secretLinkRegion;
 ---
 
 <BaseLayout title={seoTitle} description={seoDescription}>
@@ -83,11 +79,18 @@ const region = (artwork as any)?.secretLinkRegion;
           &larr; Back to Gallery
         </a>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16 items-start">
+        <div class="grid grid-cols-1 md:grid-cols-[3fr_2fr] gap-12 lg:gap-16 items-start">
 
-          <!-- Left: Image viewer -->
-          <div>
-            <ImageViewer client:visible images={images} secretLinkRegion={region} />
+          <!-- Stacked images -->
+          <div class="space-y-2">
+            {images.map((img: any) => (
+              <img
+                src={img.url}
+                alt={img.alt}
+                class="w-full block"
+                loading="lazy"
+              />
+            ))}
           </div>
 
           <!-- Right: Details sidebar -->
