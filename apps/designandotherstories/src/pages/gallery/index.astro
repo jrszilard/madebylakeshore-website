@@ -2,41 +2,40 @@
 export const prerender = false;
 
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import GalleryCard from '../../components/GalleryCard.astro';
-import { sanityClient, queries } from '../../lib/sanity';
+import GalleryGrid from '../../components/GalleryGrid.tsx';
+import { sanityClient, urlFor, queries } from '../../lib/sanity';
+import type { GalleryItem } from '../../components/GalleryGrid.tsx';
 
 const allArtwork = await sanityClient.fetch(queries.allArtwork);
+
+function formatTypeLabel(type: string): string {
+  return type === 'photography' ? 'Photography' : 'Original';
+}
+
+const items: GalleryItem[] = allArtwork.map((piece: any) => ({
+  id: piece._id,
+  title: piece.title,
+  slug: piece.slug.current,
+  imageUrl: piece.images?.[0] ? urlFor(piece.images[0]).width(700).url() : null,
+  artworkType: piece.artworkType ?? 'original',
+  artworkTypeLabel: formatTypeLabel(piece.artworkType ?? 'original'),
+  forSale: piece.forSale,
+  originalAvailable: piece.originalAvailable,
+  price: piece.price,
+}));
 ---
 
 <BaseLayout
   title="Gallery"
   description="Original paintings, drawings, and photography by Wilma Huertas."
 >
-  {allArtwork.length === 0 ? (
+  {items.length === 0 ? (
     <div class="text-center py-40">
       <p class="font-body text-daos-cream/70 text-lg">New work coming soon.</p>
     </div>
   ) : (
-    <div class="px-1.5 py-1.5">
-      <div class="columns-2 md:columns-3 lg:columns-4 gap-1.5">
-        <!-- Text tile: first cell in the grid -->
-        <div class="break-inside-avoid mb-1.5 bg-daos-ink flex flex-col justify-end p-6 aspect-[3/4]">
-          <p class="font-sans text-xs uppercase tracking-widest text-daos-marigold mb-3">Gallery</p>
-          <h1 class="font-display italic text-daos-cream leading-none" style="font-size: clamp(2.5rem, 5vw, 4rem); font-variation-settings: 'opsz' 144, 'SOFT' 100;">Work</h1>
-        </div>
-
-        {allArtwork.map((piece: any) => (
-          <GalleryCard
-            title={piece.title}
-            slug={piece.slug}
-            images={piece.images ?? []}
-            medium={piece.medium}
-            forSale={piece.forSale}
-            originalAvailable={piece.originalAvailable}
-            price={piece.price}
-          />
-        ))}
-      </div>
+    <div class="px-1.5 py-1.5 pt-20 md:pt-28">
+      <GalleryGrid client:load items={items} />
     </div>
   )}
 </BaseLayout>
