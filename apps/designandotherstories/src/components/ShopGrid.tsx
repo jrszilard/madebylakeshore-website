@@ -41,7 +41,7 @@ function ShopCard({ item }: { item: ShopItem }) {
           )}
         </div>
       </a>
-      <div className="flex-1 p-4 space-y-3">
+      <div className="flex-1 p-4 flex flex-col">
         <div className="space-y-1">
           <p className="font-sans text-xs uppercase tracking-widest text-daos-charcoal">{item.categoryLabel}</p>
           <h3 className="font-serif text-xl text-daos-ink leading-snug">
@@ -50,17 +50,19 @@ function ShopCard({ item }: { item: ShopItem }) {
             </a>
           </h3>
         </div>
-        {!isSold && item.price != null && (
-          <p className="font-sans font-medium text-daos-ink">${item.price.toLocaleString()}</p>
-        )}
-        {hasPrints && (
-          <a href={`/shop/${item.slug}#prints`} className="inline-block font-sans text-sm text-daos-terracotta hover:underline transition-colors">
-            Prints available &rarr;
-          </a>
-        )}
-        {isSold && !hasPrints && (
-          <p className="font-sans text-sm text-daos-charcoal">Sold</p>
-        )}
+        <div className="mt-auto pt-3">
+          {!isSold && item.price != null && (
+            <p className="font-sans font-medium text-daos-ink">${item.price.toLocaleString()}</p>
+          )}
+          {hasPrints && (
+            <a href={`/shop/${item.slug}#prints`} className="inline-block font-sans text-sm text-daos-terracotta hover:underline transition-colors">
+              Prints available &rarr;
+            </a>
+          )}
+          {isSold && !hasPrints && (
+            <p className="font-sans text-sm text-daos-charcoal">Sold</p>
+          )}
+        </div>
       </div>
     </article>
   );
@@ -81,7 +83,7 @@ export default function ShopGrid({ items }: { items: ShopItem[] }) {
   return (
     <div>
       {categories.length > 2 && (
-        <div className="flex flex-wrap gap-2 px-4 py-4">
+        <div className="flex flex-wrap gap-2 py-4">
           {categories.map((cat) => (
             <button
               key={cat}
@@ -89,8 +91,8 @@ export default function ShopGrid({ items }: { items: ShopItem[] }) {
               onClick={() => setActiveFilter(cat)}
               className={
                 activeFilter === cat
-                  ? 'px-4 py-2 bg-daos-terracotta border border-daos-terracotta font-sans text-sm text-white'
-                  : 'px-4 py-2 border border-daos-warm font-sans text-sm text-daos-charcoal hover:border-daos-ink hover:text-daos-ink transition-colors'
+                  ? 'px-4 py-2 bg-daos-marigold border border-daos-marigold font-sans text-sm text-daos-ink'
+                  : 'px-4 py-2 border border-daos-cream/30 font-sans text-sm text-daos-cream/70 hover:border-daos-cream/60 hover:text-daos-cream transition-colors'
               }
             >
               {categoryLabel(cat)}

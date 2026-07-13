@@ -31,6 +31,7 @@ export default defineType({
           { title: 'Greeting Card', value: 'greeting-card' },
           { title: 'Print', value: 'print' },
           { title: 'Sticker', value: 'sticker' },
+          { title: 'Bookmark', value: 'bookmark' },
           { title: 'Other', value: 'other' },
         ],
         layout: 'radio',
