@@ -21,13 +21,4 @@ export const fattamanoStructure: StructureResolver = (S) =>
             .title('Products')
             .defaultOrdering([{ field: 'dateAdded', direction: 'desc' }])
         ),
-      S.divider(),
-      S.listItem()
-        .title('Orders (internal)')
-        .schemaType('fattamanoCheckoutSession')
-        .child(
-          S.documentTypeList('fattamanoCheckoutSession')
-            .title('Orders')
-            .defaultOrdering([{ field: 'createdAt', direction: 'desc' }])
-        ),
     ]);

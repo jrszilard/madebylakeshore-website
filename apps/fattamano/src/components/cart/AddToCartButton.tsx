@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import type { CartItem } from '../../lib/types';
 import { dispatch } from '../../lib/cart/cartStore';
+import { trackFunnelEvent } from '../../lib/analytics/client';
 
 interface Props {
   item: CartItem; // qty defaults to 1 when added
@@ -39,10 +40,12 @@ export default function AddToCartButton({ item, initialAvailable }: Props) {
       type="button"
       onClick={() => {
         dispatch({ type: 'add', item: { ...item, qty: 1 } });
+        trackFunnelEvent('add_to_cart', item.slug);
+        window.dispatchEvent(new CustomEvent('ft-cart-open'));
         setAdded(true);
         setTimeout(() => setAdded(false), 1500);
       }}
-      className="inline-block bg-ft-shout text-ft-paper font-display px-6 py-3 text-lg hover:bg-ft-ink transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-ft-ink focus-visible:outline-offset-2"
+      className="inline-block border-2 border-ft-ink bg-ft-shout text-ft-paper font-display px-6 py-3 text-lg shadow-[5px_5px_0_#1A1A1A] hover:bg-ft-ink hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[3px_3px_0_#1A1A1A] transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-ft-ink focus-visible:outline-offset-2"
     >
       {added ? 'added ✓' : 'add to cart'}
     </button>

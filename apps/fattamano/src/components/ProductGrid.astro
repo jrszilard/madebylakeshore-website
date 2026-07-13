@@ -1,6 +1,7 @@
 ---
 import ProductCard from './ProductCard.astro';
-import type { FattamanoProduct } from '../lib/types';
+import { sanityClient, queries } from '../lib/sanity';
+import type { FattamanoProduct, FattamanoSettings } from '../lib/types';
 
 interface Props {
   products: FattamanoProduct[];
@@ -8,6 +9,11 @@ interface Props {
 }
 
 const { products, jitter = false } = Astro.props;
+const settings = await sanityClient.fetch<FattamanoSettings | null>(queries.fattamanoSettings).catch(() => null);
+const usZone = settings?.shippingZones?.find((zone) =>
+  zone.countryCodes?.some((code) => code.trim().toUpperCase() === 'US'),
+);
+const freeShippingThresholdCents = usZone?.freeShippingThresholdCents ?? null;
 
 function rotateFor(i: number): 'none' | 'left' | 'right' {
   if (!jitter) return 'none';
@@ -17,6 +23,11 @@ function rotateFor(i: number): 'none' | 'left' | 'right' {
 ---
 <div class="grid grid-cols-1 gap-x-7 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
   {products.map((p, i) => (
-    <ProductCard product={p} rotate={rotateFor(i)} catalogNumber={i + 1} />
+    <ProductCard
+      product={p}
+      rotate={rotateFor(i)}
+      catalogNumber={i + 1}
+      freeShippingThresholdCents={freeShippingThresholdCents}
+    />
   ))}
 </div>

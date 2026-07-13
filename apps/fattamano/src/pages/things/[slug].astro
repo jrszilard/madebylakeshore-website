@@ -2,9 +2,10 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import BuyButton from '../../components/BuyButton.astro';
 import AddToCartButton from '../../components/cart/AddToCartButton.tsx';
+import ProductGrid from '../../components/ProductGrid.astro';
 import { sanityClient, queries, urlFor } from '../../lib/sanity';
 import { formatPrice } from '../../lib/format';
-import type { FattamanoProduct, SanityImageLike } from '../../lib/types';
+import type { FattamanoProduct, FattamanoSettings, SanityImageLike } from '../../lib/types';
 import { breadcrumbSchema, productSchema } from '../../lib/seo';
 
 export const prerender = true;
@@ -27,9 +28,14 @@ const full = await sanityClient.fetch<FattamanoProduct>(queries.fattamanoProduct
 }).catch(() => product);
 
 const settings = await sanityClient
-  .fetch<{ contactEmail?: string }>(queries.fattamanoSettings)
+  .fetch<FattamanoSettings | null>(queries.fattamanoSettings)
   .catch(() => null);
 const contactEmail = settings?.contactEmail || '';
+const usZone = settings?.shippingZones?.find((zone) =>
+  zone.countryCodes?.some((code) => code.trim().toUpperCase() === 'US'),
+);
+const usShippingRateCents = usZone?.rateCents;
+const freeShippingThresholdCents = usZone?.freeShippingThresholdCents;
 
 const images: SanityImageLike[] = full?.images ?? [];
 const heroUrl = images[0] ? urlFor(images[0])?.width(1400).url() ?? null : null;
@@ -38,6 +44,12 @@ const thumbnailUrls = images
   .map((img) => urlFor(img)?.width(400).height(400).fit('crop').url())
   .filter((url): url is string => Boolean(url));
 const priceLabel = formatPrice(full?.priceCents, full?.priceDisplayOverride);
+function statusOverlay(status: FattamanoProduct['status']): string {
+  if (status === 'sold_out') return 'sold out / already acquired';
+  if (status === 'coming_soon') return 'materializing soon';
+  if (status === 'concept') return 'concept only / not purchasable';
+  return 'currently unavailable';
+}
 
 const metaTitle = full?.seo?.metaTitle || full?.title;
 const metaDescription =
@@ -45,6 +57,12 @@ const metaDescription =
 
 const ogImagePath = `/api/og?title=${encodeURIComponent(full?.title || '')}&subtitle=${encodeURIComponent(full?.tagline || full?.category || '')}`;
 const isRealFakeAdsProduct = ['dead-people-wanted-sticker', 'samedeck-partners-sticker'].includes(full?.slug?.current);
+const liveAvailable = full.status === 'available' && Boolean(full.buyUrl || (full.stock ?? 0) > 0);
+const lowStock = liveAvailable && typeof full.stock === 'number' && full.stock <= 5;
+const related = await sanityClient
+  .fetch<FattamanoProduct[]>(queries.fattamanoProductsByCategory, { category: full.category })
+  .then((products) => products.filter((candidate) => candidate._id !== full._id).slice(0, 3))
+  .catch(() => [] as FattamanoProduct[]);
 const jsonLd = [
   productSchema(full),
   breadcrumbSchema([
@@ -63,7 +81,7 @@ const jsonLd = [
         {heroUrl && (
           <img
             src={heroUrl}
-            alt={full.title}
+            alt={images[0]?.alt || full.title}
             class="w-full border-2 border-ft-ink"
           />
         )}
@@ -90,6 +108,15 @@ const jsonLd = [
         {priceLabel && (
           <p class="font-display text-3xl text-ft-shout mt-6">{priceLabel}</p>
         )}
+        <div class="mt-4 flex flex-wrap gap-2 font-mono text-xs uppercase tracking-[0.14em]">
+          <span class:list={[
+            'border-2 border-ft-ink px-3 py-1',
+            liveAvailable ? 'bg-ft-splash text-ft-ink' : 'bg-ft-ink text-ft-paper',
+          ]}>
+            {liveAvailable ? 'in stock / ready to acquire' : statusOverlay(full.status)}
+          </span>
+          {lowStock && <span class="border-2 border-ft-ink bg-white px-3 py-1 text-ft-shout">only {full.stock} left</span>}
+        </div>
 
         <div class="mt-8">
           {full.buyUrl ? (
@@ -115,6 +142,18 @@ const jsonLd = [
           )}
         </div>
 
+        {liveAvailable && !full.buyUrl && (
+          <div class="mt-5 grid gap-3 border-2 border-ft-ink bg-white p-5 font-body text-sm text-ft-smudge shadow-[5px_5px_0_#1A1A1A] sm:grid-cols-3">
+            <p><strong class="block font-display text-base text-ft-ink">secure payment</strong>Stripe Embedded Checkout; card details never touch this site.</p>
+            <p><strong class="block font-display text-base text-ft-ink">packed by a human</strong>Small-batch stock, packed and shipped by Wilma.</p>
+            <p>
+              <strong class="block font-display text-base text-ft-ink">shipping without drama</strong>
+              {typeof usShippingRateCents === 'number' ? `$${(usShippingRateCents / 100).toFixed(2)} U.S. shipping` : 'Shipping calculated at checkout'}
+              {typeof freeShippingThresholdCents === 'number' ? `; free at $${(freeShippingThresholdCents / 100).toFixed(2)}.` : '.'}
+            </p>
+          </div>
+        )}
+
         {isRealFakeAdsProduct && (
           <div class="mt-6 border-2 border-ft-ink bg-ft-splash p-5 shadow-[6px_6px_0_#1A1A1A]">
             <p class="font-mono text-xs uppercase tracking-[0.18em] text-ft-smudge">Real Fake Ads acquisition note</p>
@@ -136,4 +175,29 @@ const jsonLd = [
       </div>
     </div>
   </article>
+
+  {related.length > 0 && (
+    <section class="border-t-2 border-ft-ink bg-ft-paper">
+      <div class="mx-auto max-w-6xl px-6 py-14">
+        <p class="font-mono text-xs uppercase tracking-[0.2em] text-ft-smudge">continue making questionable decisions</p>
+        <div class="mb-8 mt-2 flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
+          <h2 class="font-display text-4xl">Related objects</h2>
+          {typeof freeShippingThresholdCents === 'number' && (
+            <p class="font-body text-sm text-ft-smudge">Build a {`$${(freeShippingThresholdCents / 100).toFixed(2)}`} cart for free U.S. shipping.</p>
+          )}
+        </div>
+        <ProductGrid products={related} />
+      </div>
+    </section>
+  )}
+
+  <script is:inline define:vars={{ productSlug: full.slug.current }}>
+    void fetch('/api/events', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ event: 'product_view', productSlug }),
+      keepalive: true,
+      credentials: 'same-origin',
+    }).catch(() => {});
+  </script>
 </BaseLayout>

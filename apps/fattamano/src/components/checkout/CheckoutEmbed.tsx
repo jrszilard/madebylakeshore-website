@@ -6,6 +6,7 @@ import type {
 import { EmbeddedCheckoutProvider, EmbeddedCheckout } from '@stripe/react-stripe-js';
 import { useCallback } from 'react';
 import { getSnapshot } from '../../lib/cart/cartStore';
+import { trackFunnelEvent } from '../../lib/analytics/client';
 
 interface Props {
   publishableKey: string;
@@ -25,6 +26,7 @@ export default function CheckoutEmbed({ publishableKey }: Props) {
     });
     if (!res.ok) throw new Error('Could not start checkout');
     const { clientSecret } = await res.json();
+    trackFunnelEvent('checkout_started');
     return clientSecret as string;
   }, []);
 

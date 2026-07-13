@@ -7,9 +7,10 @@ interface Props {
   product: FattamanoProduct;
   rotate?: 'none' | 'left' | 'right';
   catalogNumber?: number;
+  freeShippingThresholdCents?: number | null;
 }
 
-const { product, rotate = 'none', catalogNumber = 1 } = Astro.props;
+const { product, rotate = 'none', catalogNumber = 1, freeShippingThresholdCents = null } = Astro.props;
 const thumb = product.images?.[0];
 const thumbUrl = thumb ? urlFor(thumb)?.width(900).height(900).fit('crop').url() ?? null : null;
 const priceLabel = formatPrice(product.priceCents, product.priceDisplayOverride);
@@ -37,6 +38,12 @@ const statusClasses =
 const categoryLabel = product.category
   ? product.category.replace(/_/g, ' ')
   : 'unclassified';
+const liveAvailable = product.status === 'available' && Boolean(product.buyUrl || (product.stock ?? 0) > 0);
+const lowStock = liveAvailable && typeof product.stock === 'number' && product.stock > 0 && product.stock <= 5;
+const freeShippingLabel =
+  typeof freeShippingThresholdCents === 'number' && freeShippingThresholdCents > 0
+    ? `free U.S. shipping at $${(freeShippingThresholdCents / 100).toFixed(0)}`
+    : null;
 ---
 <a
   href={`/things/${product.slug.current}`}
@@ -84,9 +91,13 @@ const categoryLabel = product.category
         <div>
           <p class="font-mono text-[0.65rem] uppercase tracking-[0.18em] text-ft-smudge">acquisition fee</p>
           <p class="font-display text-xl text-ft-shout">{priceLabel || 'inquire spiritually'}</p>
+          {lowStock && <p class="mt-1 font-mono text-[0.65rem] uppercase tracking-[0.14em] text-ft-shout">only {product.stock} left</p>}
+          {liveAvailable && freeShippingLabel && !lowStock && (
+            <p class="mt-1 font-mono text-[0.62rem] uppercase tracking-[0.12em] text-ft-smudge">{freeShippingLabel}</p>
+          )}
         </div>
         <span class="font-mono text-[0.65rem] uppercase tracking-[0.18em] text-ft-ink underline decoration-ft-splash decoration-4 underline-offset-4">
-          inspect →
+          {liveAvailable ? 'view & buy →' : 'inspect →'}
         </span>
       </div>
     </div>

@@ -9,6 +9,7 @@
     "start": "sanity start",
     "build": "sanity build",
     "seed:fattamano": "node scripts/seed-fattamano.mjs",
+    "migrate:fattamano-orders": "node scripts/migrate-fattamano-orders.mjs",
     "deploy": "sanity deploy",
     "deploy-graphql": "sanity graphql deploy"
   },

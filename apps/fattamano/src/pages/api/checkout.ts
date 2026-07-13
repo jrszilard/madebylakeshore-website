@@ -3,6 +3,7 @@ export const prerender = false;
 import type { APIRoute } from 'astro';
 import { getStripe } from '../../lib/server/stripe';
 import { sanityWriteFetch, sanityWriteClient } from '../../lib/server/sanityWrite';
+import { orderClient, stockReceiptId } from '../../lib/server/orderStore';
 import { queries } from '@lakeshore/shared-ui/sanity';
 import { normalizeCartItems, buildOrderLines, cartSubtotalCents, BadCartError } from '../../lib/commerce/validateCart';
 import { allowedCountries } from '../../lib/commerce/shipping';
@@ -97,20 +98,40 @@ export const POST: APIRoute = async ({ request }) => {
       },
     ],
     return_url: checkoutReturnUrl(request),
+    metadata: { store: 'fattamano' },
   } as unknown as Stripe.Checkout.SessionCreateParams;
   const session = await stripe.checkout.sessions.create(sessionParams);
 
-  // Idempotency + cart source for the webhook. _id = Stripe session id.
-  // subtotalCents is the authoritative (server-priced) cart total, persisted so
-  // /api/calculate-shipping-options can apply free-shipping thresholds without
-  // trusting any client-supplied total.
-  await sanityWriteClient().createIfNotExists({
+  // Detailed order state belongs in a private Sanity dataset. It intentionally
+  // stores no customer PII; names, email, and shipping address remain in Stripe.
+  // Immutable titles/prices make the fulfillment view useful even if catalog
+  // copy changes after purchase.
+  const now = new Date().toISOString();
+  await orderClient().createIfNotExists({
     _id: session.id,
     _type: 'fattamanoCheckoutSession',
-    items: lines.map((l) => ({ _key: l.productId, productId: l.productId, qty: l.qty })),
+    items: lines.map((l) => ({
+      _key: l.productId,
+      productId: l.productId,
+      title: l.title,
+      unitAmountCents: l.unitAmountCents,
+      qty: l.qty,
+    })),
     subtotalCents: cartSubtotalCents(lines),
-    status: 'pending',
-    createdAt: new Date().toISOString(),
+    status: 'pending', // legacy compatibility; paymentStatus is authoritative.
+    paymentStatus: 'pending',
+    fulfillmentStatus: 'new',
+    notificationStatus: 'pending',
+    analyticsRecorded: false,
+    createdAt: now,
+  } as any);
+
+  // Minimal public receipt: no Stripe id, cart, total, or PII. Keeping this in
+  // the product dataset lets the webhook atomically commit stock + idempotency.
+  await sanityWriteClient().createIfNotExists({
+    _id: stockReceiptId(session.id),
+    _type: 'fattamanoStockReceipt',
+    applied: false,
   } as any);
 
   return Response.json({ clientSecret: session.client_secret });
