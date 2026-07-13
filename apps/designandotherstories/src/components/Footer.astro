@@ -5,8 +5,16 @@ import { SUBSTACK_URL } from '../lib/config';
 const currentYear = new Date().getFullYear();
 
 let artistProfile: { shortBio?: string } | null = null;
+let nextEvent: {
+  title: string;
+  startDate: string;
+  location?: { venueName?: string; city?: string; state?: string };
+} | null = null;
 try {
-  artistProfile = await sanityClient.fetch(queries.artistProfile);
+  [artistProfile, nextEvent] = await Promise.all([
+    sanityClient.fetch(queries.artistProfile),
+    sanityClient.fetch(queries.nextEvent),
+  ]);
 } catch (_e) {
   // Gracefully degrade if Sanity is unavailable at build time
 }
@@ -20,52 +28,116 @@ const brandDescription =
   <div class="container-art py-16">
     <div class="grid md:grid-cols-3 gap-12">
       <!-- Brand -->
-      <div>
-        <span class="font-display block mb-4" style="font-size: 64px; line-height: 1; font-style: italic; font-weight: 700; color: #181410; font-variation-settings: 'opsz' 144, 'SOFT' 100;">&amp;</span>
-        <p class="text-daos-ink/70 text-sm leading-relaxed mb-6">
-          {brandDescription}
-        </p>
-        <div class="flex gap-4">
-          <!-- Substack -->
-          <a
-            href={SUBSTACK_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            class="text-daos-ink/70 hover:text-daos-ink transition-colors"
-            aria-label="Newsletter"
-          >
-            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M22.539 8.242H1.46V5.406h21.08v2.836zM1.46 10.812V24L12 18.11 22.54 24V10.812H1.46zM22.54 0H1.46v2.836h21.08V0z"/>
-            </svg>
-          </a>
-        </div>
-      </div>
-
-      <!-- Navigation -->
-      <div>
-        <h4 class="font-sans font-semibold text-sm uppercase tracking-wider text-daos-ink mb-4">Explore</h4>
-        <ul class="space-y-2">
-          <li><a href="/shop" class="text-daos-ink/70 hover:text-daos-ink text-sm transition-colors">Shop</a></li>
-          <li><a href="/events" class="text-daos-ink/70 hover:text-daos-ink text-sm transition-colors">Events</a></li>
-        </ul>
-      </div>
-
-      <!-- Info -->
-      <div>
-        <h4 class="font-sans font-semibold text-sm uppercase tracking-wider text-daos-ink mb-4">Info</h4>
-        <ul class="space-y-2">
-          <li><a href="/about" class="text-daos-ink/70 hover:text-daos-ink text-sm transition-colors">About</a></li>
-          <li>
+      <div class="space-y-8">
+        <div>
+          <span class="font-display block mb-4" style="font-size: 64px; line-height: 1; font-style: italic; font-weight: 700; color: #181410; font-variation-settings: 'opsz' 144, 'SOFT' 100;">&amp;</span>
+          <p class="text-daos-ink/70 text-sm leading-relaxed mb-6">
+            {brandDescription}
+          </p>
+          <div class="flex gap-4">
+            <!-- Substack -->
             <a
               href={SUBSTACK_URL}
               target="_blank"
               rel="noopener noreferrer"
-              class="text-daos-ink/70 hover:text-daos-ink text-sm transition-colors"
+              class="text-daos-ink/70 hover:text-daos-ink transition-colors"
+              aria-label="Newsletter"
             >
-              Newsletter
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M22.539 8.242H1.46V5.406h21.08v2.836zM1.46 10.812V24L12 18.11 22.54 24V10.812H1.46zM22.54 0H1.46v2.836h21.08V0z"/>
+              </svg>
             </a>
-          </li>
+          </div>
+        </div>
+
+        <!-- Next event -->
+        <div class="space-y-2">
+          <div class="flex items-center gap-3">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-6 h-6 flex-shrink-0 text-daos-ink" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="3" y="4" width="18" height="17" rx="1"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="9" x2="21" y2="9"></line>
+            </svg>
+            {nextEvent ? (
+              <h4 class="font-display text-lg text-daos-ink">{nextEvent.title}</h4>
+            ) : (
+              <h4 class="font-display text-lg text-daos-ink">Next Event</h4>
+            )}
+          </div>
+          {nextEvent ? (
+            <div class="space-y-1">
+              {nextEvent.location?.city && (
+                <p class="font-sans text-xs text-daos-ink/60">
+                  {[nextEvent.location.venueName, nextEvent.location.city, nextEvent.location.state].filter(Boolean).join(', ')}
+                </p>
+              )}
+              <p class="font-sans text-xs text-daos-ink/60">
+                {new Date(nextEvent.startDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' })}
+              </p>
+            </div>
+          ) : (
+            <p class="text-daos-ink/70 text-sm leading-relaxed">
+              No upcoming events right now. Check back soon, or subscribe to hear first.
+            </p>
+          )}
+          <a href="/events" class="text-daos-ink text-sm font-medium hover:underline inline-block">All Events &rarr;</a>
+        </div>
+      </div>
+
+      <!-- Site Map -->
+      <div>
+        <h4 class="font-sans font-semibold text-sm uppercase tracking-wider text-daos-ink mb-4">Site Map</h4>
+        <ul class="space-y-2">
+          <li><a href="/gallery" class="text-daos-ink/70 hover:text-daos-ink text-sm transition-colors">Gallery</a></li>
+          <li><a href="/shop" class="text-daos-ink/70 hover:text-daos-ink text-sm transition-colors">Shop</a></li>
+          <li><a href="/events" class="text-daos-ink/70 hover:text-daos-ink text-sm transition-colors">Events</a></li>
+          <li><a href="/about" class="text-daos-ink/70 hover:text-daos-ink text-sm transition-colors">About</a></li>
         </ul>
+      </div>
+
+      <!-- Connect: Newsletter / Lakeshore Studios -->
+      <div class="space-y-8">
+        <!-- Newsletter (no blurb) -->
+        <div class="space-y-2">
+          <div class="flex items-center gap-3">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-6 h-6 flex-shrink-0 text-daos-ink" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+              <path d="M2 6l10 7 10-7"></path>
+            </svg>
+            <h4 class="font-display text-lg text-daos-ink">The Newsletter</h4>
+          </div>
+          <a
+            href={`${SUBSTACK_URL}/subscribe`}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-daos-ink text-sm font-medium hover:underline inline-block"
+          >
+            Subscribe &rarr;
+          </a>
+        </div>
+
+        <!-- Lakeshore Studios -->
+        <div class="space-y-2">
+          <div class="flex items-center gap-3">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-6 h-6 flex-shrink-0 text-daos-ink" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+              <circle cx="12" cy="10" r="3"></circle>
+            </svg>
+            <h4 class="font-display text-lg text-daos-ink">Part of Lakeshore Studios</h4>
+          </div>
+          <p class="text-daos-ink/70 text-sm leading-relaxed">
+            A small design and data consultancy I run with my husband, Justin. Same care, different canvas.
+          </p>
+          <a
+            href="https://madebylakeshore.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-daos-ink text-sm font-medium hover:underline inline-block"
+          >
+            Visit Us &rarr;
+          </a>
+        </div>
       </div>
     </div>
 
@@ -75,7 +147,7 @@ const brandDescription =
         &copy; {currentYear} Design &amp; Other Stories. All rights reserved.
       </p>
       <p class="text-daos-ink/60 text-sm">
-        Part of <a href="https://madebylakeshore.com" class="text-daos-ink hover:underline">Lakeshore Studios</a>
+        <a href="https://fattamano.com" target="_blank" rel="noopener noreferrer" class="text-daos-ink hover:underline">Fattamano</a>
       </p>
     </div>
   </div>

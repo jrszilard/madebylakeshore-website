@@ -2,12 +2,8 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import MediumCard from '../components/MediumCard.astro';
 import { sanityClient, urlFor, queries } from '../lib/sanity';
-import { SUBSTACK_URL } from '../lib/config';
 
-const [profile, nextEvent] = await Promise.all([
-  sanityClient.fetch(queries.artistProfile),
-  sanityClient.fetch(queries.nextEvent),
-]);
+const profile = await sanityClient.fetch(queries.artistProfile);
 
 const aboutImages = (profile?.aboutImages ?? [])
   .slice(0, 4)
@@ -24,6 +20,10 @@ const aboutImages = (profile?.aboutImages ?? [])
       offset: ['0', '2rem', '1rem', '3rem'][i] ?? '0',
     };
   });
+
+const workTogetherImageUrl = profile?.workTogetherImage?.asset
+  ? urlFor(profile.workTogetherImage).width(700).height(700).fit('crop').crop('focalpoint').url()
+  : null;
 ---
 
 <BaseLayout
@@ -106,81 +106,66 @@ const aboutImages = (profile?.aboutImages ?? [])
     </section>
   )}
 
-  <!-- 4. Find me / connect -->
-  <section class="py-20 md:py-28">
+  <!-- 4. Let's work together -->
+  <section class="py-20 md:py-28 bg-daos-thread">
     <div class="container-art">
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-12 lg:gap-16">
+      <div class:list={["items-center", workTogetherImageUrl ? "grid grid-cols-1 md:grid-cols-[1fr_2fr] gap-10 md:gap-16" : "max-w-2xl"]}>
+        {workTogetherImageUrl && (
+          <div class="overflow-hidden rounded-sm aspect-square">
+            <img
+              src={workTogetherImageUrl}
+              alt={profile?.workTogetherImage?.alt ?? ''}
+              class="w-full h-full object-cover"
+              loading="lazy"
+            />
+          </div>
+        )}
 
-        <!-- Next event -->
-        <div class="space-y-4">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="-1 -1 26 26" class="w-12 h-12" aria-hidden="true">
-            <g transform="translate(1.05 1.25)"><path fill="#F5A81C" stroke="none" d="M4 7 L20 7 L20 20 L4 20 Z"></path><path fill="#F5A81C" stroke="none" d="M7 4 L9 4 L9 8 L7 8 Z"></path><path fill="#F5A81C" stroke="none" d="M15 4 L17 4 L17 8 L15 8 Z"></path></g>
-            <g><path fill="none" stroke="#181410" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" d="M4 7 L20 7 L20 20 L4 20 Z"></path><path fill="none" stroke="#181410" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" d="M7 4 L9 4 L9 8 L7 8 Z"></path><path fill="none" stroke="#181410" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" d="M15 4 L17 4 L17 8 L15 8 Z"></path><path fill="none" stroke="#181410" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" d="M4 11 L20 11"></path><path fill="none" stroke="#181410" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" d="M10.5 14 L13.5 14 L13.5 17 L10.5 17 Z"></path></g>
-          </svg>
-          {nextEvent ? (
-            <div class="space-y-2">
-              <h2 class="font-display text-xl text-daos-cream">{nextEvent.title}</h2>
-              {nextEvent.location?.city && (
-                <p class="font-sans text-sm text-daos-cream/60">
-                  {[nextEvent.location.venueName, nextEvent.location.city, nextEvent.location.state].filter(Boolean).join(', ')}
-                </p>
-              )}
-              <p class="font-sans text-sm text-daos-cream/60">
-                {new Date(nextEvent.startDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' })}
-              </p>
-            </div>
-          ) : (
-            <p class="font-body text-daos-cream/70 leading-relaxed">
-              No upcoming events right now. Check back soon, or subscribe to hear first.
-            </p>
-          )}
-          <a href="/events" class="btn-outline-light inline-flex">
-            All Events
-          </a>
-        </div>
-
-        <!-- Newsletter -->
-        <div class="space-y-4">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="-1 -1 26 26" class="w-12 h-12" aria-hidden="true">
-            <g transform="translate(1.05 1.25)"><path fill="#D6336C" stroke="none" d="M3 6 L21 6 L21 18 L3 18 Z"></path></g>
-            <g><path fill="none" stroke="#181410" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" d="M3 6 L21 6 L21 18 L3 18 Z"></path><path fill="none" stroke="#181410" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" d="M3 6 L12 13 L21 6"></path></g>
-          </svg>
-          <h2 class="font-display text-xl text-daos-cream">The Newsletter</h2>
-          <p class="font-body text-daos-cream/70 leading-relaxed">
-            New work, upcoming events, and occasional dispatches from the studio. No noise.
+        <div>
+          <h2 class="font-display italic text-display leading-tight mb-4" style="color: #3B45E0;">Let's Work Together!</h2>
+          <p class="font-body text-daos-charcoal text-lg leading-relaxed mb-8">
+            Have a project in mind? Reach out and let's talk.
           </p>
-          <a
-            href={`${SUBSTACK_URL}/subscribe`}
-            target="_blank"
-            rel="noopener noreferrer"
-            class="btn-outline-light inline-flex"
-          >
-            Subscribe
-          </a>
+          <div class="flex flex-wrap items-center gap-4">
+            <a
+              href="mailto:wilma@madebylakeshore.com"
+              class="font-sans text-daos-ink text-lg hover:text-daos-charcoal transition-colors underline underline-offset-4 decoration-daos-ink/40"
+            >
+              wilma@madebylakeshore.com
+            </a>
+            <button
+              type="button"
+              id="copy-email-btn"
+              data-email="wilma@madebylakeshore.com"
+              class="btn-outline text-sm"
+            >
+              Copy Email
+            </button>
+          </div>
         </div>
-
-        <!-- Lakeshore Studios -->
-        <div class="space-y-4">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="-1 -1 26 26" class="w-12 h-12" aria-hidden="true">
-            <g transform="translate(1.05 1.25)"><path fill="#0F7FBF" stroke="none" d="M12 21 C7.5 15 5 12 5 9 A7 7 0 1 1 19 9 C19 12 16.5 15 12 21 Z"></path></g>
-            <g><path fill="none" stroke="#181410" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" d="M12 21 C7.5 15 5 12 5 9 A7 7 0 1 1 19 9 C19 12 16.5 15 12 21 Z"></path><circle fill="none" stroke="#181410" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" cx="12" cy="9" r="2.4"></circle></g>
-          </svg>
-          <h2 class="font-display text-xl text-daos-cream">Lakeshore Studios</h2>
-          <p class="font-body text-daos-cream/70 leading-relaxed">
-            A small design and data consultancy I run with my husband, Justin. Same care, different canvas.
-          </p>
-          <a
-            href="https://madebylakeshore.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="btn-outline-light inline-flex"
-          >
-            Visit Us
-          </a>
-        </div>
-
       </div>
     </div>
   </section>
 
+
 </BaseLayout>
+
+<script>
+  const copyBtn = document.getElementById('copy-email-btn') as HTMLButtonElement | null;
+
+  copyBtn?.addEventListener('click', async () => {
+    const email = copyBtn.dataset.email;
+    if (!email) return;
+
+    try {
+      await navigator.clipboard.writeText(email);
+      const original = copyBtn.textContent;
+      copyBtn.textContent = 'Copied!';
+      setTimeout(() => {
+        copyBtn.textContent = original;
+      }, 1500);
+    } catch {
+      // Clipboard API unavailable — mailto link remains as fallback
+    }
+  });
+</script>

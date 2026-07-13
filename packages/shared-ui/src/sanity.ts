@@ -333,6 +333,10 @@ export const queries = {
     alt,
     asset-> { url, metadata { dimensions { width, height } } }
   },
+  workTogetherImage {
+    alt,
+    asset-> { url, metadata { dimensions { width, height } } }
+  },
   mediums[] {
     title, description, icon
   }

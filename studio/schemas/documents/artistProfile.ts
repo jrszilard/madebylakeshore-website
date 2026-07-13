@@ -79,6 +79,12 @@ export default defineType({
       description: 'Photos for the mosaic grid at the top of the About page. 3–4 images work best.',
     }),
     defineField({
+      name: 'workTogetherImage',
+      title: 'Work Together Image',
+      type: 'figure',
+      description: 'Optional image shown to the left of the "Let\'s Work Together!" text on the About page. Leave empty to show text only.',
+    }),
+    defineField({
       name: 'mediums',
       title: 'Mediums',
       type: 'array',
