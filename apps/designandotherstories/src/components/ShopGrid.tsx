@@ -80,6 +80,8 @@ export default function ShopGrid({ items }: { items: ShopItem[] }) {
 
   const visible = activeFilter === 'all' ? items : items.filter((i) => i.category === activeFilter);
 
+  const heroLabel = activeFilter === 'all' ? 'All Products' : `${categoryLabel(activeFilter)}s`;
+
   return (
     <div>
       {categories.length > 2 && (
@@ -105,12 +107,10 @@ export default function ShopGrid({ items }: { items: ShopItem[] }) {
         <p className="font-body text-daos-charcoal text-lg py-20 text-center">Nothing here yet.</p>
       ) : (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {activeFilter === 'all' && (
-            <div className="bg-daos-terracotta flex flex-col justify-end p-6">
-              <p className="font-sans text-xs uppercase tracking-widest text-white/60 mb-3">Shop</p>
-              <h1 className="font-display italic text-white leading-tight" style={{ fontSize: 'clamp(1.5rem, 3vw, 2.5rem)', fontVariationSettings: '"opsz" 144, "SOFT" 100' }}>All Products</h1>
-            </div>
-          )}
+          <div className="bg-daos-terracotta flex flex-col justify-end p-6">
+            <p className="font-sans text-xs uppercase tracking-widest text-white/60 mb-3">Shop</p>
+            <h1 className="font-display italic text-white leading-tight" style={{ fontSize: 'clamp(1.5rem, 3vw, 2.5rem)', fontVariationSettings: '"opsz" 144, "SOFT" 100' }}>{heroLabel}</h1>
+          </div>
           {visible.map((item) => (
             <ShopCard key={item.id} item={item} />
           ))}
