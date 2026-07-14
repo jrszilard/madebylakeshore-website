@@ -6,7 +6,7 @@ export default {
       colors: {
         'mbl': {
           'ink': '#1a1a2e',
-          'dusk': 'oklch(0.74 0.15 55 / <alpha-value>)',
+          'dusk': '#F5A81C',
           'slate': '#A05C1F',
           'stone': '#4a5568',
           'mist': '#AFB9B8',
