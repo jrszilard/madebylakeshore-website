@@ -46,12 +46,12 @@
 - Store orders at `fattamano.order.<sha256(checkout-session-id)>`; Sanity excludes dotted IDs from unauthenticated reads while authenticated Studio/server clients retain access.
 - Store daily aggregates under `fattamano.analytics.*` dotted IDs for the same token-only behavior.
 - Keep product stock, paid order state, and completed-purchase aggregate in one revision-guarded transaction.
-- Send merchant order email through Resend's HTTPS API with an idempotency key derived from the Stripe Checkout Session ID. Never store Resend or Stripe secrets in source.
+- Send merchant order email through AgentMail, provisioned through Vercel Marketplace. Create an immediately scheduled draft with a deterministic `client_id` derived from the Stripe Checkout Session ID so retries cannot duplicate alerts.
 - Retry notification failures through Stripe webhook retries; a paid order whose notification is not `sent` continues returning 500 until the notification succeeds.
 - Store `paymentStatus` separately from merchant-editable `fulfillmentStatus` (`new`, `packing`, `shipped`, `cancelled`).
 - Record privacy-conscious daily aggregate funnel counters under token-only dotted IDs. Completed purchases increment in the same transaction that marks the order paid.
 
 ## External prerequisites / deployment gates
 
-- Production needs Resend configuration: `RESEND_API_KEY`, `FATTAMANO_ORDER_NOTIFICATION_TO`, and a verified `FATTAMANO_ORDER_NOTIFICATION_FROM`.
+- Production needs `AGENTMAIL_API_KEY`, `AGENTMAIL_INBOX_ID`, and `FATTAMANO_ORDER_NOTIFICATION_TO` (injected/configured through Vercel).
 - Existing public `fattamanoCheckoutSession` documents must be copied to hashed dotted IDs, verified as invisible through an unauthenticated client, and then deleted before the privacy step is complete.

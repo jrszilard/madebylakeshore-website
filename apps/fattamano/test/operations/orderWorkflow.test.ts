@@ -11,8 +11,8 @@ import {
 
 const config: NotificationConfig = {
   apiKey: 'test-key',
+  inboxId: 'fattamano-orders@agentmail.to',
   to: 'orders@example.com',
-  from: 'fattamano <shop@example.com>',
 };
 
 const order = {
@@ -43,7 +43,7 @@ describe('private order workflow', () => {
 
 describe('order notifications', () => {
   it('requires all notification secrets without returning their values', () => {
-    expect(() => notificationConfig({})).toThrow('RESEND_API_KEY');
+    expect(() => notificationConfig({})).toThrow('AGENTMAIL_API_KEY');
   });
 
   it('builds an operational email without customer PII', () => {
@@ -54,15 +54,18 @@ describe('order notifications', () => {
     expect(email.text).toContain('dashboard.stripe.com/test/payments');
   });
 
-  it('uses a provider idempotency key and returns the message id', async () => {
-    const fetcher = vi.fn(async (_url: string | URL | Request, init?: RequestInit) => {
-      expect(new Headers(init?.headers).get('Idempotency-Key')).toBe('fattamano-order-cs_test_123');
-      return new Response(JSON.stringify({ id: 'email_123' }), {
+  it('uses a provider idempotency client id and returns the draft id', async () => {
+    const fetcher = vi.fn(async (url: string | URL | Request, init?: RequestInit) => {
+      expect(String(url)).toContain('/fattamano-orders%40agentmail.to/drafts');
+      const body = JSON.parse(String(init?.body));
+      expect(body.client_id).toBe('fattamano-order-cs_test_123');
+      expect(body.send_at).toBeTypeOf('string');
+      return new Response(JSON.stringify({ draft_id: 'draft_123' }), {
         status: 200,
         headers: { 'Content-Type': 'application/json' },
       });
     }) as unknown as typeof fetch;
-    await expect(sendOrderNotification(order, config, fetcher)).resolves.toEqual({ id: 'email_123' });
+    await expect(sendOrderNotification(order, config, fetcher)).resolves.toEqual({ id: 'draft_123' });
     expect(fetcher).toHaveBeenCalledOnce();
   });
 });

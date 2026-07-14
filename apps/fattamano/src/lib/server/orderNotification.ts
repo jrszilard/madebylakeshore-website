@@ -14,8 +14,8 @@ export interface OrderNotification {
 
 export interface NotificationConfig {
   apiKey: string;
+  inboxId: string;
   to: string;
-  from: string;
 }
 
 export interface NotificationResult {
@@ -29,20 +29,20 @@ function money(cents: number, currency: string): string {
   }).format(cents / 100);
 }
 
-export function notificationConfig(env: Record<string, string | undefined> = process.env): NotificationConfig {
-  const apiKey = env.RESEND_API_KEY?.trim();
-  const to = env.FATTAMANO_ORDER_NOTIFICATION_TO?.trim();
-  const from = env.FATTAMANO_ORDER_NOTIFICATION_FROM?.trim();
-  if (!apiKey || !to || !from) {
+export function notificationConfig(env?: Record<string, string | undefined>): NotificationConfig {
+  const values = env ?? {
+    ...((typeof import.meta !== 'undefined' ? (import.meta as any).env : {}) as Record<string, string | undefined>),
+    ...(typeof process !== 'undefined' ? process.env : {}),
+  };
+  const apiKey = values.AGENTMAIL_API_KEY?.trim();
+  const inboxId = values.AGENTMAIL_INBOX_ID?.trim();
+  const to = values.FATTAMANO_ORDER_NOTIFICATION_TO?.trim();
+  if (!apiKey || !inboxId || !to) {
     throw new Error(
-      'Order notifications require RESEND_API_KEY, FATTAMANO_ORDER_NOTIFICATION_TO, and FATTAMANO_ORDER_NOTIFICATION_FROM',
+      'Order notifications require AGENTMAIL_API_KEY, AGENTMAIL_INBOX_ID, and FATTAMANO_ORDER_NOTIFICATION_TO',
     );
   }
-  return {
-    apiKey,
-    to,
-    from,
-  };
+  return { apiKey, inboxId, to };
 }
 
 export function buildOrderEmail(order: OrderNotification) {
@@ -62,35 +62,49 @@ export function buildOrderEmail(order: OrderNotification) {
     `Checkout Session: ${order.sessionId}`,
     `Open Stripe for customer and shipping details: ${dashboardUrl}`,
     '',
-    'Update fulfillment status in the private fattamano Orders Studio workspace.',
+    'Update fulfillment status in the fattamano Orders Studio workspace.',
   ].join('\n');
 
   return { subject, text };
 }
 
+/**
+ * AgentMail draft creation supports deterministic client_id idempotency. The
+ * provider schedules the draft immediately, so a crash after the API response
+ * can safely retry without creating or sending a duplicate message.
+ */
 export async function sendOrderNotification(
   order: OrderNotification,
   config = notificationConfig(),
   fetcher: typeof fetch = fetch,
 ): Promise<NotificationResult> {
   const { subject, text } = buildOrderEmail(order);
-  const response = await fetcher('https://api.resend.com/emails', {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${config.apiKey}`,
-      'Content-Type': 'application/json',
-      'Idempotency-Key': `fattamano-order-${order.sessionId}`,
+  const response = await fetcher(
+    `https://api.agentmail.to/v0/inboxes/${encodeURIComponent(config.inboxId)}/drafts`,
+    {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${config.apiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        to: config.to,
+        subject,
+        text,
+        client_id: `fattamano-order-${order.sessionId}`,
+        send_at: new Date(Date.now() + 1000).toISOString(),
+      }),
     },
-    body: JSON.stringify({ from: config.from, to: [config.to], subject, text }),
-  });
+  );
 
   if (!response.ok) {
     const detail = (await response.text()).slice(0, 500);
     throw new Error(`Order notification failed (${response.status}): ${detail}`);
   }
-  const payload = (await response.json()) as { id?: unknown };
-  if (typeof payload.id !== 'string' || !payload.id) {
-    throw new Error('Order notification provider returned no message id');
+  const payload = (await response.json()) as { draft_id?: unknown; draftId?: unknown };
+  const id = payload.draft_id ?? payload.draftId;
+  if (typeof id !== 'string' || !id) {
+    throw new Error('Order notification provider returned no draft id');
   }
-  return { id: payload.id };
+  return { id };
 }

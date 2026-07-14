@@ -7,9 +7,9 @@ Server-only values:
 - `STRIPE_SECRET_KEY` — restricted Stripe key with Checkout Sessions write/read access.
 - `STRIPE_WEBHOOK_SECRET` — signing secret for the fattamano webhook endpoint.
 - `SANITY_WRITE_TOKEN` — token used for token-only order, stock, and aggregate-counter writes.
-- `RESEND_API_KEY` — server-only Resend API key.
+- `AGENTMAIL_API_KEY` — server-only key injected by the Vercel AgentMail integration.
+- `AGENTMAIL_INBOX_ID` — dedicated sender inbox created for fattamano order alerts.
 - `FATTAMANO_ORDER_NOTIFICATION_TO` — Wilma's order-alert mailbox.
-- `FATTAMANO_ORDER_NOTIFICATION_FROM` — verified sender, e.g. `fattamano orders <orders@fattamano.com>`.
 
 Client-safe existing values remain `PUBLIC_SANITY_PROJECT_ID`, `PUBLIC_SANITY_DATASET`, and `PUBLIC_STRIPE_PUBLISHABLE_KEY`.
 
@@ -41,7 +41,7 @@ The migration enriches legacy lines, verifies every dotted target through the au
 1. Checkout creates the order at a deterministic `fattamano.order.<sha256>` ID. The Stripe ID itself is not stored in the document ID.
 2. Stripe sends signed `checkout.session.completed`.
 3. Product stock, paid order state, and the completed-purchase aggregate commit in one revision-guarded Sanity transaction, preserving exactly-once behavior.
-4. Resend receives an idempotent merchant alert. A failure returns HTTP 500 so Stripe retries; stale notification claims can be reclaimed after five minutes.
+4. AgentMail receives an idempotent scheduled draft and sends the merchant alert. A failure returns HTTP 500 so Stripe retries; stale notification claims can be reclaimed after five minutes.
 5. In Studio, open `/fattamano-orders` and move orders through **New → Packing → Shipped**. Customer/shipping details remain in Stripe.
 
 ## Funnel counters
@@ -66,6 +66,6 @@ Useful GROQ in the internal workspace Vision tool:
 ## Alert troubleshooting
 
 - **Notification failures** are visible as a dedicated Studio order list.
-- Confirm all three Resend environment variables exist; never paste values into source, logs, or Sanity.
-- Resend requests use `Idempotency-Key: fattamano-order-<checkout-session-id>` to avoid duplicate email when Stripe retries.
+- Confirm `AGENTMAIL_API_KEY`, `AGENTMAIL_INBOX_ID`, and `FATTAMANO_ORDER_NOTIFICATION_TO` exist; never paste values into source, logs, or Sanity.
+- AgentMail scheduled drafts use `client_id: fattamano-order-<checkout-session-id>` so Stripe retries cannot create duplicate alerts.
 - Do not manually change payment or notification fields in Sanity. Only `fulfillmentStatus`, `fulfillmentNote`, and `shippedAt` are operationally editable.
