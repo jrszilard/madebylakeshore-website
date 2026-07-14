@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import HeroTwinkle from '../../components/HeroTwinkle.astro';
+import CaseStudyCard from '../../components/CaseStudyCard.astro';
 import { sanityClient, urlFor, queries } from '../../lib/sanity';
 
 export const prerender = false;
@@ -14,12 +15,6 @@ const caseStudies = person
 if (!person) return Astro.redirect('/about');
 
 const heroImage = person.image?.asset ? urlFor(person.image).width(1200).url() : null;
-
-const categoryColors: Record<string, string> = {
-  design: 'bg-mbl-warm/10 text-mbl-warm',
-  data: 'bg-mbl-accent/10 text-mbl-accent',
-  ai: 'bg-purple-100 text-purple-600',
-};
 ---
 
 <BaseLayout
@@ -198,66 +193,23 @@ const categoryColors: Record<string, string> = {
 
   <!-- Case Studies -->
   {caseStudies?.length > 0 && (
-    <section class="section-spacing">
+    <section class="section-spacing bg-white">
       <div class="container-wide">
         <div class="max-w-2xl mb-12">
           <p class="font-heading text-mbl-accent font-medium tracking-wide mb-3">Work</p>
           <h2 class="font-display text-display">Case Studies</h2>
         </div>
-        <div class="space-y-16">
-          {caseStudies.map((study: any) => {
-            const studyImage = study.featuredImage?.asset
-              ? urlFor(study.featuredImage).width(800).url()
-              : null;
-            return (
-              <a href={`/case-studies/${study.slug?.current}?back=/team/${slug}`} class="group grid md:grid-cols-2 gap-8 lg:gap-16 items-center block">
-                <!-- Image -->
-                <div class="relative rounded-lg overflow-hidden">
-                  {studyImage ? (
-                    <img src={studyImage} alt={study.title} class="w-full h-auto block" loading="lazy" decoding="async" />
-                  ) : (
-                    <div class="aspect-[4/3] bg-gradient-to-br from-mbl-slate to-mbl-dusk opacity-80"></div>
-                  )}
-                </div>
-                <!-- Content -->
-                <div>
-                  <div class="flex items-center gap-3 mb-4 flex-wrap">
-                    <span class={`px-3 py-1 rounded-full text-xs font-heading font-medium ${categoryColors[study.category] ?? 'bg-mbl-mist text-mbl-stone'}`}>
-                      {study.category?.charAt(0).toUpperCase() + study.category?.slice(1)}
-                    </span>
-                    {study.client && <span class="text-sm text-mbl-stone">{study.client}</span>}
-                    {study.isProtected && (
-                      <svg class="w-4 h-4 text-mbl-stone/50" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" aria-label="Password protected">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
-                      </svg>
-                    )}
-                  </div>
-                  <h3 class="font-display text-2xl lg:text-3xl mb-4 group-hover:text-mbl-accent transition-colors duration-300">
-                    {study.title}
-                  </h3>
-                  {study.excerpt && (
-                    <p class="text-mbl-stone mb-6">{study.excerpt}</p>
-                  )}
-                  {study.metrics?.length > 0 && !study.isProtected && (
-                    <div class="grid grid-cols-3 gap-6 mb-6">
-                      {study.metrics.slice(0, 3).map((metric: any) => (
-                        <div>
-                          <div class="text-2xl font-display text-mbl-accent mb-1">{metric.value}</div>
-                          <div class="text-sm text-mbl-stone">{metric.label}</div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                  <span class="inline-flex items-center gap-2 font-heading font-medium text-mbl-ink group-hover:text-mbl-accent transition-colors">
-                    {study.isProtected ? 'Request access' : 'Read case study'}
-                    <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                    </svg>
-                  </span>
-                </div>
-              </a>
-            );
-          })}
+        <div class="grid md:grid-cols-2 gap-x-16 gap-y-16">
+          {caseStudies.map((study: any, index: number) => (
+            <CaseStudyCard
+              href={`/case-studies/${study.slug?.current}?back=/team/${slug}`}
+              title={study.title}
+              client={study.client}
+              imageUrl={study.featuredImage?.asset ? urlFor(study.featuredImage).width(800).url() : null}
+              isProtected={study.isProtected}
+              loading={index < 2 ? undefined : 'lazy'}
+            />
+          ))}
         </div>
       </div>
     </section>

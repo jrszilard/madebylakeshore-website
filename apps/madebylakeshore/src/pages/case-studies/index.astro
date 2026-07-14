@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import HeroTwinkle from '../../components/HeroTwinkle.astro';
+import CaseStudyCard from '../../components/CaseStudyCard.astro';
 import { sanityClient, urlFor, queries } from '../../lib/sanity';
 
 export const prerender = false;
@@ -106,40 +107,15 @@ const categoryColors: Record<string, string> = {
     <div class="container-wide">
       <div class="grid md:grid-cols-2 gap-x-16 gap-y-16">
         {caseStudies.map((study: any, index: number) => (
-          <a
+          <CaseStudyCard
             href={`/case-studies/${study.slug}`}
-            class="group block"
-          >
-            <!-- Image -->
-            <div class="relative aspect-video rounded-lg overflow-hidden mb-4 bg-white">
-              {study.heroImage ? (
-                <img
-                  src={study.heroImage}
-                  alt={study.title}
-                  class="absolute inset-0 w-full h-full object-contain group-hover:scale-105 transition-transform duration-500"
-                  loading={index < 2 ? undefined : 'lazy'}
-                  fetchpriority={index === 0 ? 'high' : undefined}
-                  decoding="async"
-                />
-              ) : (
-                <div class="absolute inset-0 bg-gradient-to-br from-mbl-slate to-mbl-dusk opacity-80"></div>
-              )}
-{study.isProtected && (
-                <div class="absolute top-4 right-4">
-                  <svg class="w-4 h-4 text-white/70" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" aria-label="Password protected" role="img">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
-                  </svg>
-                </div>
-              )}
-            </div>
-            <!-- Text -->
-            <h2 class="font-display text-xl mb-1 group-hover:text-mbl-accent transition-colors duration-200">
-              {study.title}
-            </h2>
-            {study.client && (
-              <p class="text-sm text-mbl-stone">{study.client}</p>
-            )}
-          </a>
+            title={study.title}
+            client={study.client}
+            imageUrl={study.heroImage}
+            isProtected={study.isProtected}
+            loading={index < 2 ? undefined : 'lazy'}
+            fetchpriority={index === 0 ? 'high' : undefined}
+          />
         ))}
       </div>
     </div>
