@@ -32,6 +32,7 @@ export default defineType({
           { title: 'Print', value: 'print' },
           { title: 'Sticker', value: 'sticker' },
           { title: 'Bookmark', value: 'bookmark' },
+          { title: 'Bundle', value: 'bundle' },
           { title: 'Other', value: 'other' },
         ],
         layout: 'radio',
