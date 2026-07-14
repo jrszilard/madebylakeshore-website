@@ -5,6 +5,7 @@ import Banner from '../components/Banner.astro';
 import Footer from '../components/Footer.astro';
 import CartDrawer from '../components/cart/CartDrawer.tsx';
 import { sanityClient, queries } from '../lib/sanity';
+import Analytics from '@vercel/analytics/astro';
 
 interface Props {
   title: string;
@@ -60,5 +61,6 @@ try {
     <Footer />
 
     <CartDrawer client:idle freeShippingThresholdCents={freeShippingThresholdCents} />
+    <Analytics />
   </body>
 </html>
