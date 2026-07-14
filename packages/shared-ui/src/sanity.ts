@@ -373,6 +373,11 @@ export const queries = {
   styles[]{ label }
 }`,
 
+  newArrivalShopProducts: `*[_type == "shopProduct" && available == true && featured == true] | order(_createdAt desc)[0...4] {
+  _id, title, slug, category, images, blurb, price, available, featured,
+  styles[]{ label }
+}`,
+
   shopProductBySlug: `*[_type == "shopProduct" && slug.current == $slug][0] {
   _id, title, slug, category, images, blurb, description, price, available, stock, featured,
   styles[]{ label },

@@ -16,14 +16,14 @@ const [artistProfile, featuredWriting, heroShopItems, newArrivals, allCollection
   sanityClient.fetch(queries.artistProfile),
   sanityClient.fetch(queries.featuredWritingForHome),
   sanityClient.fetch(queries.featuredShopItems),
-  sanityClient.fetch(queries.shopProducts),
+  sanityClient.fetch(queries.newArrivalShopProducts),
   sanityClient.fetch(queries.allCollections),
   sanityClient.fetch(queries.nextEvent),
   fetchSubstackFeed(SUBSTACK_SHORT_STORIES_SECTION_ID),
 ]);
 
 const isSingleCollection = (allCollections ?? []).length === 1;
-const swimlaneShopItems = (newArrivals ?? []).slice(0, 4);
+const swimlaneShopItems = newArrivals ?? [];
 
 function formatCategoryLabel(cat: string): string {
   return cat.charAt(0).toUpperCase() + cat.slice(1).replace(/-/g, ' ');
