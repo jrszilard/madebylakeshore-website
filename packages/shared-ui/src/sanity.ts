@@ -93,6 +93,18 @@ export const queries = {
     "consultant": consultant->{ name, slug, image, calendlyUrl, shortBio }
   }`,
 
+  caseStudiesByServiceArea: `*[_type == "caseStudy" && $serviceArea in serviceAreas && !(isProtected == true && listingVisibility == "hidden")] | order(coalesce(order, 100) asc, publishedAt desc) {
+    _id,
+    title,
+    slug,
+    client,
+    category,
+    excerpt,
+    featuredImage,
+    metrics,
+    isProtected
+  }`,
+
   allCaseStudies: `*[_type == "caseStudy"] | order(coalesce(order, 100) asc, publishedAt desc) {
     _id,
     title,

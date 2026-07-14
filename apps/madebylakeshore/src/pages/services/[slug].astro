@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { sanityClient, queries } from '../../lib/sanity';
+import CaseStudyCard from '../../components/CaseStudyCard.astro';
+import { sanityClient, urlFor, queries } from '../../lib/sanity';
 
 export const prerender = true;
 
@@ -22,14 +23,24 @@ if (!service) {
   return Astro.redirect('/services');
 }
 
+// Case studies tagged for this specific service area (brand-identity / product-design)
+const caseStudies = await sanityClient.fetch(queries.caseStudiesByServiceArea, { serviceArea: slug });
+
 // Default process steps based on service type
 const processSteps: Record<string, { step: string; title: string; description: string }[]> = {
-  design: [
+  'brand-identity': [
     { step: '01', title: 'Discovery', description: 'We dive deep into your business, audience, and goals.' },
-    { step: '02', title: 'Strategy', description: 'I develop a creative strategy aligned with your objectives.' },
+    { step: '02', title: 'Strategy', description: 'I develop a brand strategy aligned with your objectives.' },
     { step: '03', title: 'Design', description: 'Concepts come to life through iterative design exploration.' },
     { step: '04', title: 'Refine', description: 'We refine the chosen direction based on your feedback.' },
     { step: '05', title: 'Deliver', description: 'Final assets delivered with guidelines for implementation.' },
+  ],
+  'product-design': [
+    { step: '01', title: 'Discovery', description: 'We dive into user needs, constraints, and business goals.' },
+    { step: '02', title: 'Explore', description: 'I sketch and prototype directions across the solution space.' },
+    { step: '03', title: 'Design', description: 'The chosen direction is designed in detail, screen by screen.' },
+    { step: '04', title: 'Test', description: 'We validate with users and refine based on what we learn.' },
+    { step: '05', title: 'Deliver', description: 'Production-ready specs and assets handed off for build.' },
   ],
   data: [
     { step: '01', title: 'Audit', description: 'We assess your current data landscape and identify gaps.' },
@@ -47,15 +58,20 @@ const processSteps: Record<string, { step: string; title: string; description: s
   ],
 };
 
-const process = processSteps[service.icon] || processSteps.design;
-const accentColor = service.icon === 'design' ? 'warm' : 'accent';
+const process = processSteps[service.icon] || processSteps['brand-identity'];
+const accentColor = ['brand-identity', 'product-design', 'design'].includes(service.icon) ? 'warm' : 'accent';
 
 // Section titles based on service type
 const sectionTitles: Record<string, { offerings: string; process: string; cta: string }> = {
-  design: {
-    offerings: 'Design services tailored to your needs',
+  'brand-identity': {
+    offerings: 'Brand identity services tailored to your needs',
     process: 'How we\'ll work together',
     cta: 'Ready to elevate your brand?',
+  },
+  'product-design': {
+    offerings: 'Product design services tailored to your needs',
+    process: 'How we\'ll work together',
+    cta: 'Ready to build something great?',
   },
   data: {
     offerings: 'Data solutions that scale',
@@ -69,7 +85,7 @@ const sectionTitles: Record<string, { offerings: string; process: string; cta: s
   },
 };
 
-const titles = sectionTitles[service.icon] || sectionTitles.design;
+const titles = sectionTitles[service.icon] || sectionTitles['brand-identity'];
 ---
 
 <BaseLayout
@@ -159,8 +175,32 @@ const titles = sectionTitles[service.icon] || sectionTitles.design;
     </section>
   )}
 
+  <!-- Case Studies -->
+  {caseStudies?.length > 0 && (
+    <section class="section-spacing">
+      <div class="container-wide">
+        <div class="max-w-2xl mb-12">
+          <p class={`font-heading text-mbl-${accentColor} font-medium tracking-wide mb-3`}>Proof of Work</p>
+          <h2 class="font-display text-display">Case Studies</h2>
+        </div>
+        <div class="grid md:grid-cols-2 gap-x-16 gap-y-16">
+          {caseStudies.map((study: any, index: number) => (
+            <CaseStudyCard
+              href={`/case-studies/${study.slug?.current}?back=/services/${slug}`}
+              title={study.title}
+              client={study.client}
+              imageUrl={study.featuredImage?.asset ? urlFor(study.featuredImage).width(800).url() : null}
+              isProtected={study.isProtected}
+              loading={index < 2 ? undefined : 'lazy'}
+            />
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
   <!-- Process -->
-  <section class="section-spacing">
+  <section class="section-spacing bg-white">
     <div class="container-wide">
       <div class="max-w-2xl mb-16">
         <p class={`font-heading text-mbl-${accentColor} font-medium tracking-wide mb-4`}>The Process</p>

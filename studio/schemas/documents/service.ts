@@ -54,9 +54,11 @@ export default defineType({
       type: 'string',
       options: {
         list: [
-          { title: 'Design', value: 'design' },
+          { title: 'Brand Identity', value: 'brand-identity' },
+          { title: 'Product Design', value: 'product-design' },
           { title: 'Data', value: 'data' },
           { title: 'AI', value: 'ai' },
+          { title: 'Design (legacy)', value: 'design' },
         ],
       },
     }),

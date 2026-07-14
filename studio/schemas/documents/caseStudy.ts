@@ -60,6 +60,20 @@ export default defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
+      name: 'serviceAreas',
+      title: 'Service Areas',
+      type: 'array',
+      description: 'Which specific service page(s) should feature this case study? A project can belong to more than one (e.g. brand identity work that also involved packaging).',
+      of: [{ type: 'string' }],
+      options: {
+        list: [
+          { title: 'Brand Identity', value: 'brand-identity' },
+          { title: 'Product Design', value: 'product-design' },
+          { title: 'Packaging', value: 'packaging' },
+        ],
+      },
+    }),
+    defineField({
       name: 'featured',
       title: 'Featured',
       type: 'boolean',
