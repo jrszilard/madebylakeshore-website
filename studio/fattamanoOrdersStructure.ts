@@ -9,7 +9,7 @@ const orderList = (S: StructureBuilder, title: string, filter: string) =>
 
 export const fattamanoOrdersStructure: StructureResolver = (S) =>
   S.list()
-    .title('fattamano Orders')
+    .title('fattamano Orders (internal)')
     .items([
       S.listItem()
         .title('New — needs attention')

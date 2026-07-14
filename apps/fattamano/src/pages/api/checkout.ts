@@ -2,8 +2,8 @@ export const prerender = false;
 
 import type { APIRoute } from 'astro';
 import { getStripe } from '../../lib/server/stripe';
-import { sanityWriteFetch, sanityWriteClient } from '../../lib/server/sanityWrite';
-import { orderClient, stockReceiptId } from '../../lib/server/orderStore';
+import { sanityWriteFetch } from '../../lib/server/sanityWrite';
+import { orderClient, orderDocumentId } from '../../lib/server/orderStore';
 import { queries } from '@lakeshore/shared-ui/sanity';
 import { normalizeCartItems, buildOrderLines, cartSubtotalCents, BadCartError } from '../../lib/commerce/validateCart';
 import { allowedCountries } from '../../lib/commerce/shipping';
@@ -108,7 +108,7 @@ export const POST: APIRoute = async ({ request }) => {
   // copy changes after purchase.
   const now = new Date().toISOString();
   await orderClient().createIfNotExists({
-    _id: session.id,
+    _id: orderDocumentId(session.id),
     _type: 'fattamanoCheckoutSession',
     items: lines.map((l) => ({
       _key: l.productId,
@@ -124,14 +124,6 @@ export const POST: APIRoute = async ({ request }) => {
     notificationStatus: 'pending',
     analyticsRecorded: false,
     createdAt: now,
-  } as any);
-
-  // Minimal public receipt: no Stripe id, cart, total, or PII. Keeping this in
-  // the product dataset lets the webhook atomically commit stock + idempotency.
-  await sanityWriteClient().createIfNotExists({
-    _id: stockReceiptId(session.id),
-    _type: 'fattamanoStockReceipt',
-    applied: false,
   } as any);
 
   return Response.json({ clientSecret: session.client_secret });

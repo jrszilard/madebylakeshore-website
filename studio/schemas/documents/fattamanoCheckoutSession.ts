@@ -1,7 +1,7 @@
 import { defineType, defineField } from 'sanity';
 
-// Private-dataset operational order. Customer name, email, and shipping address
-// intentionally remain in Stripe and are not copied into Sanity.
+// Token-only operational order. Dotted document IDs are excluded from Sanity's
+// unauthenticated public reads. Customer PII remains in Stripe.
 export default defineType({
   name: 'fattamanoCheckoutSession',
   title: 'fattamano Order',

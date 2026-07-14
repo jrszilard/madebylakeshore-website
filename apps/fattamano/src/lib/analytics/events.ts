@@ -31,7 +31,7 @@ export function normalizeFunnelEvent(value: unknown): FunnelEventInput | null {
 
 export function analyticsDocumentId(input: FunnelEventInput, date = new Date()): string {
   const day = date.toISOString().slice(0, 10);
-  return `fattamano-analytics-${day}-${input.event}-${input.productSlug ?? 'all'}`;
+  return `fattamano.analytics.${day}.${input.event}.${input.productSlug ?? 'all'}`;
 }
 
 export function analyticsDocument(input: FunnelEventInput, date = new Date()) {

@@ -3,7 +3,7 @@ export const prerender = false;
 import type { APIRoute } from 'astro';
 import { getStripe } from '../../lib/server/stripe';
 import { sanityWriteFetch } from '../../lib/server/sanityWrite';
-import { orderFetch } from '../../lib/server/orderStore';
+import { orderDocumentId, orderFetch } from '../../lib/server/orderStore';
 import { queries } from '@lakeshore/shared-ui/sanity';
 import { resolveShippingOption } from '../../lib/commerce/shipping';
 import type { FattamanoSettings } from '../../lib/types';
@@ -21,7 +21,7 @@ export const POST: APIRoute = async ({ request }) => {
   // client could call sessions.update against an arbitrary Stripe session id.
   const known = await orderFetch<{ _id: string; subtotalCents?: number } | null>(
     `*[_type == "fattamanoCheckoutSession" && _id == $id && status == "pending"][0]{ _id, subtotalCents }`,
-    { id: sessionId }
+    { id: orderDocumentId(sessionId) }
   );
   if (!known) {
     return Response.json({ type: 'reject' }, { status: 404 });

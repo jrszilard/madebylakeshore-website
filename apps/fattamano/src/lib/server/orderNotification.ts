@@ -8,6 +8,7 @@ export interface OrderNotification {
   sessionId: string;
   amountTotalCents: number;
   currency: string;
+  livemode: boolean;
   items: NotificationOrderItem[];
 }
 
@@ -48,8 +49,10 @@ export function buildOrderEmail(order: OrderNotification) {
   const lines = order.items.map(
     (item) => `${item.qty} × ${item.title} — ${money(item.qty * item.unitAmountCents, order.currency)}`,
   );
-  const dashboardUrl = 'https://dashboard.stripe.com/payments';
-  const subject = `New fattamano order — ${money(order.amountTotalCents, order.currency)}`;
+  const dashboardUrl = order.livemode
+    ? 'https://dashboard.stripe.com/payments'
+    : 'https://dashboard.stripe.com/test/payments';
+  const subject = `${order.livemode ? '' : '[TEST] '}New fattamano order — ${money(order.amountTotalCents, order.currency)}`;
   const text = [
     'A paid fattamano order is ready to fulfill.',
     '',

@@ -2,8 +2,8 @@ export const prerender = false;
 
 import type { APIRoute } from 'astro';
 import { getStripe } from '../../lib/server/stripe';
-import { sanityWriteFetch, sanityWriteClient } from '../../lib/server/sanityWrite';
-import { orderClient, orderFetch, stockReceiptId } from '../../lib/server/orderStore';
+import { sanityWriteFetch } from '../../lib/server/sanityWrite';
+import { orderClient, orderDocumentId, orderFetch } from '../../lib/server/orderStore';
 import { sendOrderNotification } from '../../lib/server/orderNotification';
 import { analyticsDocument } from '../../lib/analytics/events';
 import { requireServerEnv } from '../../lib/server/env';
@@ -31,69 +31,49 @@ interface OrderDocument {
   items: OrderItem[];
 }
 
-interface StockReceipt {
-  _id: string;
-  _rev: string;
-  applied: boolean;
-}
-
 function isRevisionConflict(error: unknown): boolean {
   const candidate = error as { statusCode?: number; message?: string };
   return candidate?.statusCode === 409 || String(candidate?.message || '').toLowerCase().includes('revision');
 }
 
-async function loadOrder(id: string): Promise<OrderDocument | null> {
+async function loadOrder(checkoutSessionId: string): Promise<OrderDocument | null> {
   return orderFetch<OrderDocument | null>(
     `*[_type == "fattamanoCheckoutSession" && _id == $id][0]{
       _id, _rev, status, paymentStatus, fulfillmentStatus,
       notificationStatus, notificationAttemptedAt, analyticsRecorded,
       items[]{ productId, title, unitAmountCents, qty }
     }`,
-    { id },
+    { id: orderDocumentId(checkoutSessionId) },
   );
 }
 
-async function loadReceipt(id: string): Promise<StockReceipt | null> {
-  return sanityWriteFetch<StockReceipt | null>(
-    `*[_type == "fattamanoStockReceipt" && _id == $id][0]{ _id, _rev, applied }`,
-    { id },
-  );
-}
+/**
+ * Products, paid state, and the purchase aggregate all share one dataset and
+ * one revision-guarded transaction. A duplicate Stripe delivery can therefore
+ * never decrement stock or count a purchase twice.
+ */
+async function applyPaidOrderOnce(
+  order: OrderDocument,
+  session: any,
+  eventId: string,
+): Promise<OrderDocument> {
+  if (order.paymentStatus === 'paid' && order.analyticsRecorded) return order;
 
-async function applyStockOnce(order: OrderDocument, receipt: StockReceipt): Promise<boolean> {
-  if (receipt.applied) return true;
   const ids = order.items.map((item) => item.productId);
   const rows = await sanityWriteFetch<ProductRow[]>(queries.fattamanoProductsByIds, { ids });
   const changes = planStockDecrements(order.items, rows);
-
-  try {
-    let transaction = sanityWriteClient().transaction();
-    for (const change of changes) {
-      transaction = transaction.patch(change.productId, (patch) =>
-        patch.set({ stock: change.newStock, ...(change.soldOut ? { status: 'sold_out' } : {}) }),
-      );
-    }
-    transaction = transaction.patch(receipt._id, (patch) =>
-      patch.ifRevisionId(receipt._rev).set({ applied: true, appliedAt: new Date().toISOString() }),
-    );
-    await transaction.commit();
-    return true;
-  } catch (error) {
-    if (!isRevisionConflict(error)) throw error;
-    return Boolean((await loadReceipt(receipt._id))?.applied);
-  }
-}
-
-async function markPaidAndRecordPurchase(order: OrderDocument, session: any, eventId: string): Promise<OrderDocument> {
-  if (order.paymentStatus === 'paid' && order.analyticsRecorded) return order;
-
   const now = new Date();
   const aggregate = analyticsDocument({ event: 'purchase_completed' }, now);
-  let transaction = orderClient().transaction();
-  transaction = transaction.createIfNotExists(aggregate);
+
+  let transaction = orderClient().transaction().createIfNotExists(aggregate);
   transaction = transaction.patch(aggregate._id, (patch) =>
     patch.inc({ count: 1 }).set({ updatedAt: now.toISOString() }),
   );
+  for (const change of changes) {
+    transaction = transaction.patch(change.productId, (patch) =>
+      patch.set({ stock: change.newStock, ...(change.soldOut ? { status: 'sold_out' } : {}) }),
+    );
+  }
   transaction = transaction.patch(order._id, (patch) =>
     patch.ifRevisionId(order._rev).set({
       status: 'fulfilled', // legacy: Stripe/stock processing completed.
@@ -113,9 +93,9 @@ async function markPaidAndRecordPurchase(order: OrderDocument, session: any, eve
     if (!isRevisionConflict(error)) throw error;
   }
 
-  const refreshed = await loadOrder(order._id);
+  const refreshed = await loadOrder(session.id);
   if (!refreshed?.analyticsRecorded || refreshed.paymentStatus !== 'paid') {
-    throw new Error('Paid order transition did not complete');
+    throw new Error('Paid order transaction did not complete');
   }
   return refreshed;
 }
@@ -141,6 +121,7 @@ async function notifyMerchant(order: OrderDocument, session: any): Promise<'sent
       sessionId: session.id,
       amountTotalCents: session.amount_total ?? 0,
       currency: session.currency ?? 'usd',
+      livemode: session.livemode === true,
       items: order.items,
     });
     await orderClient()
@@ -180,18 +161,9 @@ export const POST: APIRoute = async ({ request }) => {
 
   try {
     let order = await loadOrder(session.id);
-    const receiptId = stockReceiptId(session.id);
-    const receipt = await loadReceipt(receiptId);
-    if (!order || !receipt) return new Response('order state missing', { status: 500 });
-
-    if (!(await applyStockOnce(order, receipt))) {
-      return new Response('stock update raced; retry', { status: 500 });
-    }
-
-    order = await loadOrder(session.id);
     if (!order) return new Response('order state missing', { status: 500 });
-    order = await markPaidAndRecordPurchase(order, session, event.id);
 
+    order = await applyPaidOrderOnce(order, session, event.id);
     const notification = await notifyMerchant(order, session);
     if (notification !== 'sent') return new Response('notification in progress; retry', { status: 500 });
 

@@ -25,8 +25,8 @@
 ### Privacy and access
 
 6. The shared `production` Sanity dataset is public. `fattamanoCheckoutSession` documents are therefore queryable without a token. They contain no customer PII but reveal order timing, volume, cart contents, and totals.
-7. Sanity dataset ACL is dataset-wide; it cannot hide one document type while keeping public product documents readable. Internal orders must move to a private dataset (or another private store).
-8. Moving orders introduces a cross-dataset idempotency boundary. A minimal public stock receipt is required so product stock and the receipt can still commit atomically while detailed order data stays private.
+7. Sanity dataset ACL is dataset-wide, and this project's plan does not permit private datasets. The compatible token-only mechanism is a dotted document ID, already proven by the backend-only visitor counter.
+8. Orders need deterministic hashed dotted IDs so checkout/shipping/webhook code can locate them without storing the raw Stripe ID in the document ID, while stock and order state remain transactionally atomic.
 
 ### Conversion and customer experience
 
@@ -43,17 +43,15 @@
 
 ## Implementation decisions
 
-- Use a private Sanity dataset named `fattamano-orders` for detailed order and aggregate analytics documents.
-- Keep a minimal `fattamanoStockReceipt` document in public `production`; its hashed ID and applied state contain no cart, total, Stripe ID, or PII. It exists only to preserve atomic stock idempotency.
+- Store orders at `fattamano.order.<sha256(checkout-session-id)>`; Sanity excludes dotted IDs from unauthenticated reads while authenticated Studio/server clients retain access.
+- Store daily aggregates under `fattamano.analytics.*` dotted IDs for the same token-only behavior.
+- Keep product stock, paid order state, and completed-purchase aggregate in one revision-guarded transaction.
 - Send merchant order email through Resend's HTTPS API with an idempotency key derived from the Stripe Checkout Session ID. Never store Resend or Stripe secrets in source.
 - Retry notification failures through Stripe webhook retries; a paid order whose notification is not `sent` continues returning 500 until the notification succeeds.
 - Store `paymentStatus` separately from merchant-editable `fulfillmentStatus` (`new`, `packing`, `shipped`, `cancelled`).
-- Record privacy-conscious daily aggregate funnel counters in the private dataset. Completed purchases are incremented transactionally with the private paid-order transition.
+- Record privacy-conscious daily aggregate funnel counters under token-only dotted IDs. Completed purchases increment in the same transaction that marks the order paid.
 
 ## External prerequisites / deployment gates
 
-- A Sanity project administrator must create private dataset `fattamano-orders`; the current Editor token can list datasets but lacks `sanity.project.datasets/create`.
-- The production Sanity write token must have read/write access to both `production` and `fattamano-orders`.
-- Production needs `SANITY_ORDER_DATASET=fattamano-orders`.
 - Production needs Resend configuration: `RESEND_API_KEY`, `FATTAMANO_ORDER_NOTIFICATION_TO`, and a verified `FATTAMANO_ORDER_NOTIFICATION_FROM`.
-- Existing public `fattamanoCheckoutSession` documents must be migrated, verified in the private dataset, and deleted from `production` before the privacy step is complete.
+- Existing public `fattamanoCheckoutSession` documents must be copied to hashed dotted IDs, verified as invisible through an unauthenticated client, and then deleted before the privacy step is complete.

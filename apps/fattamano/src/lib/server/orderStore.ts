@@ -1,36 +1,22 @@
 import { createHash } from 'node:crypto';
-import { createServerSanityClient } from '@lakeshore/shared-ui/sanity';
-import { requireServerEnv } from './env';
+import { sanityWriteClient, sanityWriteFetch } from './sanityWrite';
 
-let _bundle: ReturnType<typeof createServerSanityClient> | null = null;
-
-export const ORDER_DATASET_ENV = 'SANITY_ORDER_DATASET';
-
-function bundle() {
-  if (!_bundle) {
-    _bundle = createServerSanityClient({
-      projectId: requireServerEnv('PUBLIC_SANITY_PROJECT_ID'),
-      dataset: requireServerEnv(ORDER_DATASET_ENV),
-      token: requireServerEnv('SANITY_WRITE_TOKEN'),
-    });
-  }
-  return _bundle;
-}
-
-export function orderFetch<T = unknown>(query: string, params?: Record<string, unknown>): Promise<T> {
-  return bundle().fetch<T>(query, params);
-}
-
-export function orderClient() {
-  return bundle().client;
+function digest(value: string): string {
+  return createHash('sha256').update(value).digest('hex');
 }
 
 /**
- * The public dataset keeps only this opaque, content-free receipt so stock and
- * idempotency can remain in one Sanity transaction. Detailed order data lives
- * in the private order dataset.
+ * Sanity excludes dotted document IDs from unauthenticated public reads. The
+ * hash also avoids exposing the Stripe Checkout Session id in Studio URLs.
  */
-export function stockReceiptId(checkoutSessionId: string): string {
-  const digest = createHash('sha256').update(checkoutSessionId).digest('hex');
-  return `fattamano-stock-receipt-${digest}`;
+export function orderDocumentId(checkoutSessionId: string): string {
+  return `fattamano.order.${digest(checkoutSessionId)}`;
+}
+
+export function orderFetch<T = unknown>(query: string, params?: Record<string, unknown>): Promise<T> {
+  return sanityWriteFetch<T>(query, params);
+}
+
+export function orderClient() {
+  return sanityWriteClient();
 }

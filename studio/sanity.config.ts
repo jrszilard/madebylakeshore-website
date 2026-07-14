@@ -8,7 +8,6 @@ import { fattamanoOrdersStructure } from './fattamanoOrdersStructure';
 
 const projectId = process.env.SANITY_STUDIO_PROJECT_ID || 'YOUR_PROJECT_ID_HERE';
 const dataset = process.env.SANITY_STUDIO_DATASET || 'production';
-const orderDataset = process.env.SANITY_STUDIO_ORDER_DATASET || 'fattamano-orders';
 
 const isSharedSchema = (t: (typeof schemaTypes)[number]) => t.type !== 'document';
 const isPrivateFattamanoSchema = (name: string) =>
@@ -47,10 +46,10 @@ export default defineConfig([
   },
   {
     name: 'fattamano-orders',
-    title: 'fattamano Orders (private)',
+    title: 'fattamano Orders (internal)',
     basePath: '/fattamano-orders',
     projectId,
-    dataset: orderDataset,
+    dataset,
     plugins: [structureTool({ structure: fattamanoOrdersStructure }), visionTool()],
     schema: { types: fattamanoOrderSchemaTypes },
   },
