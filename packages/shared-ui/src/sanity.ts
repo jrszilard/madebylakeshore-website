@@ -318,6 +318,21 @@ export const queries = {
   _id, title, coverImage, excerpt, type, substackUrl, publishedDate
 }`,
 
+  // DesignAndOtherStories — Journal (on-site art-process blog)
+  allDaosJournalPosts: `*[_type == "daosJournalPost" && defined(publishedAt)] | order(publishedAt desc) {
+  _id, title, slug, excerpt, coverImage, publishedAt, categories, featured
+}`,
+
+  daosJournalPostBySlug: `*[_type == "daosJournalPost" && slug.current == $slug][0] {
+  _id, title, slug, excerpt, coverImage, body, publishedAt, categories, seo,
+  "relatedWork": relatedWork[]->{
+    _type, title, slug, price,
+    "image": coalesce(images[0], coverImage, featuredImage)
+  }
+}`,
+
+  allDaosJournalSlugs: `*[_type == "daosJournalPost" && defined(publishedAt)].slug.current`,
+
   // DesignAndOtherStories — Events
   upcomingEvents: `*[_type == "event" && startDate >= now()] | order(startDate asc) {
   _id, title, slug, eventType, startDate, endDate, location, coverImage, featured

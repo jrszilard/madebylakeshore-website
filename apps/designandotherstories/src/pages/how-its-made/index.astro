@@ -1,0 +1,76 @@
+---
+export const prerender = false;
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { sanityClient, urlFor, queries } from '../../lib/sanity';
+
+const posts = (await sanityClient.fetch(queries.allDaosJournalPosts)) ?? [];
+
+function formatDate(value: string): string {
+  return new Date(value).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    timeZone: 'UTC',
+  });
+}
+
+const cards = posts.map((post: any) => ({
+  slug: post.slug?.current ?? '',
+  title: post.title,
+  excerpt: post.excerpt ?? '',
+  date: post.publishedAt ? formatDate(post.publishedAt) : '',
+  categories: post.categories ?? [],
+  cover: post.coverImage?.asset ? urlFor(post.coverImage).width(900).url() : null,
+  coverAlt: post.coverImage?.alt ?? post.title,
+}));
+---
+
+<style is:global>
+  body { background-color: #DED9E4; }
+</style>
+
+<BaseLayout
+  title="How It's Made"
+  description="Notes from the studio — how the work gets made. Process, materials, and the story behind each piece from Design & Other Stories."
+  navTheme="dark"
+>
+  <section class="py-20 md:py-28">
+    <div class="container-art">
+      <header class="max-w-2xl mb-16">
+        <h1 class="font-display italic text-display md:text-display-lg text-daos-ink leading-tight mb-6">How It's Made</h1>
+        <p class="font-body text-lg text-daos-charcoal leading-relaxed">
+          Process, materials, and the story behind each piece.
+        </p>
+      </header>
+
+      {cards.length === 0 ? (
+        <p class="font-body text-daos-charcoal">No posts yet — check back soon.</p>
+      ) : (
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-14">
+          {cards.map((post: any) => (
+            <a href={`/how-its-made/${post.slug}`} class="group block">
+              {post.cover && (
+                <div class="overflow-hidden mb-5 bg-daos-warm">
+                  <img
+                    src={post.cover}
+                    alt={post.coverAlt}
+                    class="w-full aspect-[4/3] object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                    loading="lazy"
+                  />
+                </div>
+              )}
+              {post.date && (
+                <p class="font-sans text-xs uppercase tracking-widest text-daos-clay mb-3">{post.date}</p>
+              )}
+              <h2 class="font-display text-2xl text-daos-ink leading-snug mb-3 group-hover:text-daos-terracotta transition-colors">{post.title}</h2>
+              {post.excerpt && (
+                <p class="font-body text-daos-charcoal leading-relaxed line-clamp-3">{post.excerpt}</p>
+              )}
+            </a>
+          ))}
+        </div>
+      )}
+    </div>
+  </section>
+</BaseLayout>

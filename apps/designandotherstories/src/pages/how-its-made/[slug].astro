@@ -1,0 +1,143 @@
+---
+export const prerender = false;
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PortableText from '../../components/PortableText.astro';
+import { sanityClient, urlFor, queries } from '../../lib/sanity';
+import { SUBSTACK_URL } from '../../lib/config';
+
+const { slug } = Astro.params;
+const post = await sanityClient.fetch(queries.daosJournalPostBySlug, { slug });
+if (!post) return Astro.redirect('/how-its-made');
+
+function formatDate(value: string): string {
+  return new Date(value).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    timeZone: 'UTC',
+  });
+}
+
+const publishedDate = post.publishedAt ? formatDate(post.publishedAt) : '';
+const coverUrl = post.coverImage?.asset ? urlFor(post.coverImage).width(1600).url() : null;
+const coverAlt = post.coverImage?.alt ?? post.title;
+
+// "Shop this piece" cards from the referenced artwork / products.
+const relatedWork = (post.relatedWork ?? [])
+  .filter((w: any) => w && w.slug?.current)
+  .map((w: any) => {
+    const isProduct = w._type === 'shopProduct';
+    return {
+      title: w.title,
+      href: isProduct ? `/shop/${w.slug.current}` : `/gallery/${w.slug.current}`,
+      cta: isProduct ? 'Shop this piece' : 'See in the gallery',
+      price: isProduct && typeof w.price === 'number'
+        ? `$${w.price.toLocaleString(undefined, { minimumFractionDigits: 0 })}`
+        : null,
+      image: w.image?.asset ? urlFor(w.image).width(400).url() : null,
+    };
+  });
+
+// SEO
+const canonical = new URL(`/how-its-made/${slug}`, Astro.site ?? Astro.url).href;
+const seoTitle = post.seo?.metaTitle ?? post.title;
+const seoDescription = post.seo?.metaDescription ?? post.excerpt ?? undefined;
+const ogImage = post.seo?.ogImage?.asset
+  ? urlFor(post.seo.ogImage).width(1200).height(630).url()
+  : (post.coverImage?.asset ? urlFor(post.coverImage).width(1200).url() : undefined);
+
+const jsonLd: Record<string, unknown> = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: post.title,
+  mainEntityOfPage: canonical,
+  author: { '@type': 'Organization', name: 'Design & Other Stories' },
+  publisher: { '@type': 'Organization', name: 'Design & Other Stories' },
+  ...(post.publishedAt ? { datePublished: post.publishedAt } : {}),
+  ...(seoDescription ? { description: seoDescription } : {}),
+  ...(ogImage ? { image: ogImage } : {}),
+};
+---
+
+<style is:global>
+  body { background-color: #DED9E4; }
+</style>
+
+<BaseLayout
+  title={seoTitle}
+  description={seoDescription}
+  navTheme="dark"
+  canonicalURL={canonical}
+  ogType="article"
+  ogImage={ogImage}
+  publishedTime={post.publishedAt}
+  jsonLd={jsonLd}
+>
+  <article class="py-20 md:py-28">
+    <div class="container-art max-w-3xl">
+      <a href="/how-its-made" class="inline-flex items-center gap-1 font-sans text-sm text-daos-charcoal hover:text-daos-ink transition-colors mb-10">
+        &larr; Back to How It's Made
+      </a>
+
+      <header class="mb-10">
+        {publishedDate && (
+          <p class="font-sans text-xs uppercase tracking-widest text-daos-clay mb-4">{publishedDate}</p>
+        )}
+        <h1 class="font-display italic text-display md:text-display-lg text-daos-ink leading-tight mb-6">{post.title}</h1>
+        {post.categories?.length > 0 && (
+          <div class="flex flex-wrap gap-2">
+            {post.categories.map((cat: string) => (
+              <span class="font-sans text-[11px] uppercase tracking-widest text-daos-charcoal border border-daos-warm rounded-full px-3 py-1">{cat}</span>
+            ))}
+          </div>
+        )}
+      </header>
+
+      {coverUrl && (
+        <figure class="mb-12">
+          <img src={coverUrl} alt={coverAlt} class="w-full" />
+          {post.coverImage?.caption && (
+            <figcaption class="font-sans text-xs text-daos-clay mt-2 text-center">{post.coverImage.caption}</figcaption>
+          )}
+        </figure>
+      )}
+
+      {post.body && <PortableText blocks={post.body} />}
+
+      {relatedWork.length > 0 && (
+        <aside class="mt-16 pt-10 border-t border-daos-warm">
+          <h2 class="font-sans text-xs uppercase tracking-widest text-daos-clay mb-6">The finished piece</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            {relatedWork.map((w: any) => (
+              <a href={w.href} class="group flex items-center gap-4">
+                {w.image && (
+                  <img src={w.image} alt={w.title} class="w-24 h-24 object-cover bg-daos-warm flex-shrink-0" loading="lazy" />
+                )}
+                <span class="min-w-0">
+                  <span class="block font-display text-lg text-daos-ink leading-snug group-hover:text-daos-terracotta transition-colors">{w.title}</span>
+                  {w.price && <span class="block font-sans text-sm text-daos-charcoal mt-1">{w.price}</span>}
+                  <span class="block font-sans text-xs uppercase tracking-widest text-daos-terracotta mt-2">{w.cta} &rarr;</span>
+                </span>
+              </a>
+            ))}
+          </div>
+        </aside>
+      )}
+
+      <aside class="mt-16 pt-10 border-t border-daos-warm">
+        <p class="font-body text-daos-charcoal leading-relaxed mb-4">
+          For essays and a monthly letter from the studio, subscribe to the newsletter.
+        </p>
+        <a
+          href={`${SUBSTACK_URL}/subscribe`}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-2 px-6 py-3 border border-daos-ink text-daos-ink font-sans text-sm uppercase tracking-widest hover:bg-daos-ink hover:text-daos-cream transition-colors"
+        >
+          Subscribe on Substack
+        </a>
+      </aside>
+    </div>
+  </article>
+</BaseLayout>

@@ -94,7 +94,7 @@ const workTogetherImageUrl = profile?.workTogetherImage?.asset
 
   <!-- 3. Mediums -->
   {profile?.mediums?.length > 0 && (
-    <section class="py-20 md:py-28">
+    <section class="pt-20 md:pt-28 pb-8 md:pb-10">
       <div class="container-art">
         <h2 class="font-display text-display text-daos-cream leading-tight mb-10" style="font-variation-settings: 'opsz' 96, 'SOFT' 30;">What I Make</h2>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -105,6 +105,15 @@ const workTogetherImageUrl = profile?.workTogetherImage?.asset
       </div>
     </section>
   )}
+
+  <!-- 3b. How It's Made -->
+  <section class="pb-20 md:pb-28">
+    <div class="container-art text-center">
+      <a href="/how-its-made" class="inline-flex items-center gap-2 px-6 py-3 border border-daos-cream/50 text-daos-cream font-sans text-sm uppercase tracking-widest hover:bg-daos-cream/10 transition-colors">
+        See how the work is made &rarr;
+      </a>
+    </div>
+  </section>
 
   <!-- 4. Let's work together -->
   <section class="py-20 md:py-28 bg-daos-thread">

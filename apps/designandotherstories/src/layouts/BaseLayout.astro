@@ -12,6 +12,16 @@ interface Props {
   description?: string;
   noindex?: boolean;
   navTheme?: 'dark' | 'light';
+  /** Absolute canonical URL. Defaults to the current page URL. */
+  canonicalURL?: string;
+  /** Absolute URL for the social share image. */
+  ogImage?: string;
+  /** Open Graph type. 'website' for most pages, 'article' for Journal posts. */
+  ogType?: 'website' | 'article';
+  /** ISO date for article:published_time (Journal posts). */
+  publishedTime?: string;
+  /** JSON-LD structured data object, serialized into a ld+json script tag. */
+  jsonLd?: Record<string, unknown>;
 }
 
 const {
@@ -19,9 +29,17 @@ const {
   description = 'Design & Other Stories is a small studio making literary fiction and traditional art by hand in New Hampshire. Original paintings, drawings, and books — made one piece at a time.',
   noindex = false,
   navTheme = 'light',
+  canonicalURL,
+  ogImage,
+  ogType = 'website',
+  publishedTime,
+  jsonLd,
 } = Astro.props;
 
 const siteTitle = title === 'Home' ? 'Design & Other Stories' : `${title} | Design & Other Stories`;
+
+// Default the canonical to the current path, resolved against the configured site.
+const canonical = canonicalURL ?? new URL(Astro.url.pathname, Astro.site ?? Astro.url).href;
 
 let freeShippingThresholdCents: number | null = null;
 try {
@@ -39,9 +57,25 @@ try {
     <meta name="description" content={description} />
     {noindex && <meta name="robots" content="noindex, nofollow" />}
 
+    <link rel="canonical" href={canonical} />
+
     <meta property="og:title" content={siteTitle} />
     <meta property="og:description" content={description} />
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:url" content={canonical} />
+    {ogImage && <meta property="og:image" content={ogImage} />}
+    {ogType === 'article' && publishedTime && (
+      <meta property="article:published_time" content={publishedTime} />
+    )}
+
+    <meta name="twitter:card" content={ogImage ? 'summary_large_image' : 'summary'} />
+    <meta name="twitter:title" content={siteTitle} />
+    <meta name="twitter:description" content={description} />
+    {ogImage && <meta name="twitter:image" content={ogImage} />}
+
+    {jsonLd && (
+      <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+    )}
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
