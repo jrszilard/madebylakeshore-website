@@ -38,11 +38,16 @@ const usShippingRateCents = usZone?.rateCents;
 const freeShippingThresholdCents = usZone?.freeShippingThresholdCents;
 
 const images: SanityImageLike[] = full?.images ?? [];
-const heroUrl = images[0] ? urlFor(images[0])?.width(1400).url() ?? null : null;
-const thumbnailUrls = images
-  .slice(1)
-  .map((img) => urlFor(img)?.width(400).height(400).fit('crop').url())
-  .filter((url): url is string => Boolean(url));
+const galleryImages = images
+  .map((img, index) => ({
+    full: urlFor(img)?.width(1400).url() ?? null,
+    thumb: urlFor(img)?.width(400).height(400).fit('crop').url() ?? null,
+    alt: img.alt || `${full?.title ?? 'product'} — photo ${index + 1}`,
+  }))
+  .filter((entry): entry is { full: string; thumb: string; alt: string } =>
+    Boolean(entry.full && entry.thumb),
+  );
+const heroUrl = galleryImages[0]?.full ?? null;
 const priceLabel = formatPrice(full?.priceCents, full?.priceDisplayOverride);
 function statusOverlay(status: FattamanoProduct['status']): string {
   if (status === 'sold_out') return 'sold out / already acquired';
@@ -80,23 +85,56 @@ const jsonLd = [
       <div>
         {heroUrl && (
           <img
+            id="product-hero-image"
             src={heroUrl}
-            alt={images[0]?.alt || full.title}
+            alt={galleryImages[0]?.alt || full.title}
             class="w-full border-2 border-ft-ink"
           />
         )}
-        {thumbnailUrls.length > 0 && (
-          <div class="grid grid-cols-4 gap-3 mt-3">
-            {thumbnailUrls.map((thumbUrl) => (
-              <img
-                src={thumbUrl}
-                alt=""
-                class="w-full aspect-square object-cover border-2 border-ft-ink"
-                loading="lazy"
-              />
+        {galleryImages.length > 1 && (
+          <div class="grid grid-cols-4 gap-3 mt-3" data-product-gallery>
+            {galleryImages.map((entry, index) => (
+              <button
+                type="button"
+                data-gallery-thumb
+                data-full={entry.full}
+                data-alt={entry.alt}
+                aria-label={`Show photo ${index + 1}: ${entry.alt}`}
+                aria-pressed={index === 0 ? 'true' : 'false'}
+                class:list={[
+                  'border-2 p-0 transition-colors hover:border-ft-shout focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ft-shout',
+                  index === 0 ? 'border-ft-shout' : 'border-ft-ink',
+                ]}
+              >
+                <img
+                  src={entry.thumb}
+                  alt=""
+                  class="block w-full aspect-square object-cover"
+                  loading="lazy"
+                />
+              </button>
             ))}
           </div>
         )}
+        <script>
+          const hero = document.getElementById('product-hero-image') as HTMLImageElement | null;
+          const thumbs = Array.from(
+            document.querySelectorAll<HTMLButtonElement>('[data-gallery-thumb]'),
+          );
+          for (const thumb of thumbs) {
+            thumb.addEventListener('click', () => {
+              if (!hero || !thumb.dataset.full) return;
+              hero.src = thumb.dataset.full;
+              hero.alt = thumb.dataset.alt || hero.alt;
+              for (const other of thumbs) {
+                const active = other === thumb;
+                other.setAttribute('aria-pressed', active ? 'true' : 'false');
+                other.classList.toggle('border-ft-shout', active);
+                other.classList.toggle('border-ft-ink', !active);
+              }
+            });
+          }
+        </script>
       </div>
 
       <div class="flex flex-col">
