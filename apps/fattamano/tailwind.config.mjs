@@ -18,9 +18,9 @@ export default {
         }
       },
       fontFamily: {
-        'display': ['"Space Grotesk"', 'system-ui', 'sans-serif'],
-        'body': ['"Inter"', 'system-ui', 'sans-serif'],
-        'hand': ['"Caveat"', 'cursive'],
+        'display': ['"Space Grotesk Variable"', '"Space Grotesk"', 'system-ui', 'sans-serif'],
+        'body': ['"Inter Variable"', '"Inter"', 'system-ui', 'sans-serif'],
+        'hand': ['"Caveat Variable"', '"Caveat"', 'cursive'],
       },
       fontSize: {
         'huge': ['5rem', { lineHeight: '0.95', letterSpacing: '-0.04em' }],

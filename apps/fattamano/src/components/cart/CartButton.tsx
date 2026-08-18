@@ -6,7 +6,7 @@ export default function CartButton() {
     <button
       type="button"
       onClick={() => window.dispatchEvent(new CustomEvent('ft-cart-open'))}
-      className="relative font-body text-sm text-ft-ink hover:text-ft-shout"
+      className="border-2 border-ft-ink bg-ft-paper px-3 py-1.5 font-mono text-xs uppercase tracking-[0.14em] text-ft-ink shadow-[3px_3px_0_#1A1A1A] transition-all hover:-translate-y-0.5 hover:text-ft-shout hover:shadow-[4px_4px_0_#1A1A1A] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ft-shout"
       aria-label={`Cart, ${count} item${count === 1 ? '' : 's'}`}
     >
       cart{count > 0 ? ` (${count})` : ''}

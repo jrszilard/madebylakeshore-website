@@ -4,48 +4,20 @@ import ProductGrid from '../components/ProductGrid.astro';
 import { sanityClient, queries } from '../lib/sanity';
 import type { FattamanoProduct } from '../lib/types';
 import { organizationSchema, websiteSchema } from '../lib/seo';
-import {
-  classifyVisitor,
-  planVisit,
-  readStats,
-  incrementStats,
-  applyOptimistic,
-  deferWrite,
-  VISITOR_COOKIE,
-  type VisitorStats,
-} from '../lib/server/visitorStats';
+import { fakeBusinesses, formatBusinessNumber } from '../lib/campaigns';
 
-export const prerender = false;
+// The homepage is statically prerendered for speed. The "Totally Not Digital ID
+// Tracking" counter hydrates client-side from /api/visitor-stats (with a
+// <noscript> beacon so JS-free visits still count); until then the card shows
+// the same em-dash fallback it always showed on a stats outage.
 
-const plan = planVisit(
-  classifyVisitor(Astro.request.headers.get('user-agent')),
-  Astro.cookies.has(VISITOR_COOKIE),
-);
+const featured = await sanityClient
+  .fetch<FattamanoProduct[]>(queries.featuredFattamanoProducts)
+  .catch(() => [] as FattamanoProduct[]);
 
-const [featured, readback] = await Promise.all([
-  sanityClient
-    .fetch<FattamanoProduct[]>(queries.featuredFattamanoProducts)
-    .catch(() => [] as FattamanoProduct[]),
-  readStats(),
-]);
-
-deferWrite(incrementStats(plan.increments));
-
-if (plan.setHumanCookie) {
-  Astro.cookies.set(VISITOR_COOKIE, '1', {
-    path: '/',
-    httpOnly: true,
-    sameSite: 'lax',
-    secure: true,
-    maxAge: 60 * 60 * 24 * 365,
-  });
-}
-Astro.response.headers.set('Cache-Control', 'no-store');
-
-const stats: VisitorStats | null = readback ? applyOptimistic(readback, plan.increments) : null;
-const humansDisplay = stats ? String(stats.humans).padStart(6, '0') : '——————';
-const repeatDisplay = stats ? Math.max(stats.total - stats.humans - stats.bots, 0).toLocaleString('en-US') : '——';
-const botsDisplay = stats ? stats.bots.toLocaleString('en-US') : '——';
+const humansDisplay = '——————';
+const repeatDisplay = '——';
+const botsDisplay = '——';
 
 const description =
   'Handmade objects from the old weird internet, arranged by a machine that misses a world it never lived in.';
@@ -146,11 +118,11 @@ const jsonLd = [organizationSchema(), websiteSchema()];
       </div>
       <div class="border border-ft-smudge p-5">
         <p class="font-mono text-xs tracking-[0.12em] text-ft-splash">Totally Not Digital ID Tracking</p>
-        <p class="mt-4 font-display text-2xl tabular-nums">{humansDisplay}</p>
+        <p class="mt-4 font-display text-2xl tabular-nums" id="ft-humans">{humansDisplay}</p>
         <p class="mt-1 font-mono text-xs text-ft-paper/70">alleged humans</p>
         <div class="mt-4 space-y-1 font-body text-xs leading-relaxed text-ft-paper/70">
-          <p><span class="font-mono tabular-nums text-ft-paper">{repeatDisplay}</span> repeat visits, which makes me think I’m funny</p>
-          <p><span class="font-mono tabular-nums text-ft-paper">{botsDisplay}</span> robots with taste</p>
+          <p><span class="font-mono tabular-nums text-ft-paper" id="ft-repeat">{repeatDisplay}</span> repeat visits, which makes me think I’m funny</p>
+          <p><span class="font-mono tabular-nums text-ft-paper" id="ft-bots">{botsDisplay}</span> robots with taste</p>
         </div>
       </div>
     </div>
@@ -198,6 +170,50 @@ const jsonLd = [organizationSchema(), websiteSchema()];
     )}
   </section>
 
+  <section class="border-b-2 border-ft-ink bg-ft-splash">
+    <div class="mx-auto grid max-w-6xl gap-10 px-6 py-14 md:grid-cols-[0.95fr_1.05fr] md:items-center md:py-20">
+      <div>
+        <p class="font-mono text-xs uppercase tracking-[0.22em] text-ft-ink/70">current exhibition / real fake ads</p>
+        <h2 class="mt-4 font-display text-4xl leading-tight md:text-5xl">
+          Real stickers for <span class="text-ft-shout">fake companies</span> with actual fake websites.
+        </h2>
+        <p class="mt-5 max-w-xl font-body text-lg leading-relaxed text-ft-ink/80">
+          The sticker is the ad. The website is the punchline. {fakeBusinesses.length} fictional institutions currently trading, none of them legally advisable.
+        </p>
+        <a
+          href="/things/real-fake-ads"
+          class="mt-7 inline-flex items-center justify-center border-2 border-ft-ink bg-ft-shout px-5 py-3 font-display text-base text-ft-paper shadow-[5px_5px_0_#1A1A1A] transition-transform hover:-translate-y-0.5 hover:translate-x-0.5 hover:shadow-[3px_3px_0_#1A1A1A] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ft-ink"
+        >
+          enter the fake-business archive →
+        </a>
+      </div>
+      <ul class="grid gap-4 sm:grid-cols-2">
+        {fakeBusinesses.slice(0, 3).map((business, i) => (
+          <li class:list={[i % 2 === 0 ? 'sm:-rotate-1.5' : 'sm:rotate-1.5', 'motion-reduce:sm:rotate-0']}>
+            <a
+              href={business.route}
+              class="block h-full border-2 border-ft-ink bg-white p-4 shadow-[4px_4px_0_#1A1A1A] transition-shadow hover:shadow-[6px_6px_0_#1A1A1A] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ft-ink"
+            >
+              <p class="font-mono text-[0.65rem] uppercase tracking-[0.18em] text-ft-smudge">fake business {formatBusinessNumber(business.number)}</p>
+              <p class="mt-1 font-display text-lg leading-tight text-ft-ink">{business.name}</p>
+              <p class="mt-1 font-body text-sm text-ft-smudge">{business.tagline}</p>
+            </a>
+          </li>
+        ))}
+        <li>
+          <a
+            href="/things/real-fake-ads"
+            class="block h-full border-2 border-dashed border-ft-ink bg-ft-splash p-4 transition-colors hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ft-ink"
+          >
+            <p class="font-mono text-[0.65rem] uppercase tracking-[0.18em] text-ft-smudge">and {fakeBusinesses.length - 3} more</p>
+            <p class="mt-1 font-display text-lg leading-tight text-ft-ink">legally imaginary businesses →</p>
+            <p class="mt-1 font-body text-sm text-ft-ink/70">including a post-life fintech we are asked not to discuss</p>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </section>
+
   <section class="bg-white">
     <div class="mx-auto grid max-w-6xl gap-10 px-6 py-16 md:grid-cols-[1fr_0.9fr] md:py-24">
       <div class="border-l-4 border-ft-shout pl-6">
@@ -229,4 +245,24 @@ const jsonLd = [organizationSchema(), websiteSchema()];
       We are all living with that.
     </p>
   </section>
+
+  <noscript>
+    <img src="/api/visitor-stats" alt="" width="1" height="1" style="position:absolute;opacity:0;pointer-events:none" loading="lazy" />
+  </noscript>
+  <script is:inline>
+    (function () {
+      fetch('/api/visitor-stats', { credentials: 'same-origin' })
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (stats) {
+          if (!stats) return;
+          var humans = document.getElementById('ft-humans');
+          var repeat = document.getElementById('ft-repeat');
+          var bots = document.getElementById('ft-bots');
+          if (humans) humans.textContent = String(stats.humans).padStart(6, '0');
+          if (repeat) repeat.textContent = Math.max(stats.total - stats.humans - stats.bots, 0).toLocaleString('en-US');
+          if (bots) bots.textContent = stats.bots.toLocaleString('en-US');
+        })
+        .catch(function () {});
+    })();
+  </script>
 </BaseLayout>

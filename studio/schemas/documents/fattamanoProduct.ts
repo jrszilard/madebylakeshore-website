@@ -1,4 +1,7 @@
 import { defineType, defineField } from 'sanity';
+// Campaign options come from the fattamano app's registry so Studio can never
+// offer a fake business the site doesn't know about.
+import { fakeBusinesses } from '../../../apps/fattamano/src/lib/campaigns';
 
 export default defineType({
   name: 'fattamanoProduct',
@@ -52,6 +55,20 @@ export default defineType({
         layout: 'radio',
       },
       validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'campaign',
+      title: 'Real Fake Ads campaign',
+      type: 'string',
+      description:
+        'The fake business this object advertises. Adds the acquisition note and fake-site link on the product page. Leave empty for non-campaign objects.',
+      options: {
+        list: fakeBusinesses.map((b) => ({
+          title: `${b.name} — ${b.route}`,
+          value: b.route.replace(/^\//, ''),
+        })),
+        layout: 'dropdown',
+      },
     }),
     defineField({
       name: 'priceCents',

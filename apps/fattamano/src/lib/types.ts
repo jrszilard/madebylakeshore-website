@@ -23,6 +23,8 @@ export interface FattamanoProduct {
   tagline?: string;
   images?: SanityImageLike[];
   category: string;
+  /** Real Fake Ads campaign slug (bare, e.g. 'wewantdeadpeople') this object advertises. */
+  campaign?: string;
   priceCents?: number;
   priceDisplayOverride?: string;
   buyUrl?: string;

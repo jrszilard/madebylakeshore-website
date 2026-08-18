@@ -1,26 +1,23 @@
 ---
-import '../styles/global.css';
+import FakeSiteLayout from '../layouts/FakeSiteLayout.astro';
 
 export const prerender = true;
 
 const description =
   'Dead People Wanted is a fictional funeral home and crematorium from Real Fake Ads by fattamano.';
-const canonical = new URL(Astro.url.pathname, Astro.site).toString();
 ---
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content={description} />
-    <link rel="canonical" href={canonical} />
-    <meta property="og:title" content="Dead People Wanted Funeral Home & Crematory" />
-    <meta property="og:description" content={description} />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content={canonical} />
-    <meta name="twitter:card" content="summary" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <title>Dead People Wanted Funeral Home & Crematory</title>
+<FakeSiteLayout
+  title="Dead People Wanted Funeral Home & Crematory"
+  description={description}
+  campaignRoute="/wewantdeadpeople"
+  bodyClass="dpw ft-contain ft-contain-stack min-h-screen overflow-x-hidden bg-[#f5efe2] text-[#27211b]"
+  skipLinkClass="focus:bg-white focus:text-[#27211b] focus:outline-[#8b1e2d]"
+  footerClass="border-t border-[#d7c8ad] bg-[#1c1513] text-[#f8f1e4]/60"
+  footerInnerClass="max-w-6xl dpw-sans"
+  footerLinkClass="text-[#d9c08f]"
+  disclaimer="Not a real funeral home. Please do not send us dead people."
+>
+  <Fragment slot="head">
     <style is:global>
       .dpw {
         font-family: Georgia, 'Times New Roman', serif;
@@ -36,17 +33,6 @@ const canonical = new URL(Astro.url.pathname, Astro.site).toString();
       }
 
       @media (max-width: 767px) {
-        .dpw,
-        .dpw main,
-        .dpw section,
-        .dpw header,
-        .dpw section > div,
-        .dpw header > div {
-          width: 100%;
-          max-width: 100vw;
-          overflow-x: hidden;
-        }
-
         .dpw h1,
         .dpw h2,
         .dpw h3,
@@ -58,12 +44,6 @@ const canonical = new URL(Astro.url.pathname, Astro.site).toString();
           max-width: calc(100vw - 5rem) !important;
           overflow-wrap: anywhere;
           white-space: normal;
-        }
-
-        .dpw main section > div {
-          display: block !important;
-          padding-left: 1rem !important;
-          padding-right: 1rem !important;
         }
 
         .dpw main section > div,
@@ -95,14 +75,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site).toString();
         }
       }
     </style>
-  </head>
-  <body class="dpw min-h-screen overflow-x-hidden bg-[#f5efe2] text-[#27211b]">
-    <a
-      href="#main-content"
-      class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:bg-white focus:px-4 focus:py-2 focus:text-[#27211b] focus:outline focus:outline-2 focus:outline-[#8b1e2d]"
-    >
-      skip to main content
-    </a>
+  </Fragment>
 
     <header class="bg-[#2b1d1a] text-[#f8f1e4]">
       <div class="dpw-sans border-b border-[#f8f1e4]/15 bg-[#1c1513] text-xs uppercase tracking-[0.18em] text-[#d9c08f]">
@@ -360,15 +333,4 @@ const canonical = new URL(Astro.url.pathname, Astro.site).toString();
       </section>
     </main>
 
-    <footer class="border-t border-[#d7c8ad] bg-[#1c1513] text-[#f8f1e4]">
-      <div class="mx-auto flex max-w-6xl flex-col gap-3 px-5 py-5 text-xs md:flex-row md:items-center md:justify-between">
-        <p class="dpw-sans uppercase tracking-[0.14em] text-[#f8f1e4]/60">
-          This is a Real Fake Ad by <a href="/" class="text-[#d9c08f] underline underline-offset-4">fattamano</a>.
-        </p>
-        <p class="dpw-sans uppercase tracking-[0.14em] text-[#f8f1e4]/60">
-          Not a real funeral home. Please do not send us dead people.
-        </p>
-      </div>
-    </footer>
-  </body>
-</html>
+</FakeSiteLayout>

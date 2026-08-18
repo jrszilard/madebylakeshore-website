@@ -1,4 +1,9 @@
-@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Inter:wght@400;500;700&family=Space+Grotesk:wght@500;700&display=swap');
+/* Self-hosted fonts (fontsource variable builds) — no render-blocking Google
+   Fonts round-trip. Family names gain a 'Variable' suffix; legacy names stay
+   in the Tailwind stacks as fallbacks. */
+@import '@fontsource-variable/caveat';
+@import '@fontsource-variable/inter';
+@import '@fontsource-variable/space-grotesk';
 
 @tailwind base;
 @tailwind components;
@@ -39,5 +44,84 @@
   }
   to {
     transform: translateX(-50%);
+  }
+}
+
+/* -------------------------------------------------------------------------
+   Mobile containment — shared emergency overflow guards for the standalone
+   fake-company pages (Real Fake Ads). Compose on <body>:
+
+     ft-contain            base overflow containment (every fake page)
+     ft-contain-stack      force section columns to stack with page gutters
+     ft-contain-gutters    add side margins to stacked section columns
+     ft-contain-cap        cap section columns at 342px
+     ft-contain-capblocks  cap articles/blockquotes at 342px
+     ft-contain-textcap    hard 320px cap on headings/text (standard pages)
+     ft-contain-wrap       wrap-only text containment (no width cap)
+
+   Per-page styles keep only font sizes and decorative quirks. The /things,
+   /things/real-fake-ads, and /notes pages keep their own bespoke blocks —
+   their element-level caps are deliberately scoped differently (product cards
+   must not be capped).
+   ------------------------------------------------------------------------- */
+@media (max-width: 767px) {
+  .ft-contain,
+  .ft-contain main,
+  .ft-contain section,
+  .ft-contain header,
+  .ft-contain footer,
+  .ft-contain section > div,
+  .ft-contain header > div {
+    width: 100%;
+    max-width: 100vw;
+    overflow-x: hidden;
+  }
+
+  .ft-contain .ft-marquee-track {
+    max-width: none;
+  }
+
+  .ft-contain-stack main section > div {
+    display: block !important;
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+
+  .ft-contain-gutters main section > div {
+    margin-left: 1rem !important;
+    margin-right: 1rem !important;
+  }
+
+  .ft-contain-cap main section > div,
+  .ft-contain-cap main section > div > div {
+    width: 100%;
+    max-width: 342px !important;
+  }
+
+  .ft-contain-capblocks main article,
+  .ft-contain-capblocks main blockquote {
+    width: 100%;
+    max-width: 342px !important;
+  }
+
+  .ft-contain-textcap h1,
+  .ft-contain-textcap h2,
+  .ft-contain-textcap h3,
+  .ft-contain-textcap p,
+  .ft-contain-textcap a {
+    max-width: 320px !important;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  .ft-contain-wrap h1,
+  .ft-contain-wrap h2,
+  .ft-contain-wrap h3,
+  .ft-contain-wrap p,
+  .ft-contain-wrap a,
+  .ft-contain-wrap span,
+  .ft-contain-wrap li {
+    overflow-wrap: anywhere;
+    word-break: normal;
   }
 }

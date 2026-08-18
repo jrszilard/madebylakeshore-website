@@ -1,7 +1,28 @@
 ---
+import { fakeBusinesses } from '../lib/campaigns';
 const year = new Date().getFullYear();
 ---
 <footer class="border-t-2 border-ft-ink bg-ft-paper mt-24">
+  <div class="max-w-6xl mx-auto px-6 pt-10">
+    <nav aria-label="Fake business directory" class="border-2 border-ft-ink bg-white p-5 shadow-[6px_6px_0_#1A1A1A]">
+      <div class="flex flex-wrap items-baseline justify-between gap-2">
+        <p class="font-mono text-xs uppercase tracking-[0.22em] text-ft-smudge">fake business directory</p>
+        <a href="/things/real-fake-ads" class="font-mono text-xs uppercase tracking-[0.16em] text-ft-ink underline decoration-ft-splash decoration-2 underline-offset-4 hover:text-ft-shout">full archive →</a>
+      </div>
+      <ul class="mt-4 flex flex-wrap gap-x-5 gap-y-2 font-body text-sm text-ft-ink">
+        {fakeBusinesses.map((business) => (
+          <li>
+            <a href={business.route} class="underline decoration-ft-splash decoration-2 underline-offset-4 hover:text-ft-shout">
+              {business.name}
+            </a>
+          </li>
+        ))}
+      </ul>
+      <p class="mt-4 border-t border-dashed border-ft-smudge pt-3 font-mono text-[0.65rem] uppercase tracking-[0.16em] text-ft-smudge">
+        all companies fictional / all links functional / all sales regrettably real
+      </p>
+    </nav>
+  </div>
   <div class="max-w-6xl mx-auto px-6 py-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-3 text-sm text-ft-smudge">
     <p>
       <span class="font-hand text-ft-ink text-base">fatto a mano</span> &mdash; made by hand, sometimes well

@@ -26,7 +26,7 @@ const disabled = status === 'sold_out' || status === 'coming_soon';
 const href = disabled ? null : (buyUrl || mailtoLink || null);
 ---
 {disabled ? (
-  <span class="inline-block bg-ft-smudge text-ft-paper font-display px-6 py-3 text-lg cursor-not-allowed">
+  <span class="inline-block cursor-not-allowed border-2 border-ft-ink bg-ft-smudge px-6 py-3 font-display text-lg text-ft-paper">
     {label}
   </span>
 ) : href ? (
@@ -34,12 +34,12 @@ const href = disabled ? null : (buyUrl || mailtoLink || null);
     href={href}
     target={href.startsWith('mailto:') ? '_self' : '_blank'}
     rel={href.startsWith('mailto:') ? undefined : 'noopener noreferrer'}
-    class="inline-block bg-ft-shout text-ft-paper font-display px-6 py-3 text-lg hover:bg-ft-ink transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-ft-ink focus-visible:outline-offset-2"
+    class="inline-flex items-center justify-center border-2 border-ft-ink bg-ft-shout px-6 py-3 font-display text-lg text-ft-paper shadow-[5px_5px_0_#1A1A1A] transition-transform hover:-translate-y-0.5 hover:translate-x-0.5 hover:shadow-[3px_3px_0_#1A1A1A] focus-visible:outline focus-visible:outline-2 focus-visible:outline-ft-ink focus-visible:outline-offset-2"
   >
     {label}
   </a>
 ) : (
-  <span class="inline-block bg-ft-smudge text-ft-paper font-display px-6 py-3 text-lg">
+  <span class="inline-block border-2 border-dashed border-ft-smudge px-6 py-3 font-display text-lg text-ft-smudge">
     no link yet
   </span>
 )}

@@ -29,7 +29,7 @@ export default function AddToCartButton({ item, initialAvailable }: Props) {
 
   if (!available) {
     return (
-      <span className="inline-block bg-ft-smudge text-ft-paper font-display px-6 py-3 text-lg">
+      <span className="inline-block cursor-not-allowed border-2 border-ft-ink bg-ft-smudge px-6 py-3 font-display text-lg text-ft-paper">
         sold out
       </span>
     );

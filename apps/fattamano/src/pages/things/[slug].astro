@@ -7,6 +7,7 @@ import { sanityClient, queries, urlFor } from '../../lib/sanity';
 import { formatPrice } from '../../lib/format';
 import type { FattamanoProduct, FattamanoSettings, SanityImageLike } from '../../lib/types';
 import { breadcrumbSchema, productSchema } from '../../lib/seo';
+import { getCampaignByRoute } from '../../lib/campaigns';
 
 export const prerender = true;
 
@@ -61,7 +62,9 @@ const metaDescription =
   full?.seo?.metaDescription || full?.tagline || `${full?.title} — handmade by fattamano.`;
 
 const ogImagePath = `/api/og?title=${encodeURIComponent(full?.title || '')}&subtitle=${encodeURIComponent(full?.tagline || full?.category || '')}`;
-const isRealFakeAdsProduct = ['dead-people-wanted-sticker', 'samedeck-partners-sticker'].includes(full?.slug?.current);
+// Campaign membership comes from Sanity (fattamanoProduct.campaign) and resolves
+// through the registry. No more hardcoded slug lists.
+const campaign = full?.campaign ? getCampaignByRoute(`/${full.campaign}`) : undefined;
 const liveAvailable = full.status === 'available' && Boolean(full.buyUrl || (full.stock ?? 0) > 0);
 const lowStock = liveAvailable && typeof full.stock === 'number' && full.stock <= 5;
 const related = await sanityClient
@@ -79,7 +82,15 @@ const jsonLd = [
 ---
 <BaseLayout title={metaTitle} description={metaDescription} ogImagePath={ogImagePath} jsonLd={jsonLd}>
   <article class="max-w-6xl mx-auto px-6 py-12">
-    <a href="/things" class="inline-block mb-8 font-body text-sm text-ft-smudge hover:text-ft-shout">← back to things</a>
+    <nav aria-label="Breadcrumb" class="mb-8 font-mono text-xs tracking-wide text-ft-smudge">
+      <a href="/" class="hover:text-ft-shout focus-visible:outline focus-visible:outline-2 focus-visible:outline-ft-shout">~</a>
+      <span aria-hidden="true"> / </span>
+      <a href="/things" class="hover:text-ft-shout focus-visible:outline focus-visible:outline-2 focus-visible:outline-ft-shout">things</a>
+      <span aria-hidden="true"> / </span>
+      <span>{full.category}</span>
+      <span aria-hidden="true"> / </span>
+      <span class="text-ft-ink" aria-current="page">{full.slug.current}</span>
+    </nav>
 
     <div class="grid md:grid-cols-2 gap-10">
       <div>
@@ -192,12 +203,19 @@ const jsonLd = [
           </div>
         )}
 
-        {isRealFakeAdsProduct && (
+        {campaign && (
           <div class="mt-6 border-2 border-ft-ink bg-ft-splash p-5 shadow-[6px_6px_0_#1A1A1A]">
             <p class="font-mono text-xs uppercase tracking-[0.18em] text-ft-smudge">Real Fake Ads acquisition note</p>
-            <p class="mt-3 font-display text-2xl leading-tight">Sticker available. Company unavailable.</p>
-            <p class="mt-2 font-body text-ft-smudge">Put this on a laptop and become difficult to explain. Buy three $4 stickers to unlock free US shipping.</p>
-            <a href="/things/real-fake-ads" class="mt-4 inline-flex font-display text-ft-shout underline decoration-2 underline-offset-4 hover:text-ft-ink">Visit the fake-business archive →</a>
+            <p class="mt-3 font-display text-2xl leading-tight">
+              {full.category === 'sticker' ? 'Sticker available. Company unavailable.' : 'Evidence available. Company unavailable.'}
+            </p>
+            <p class="mt-2 font-body text-ft-smudge">
+              This object advertises {campaign.name}, a business that does not exist. Put it on a laptop and become difficult to explain. Buy three $4 stickers to unlock free US shipping.
+            </p>
+            <div class="mt-4 flex flex-wrap gap-x-5 gap-y-2">
+              <a href={campaign.route} class="inline-flex font-display text-ft-shout underline decoration-2 underline-offset-4 hover:text-ft-ink">Visit {campaign.shortName} HQ (fake) →</a>
+              <a href="/things/real-fake-ads" class="inline-flex font-display text-ft-shout underline decoration-2 underline-offset-4 hover:text-ft-ink">Fake-business archive →</a>
+            </div>
           </div>
         )}
 

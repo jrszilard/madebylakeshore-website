@@ -579,7 +579,7 @@ export const queries = {
   }`,
 
   fattamanoProductBySlug: `*[_type == "fattamanoProduct" && slug.current == $slug][0] {
-    _id, title, slug, tagline, description, images, category, priceCents,
+    _id, title, slug, tagline, description, images, category, campaign, priceCents,
     priceDisplayOverride, buyUrl, status, stock, dateAdded, tags, seo
   }`,
 

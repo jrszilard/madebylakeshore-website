@@ -15,6 +15,15 @@ const usZone = settings?.shippingZones?.find((zone) =>
 );
 const freeShippingThresholdCents = usZone?.freeShippingThresholdCents ?? null;
 
+// Permanent catalog numbers: the full catalog is ordered dateAdded desc, so the
+// oldest object is always No. 001 and new arrivals get new high numbers. Numbers
+// are stable across the homepage/featured/related grids (they rank against the
+// full catalog, not the subset being rendered). Fallback: position in this grid.
+const allProducts = await sanityClient
+  .fetch<FattamanoProduct[]>(queries.allFattamanoProducts)
+  .catch(() => [] as FattamanoProduct[]);
+const catalogNumbers = new Map(allProducts.map((p, i) => [p._id, allProducts.length - i]));
+
 function rotateFor(i: number): 'none' | 'left' | 'right' {
   if (!jitter) return 'none';
   const m = i % 4;
@@ -26,7 +35,7 @@ function rotateFor(i: number): 'none' | 'left' | 'right' {
     <ProductCard
       product={p}
       rotate={rotateFor(i)}
-      catalogNumber={i + 1}
+      catalogNumber={catalogNumbers.get(p._id) ?? i + 1}
       freeShippingThresholdCents={freeShippingThresholdCents}
     />
   ))}

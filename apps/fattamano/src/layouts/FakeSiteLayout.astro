@@ -1,0 +1,105 @@
+---
+/**
+ * FakeSiteLayout — shared shell for Real Fake Ads fake-company pages.
+ *
+ * Owns the boring parts: doctype, head boilerplate, canonical/OG meta, skip link,
+ * and the disclosure footer with the registry-driven reveal block. The fake
+ * company keeps total creative freedom over header/main art direction via the
+ * default slot, and injects its own fonts/containment CSS via the `head` slot.
+ *
+ * The reveal block is the conversion loop: when the campaign registry says a
+ * real product exists for this fake business, the footer grows a
+ * "buy the evidence" link automatically. No product → only the archive link.
+ */
+import '../styles/global.css';
+import { getCampaignByRoute } from '../lib/campaigns';
+
+interface Props {
+  /** <title> and og:title of the fake site (in the fake company's voice). */
+  title: string;
+  /** Meta/OG description. Should admit the company is fictional. */
+  description: string;
+  /** Registry route of this fake business, e.g. '/burialcoin'. */
+  campaignRoute: string;
+  /** body classes: page prefix class + theme background/text. */
+  bodyClass: string;
+  /** Themed focus-visible additions for the skip link (bg/text/outline). */
+  skipLinkClass?: string;
+  skipLinkText?: string;
+  /** footer element theme: border, background, text color. */
+  footerClass: string;
+  /** Inner footer container additions: max-width, font family/weight overrides. */
+  footerInnerClass?: string;
+  /** Accent text class for footer links, e.g. 'text-[#d6a73a]'. */
+  footerLinkClass: string;
+  /** The fake company's own disclaimer, e.g. 'Not advice.' */
+  disclaimer: string;
+}
+
+const {
+  title,
+  description,
+  campaignRoute,
+  bodyClass,
+  skipLinkClass = '',
+  skipLinkText = 'skip to main content',
+  footerClass,
+  footerInnerClass = 'max-w-7xl',
+  footerLinkClass,
+  disclaimer,
+} = Astro.props;
+
+const campaign = getCampaignByRoute(campaignRoute);
+const canonical = new URL(Astro.url.pathname, Astro.site).toString();
+const ogImage = new URL('/og-default.png', Astro.site).toString();
+---
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta name="twitter:card" content="summary" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{title}</title>
+    <slot name="head" />
+  </head>
+  <body class={bodyClass}>
+    <a
+      href="#main-content"
+      class:list={[
+        'sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:px-4 focus:py-2 focus:outline focus:outline-2',
+        skipLinkClass,
+      ]}
+    >
+      {skipLinkText}
+    </a>
+    <slot />
+    <footer class={footerClass}>
+      <div class:list={['mx-auto px-5 py-5 text-xs uppercase tracking-[0.14em]', footerInnerClass]}>
+        <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+          <p>
+            This is a Real Fake Ad by <a href="/" class:list={['underline underline-offset-4', footerLinkClass]}>fattamano</a>.
+          </p>
+          <p>{disclaimer}</p>
+        </div>
+        <div class="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-current pt-4">
+          {campaign?.productRoute && campaign.productCta && (
+            <a href={campaign.productRoute} class:list={['font-bold underline decoration-2 underline-offset-4', footerLinkClass]}>
+              {campaign.productCta} →
+            </a>
+          )}
+          <a href="/things/real-fake-ads" class:list={['underline decoration-2 underline-offset-4', footerLinkClass]}>
+            See the other lies →
+          </a>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

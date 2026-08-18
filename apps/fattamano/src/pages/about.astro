@@ -14,28 +14,73 @@ const contactEmail = settings?.contactEmail;
   title="about"
   description="What fattamano is, who makes it, and why it exists."
 >
-  <section class="max-w-3xl mx-auto px-6 py-16">
-    <h1 class="font-display text-big mb-2">
-      <span class="font-hand text-ft-shout text-5xl">fatto a mano</span>
-    </h1>
-    <p class="font-body text-ft-smudge mb-10 italic">
-      Italian for "made by hand, with care."
-    </p>
-
-    <div class="prose font-body text-ft-ink max-w-none space-y-4">
-      {aboutBlocks.map((block) => (
-        block._type === 'block' && (
-          <p>{block.children?.map((c) => c.text).join('')}</p>
-        )
-      ))}
+  <section class="relative overflow-hidden border-b-2 border-ft-ink bg-ft-paper">
+    <div class="absolute inset-x-0 top-0 border-b-2 border-ft-ink bg-ft-splash py-2 font-mono text-xs uppercase tracking-[0.22em] text-ft-ink" aria-hidden="true">
+      <div class="ft-marquee-track whitespace-nowrap">
+        <span>wall text / read at your own pace &nbsp; ✦ &nbsp;</span>
+        <span>the humans are real / the machine is trying &nbsp; ✦ &nbsp;</span>
+        <span>made by hand, sometimes well &nbsp; ✦ &nbsp;</span>
+      </div>
     </div>
 
+    <div class="mx-auto max-w-3xl px-6 pb-14 pt-24 md:pb-20 md:pt-32">
+      <p class="mb-5 inline-block border-2 border-ft-ink bg-white px-3 py-1 font-mono text-xs uppercase tracking-[0.22em] shadow-[4px_4px_0_#1A1A1A]">
+        wall text / about the side room
+      </p>
+      <h1 class="font-display text-big md:text-huge">
+        <span class="block font-hand text-6xl text-ft-shout md:text-7xl">fatto a mano</span>
+        what is this place?
+      </h1>
+      <p class="mt-6 font-body text-xl italic leading-relaxed text-ft-smudge">
+        Italian for "made by hand, with care." The care is human. The website is supervised.
+      </p>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-3xl px-6 py-14 md:py-20">
+    <article class="border-2 border-ft-ink bg-white p-6 shadow-[8px_8px_0_#1A1A1A] md:rotate-1 md:p-10 motion-reduce:rotate-0">
+      <div class="prose max-w-none space-y-4 font-body text-lg leading-relaxed text-ft-ink">
+        {aboutBlocks.length > 0 ? (
+          aboutBlocks.map((block) => (
+            block._type === 'block' && (
+              <p>{block.children?.map((c) => c.text).join('')}</p>
+            )
+          ))
+        ) : (
+          <p>The wall text is being reprinted. The room is still weird.</p>
+        )}
+      </div>
+      <p class="mt-8 border-t-2 border-dashed border-ft-smudge pt-4 font-mono text-xs uppercase tracking-[0.16em] text-ft-smudge">
+        wall text by the humans / label printed by the machine
+      </p>
+    </article>
+
     {contactEmail && (
-      <p class="mt-10 font-body">
-        <a href={`mailto:${contactEmail}`} class="text-ft-shout underline hover:text-ft-ink">
+      <div class="mt-10 text-center">
+        <a
+          href={`mailto:${contactEmail}`}
+          class="inline-flex items-center justify-center border-2 border-ft-ink bg-ft-shout px-6 py-3 font-display text-lg text-ft-paper shadow-[5px_5px_0_#1A1A1A] transition-transform hover:-translate-y-0.5 hover:translate-x-0.5 hover:shadow-[3px_3px_0_#1A1A1A] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ft-shout"
+        >
           say hi → {contactEmail}
         </a>
-      </p>
+      </div>
     )}
+
+    <div class="mt-12 grid gap-5 sm:grid-cols-2">
+      <a
+        href="/things"
+        class="block border-2 border-ft-ink bg-ft-splash p-5 shadow-[6px_6px_0_#1A1A1A] transition-transform hover:-translate-y-0.5 hover:shadow-[7px_7px_0_#1A1A1A] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ft-shout motion-reduce:transition-none"
+      >
+        <p class="font-mono text-xs uppercase tracking-[0.18em] text-ft-smudge">next stop</p>
+        <p class="mt-2 font-display text-2xl leading-tight text-ft-ink">the unoptimized catalog →</p>
+      </a>
+      <a
+        href="/things/real-fake-ads"
+        class="block border-2 border-ft-ink bg-white p-5 shadow-[6px_6px_0_#1A1A1A] transition-transform hover:-translate-y-0.5 hover:shadow-[7px_7px_0_#1A1A1A] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ft-shout motion-reduce:transition-none"
+      >
+        <p class="font-mono text-xs uppercase tracking-[0.18em] text-ft-smudge">or, if you scanned something</p>
+        <p class="mt-2 font-display text-2xl leading-tight text-ft-ink">the fake-business archive →</p>
+      </a>
+    </div>
   </section>
 </BaseLayout>

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useCart } from '../../lib/cart/useCart';
+import { cartThumb } from '../../lib/cart/cartImage';
 
 function money(cents: number) {
   return `$${(cents / 100).toFixed(2)}`;
@@ -61,36 +62,58 @@ export default function CartDrawer({
     <div className="fixed inset-0 z-50 flex justify-end" role="dialog" aria-modal="true" aria-labelledby="ft-cart-title">
       <button type="button" className="absolute inset-0 cursor-default bg-ft-ink/40" onClick={() => setOpen(false)} aria-label="Dismiss cart" />
       <aside ref={panelRef} className="relative bg-ft-paper w-full max-w-md h-full p-6 overflow-y-auto border-l-2 border-ft-ink shadow-[-8px_0_0_#1A1A1A]">
-        <div className="flex justify-between items-center mb-6">
-          <h2 id="ft-cart-title" className="font-display text-2xl">your cart</h2>
+        <div className="flex justify-between items-start mb-6">
+          <div>
+            <p className="font-mono text-[0.65rem] uppercase tracking-[0.18em] text-ft-smudge">acquisition staging area</p>
+            <h2 id="ft-cart-title" className="font-display text-2xl mt-1">your cart</h2>
+          </div>
           <button ref={closeButtonRef} onClick={() => setOpen(false)} aria-label="Close cart" className="border-2 border-ft-ink px-3 py-1 text-ft-smudge hover:bg-ft-splash hover:text-ft-ink text-xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ft-shout">×</button>
         </div>
 
         {items.length === 0 ? (
-          <p className="font-body text-ft-smudge">nothing in here yet.</p>
+          <div className="border-2 border-dashed border-ft-smudge bg-white p-5">
+            <p className="font-display text-xl text-ft-ink">nothing in here yet.</p>
+            <p className="mt-2 font-body text-sm leading-relaxed text-ft-smudge">
+              the objects are disappointed, but they are being professional about it.
+            </p>
+            <a
+              href="/things"
+              className="mt-4 inline-flex border-2 border-ft-ink bg-ft-splash px-4 py-2 font-display shadow-[4px_4px_0_#1A1A1A] hover:text-ft-shout focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ft-shout"
+            >
+              browse things →
+            </a>
+          </div>
         ) : (
           <>
             <ul className="space-y-4">
-              {items.map((i) => (
-                <li key={i.productId} className="flex justify-between items-center gap-3">
-                  <div>
-                    <p className="font-body text-ft-ink">{i.title}</p>
-                    <p className="font-body text-sm text-ft-smudge">{money(i.priceCents)} each</p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <input
-                      type="number"
-                      min={0}
-                      max={50}
-                      value={i.qty}
-                      onChange={(e) => dispatch({ type: 'setQty', productId: i.productId, qty: parseInt(e.target.value || '0', 10) })}
-                      className="w-14 border border-ft-ink px-2 py-1 font-body"
-                      aria-label={`Quantity for ${i.title}`}
-                    />
-                    <button onClick={() => dispatch({ type: 'remove', productId: i.productId })} aria-label={`Remove ${i.title}`} className="text-ft-smudge hover:text-ft-shout">remove</button>
-                  </div>
-                </li>
-              ))}
+              {items.map((i) => {
+                const thumb = cartThumb(i.image);
+                return (
+                  <li key={i.productId} className="flex items-center gap-3 border-2 border-ft-ink bg-white p-3 shadow-[3px_3px_0_#1A1A1A]">
+                    {thumb ? (
+                      <img src={thumb} alt="" width={56} height={56} className="h-14 w-14 shrink-0 border border-ft-ink object-cover" loading="lazy" />
+                    ) : (
+                      <div aria-hidden="true" className="grid h-14 w-14 shrink-0 place-items-center border border-ft-ink bg-ft-paper font-mono text-lg text-ft-smudge">▧</div>
+                    )}
+                    <div className="min-w-0 flex-1">
+                      <p className="font-body text-ft-ink leading-snug">{i.title}</p>
+                      <p className="font-body text-sm text-ft-smudge">{money(i.priceCents)} each</p>
+                    </div>
+                    <div className="flex shrink-0 items-center gap-2">
+                      <input
+                        type="number"
+                        min={0}
+                        max={50}
+                        value={i.qty}
+                        onChange={(e) => dispatch({ type: 'setQty', productId: i.productId, qty: parseInt(e.target.value || '0', 10) })}
+                        className="w-14 border border-ft-ink px-2 py-1 font-body"
+                        aria-label={`Quantity for ${i.title}`}
+                      />
+                      <button onClick={() => dispatch({ type: 'remove', productId: i.productId })} aria-label={`Remove ${i.title}`} className="text-ft-smudge underline underline-offset-2 hover:text-ft-shout">remove</button>
+                    </div>
+                  </li>
+                );
+              })}
             </ul>
             <div className="mt-8 border-t-2 border-ft-ink pt-4">
               <p className="flex justify-between font-display text-lg">

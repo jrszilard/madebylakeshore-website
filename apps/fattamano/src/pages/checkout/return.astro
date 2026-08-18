@@ -2,6 +2,7 @@
 export const prerender = false;
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getStripe } from '../../lib/server/stripe';
+import { fakeBusinessOfTheDay } from '../../lib/campaigns';
 
 const sessionId = Astro.url.searchParams.get('session_id');
 let paid = false;
@@ -11,23 +12,52 @@ if (sessionId) {
     paid = s.payment_status === 'paid' || s.status === 'complete';
   } catch {}
 }
+const waitingBusiness = fakeBusinessOfTheDay();
 ---
 <BaseLayout title={paid ? 'thank you' : 'order status'} description="Order confirmation.">
-  <section class="max-w-2xl mx-auto px-6 py-20 text-center">
+  <section class="max-w-2xl mx-auto px-6 py-16 md:py-24">
     {paid ? (
-      <>
-        <h1 class="font-display text-big">thank you</h1>
-        <p class="font-body text-ft-ink mt-4">your order is in. Wilma will pack it by hand and ship it your way.</p>
-        <a href="/things" class="inline-block mt-8 bg-ft-shout text-ft-paper font-display px-6 py-3 text-lg hover:bg-ft-ink transition-colors">back to things</a>
+      <div class="relative border-2 border-ft-ink bg-white p-8 text-center shadow-[8px_8px_0_#1A1A1A]">
+        <span class="absolute -top-5 right-6 rotate-6 border-4 border-ft-olive bg-ft-paper px-3 py-1 font-display text-2xl uppercase tracking-wide text-ft-olive motion-reduce:rotate-0">
+          paid
+        </span>
+        <p class="font-mono text-xs uppercase tracking-[0.22em] text-ft-smudge">acquisition complete</p>
+        <h1 class="mt-3 font-display text-big">thank you</h1>
+        <p class="mt-4 font-body text-lg leading-relaxed text-ft-ink">
+          your order is in. Wilma will pack it by hand and ship it your way.
+        </p>
+        <p class="mt-2 font-body text-ft-smudge">
+          the machine arranged the receipt but wants it known that it did not help pack.
+        </p>
+        <div class="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
+          <a
+            href="/things"
+            class="inline-flex items-center justify-center border-2 border-ft-ink bg-ft-shout px-5 py-3 font-display text-ft-paper shadow-[5px_5px_0_#1A1A1A] transition-transform hover:-translate-y-0.5 hover:translate-x-0.5 hover:shadow-[3px_3px_0_#1A1A1A] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ft-shout"
+          >
+            adopt another object →
+          </a>
+          <a
+            href={waitingBusiness.route}
+            class="inline-flex items-center justify-center border-2 border-ft-ink bg-ft-paper px-5 py-3 font-display shadow-[5px_5px_0_#1A1A1A] transition-transform hover:-translate-y-0.5 hover:translate-x-0.5 hover:shadow-[3px_3px_0_#1A1A1A] hover:text-ft-shout focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ft-shout"
+          >
+            while Wilma packs: visit {waitingBusiness.name} →
+          </a>
+        </div>
         <script is:inline>
           try { localStorage.removeItem('ft_cart_v1'); } catch (e) {}
         </script>
-      </>
+      </div>
     ) : (
-      <>
-        <h1 class="font-display text-big">still processing...</h1>
-        <p class="font-body text-ft-ink mt-4">if you were charged, you'll get an email receipt. Refresh in a moment.</p>
-      </>
+      <div class="border-2 border-dashed border-ft-ink bg-ft-paper p-8 text-center shadow-[8px_8px_0_#1A1A1A]">
+        <p class="font-mono text-xs uppercase tracking-[0.22em] text-ft-smudge">acquisition status: pending paperwork</p>
+        <h1 class="mt-3 font-display text-big">still processing...</h1>
+        <p class="mt-4 font-body text-ft-ink">
+          if you were charged, you'll get an email receipt. Refresh in a moment.
+        </p>
+        <p class="mt-2 font-body text-ft-smudge">
+          the machine is checking with the other machine.
+        </p>
+      </div>
     )}
   </section>
 </BaseLayout>

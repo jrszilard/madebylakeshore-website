@@ -1,45 +1,36 @@
 ---
-import '../styles/global.css';
+import FakeSiteLayout from '../layouts/FakeSiteLayout.astro';
 
 export const prerender = true;
 
 const description =
   'BurialCoin is a fictional post-life fintech from Real Fake Ads by fattamano. The future of post-life liquidity.';
-const canonical = new URL(Astro.url.pathname, Astro.site).toString();
 ---
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content={description} />
-    <link rel="canonical" href={canonical} />
-    <meta property="og:title" content="BurialCoin — Post-Life Liquidity" />
-    <meta property="og:description" content={description} />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content={canonical} />
-    <meta name="twitter:card" content="summary" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <title>BurialCoin — Post-Life Liquidity</title>
+<FakeSiteLayout
+  title="BurialCoin — Post-Life Liquidity"
+  description={description}
+  campaignRoute="/burialcoin"
+  bodyClass="bc ft-contain ft-contain-stack ft-contain-gutters ft-contain-cap ft-contain-capblocks ft-contain-textcap min-h-screen overflow-x-hidden bg-[#06130d] text-[#f4ead2]"
+  skipLinkClass="focus:bg-[#f4ead2] focus:text-[#06130d] focus:outline-[#d6a73a]"
+  footerClass="border-t border-[#d6a73a]/35 bg-[#020705] text-[#f4ead2]/65"
+  footerLinkClass="text-[#d6a73a]"
+  disclaimer="Not financial advice. Not funeral advice. Not advice."
+>
+  <Fragment slot="head">
     <style is:global>
       .bc { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', monospace; }
       .bc-serif { font-family: Georgia, 'Times New Roman', serif; }
       .bc * { box-sizing: border-box; }
       .bc-coin { background: radial-gradient(circle at 35% 28%, #fff7b0, #d6a73a 38%, #6d4b13 78%); }
       @media (max-width: 767px) {
-        .bc, .bc main, .bc section, .bc header, .bc section > div, .bc header > div { width: 100%; max-width: 100vw; overflow-x: hidden; }
-        .bc main section > div { display: block !important; margin-left: 1rem !important; margin-right: 1rem !important; padding-left: 1rem !important; padding-right: 1rem !important; }
-        .bc h1, .bc h2, .bc h3, .bc p, .bc a { max-width: 320px !important; overflow-wrap: anywhere; word-break: break-word; }
-        .bc main section > div, .bc main section > div > div, .bc-card, .bc main article, .bc main blockquote { width: 100%; max-width: 342px !important; }
+        .bc-card { width: 100%; max-width: 342px !important; }
         .bc main { font-size: 0.92rem; }
         .bc h1 { font-size: 1.9rem !important; line-height: 1.04 !important; }
         .bc h1 span { display: block; }
         .bc h2 { font-size: 1.55rem !important; line-height: 1.08 !important; }
       }
     </style>
-  </head>
-  <body class="bc min-h-screen overflow-x-hidden bg-[#06130d] text-[#f4ead2]">
-    <a href="#main-content" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:bg-[#f4ead2] focus:px-4 focus:py-2 focus:text-[#06130d] focus:outline focus:outline-2 focus:outline-[#d6a73a]">skip to main content</a>
+  </Fragment>
 
     <header class="border-b border-[#d6a73a]/35 bg-[#03100a]/95 text-[#f4ead2]">
       <div class="mx-auto flex max-w-7xl flex-col gap-4 px-5 py-5 md:flex-row md:items-center md:justify-between">
@@ -135,7 +126,4 @@ const canonical = new URL(Astro.url.pathname, Astro.site).toString();
         </div>
       </section>
     </main>
-
-    <footer class="border-t border-[#d6a73a]/35 bg-[#020705] text-[#f4ead2]/65"><div class="mx-auto flex max-w-7xl flex-col gap-3 px-5 py-5 text-xs uppercase tracking-[0.14em] md:flex-row md:items-center md:justify-between"><p>This is a Real Fake Ad by <a href="/" class="text-[#d6a73a] underline underline-offset-4">fattamano</a>.</p><p>Not financial advice. Not funeral advice. Not advice.</p></div></footer>
-  </body>
-</html>
+</FakeSiteLayout>
