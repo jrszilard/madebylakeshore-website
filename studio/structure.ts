@@ -72,6 +72,14 @@ export const structure: StructureResolver = (S) =>
                     .defaultOrdering([{ field: 'publishedDate', direction: 'desc' }])
                 ),
               S.listItem()
+                .title("How It's Made")
+                .schemaType('daosJournalPost')
+                .child(
+                  S.documentTypeList('daosJournalPost')
+                    .title("How It's Made")
+                    .defaultOrdering([{ field: 'publishedAt', direction: 'desc' }])
+                ),
+              S.listItem()
                 .title('Events')
                 .schemaType('event')
                 .child(

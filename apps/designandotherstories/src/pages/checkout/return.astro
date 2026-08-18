@@ -12,8 +12,8 @@ if (sessionId) {
   } catch {}
 }
 ---
-<BaseLayout title={paid ? 'Thank you' : 'Order status'} description="Order confirmation.">
-  <section class="section-spacing">
+<BaseLayout title={paid ? 'Thank you' : 'Order status'} description="Order confirmation." navTheme="dark">
+  <section class="section-spacing bg-white min-h-[70vh]">
     <div class="container-art max-w-2xl text-center py-16">
       {paid ? (
         <>

@@ -51,6 +51,10 @@ let behindThePosts: any[] = [];
 if (!isProtected || isAuthenticated) {
   study = await sanityClient.fetch(queries.caseStudyBySlug, { slug });
 
+  if (!study) {
+    return Astro.redirect('/case-studies');
+  }
+
   // When coming from a team member's portfolio, scope "next" to their studies only
   const teamSlugMatch = backHref.match(/^\/team\/([a-z0-9-]+)$/);
   const teamMemberSlug = teamSlugMatch?.[1] ?? null;

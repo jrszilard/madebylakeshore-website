@@ -13,6 +13,7 @@ import artwork from './documents/artwork';
 import artCollection from './documents/artCollection';
 import book from './documents/book';
 import writingPiece from './documents/writingPiece';
+import daosJournalPost from './documents/daosJournalPost';
 import event from './documents/event';
 import artistProfile from './documents/artistProfile';
 import shopProduct from './documents/shopProduct';
@@ -49,6 +50,7 @@ export const schemaTypes = [
   artCollection,
   book,
   writingPiece,
+  daosJournalPost,
   event,
   artistProfile,
   shopProduct,

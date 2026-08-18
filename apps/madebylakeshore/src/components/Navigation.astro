@@ -9,9 +9,15 @@ const navLinks = [
   { href: '/contact', label: 'Contact' },
 ];
 
+const serviceLinks = [
+  { href: '/services/brand-identity', label: 'Brand Identity' },
+  { href: '/services/product-design', label: 'Product Design' },
+  { href: '/services/data-and-analytics', label: 'Data & Analytics' },
+  { href: '/services/artificial-intelligence', label: 'AI Solutions' },
+];
+
 const brandLinks = [
   { href: 'https://designandotherstories.com', label: 'Design & Other Stories', external: true },
-  { href: 'https://incubator.madebylakeshore.com', label: 'Incubator', external: true },
 ];
 ---
 
@@ -25,7 +31,35 @@ const brandLinks = [
 
       <!-- Desktop Navigation -->
       <div class="hidden lg:flex items-center gap-8 ml-12">
-        {navLinks.map((link) => {
+        <!-- Services (with dropdown) -->
+        <div class="relative group">
+          <a
+            href="/services"
+            aria-current={currentPath.startsWith('/services') ? 'page' : undefined}
+            class:list={[
+              "flex items-center gap-1 font-body text-[11px] font-semibold tracking-[0.18em] uppercase transition-colors duration-200",
+              currentPath.startsWith('/services') ? "text-white" : "text-white/60 hover:text-white"
+            ]}
+          >
+            Services
+            <svg class="w-3 h-3 transition-transform group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </a>
+          <div class="absolute top-full left-0 mt-2 w-56 py-2 bg-white rounded-lg shadow-lg border border-mbl-ink/10 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+            {serviceLinks.map((link) => (
+              <a
+                href={link.href}
+                aria-current={currentPath === link.href ? 'page' : undefined}
+                class="block px-4 py-2 font-body text-[11px] font-semibold tracking-[0.18em] uppercase text-mbl-stone hover:text-mbl-ink hover:bg-mbl-mist/30 transition-colors"
+              >
+                {link.label}
+              </a>
+            ))}
+          </div>
+        </div>
+
+        {navLinks.filter((link) => link.href !== '/services').map((link) => {
           const isActive = currentPath === link.href || currentPath.startsWith(link.href + '/');
           return (
             <a
@@ -99,16 +133,34 @@ const brandLinks = [
       {navLinks.map((link) => {
         const isActive = currentPath === link.href || currentPath.startsWith(link.href + '/');
         return (
-          <a
-            href={link.href}
-            aria-current={isActive ? 'page' : undefined}
-            class:list={[
-              "block py-2 font-body text-[11px] font-semibold tracking-[0.18em] uppercase transition-colors",
-              isActive ? "text-white" : "text-white/60 hover:text-white"
-            ]}
-          >
-            {link.label}
-          </a>
+          <>
+            <a
+              href={link.href}
+              aria-current={isActive ? 'page' : undefined}
+              class:list={[
+                "block py-2 font-body text-[11px] font-semibold tracking-[0.18em] uppercase transition-colors",
+                isActive ? "text-white" : "text-white/60 hover:text-white"
+              ]}
+            >
+              {link.label}
+            </a>
+            {link.href === '/services' && (
+              <div class="pl-4 space-y-1 mb-2">
+                {serviceLinks.map((serviceLink) => (
+                  <a
+                    href={serviceLink.href}
+                    aria-current={currentPath === serviceLink.href ? 'page' : undefined}
+                    class:list={[
+                      "block py-1.5 font-body text-[10px] font-semibold tracking-[0.18em] uppercase transition-colors",
+                      currentPath === serviceLink.href ? "text-white" : "text-white/40 hover:text-white"
+                    ]}
+                  >
+                    {serviceLink.label}
+                  </a>
+                ))}
+              </div>
+            )}
+          </>
         );
       })}
       <hr class="border-white/15" />

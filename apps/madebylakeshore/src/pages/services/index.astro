@@ -7,18 +7,38 @@ export const prerender = true;
 
 // Fetch services from Sanity
 const sanityServices = await sanityClient.fetch(queries.allServices);
+const warmIcons = new Set(['brand-identity', 'product-design', 'design']);
+
 const services = sanityServices.map((service: any) => ({
   title: service.title,
   slug: service.slug?.current || service.icon,
-  icon: service.icon as 'design' | 'data' | 'ai',
+  icon: service.icon as 'brand-identity' | 'product-design' | 'design' | 'data' | 'ai',
   consultant: service.consultant?.name || '',
   description: service.tagline || '',
   offerings: service.offerings?.map((o: any) => o.title) || [],
-  color: service.icon === 'design' ? 'warm' : 'accent',
+  color: warmIcons.has(service.icon) ? 'warm' : 'accent',
 }));
 
 const serviceIcons: Record<string, string> = {
   // Letterform — capital A with typographic construction guides
+  'brand-identity': `
+    <line x1="2" y1="3" x2="22" y2="3" stroke="currentColor" stroke-width="0.5" stroke-linecap="round" opacity="0.3"/>
+    <line x1="2" y1="21" x2="22" y2="21" stroke="currentColor" stroke-width="0.6" stroke-linecap="round" opacity="0.4"/>
+    <line x1="2" y1="13" x2="22" y2="13" stroke="currentColor" stroke-width="0.4" stroke-linecap="round" opacity="0.15"/>
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M5 21 L12 3 L19 21" />
+    <path stroke-linecap="round" stroke-width="0.9" d="M8 13 L16 13" />
+    <circle cx="5" cy="21" r="1" fill="currentColor" opacity="0.7"/>
+    <circle cx="19" cy="21" r="1" fill="currentColor" opacity="0.7"/>
+    <circle cx="12" cy="3" r="1.2" fill="currentColor"/>
+    <circle cx="12" cy="3" r="3.5" stroke="currentColor" stroke-width="0.5" fill="none" opacity="0.22"/>
+  `,
+  // Isometric cube — physical/digital product form
+  'product-design': `
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M12 3 L20 7.5 L20 16.5 L12 21 L4 16.5 L4 7.5 Z" />
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="0.7" d="M12 12 L20 7.5 M12 12 L4 7.5 M12 12 L12 21" opacity="0.5"/>
+    <circle cx="12" cy="3" r="1.2" fill="currentColor"/>
+    <circle cx="12" cy="3" r="3.5" stroke="currentColor" stroke-width="0.5" fill="none" opacity="0.22"/>
+  `,
   design: `
     <line x1="2" y1="3" x2="22" y2="3" stroke="currentColor" stroke-width="0.5" stroke-linecap="round" opacity="0.3"/>
     <line x1="2" y1="21" x2="22" y2="21" stroke="currentColor" stroke-width="0.6" stroke-linecap="round" opacity="0.4"/>

@@ -1,0 +1,45 @@
+---
+interface Props {
+  href: string;
+  title: string;
+  client?: string;
+  imageUrl?: string | null;
+  isProtected?: boolean;
+  loading?: 'lazy';
+  fetchpriority?: 'high';
+}
+
+const { href, title, client, imageUrl, isProtected = false, loading, fetchpriority } = Astro.props;
+---
+
+<a href={href} class="group block">
+  <!-- Image -->
+  <div class="relative aspect-video rounded-lg overflow-hidden mb-4 bg-white">
+    {imageUrl ? (
+      <img
+        src={imageUrl}
+        alt={title}
+        class="absolute inset-0 w-full h-full object-contain group-hover:scale-105 transition-transform duration-500"
+        loading={loading}
+        fetchpriority={fetchpriority}
+        decoding="async"
+      />
+    ) : (
+      <div class="absolute inset-0 bg-gradient-to-br from-mbl-slate to-mbl-dusk opacity-80"></div>
+    )}
+    {isProtected && (
+      <div class="absolute top-4 right-4">
+        <svg class="w-4 h-4 text-white/70" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" aria-label="Password protected" role="img">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+        </svg>
+      </div>
+    )}
+  </div>
+  <!-- Text -->
+  <h2 class="font-display text-xl mb-1 group-hover:text-mbl-accent transition-colors duration-200">
+    {title}
+  </h2>
+  {client && (
+    <p class="text-sm text-mbl-stone">{client}</p>
+  )}
+</a>
