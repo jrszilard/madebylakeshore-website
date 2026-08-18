@@ -1,0 +1,66 @@
+{
+  "products": [
+    {
+      "title": "The Cloud, Locally Hosted",
+      "slug": "the-cloud-locally-hosted",
+      "tagline": "Five-bay cloud storage that cannot be sunset, throttled, or fondly discontinued.",
+      "description": [
+        "The flagship object of the Local Copy Department: a soft, translucent 3D-printed cloud that holds five USB drives in spring-grip bays. Push a drive in; the cloud grips it; your files remain exactly where you left them, indefinitely, which is apparently a premium feature now.",
+        "Flexible TPU body with hand-pressed lettering, 2026. No account, no renewal email, no deprecation roadmap. Uptime is enforced by physics.",
+        "Stands on a desk like a small monument to ownership, straps to a shelf or rack post with zip ties, or screws straight into drywall through its mounting slots — all three demonstrated, none requiring a support ticket.",
+        "Ships with the complete deployment kit: three zip ties and three #8 screws with drywall anchors. Every supported mounting posture, zero trips to the hardware store.",
+        "Approximately 167 × 97 × 34 mm. Fits full-size USB-A sticks and anything smaller; the flexible bays self-adjust. Ships as shown in warm white with blue lettering. Drives not included — those are your files, and that is the entire point."
+      ],
+      "category": "other",
+      "priceCents": 2000,
+      "status": "available",
+      "stock": 1,
+      "featured": true,
+      "tags": [
+        "real fake ads",
+        "local copy department",
+        "usb",
+        "3d printed",
+        "tpu",
+        "physical media",
+        "desk object"
+      ],
+      "seo": {
+        "metaTitle": "The Cloud, Locally Hosted — fattamano",
+        "metaDescription": "A 3D-printed flexible cloud that holds five USB drives in spring-grip bays. Desk or wall mount. The Local Copy Department flagship from Real Fake Ads by fattamano."
+      },
+      "imagePaths": [
+        {
+          "path": "../../apps/fattamano/design/real-fake-ads/local-copy-department/usb-cloud-mini/01-hero-desk.jpg",
+          "alt": "Translucent white 3D-printed cloud holding USB drives, with blue lettering reading THE CLOUD, LOCALLY HOSTED — Fattamano",
+          "caption": "The cloud, standing on a desk, hosting locally."
+        },
+        {
+          "path": "../../apps/fattamano/design/real-fake-ads/local-copy-department/usb-cloud-mini/03-desk-front-loaded.jpg",
+          "alt": "Front view of the cloud with all five USB bays visible, several holding drives including one on an orange lanyard",
+          "caption": "Five spring-grip bays. The bays hold the drives; nobody holds your data."
+        },
+        {
+          "path": "../../apps/fattamano/design/real-fake-ads/local-copy-department/usb-cloud-mini/06-side-profile-loaded.jpg",
+          "alt": "Side profile of the cloud showing USB drives standing in their bays",
+          "caption": "Drives seat on an internal stop and stand at attention."
+        },
+        {
+          "path": "../../apps/fattamano/design/real-fake-ads/local-copy-department/usb-cloud-mini/10-rack-mounted-front.jpg",
+          "alt": "The cloud zip-tied to a black wire shelving post, holding USB drives horizontally",
+          "caption": "Rack-mounted deployment via zip tie. Enterprise-grade."
+        },
+        {
+          "path": "../../apps/fattamano/design/real-fake-ads/local-copy-department/usb-cloud-mini/07-back-screw-mount.jpg",
+          "alt": "Back of the cloud showing brass screws driven through the built-in mounting slots",
+          "caption": "The mounting slots also take screws or nails. No alignment skill required."
+        },
+        {
+          "path": "../../apps/fattamano/design/real-fake-ads/local-copy-department/usb-cloud-mini/09-hand-scale-ties.jpg",
+          "alt": "A hand holding the flexible cloud with colored zip ties threaded through its three mounting slots",
+          "caption": "Soft-touch TPU. It flexes; your ownership does not."
+        }
+      ]
+    }
+  ]
+}
