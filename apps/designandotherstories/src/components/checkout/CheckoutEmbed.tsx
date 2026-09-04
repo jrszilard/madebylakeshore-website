@@ -17,13 +17,22 @@ export default function CheckoutEmbed({ publishableKey }: Props) {
   const stripePromise = (stripePromiseCache.p ??= loadStripe(publishableKey));
 
   const fetchClientSecret = useCallback(async () => {
-    const items = getSnapshot().items.map((i) => ({ productId: i.productId, qty: i.qty }));
+    // styleLabel must travel with the line — it is what tells a variant apart on
+    // the order, and dropping it silently merges two variants into one line.
+    const items = getSnapshot().items.map((i) => ({
+      productId: i.productId,
+      qty: i.qty,
+      ...(i.styleLabel ? { styleLabel: i.styleLabel } : {}),
+    }));
     const res = await fetch('/api/checkout', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(items),
     });
-    if (!res.ok) throw new Error('Could not start checkout');
+    if (!res.ok) {
+      const detail = await res.json().catch(() => null);
+      throw new Error(detail?.error || 'Could not start checkout');
+    }
     const { clientSecret } = await res.json();
     return clientSecret as string;
   }, []);

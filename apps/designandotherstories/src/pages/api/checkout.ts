@@ -41,20 +41,27 @@ export const POST: APIRoute = async ({ request }) => {
 
   // Prices/stock/availability come ONLY from this authoritative server read.
   const ids = items.map((i) => i.productId);
-  const rows = await sanityWriteFetch<ProductRow[]>(queries.daosProductsByIds, { ids });
+  let rows: ProductRow[];
+  let settings: DaosShopSettings;
+  try {
+    rows = await sanityWriteFetch<ProductRow[]>(queries.daosProductsByIds, { ids });
+    settings = await sanityWriteFetch<DaosShopSettings>(queries.daosShopSettings);
+  } catch (err: any) {
+    console.error('[checkout] sanity read failed', { message: err?.message });
+    return Response.json({ error: 'Could not reach the catalogue' }, { status: 503 });
+  }
+
   const { lines, unavailable } = buildOrderLines(items, rows);
   if (unavailable.length) {
     return Response.json({ error: 'Some items are unavailable', unavailable }, { status: 409 });
   }
 
-  const settings = await sanityWriteFetch<DaosShopSettings>(queries.daosShopSettings);
   const zones = settings?.shippingZones ?? [];
   const countries = allowedCountries(zones);
   if (!countries.length) {
     return Response.json({ error: 'Shipping not configured' }, { status: 500 });
   }
 
-  const stripe = getStripe();
   const sessionParams = {
     ui_mode: 'embedded',
     mode: 'payment',
@@ -79,17 +86,43 @@ export const POST: APIRoute = async ({ request }) => {
     ],
     return_url: checkoutReturnUrl(request),
   } as unknown as Stripe.Checkout.SessionCreateParams;
-  const session = await stripe.checkout.sessions.create(sessionParams);
+
+  // A throw here is almost always configuration rather than customer error: an
+  // unset/invalid STRIPE_SECRET_KEY, a restricted key without checkout_sessions
+  // write access, a test/live key mismatch, or an unactivated account. Log the
+  // actual Stripe reason — an unhandled throw surfaces as a bodyless 500 that
+  // tells neither the shopper nor us anything.
+  let session: Stripe.Checkout.Session;
+  try {
+    session = await getStripe().checkout.sessions.create(sessionParams);
+  } catch (err: any) {
+    console.error('[checkout] could not create Stripe session', {
+      type: err?.type,
+      code: err?.code,
+      statusCode: err?.statusCode,
+      message: err?.message,
+    });
+    return Response.json({ error: 'Payments are temporarily unavailable' }, { status: 502 });
+  }
 
   // Idempotency + cart source for the webhook. _id = Stripe session id.
-  await sanityWriteClient().createIfNotExists({
-    _id: session.id,
-    _type: 'daosCheckoutSession',
-    items: lines.map((l) => ({ _key: l.productId, productId: l.productId, type: l.type, qty: l.qty, styleLabel: l.styleLabel })),
-    subtotalCents: cartSubtotalCents(lines),
-    status: 'pending',
-    createdAt: new Date().toISOString(),
-  } as any);
+  // _key must be unique per array entry, and one product can appear on several
+  // lines (one per variant), so the line index — not the product id — keys it.
+  try {
+    await sanityWriteClient().createIfNotExists({
+      _id: session.id,
+      _type: 'daosCheckoutSession',
+      items: lines.map((l, i) => ({ _key: `${l.productId}-${i}`, productId: l.productId, type: l.type, qty: l.qty, styleLabel: l.styleLabel })),
+      subtotalCents: cartSubtotalCents(lines),
+      status: 'pending',
+      createdAt: new Date().toISOString(),
+    } as any);
+  } catch (err: any) {
+    // Without this doc the webhook cannot fulfil the order, so fail closed
+    // rather than take a payment we would not be able to act on.
+    console.error('[checkout] could not persist session doc', { id: session.id, message: err?.message });
+    return Response.json({ error: 'Could not start checkout' }, { status: 503 });
+  }
 
   return Response.json({ clientSecret: session.client_secret });
 };
