@@ -3,6 +3,7 @@ export const prerender = false;
 import type { APIRoute } from 'astro';
 import { getStripe } from '../../lib/server/stripe';
 import { sanityWriteFetch } from '../../lib/server/sanityWrite';
+import { orderDocumentId } from '../../lib/server/orderStore';
 import { queries } from '@lakeshore/shared-ui/sanity';
 import { resolveShippingOption } from '../../lib/commerce/shipping';
 import type { DaosShopSettings } from '../../lib/types';
@@ -20,7 +21,7 @@ export const POST: APIRoute = async ({ request }) => {
   // client could call sessions.update against an arbitrary Stripe session id.
   const known = await sanityWriteFetch<{ _id: string; subtotalCents?: number } | null>(
     `*[_type == "daosCheckoutSession" && _id == $id && status == "pending"][0]{ _id, subtotalCents }`,
-    { id: sessionId }
+    { id: orderDocumentId(sessionId) }
   );
   if (!known) {
     return Response.json({ type: 'reject' }, { status: 404 });

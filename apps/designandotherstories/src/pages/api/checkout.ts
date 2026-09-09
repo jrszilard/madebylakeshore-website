@@ -2,7 +2,8 @@ export const prerender = false;
 
 import type { APIRoute } from 'astro';
 import { getStripe } from '../../lib/server/stripe';
-import { sanityWriteFetch, sanityWriteClient } from '../../lib/server/sanityWrite';
+import { sanityWriteFetch } from '../../lib/server/sanityWrite';
+import { orderClient, orderDocumentId } from '../../lib/server/orderStore';
 import { queries } from '@lakeshore/shared-ui/sanity';
 import { normalizeCartItems, buildOrderLines, cartSubtotalCents, BadCartError } from '../../lib/commerce/validateCart';
 import { allowedCountries } from '../../lib/commerce/shipping';
@@ -105,22 +106,38 @@ export const POST: APIRoute = async ({ request }) => {
     return Response.json({ error: 'Payments are temporarily unavailable' }, { status: 502 });
   }
 
-  // Idempotency + cart source for the webhook. _id = Stripe session id.
-  // _key must be unique per array entry, and one product can appear on several
-  // lines (one per variant), so the line index — not the product id — keys it.
+  // The order record the webhook fulfils against, and the only place the shop
+  // itself keeps a purchase. It carries the title and unit price AS CHARGED, so
+  // a later price edit or rename cannot rewrite what someone actually bought.
+  // Customer name and address stay in Stripe and are deliberately not copied
+  // here; the dotted document id keeps even this much out of public reads.
+  const titleById = new Map(rows.map((r) => [r._id, r.title]));
   try {
-    await sanityWriteClient().createIfNotExists({
-      _id: session.id,
+    await orderClient().createIfNotExists({
+      _id: orderDocumentId(session.id),
       _type: 'daosCheckoutSession',
-      items: lines.map((l, i) => ({ _key: `${l.productId}-${i}`, productId: l.productId, type: l.type, qty: l.qty, styleLabel: l.styleLabel })),
+      // _key must be unique per entry, and one product can appear on several
+      // lines (one per variant), so the line index — not the product id — keys it.
+      items: lines.map((l, i) => ({
+        _key: `${l.productId}-${i}`,
+        productId: l.productId,
+        type: l.type,
+        title: titleById.get(l.productId) ?? l.title,
+        unitAmountCents: l.unitAmountCents,
+        qty: l.qty,
+        ...(l.styleLabel ? { styleLabel: l.styleLabel } : {}),
+      })),
       subtotalCents: cartSubtotalCents(lines),
+      fulfillmentStatus: 'new',
+      paymentStatus: 'pending',
+      notificationStatus: 'pending',
       status: 'pending',
       createdAt: new Date().toISOString(),
     } as any);
   } catch (err: any) {
     // Without this doc the webhook cannot fulfil the order, so fail closed
     // rather than take a payment we would not be able to act on.
-    console.error('[checkout] could not persist session doc', { id: session.id, message: err?.message });
+    console.error('[checkout] could not persist order doc', { id: session.id, message: err?.message });
     return Response.json({ error: 'Could not start checkout' }, { status: 503 });
   }
 

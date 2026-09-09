@@ -1,4 +1,11 @@
-import type { StructureResolver } from 'sanity/structure';
+import type { StructureBuilder, StructureResolver } from 'sanity/structure';
+
+const daosOrderList = (S: StructureBuilder, title: string, filter: string) =>
+  S.documentList()
+    .title(title)
+    .schemaType('daosCheckoutSession')
+    .filter(`_type == "daosCheckoutSession" && (${filter})`)
+    .defaultOrdering([{ field: 'createdAt', direction: 'desc' }]);
 
 export const structure: StructureResolver = (S) =>
   S.list()
@@ -146,12 +153,36 @@ export const structure: StructureResolver = (S) =>
                             .defaultOrdering([{ field: '_createdAt', direction: 'desc' }])
                         ),
                       S.listItem()
-                        .title('Orders (internal)')
-                        .schemaType('daosCheckoutSession')
+                        .title('Orders')
                         .child(
-                          S.documentTypeList('daosCheckoutSession')
+                          S.list()
                             .title('Orders')
-                            .defaultOrdering([{ field: 'createdAt', direction: 'desc' }])
+                            .items([
+                              S.listItem()
+                                .title('New — needs attention')
+                                .child(
+                                  daosOrderList(
+                                    S,
+                                    'New orders',
+                                    'paymentStatus == "paid" && coalesce(fulfillmentStatus, "new") == "new"'
+                                  )
+                                ),
+                              S.listItem()
+                                .title('Packing')
+                                .child(daosOrderList(S, 'Packing', 'fulfillmentStatus == "packing"')),
+                              S.listItem()
+                                .title('Shipped')
+                                .child(daosOrderList(S, 'Shipped', 'fulfillmentStatus == "shipped"')),
+                              S.listItem()
+                                .title('Notification failures')
+                                .child(
+                                  daosOrderList(S, 'Notification failures', 'notificationStatus == "failed"')
+                                ),
+                              S.divider(),
+                              S.listItem()
+                                .title('All orders')
+                                .child(daosOrderList(S, 'All orders', 'true')),
+                            ])
                         ),
                     ])
                 ),
