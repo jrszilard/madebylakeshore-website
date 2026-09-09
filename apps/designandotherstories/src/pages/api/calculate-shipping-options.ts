@@ -13,7 +13,7 @@ export const POST: APIRoute = async ({ request }) => {
   const shippingDetails = body?.shippingDetails;
   const country = shippingDetails?.address?.country;
   if (typeof sessionId !== 'string') {
-    return Response.json({ type: 'reject' }, { status: 400 });
+    return Response.json({ type: 'error', message: 'Invalid request' }, { status: 400 });
   }
 
   // Only act on sessions WE created and that are still pending. Without this, a
@@ -23,7 +23,7 @@ export const POST: APIRoute = async ({ request }) => {
     { id: sessionId }
   );
   if (!known) {
-    return Response.json({ type: 'reject' }, { status: 404 });
+    return Response.json({ type: 'error', message: 'Unknown checkout session' }, { status: 404 });
   }
 
   // Authoritative zone table (server-side read); allowed countries / rates are
@@ -37,17 +37,14 @@ export const POST: APIRoute = async ({ request }) => {
     known.subtotalCents ?? 0
   );
   if (!option) {
-    return Response.json({ type: 'reject', message: "We can't ship there yet." }, { status: 200 });
+    return Response.json({ type: 'error', message: "We can't ship there yet." }, { status: 200 });
   }
 
-  // For embedded custom shipping with permissions.update_shipping_details =
-  // server_only, the session update must echo BOTH the customer's shipping
-  // details AND the resolved shipping_options (per Stripe's custom-shipping-options
-  // guide: "Update the Checkout Session with the customer's shipping_details and
-  // the shipping_options"). SessionUpdateParams in stripe@17 types omits
-  // shipping_options, so the payload is cast.
+  // The embedded form collects the address on the client and Stripe records it on
+  // the session, so we set only the resolved rate here. shipping_options is a
+  // secret-key write, which is what keeps the rate authoritative: the customer
+  // cannot choose their own shipping price.
   await getStripe().checkout.sessions.update(sessionId, {
-    collected_information: shippingDetails ? { shipping_details: shippingDetails } : undefined,
     shipping_options: [
       {
         shipping_rate_data: {
@@ -57,7 +54,7 @@ export const POST: APIRoute = async ({ request }) => {
         },
       },
     ],
-  } as any);
+  });
 
-  return Response.json({ type: 'accept' });
+  return Response.json({ type: 'object', value: { succeeded: true } });
 };
