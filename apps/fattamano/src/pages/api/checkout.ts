@@ -65,14 +65,13 @@ export const POST: APIRoute = async ({ request }) => {
   }
 
   const stripe = getStripe();
-  // The known fields below are checked against the SDK's SessionCreateParams.
-  // `permissions.update_shipping_details` is runtime-valid for embedded custom
-  // shipping but is absent from stripe@17 types, so it is merged in via a cast on
-  // the whole literal (a per-property cast does not suppress the excess-property
-  // check). allowed_countries is a strict ISO-3166 union; our zone table yields a
-  // dynamic string[], so it is cast too.
-  const sessionParams = {
-    ui_mode: 'embedded',
+  // ui_mode `form` is the embedded form (Checkout Form Element). Stripe retired
+  // `permissions.update_shipping_details` on every surface, so the rate is kept
+  // authoritative by only ever writing shipping_options with our secret key.
+  // allowed_countries is a strict ISO-3166 union; our zone table yields a dynamic
+  // string[], so that one property is still cast.
+  const sessionParams: Stripe.Checkout.SessionCreateParams = {
+    ui_mode: 'form',
     mode: 'payment',
     line_items: lines.map((l) => ({
       quantity: l.qty,
@@ -83,9 +82,6 @@ export const POST: APIRoute = async ({ request }) => {
       },
     })),
     shipping_address_collection: { allowed_countries: countries as any },
-    // server_only disables Stripe's automatic client-side shipping update so the
-    // rate is set exclusively by /api/calculate-shipping-options.
-    permissions: { update_shipping_details: 'server_only' },
     // Placeholder rate; replaced live by /api/calculate-shipping-options once the
     // customer enters an address.
     shipping_options: [
@@ -99,7 +95,7 @@ export const POST: APIRoute = async ({ request }) => {
     ],
     return_url: checkoutReturnUrl(request),
     metadata: { store: 'fattamano' },
-  } as unknown as Stripe.Checkout.SessionCreateParams;
+  };
   const session = await stripe.checkout.sessions.create(sessionParams);
 
   // Detailed order state belongs in a private Sanity dataset. It intentionally
