@@ -22,6 +22,17 @@ export default defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
+      name: 'sku',
+      title: 'SKU',
+      type: 'string',
+      description:
+        'Stock-keeping unit, e.g. "ST-013". Prefix by category: PC postcard, ST sticker, BM bookmark, NP notepad, MG magnet.',
+      validation: (Rule) =>
+        Rule.regex(/^[A-Z]{2}-\d{3}$/, { name: 'SKU format' }).error(
+          'Use two uppercase letters, a hyphen, then three digits — e.g. ST-013.'
+        ),
+    }),
+    defineField({
       name: 'category',
       title: 'Category',
       type: 'string',
@@ -33,6 +44,7 @@ export default defineType({
           { title: 'Sticker', value: 'sticker' },
           { title: 'Bookmark', value: 'bookmark' },
           { title: 'Notepad', value: 'notepad' },
+          { title: 'Magnet', value: 'magnet' },
           { title: 'Bundle', value: 'bundle' },
           { title: 'Other', value: 'other' },
         ],
@@ -95,8 +107,14 @@ export default defineType({
               description: 'e.g. "Red", "Forest Green", "8×10"',
               validation: (Rule) => Rule.required(),
             }),
+            defineField({
+              name: 'sku',
+              title: 'Variant SKU',
+              type: 'string',
+              description: 'Product SKU plus a variant suffix, e.g. "ST-013-BLU".',
+            }),
           ],
-          preview: { select: { title: 'label' } },
+          preview: { select: { title: 'label', subtitle: 'sku' } },
         }),
       ],
       description: 'Optional variants (colors, sizes, etc.). Leave empty for single-style products.',
@@ -121,11 +139,12 @@ export default defineType({
       media: 'images.0',
       category: 'category',
       available: 'available',
+      sku: 'sku',
     },
-    prepare({ title, media, category, available }) {
+    prepare({ title, media, category, available, sku }) {
       return {
         title,
-        subtitle: `${category || 'uncategorized'}${available ? '' : ' • sold out'}`,
+        subtitle: `${sku ? `${sku} • ` : ''}${category || 'uncategorized'}${available ? '' : ' • sold out'}`,
         media,
       };
     },
