@@ -4,6 +4,7 @@ export const prerender = false;
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import AddToCartButton from '../../components/cart/AddToCartButton.tsx';
 import { sanityClient, urlFor, queries } from '../../lib/sanity';
+import { priceRange } from '../../lib/commerce/pricing';
 
 const { slug } = Astro.params;
 // shopProduct wins on collision; fall back to artwork.
@@ -26,8 +27,14 @@ const images = (doc.images ?? [])
     alt: img.alt ?? doc.title,
   }));
 
-const priceCents = typeof doc.price === 'number' ? Math.round(doc.price * 100) : null;
-const priceDisplay = priceCents != null ? `$${(priceCents / 100).toLocaleString(undefined, { minimumFractionDigits: 0 })}` : null;
+// Variants can carry their own price, so the page shows the range and the
+// add-to-cart control swaps in the chosen variant's price.
+const range = priceRange(doc.price, isArtwork ? null : product.styles);
+const priceCents = range ? Math.round(range.min * 100) : null;
+const dollars = (n: number) => `$${n.toLocaleString(undefined, { minimumFractionDigits: 0 })}`;
+const priceDisplay = range
+  ? range.min === range.max ? dollars(range.min) : `${dollars(range.min)} – ${dollars(range.max)}`
+  : null;
 
 const cartItem = {
   productId: doc._id,

@@ -76,7 +76,7 @@ export default defineType({
       name: 'price',
       title: 'Price',
       type: 'number',
-      description: 'Price in USD',
+      description: 'Price in USD. Variants with their own price override this.',
       validation: (Rule) => Rule.min(0),
     }),
     defineField({
@@ -114,8 +114,21 @@ export default defineType({
               type: 'string',
               description: 'Product SKU plus a variant suffix, e.g. "ST-013-BLU".',
             }),
+            defineField({
+              name: 'price',
+              title: 'Variant Price',
+              type: 'number',
+              description: 'Price in USD for this variant. Leave blank to use the product price.',
+              validation: (Rule) => Rule.min(0),
+            }),
           ],
-          preview: { select: { title: 'label', subtitle: 'sku' } },
+          preview: {
+            select: { title: 'label', sku: 'sku', price: 'price' },
+            prepare({ title, sku, price }) {
+              const parts = [sku, typeof price === 'number' ? `$${price}` : null].filter(Boolean);
+              return { title, subtitle: parts.join(' • ') || undefined };
+            },
+          },
         }),
       ],
       description: 'Optional variants (colors, sizes, etc.). Leave empty for single-style products.',

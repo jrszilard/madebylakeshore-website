@@ -57,6 +57,32 @@ describe('buildOrderLines', () => {
       'free:no_price', 'lim:out_of_stock', 'orig:out_of_stock', 'sold:not_available', 'zzz:missing',
     ]);
   });
+  it('charges the chosen variant price, falling back to the product price', () => {
+    const rows: ProductRow[] = [{
+      _id: 'pp', _type: 'shopProduct', title: 'Photo', price: 5, available: true, stock: null,
+      styles: [{ label: '4×6', price: 5 }, { label: '8.5×11', price: 15 }, { label: 'Unpriced' }],
+    }];
+    const { lines } = buildOrderLines(
+      [{ productId: 'pp', qty: 1, styleLabel: '8.5×11' }, { productId: 'pp', qty: 2, styleLabel: 'Unpriced' }],
+      rows
+    );
+    expect(lines.map((l) => [l.title, l.unitAmountCents])).toEqual([
+      ['Photo — 8.5×11', 1500],
+      ['Photo — Unpriced', 500],
+    ]);
+  });
+  it('rejects a missing or unknown style on a product that has variants', () => {
+    const rows: ProductRow[] = [{
+      _id: 'pp', _type: 'shopProduct', title: 'Photo', price: 5, available: true, stock: null,
+      styles: [{ label: '8.5×11', price: 15 }],
+    }];
+    const { lines, unavailable } = buildOrderLines(
+      [{ productId: 'pp', qty: 1 }, { productId: 'pp', qty: 1, styleLabel: 'Huge' }],
+      rows
+    );
+    expect(lines).toEqual([]);
+    expect(unavailable.map((u) => u.reason)).toEqual(['not_available', 'not_available']);
+  });
 });
 
 describe('cartSubtotalCents', () => {

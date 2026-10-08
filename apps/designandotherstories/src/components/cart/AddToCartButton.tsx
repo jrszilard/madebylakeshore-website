@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import type { CartItem, StyleOption } from '../../lib/types';
 import { dispatch } from '../../lib/cart/cartStore';
+import { formatMoneyCents } from '../../lib/format';
 
 interface Props {
   item: CartItem;
@@ -40,6 +41,9 @@ export default function AddToCartButton({ item, initialAvailable, styles = [] }:
 
   const needsStyle = styles.length > 1;
   const canAdd = !needsStyle || selectedStyle !== null;
+  const chosen = styles.find((s) => s.label === selectedStyle);
+  const chosenPriceCents = typeof chosen?.price === 'number' ? Math.round(chosen.price * 100) : item.priceCents;
+  const pricesVary = styles.some((s) => typeof s.price === 'number');
 
   return (
     <div className="space-y-4">
@@ -62,6 +66,9 @@ export default function AddToCartButton({ item, initialAvailable, styles = [] }:
               </button>
             ))}
           </div>
+          {pricesVary && chosen && (
+            <p className="font-sans text-lg text-daos-ink mt-3">{formatMoneyCents(chosenPriceCents)}</p>
+          )}
         </div>
       )}
       <button
@@ -72,6 +79,7 @@ export default function AddToCartButton({ item, initialAvailable, styles = [] }:
           const finalItem: CartItem = {
             ...item,
             ...(selectedStyle ? { styleLabel: selectedStyle } : {}),
+            priceCents: chosenPriceCents,
             qty: 1,
           };
           dispatch({ type: 'add', item: finalItem });

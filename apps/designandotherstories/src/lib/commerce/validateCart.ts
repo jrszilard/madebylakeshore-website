@@ -83,8 +83,16 @@ export function buildOrderLines(
       unavailable.push({ productId: item.productId, reason: 'not_available' });
       continue;
     }
+    // A product with variants must be bought as one of them, or a cart could
+    // name a made-up style (or none) to dodge that variant's price.
+    const style = item.styleLabel ? row.styles?.find((s) => s.label === item.styleLabel) : undefined;
+    if (row.styles?.length && !style) {
+      unavailable.push({ productId: item.productId, reason: 'not_available' });
+      continue;
+    }
     // DAOS stores price in USD dollars; Stripe needs integer cents.
-    const unitAmountCents = Math.round((row.price ?? 0) * 100);
+    const dollars = typeof style?.price === 'number' ? style.price : row.price;
+    const unitAmountCents = Math.round((dollars ?? 0) * 100);
     if (!Number.isFinite(unitAmountCents) || unitAmountCents <= 0) {
       unavailable.push({ productId: item.productId, reason: 'no_price' });
       continue;

@@ -2,6 +2,8 @@ export type DaosProductType = 'artwork' | 'shopProduct';
 
 export interface StyleOption {
   label: string;
+  // USD dollars; overrides the product price for this variant when set.
+  price?: number | null;
 }
 
 export interface ShippingZone {
@@ -32,7 +34,8 @@ export interface CartItem {
 // Authoritative product row fetched server-side at checkout/webhook.
 // `price` is USD dollars (converted to cents in buildOrderLines). `available`
 // is normalized in GROQ. `stock` is numeric for limited shopProducts, null for
-// unlimited shopProducts, and absent/null for artwork.
+// unlimited shopProducts, and absent/null for artwork. A style's own `price`,
+// when set, is what that variant is charged at.
 export interface ProductRow {
   _id: string;
   _type: DaosProductType;
@@ -40,4 +43,5 @@ export interface ProductRow {
   price?: number;
   available: boolean;
   stock?: number | null;
+  styles?: StyleOption[] | null;
 }

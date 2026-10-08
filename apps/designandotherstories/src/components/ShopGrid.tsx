@@ -7,6 +7,7 @@ export interface ShopItem {
   imageUrl: string | null;
   medium?: string;
   price?: number;
+  priceFrom?: boolean;
   category: string;
   categoryLabel: string;
   available: boolean;
@@ -52,7 +53,7 @@ function ShopCard({ item }: { item: ShopItem }) {
         </div>
         <div className="mt-auto pt-3">
           {!isSold && item.price != null && (
-            <p className="font-sans font-medium text-daos-ink">${item.price.toLocaleString()}</p>
+            <p className="font-sans font-medium text-daos-ink">{item.priceFrom ? 'From ' : ''}${item.price.toLocaleString()}</p>
           )}
           {hasPrints && (
             <a href={`/shop/${item.slug}#prints`} className="inline-block font-sans text-sm text-daos-terracotta hover:underline transition-colors">

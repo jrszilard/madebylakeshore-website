@@ -9,6 +9,7 @@ import EventCard from '../components/EventCard.astro';
 import SubstackEmbed from '../components/SubstackEmbed.astro';
 import { SUBSTACK_SHORT_STORIES_SECTION_ID } from '../lib/config';
 import { sanityClient, urlFor, queries } from '../lib/sanity';
+import { priceRange } from '../lib/commerce/pricing';
 import { fetchSubstackFeed } from '../lib/substack';
 
 // Fetch all data at build time (static page)
@@ -23,7 +24,11 @@ const [artistProfile, featuredWriting, heroShopItems, newArrivals, allCollection
 ]);
 
 const isSingleCollection = (allCollections ?? []).length === 1;
-const swimlaneShopItems = newArrivals ?? [];
+// Cards show the lowest variant price, flagged so they read "From $5".
+const swimlaneShopItems = (newArrivals ?? []).map((item: any) => {
+  const range = priceRange(item.price, item.styles);
+  return { ...item, price: range?.min, priceFrom: range ? range.min !== range.max : false };
+});
 
 function formatCategoryLabel(cat: string): string {
   return cat.charAt(0).toUpperCase() + cat.slice(1).replace(/-/g, ' ');
@@ -87,6 +92,7 @@ const typeLabels: Record<string, string> = {
               images={item.images ?? []}
               categoryLabel={formatCategoryLabel(item.category ?? 'other')}
               price={item.price}
+              priceFrom={item.priceFrom}
               originalAvailable={item.available}
               basePath="/shop"
             />

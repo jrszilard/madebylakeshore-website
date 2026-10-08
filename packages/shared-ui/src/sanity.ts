@@ -397,17 +397,17 @@ export const queries = {
 
   shopProducts: `*[_type == "shopProduct" && available == true] | order(_createdAt desc) {
   _id, title, slug, category, images, blurb, price, available, featured,
-  styles[]{ label }
+  styles[]{ label, price }
 }`,
 
   newArrivalShopProducts: `*[_type == "shopProduct" && available == true && featured == true] | order(_createdAt desc)[0...4] {
   _id, title, slug, category, images, blurb, price, available, featured,
-  styles[]{ label }
+  styles[]{ label, price }
 }`,
 
   shopProductBySlug: `*[_type == "shopProduct" && slug.current == $slug][0] {
   _id, title, slug, category, images, blurb, description, price, available, stock, featured,
-  styles[]{ label },
+  styles[]{ label, price },
   "relatedArtwork": relatedArtwork->{ _id, title, slug }
 }`,
 
@@ -427,7 +427,8 @@ export const queries = {
       _type == "shopProduct" => available == true,
       false
     ),
-    "stock": stock
+    "stock": stock,
+    "styles": styles[]{ label, price }
   }`,
 
   // Public live-availability check for Add-to-Cart buttons (read-only client).
