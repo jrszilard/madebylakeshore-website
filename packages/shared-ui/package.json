@@ -6,7 +6,8 @@
   "types": "./src/index.ts",
   "exports": {
     ".": "./src/index.ts",
-    "./sanity": "./src/sanity.ts"
+    "./sanity": "./src/sanity.ts",
+    "./vercel-runtime": "./vercel-runtime.mjs"
   },
   "dependencies": {
     "@sanity/client": "^6.15.0",
