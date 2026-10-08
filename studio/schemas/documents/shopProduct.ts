@@ -26,7 +26,7 @@ export default defineType({
       title: 'SKU',
       type: 'string',
       description:
-        'Stock-keeping unit, e.g. "ST-013". Prefix by category: PC postcard, ST sticker, BM bookmark, NP notepad, MG magnet.',
+        'Stock-keeping unit, e.g. "ST-013". Prefix by category: PC postcard, PR print, PP photo print, ST sticker, BM bookmark, NP notepad, MG magnet.',
       validation: (Rule) =>
         Rule.regex(/^[A-Z]{2}-\d{3}$/, { name: 'SKU format' }).error(
           'Use two uppercase letters, a hyphen, then three digits — e.g. ST-013.'
@@ -41,6 +41,7 @@ export default defineType({
           { title: 'Postcard', value: 'postcard' },
           { title: 'Greeting Card', value: 'greeting-card' },
           { title: 'Print', value: 'print' },
+          { title: 'Photo Print', value: 'photo-print' },
           { title: 'Sticker', value: 'sticker' },
           { title: 'Bookmark', value: 'bookmark' },
           { title: 'Notepad', value: 'notepad' },
