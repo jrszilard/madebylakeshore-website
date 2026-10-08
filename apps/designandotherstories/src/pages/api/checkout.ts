@@ -63,8 +63,8 @@ export const POST: APIRoute = async ({ request }) => {
     return Response.json({ error: 'Shipping not configured' }, { status: 500 });
   }
 
-  const sessionParams = {
-    ui_mode: 'embedded',
+  const sessionParams: Stripe.Checkout.SessionCreateParams = {
+    ui_mode: 'form',
     mode: 'payment',
     line_items: lines.map((l) => ({
       quantity: l.qty,
@@ -75,7 +75,6 @@ export const POST: APIRoute = async ({ request }) => {
       },
     })),
     shipping_address_collection: { allowed_countries: countries as any },
-    permissions: { update_shipping_details: 'server_only' },
     shipping_options: [
       {
         shipping_rate_data: {
@@ -86,13 +85,14 @@ export const POST: APIRoute = async ({ request }) => {
       },
     ],
     return_url: checkoutReturnUrl(request),
-  } as unknown as Stripe.Checkout.SessionCreateParams;
+  };
 
-  // A throw here is almost always configuration rather than customer error: an
-  // unset/invalid STRIPE_SECRET_KEY, a restricted key without checkout_sessions
-  // write access, a test/live key mismatch, or an unactivated account. Log the
-  // actual Stripe reason — an unhandled throw surfaces as a bodyless 500 that
-  // tells neither the shopper nor us anything.
+  // A throw here is configuration, not customer error. Read statusCode first:
+  // 401 is the key itself (unset/invalid STRIPE_SECRET_KEY, a restricted key
+  // without checkout_sessions write access, a test/live mismatch, an unactivated
+  // account); 400 is the request — a parameter Stripe has since retired, which is
+  // what took this endpoint down once already. Log the actual Stripe reason; an
+  // unhandled throw surfaces as a bodyless 500 that tells nobody anything.
   let session: Stripe.Checkout.Session;
   try {
     session = await getStripe().checkout.sessions.create(sessionParams);
