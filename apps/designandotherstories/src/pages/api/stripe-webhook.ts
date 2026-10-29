@@ -148,7 +148,9 @@ export const POST: APIRoute = async ({ request }) => {
 
   let event;
   try {
-    event = stripe.webhooks.constructEvent(raw, signature, requireServerEnv('STRIPE_WEBHOOK_SECRET'));
+    // The async check: on Cloudflare, Stripe's worker build verifies with Web Crypto, which has no synchronous
+    // form, so constructEvent would throw and every event would be refused as a bad signature.
+    event = await stripe.webhooks.constructEventAsync(raw, signature, requireServerEnv('STRIPE_WEBHOOK_SECRET'));
   } catch {
     return new Response('Bad signature', { status: 400 });
   }

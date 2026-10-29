@@ -1,0 +1,32 @@
+// Design & Other Stories on Cloudflare Workers: the static files from ./dist (served before the Worker runs, with
+// public/_headers and public/_redirects), and every page and API route Astro renders on request in the Worker.
+//   Deploy:  scripts/deploy-cloudflare.sh (builds HEAD from a clean export, never the working tree, which holds .env)
+//   Logs:    npx wrangler tail daos
+// Settings are Worker secrets, never in this file: npx wrangler secret put <NAME> for STRIPE_SECRET_KEY,
+// STRIPE_WEBHOOK_SECRET, SANITY_WRITE_TOKEN, AGENTMAIL_API_KEY, AGENTMAIL_INBOX_ID and DAOS_ORDER_NOTIFICATION_TO.
+// process.env carries them at runtime (nodejs_compat, with a compatibility date from 2025-04-01 on).
+// PUBLIC_STRIPE_PUBLISHABLE_KEY is read at build time instead: the deploy script passes it.
+// The bare domain redirects to www from its own Worker: workers/apex-redirect/.
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "daos",
+  "main": "./dist/_worker.js/index.js",
+  "compatibility_date": "2026-01-14",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "binding": "ASSETS",
+    "directory": "./dist"
+  },
+  "vars": {
+    "PUBLIC_SANITY_PROJECT_ID": "pp3625pq",
+    "PUBLIC_SANITY_DATASET": "production"
+  },
+  "observability": {
+    "enabled": true
+  },
+  // Until the cutover the site is reached only at its workers.dev test address. At the cutover this becomes
+  // "workers_dev": false with "routes": [{ "pattern": "www.designandotherstories.com", "custom_domain": true }]:
+  // deploying that takes www's DNS over, so it's done only once the zone is on Cloudflare and Justin says go.
+  "workers_dev": true,
+  "preview_urls": false
+}

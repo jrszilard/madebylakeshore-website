@@ -1,0 +1,9 @@
+# The security headers for the static files Cloudflare serves (the pages the Worker renders get the same ones
+# from src/middleware.ts). Keep these and src/lib/securityHeaders.ts the same: test/server/securityHeaders.test.ts.
+/*
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+  Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://js.stripe.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' https://*.stripe.com https://cdn.sanity.io https://substack-post-media.s3.amazonaws.com https://substackcdn.com data:; connect-src 'self' https://*.sanity.io https://api.stripe.com https://checkout.stripe.com https://m.stripe.network https://cloudflareinsights.com; frame-src https://js.stripe.com https://hooks.stripe.com https://checkout.stripe.com https://designandtheotherstories.substack.com; frame-ancestors 'none'

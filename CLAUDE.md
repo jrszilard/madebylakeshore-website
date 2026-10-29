@@ -9,7 +9,8 @@ This is the monorepo for **Lakeshore Studio**, a husband-and-wife consulting ent
 - **Framework**: Astro 4 (hybrid SSR on madebylakeshore, static on others)
 - **UI**: React 18, Tailwind CSS 3
 - **CMS**: Sanity v5 (headless, GROQ queries)
-- **Deployment**: Vercel (serverless)
+- **Deployment**: Vercel (serverless), except designandotherstories, which runs on Cloudflare Workers since the move of
+  2026-10-29 (`apps/designandotherstories/wrangler.jsonc`; deploy with `apps/designandotherstories/scripts/deploy-cloudflare.sh`)
 - **Package manager**: npm workspaces
 - **Language**: TypeScript
 
@@ -18,7 +19,7 @@ This is the monorepo for **Lakeshore Studio**, a husband-and-wife consulting ent
 ```
 apps/
   madebylakeshore/     # Main consulting site (madebylakeshore.com) - hybrid SSR
-  designandotherstories/ # Wilma's design/art portfolio site - static
+  designandotherstories/ # Wilma's design/art site and shop (Stripe) - hybrid SSR on Cloudflare Workers
   incubator/           # Experimental projects showcase - static
 packages/
   shared-ui/           # Shared Sanity client config and image URL builder
