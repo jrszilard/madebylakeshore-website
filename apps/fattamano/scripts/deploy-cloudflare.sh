@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 # Deploy fattamano as committed (HEAD) to Cloudflare, built from a clean export of the repo, never from the working
 # tree: that holds .env.local (real keys, which a build would inline) and other work's untracked files.
-#   apps/fattamano/scripts/deploy-cloudflare.sh             the site Worker (fattamano)
-#   apps/fattamano/scripts/deploy-cloudflare.sh www         the www redirect Worker; at the cutover only, as it
-#                                                           takes that DNS over
+#   apps/fattamano/scripts/deploy-cloudflare.sh             the site Worker (fattamano), on fattamano.com
+#   apps/fattamano/scripts/deploy-cloudflare.sh www         the www redirect Worker, on www.fattamano.com
 #   ... --dry-run                                           build and check, upload nothing
+# Both deploy onto their custom domains, so a deploy is live at once.
 # The build needs the Stripe publishable key, which goes into the checkout page (it's public, the pk_ key):
 #   PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_live_... apps/fattamano/scripts/deploy-cloudflare.sh
 # Most pages are built from Sanity's content as it is at that moment, so a deploy is also how a content change

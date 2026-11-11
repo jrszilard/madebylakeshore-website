@@ -28,9 +28,10 @@
   "observability": {
     "enabled": true
   },
-  // Until the cutover the site is reached only at its workers.dev test address. At the cutover this becomes
-  // "workers_dev": false with "routes": [{ "pattern": "fattamano.com", "custom_domain": true }]: deploying that
-  // takes the bare domain's DNS over, so it's done only once its Vercel record is deleted and Justin says go.
-  "workers_dev": true,
+  // The site's address. The custom domain owns the bare domain's DNS record and certificate. A custom domain can't
+  // take over a record it didn't create, so the bare domain's old Vercel record had to be deleted before the first
+  // deploy with this route.
+  "routes": [{ "pattern": "fattamano.com", "custom_domain": true }],
+  "workers_dev": false,
   "preview_urls": false
 }
