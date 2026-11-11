@@ -1,56 +1,98 @@
 # fattamano deployment notes
 
-## Initial Vercel project setup
+## Where it runs
 
-1. **Create a new Vercel project**
-   - Vercel dashboard → New Project → Import `jrszilard/madebylakeshore-website`
-   - **Root Directory:** `apps/fattamano` (critical — must point at the app subdirectory, not the repo root)
-   - Framework Preset: Astro (auto-detected)
-   - Build command: `npm run build` (default)
-   - Output directory: `.vercel/output` (auto-detected from the Vercel adapter — leave as default)
-   - Install command: Vercel will run `npm install` from the repo root to handle the monorepo workspaces
+fattamano.com runs on Cloudflare Workers, in Justin's Cloudflare account, since the move from Vercel (2026-11).
+The domain's registration and DNS are in the same account.
 
-2. **Environment variables**
+- **Worker `fattamano`** (`wrangler.jsonc`) serves the site. Almost every page is built ahead of time and served by
+  Cloudflare as a static file, before the Worker runs. The Worker renders the checkout pages, the 404 page and the
+  `/api/*` routes on request.
+- **Worker `fattamano-www-redirect`** (`workers/www-redirect/`) sends `www.fattamano.com` to the bare domain.
+- Every built page answers with and without a trailing slash, as it did on Vercel (`/wewantdeadpeople`, with none,
+  is what the stickers print). `integrations/slashless-pages.mjs` writes the rules for that into the built
+  `_redirects` file.
 
-   Set these in Vercel project Settings → Environment Variables (Production + Preview):
+## Deploying
 
-   - `PUBLIC_SANITY_PROJECT_ID` — same value as the other apps (copy from `apps/designandotherstories` Vercel project)
-   - `PUBLIC_SANITY_DATASET` — `production`
-   - `PUBLIC_STRIPE_PUBLISHABLE_KEY` — Stripe publishable key for the active environment
-   - `STRIPE_SECRET_KEY` — Stripe server key; prefer a restricted key (`rk_live_`) for production
-   - `STRIPE_WEBHOOK_SECRET` — production webhook endpoint signing secret for `checkout.session.completed`
-   - `SANITY_WRITE_TOKEN` — project-level Sanity token with Editor access, stored server-side only
-   - `FATTAMANO_CHECKOUT_RETURN_ORIGIN` — optional override for Stripe Checkout returns; leave unset for local/preview request-origin returns, set to `https://fattamano.com` if production should force apex returns
+Pushing to `main` deploys, once the Worker is connected to this repository (Cloudflare dashboard → the Worker →
+Settings → Builds). The connection's settings:
 
-3. **Domain configuration**
+- Root directory: `apps/fattamano`
+- Build command:
+  `test -n "$PUBLIC_STRIPE_PUBLISHABLE_KEY" && cd ../.. && npm ci && npm run test --workspace=apps/fattamano && npm run build:fattamano`
+- Deploy command: `npx wrangler deploy`
+- Build variables: `SKIP_DEPENDENCY_INSTALL=1`, `SHARP_IGNORE_GLOBAL_LIBVIPS=1`, `PUBLIC_SANITY_PROJECT_ID`,
+  `PUBLIC_SANITY_DATASET`, `PUBLIC_STRIPE_PUBLISHABLE_KEY`
+- Build watch paths: `apps/fattamano/*`, `packages/shared-ui/*`, `package-lock.json`
+- Preview builds: off
 
-   Vercel project → Settings → Domains:
-   - Add `fattamano.com` (apex)
-   - Add `www.fattamano.com` and configure as a redirect to the apex
-   - Update DNS at the registrar per Vercel's instructions:
-     - Apex: A record → `76.76.21.21` (or Vercel's current IP — follow their UI)
-     - www: CNAME → `cname.vercel-dns.com`
+By hand, from a clean export of the last commit (never the working tree, which holds `.env.local`):
 
-4. **First deploy**
+```bash
+PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_live_... apps/fattamano/scripts/deploy-cloudflare.sh            # the site
+PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_live_... apps/fattamano/scripts/deploy-cloudflare.sh --dry-run  # build only
+apps/fattamano/scripts/deploy-cloudflare.sh www                                                  # the www redirect
+```
 
-   Once the branch is merged to `main`, Vercel will auto-deploy. For a preview deploy before merge:
-   ```bash
-   cd apps/fattamano
-   npx vercel
-   ```
+**A content change needs a deploy.** The catalog, product pages, fake-company pages and product preview images
+are built from Sanity as it is at build time. Publishing in the Studio doesn't rebuild them: push, rerun the last
+build in the dashboard, or call a Deploy Hook (the Worker → Settings → Builds → Deploy Hooks). Stock, prices at
+checkout and shipping rates are always read live.
 
-## Smoke test checklist (after live)
+## Settings
 
-- [ ] `https://fattamano.com/` — home page renders with fixture content
+Worker secrets, set with `npx wrangler secret put <NAME>` in `apps/fattamano`, never committed:
+
+- `STRIPE_SECRET_KEY` — Stripe server key; a restricted key (`rk_live_`) in production
+- `STRIPE_WEBHOOK_SECRET` — signing secret of the webhook endpoint `https://fattamano.com/api/stripe-webhook`
+  (`checkout.session.completed`). Keep the endpoint on the bare domain: Stripe doesn't follow the www redirect.
+- `SANITY_WRITE_TOKEN` — project-level Sanity token with Editor access
+- `AGENTMAIL_API_KEY`, `AGENTMAIL_INBOX_ID`, `FATTAMANO_ORDER_NOTIFICATION_TO` — order alerts (see `OPERATIONS.md`)
+- `FATTAMANO_CHECKOUT_RETURN_ORIGIN` — optional. Leave unset and Stripe returns the customer to the address they
+  checked out on; set it to `https://fattamano.com` only to force that.
+
+In `wrangler.jsonc`: `PUBLIC_SANITY_PROJECT_ID` and `PUBLIC_SANITY_DATASET`.
+
+Read when the site is built, so they are build variables (and the deploy script's environment), not secrets:
+`PUBLIC_STRIPE_PUBLISHABLE_KEY`, `PUBLIC_SANITY_PROJECT_ID`, `PUBLIC_SANITY_DATASET`.
+
+Local dev is unchanged: `npm run dev:fattamano` reads `apps/fattamano/.env.local`.
+
+## Domain
+
+Both hostnames are Worker custom domains, which own their DNS records and certificates:
+`fattamano.com` → `fattamano`, `www.fattamano.com` → `fattamano-www-redirect`. A custom domain can't take over a
+DNS record it didn't create, so an older record for the hostname has to be deleted before the first deploy.
+
+In the zone's settings, keep **SSL/TLS → Edge Certificates → Always Use HTTPS** on: Cloudflare serves the static
+pages itself, so the site can't redirect `http://` in code.
+
+## The `/_image` route
+
+Astro adds a `/_image` route to every site it renders on request. With this adapter's `imageService: 'compile'`
+setting, that route fetches any address given as `?href=` and returns it as the site's own response: an open
+proxy, and a way to run someone else's script on fattamano.com. So `astro.config.mjs` uses `'passthrough'` and
+points `image.endpoint` at `src/lib/server/noImageEndpoint.ts`, which answers 404. The site uses none of Astro's
+image tools. If it ever does, don't reach for `'compile'`.
+
+## Smoke test checklist (after a deploy)
+
+- [ ] `https://fattamano.com/` — home page renders, and the visitor card fills in
 - [ ] `https://fattamano.com/things` — catalog page renders
 - [ ] `https://fattamano.com/things/<some-slug>` — product detail page renders for any published product
+- [ ] `https://fattamano.com/wewantdeadpeople` and `/wewantdeadpeople/` — both answer 200, with no redirect
 - [ ] `https://fattamano.com/about` — about page renders
-- [ ] `https://fattamano.com/some-nonsense` — custom 404 page renders
-- [ ] `https://fattamano.com/api/og?title=Test&subtitle=Hello` — returns a 1200×630 PNG (Content-Type: image/png)
+- [ ] `https://fattamano.com/some-nonsense` — custom 404 page renders, with status 404
+- [ ] `https://fattamano.com/og/<some-slug>.png` — a 1200×630 PNG with the product's title and tagline
 - [ ] `https://fattamano.com/sitemap-index.xml` — XML loads with the expected page list
 - [ ] `https://fattamano.com/robots.txt` — text loads, references the sitemap URL
 - [ ] `https://fattamano.com/llms.txt` — text loads
-- [ ] View source of a product detail page — confirm `og:image` meta tag points at `/api/og?title=...`
+- [ ] View source of a product detail page — confirm `og:image` points at `/og/<slug>.png`
+- [ ] `https://www.fattamano.com/things?x=1` — 308 to `https://fattamano.com/things?x=1`
+- [ ] `https://fattamano.com/checkout` — renders; `curl -X POST https://fattamano.com/api/stripe-webhook` answers 400
+- [ ] `https://fattamano.com/_worker.js/index.js` — 404 (the Worker's code isn't published)
+- [ ] `https://fattamano.com/_image?href=https://example.com/` — 404, never example.com's page (see above)
 
 ## DAOS easter egg verification
 

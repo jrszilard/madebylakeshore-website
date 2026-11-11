@@ -1,0 +1,3 @@
+# Product preview images were drawn on request at /api/og?title=...&subtitle=... until the move to Cloudflare
+# (2026-11). They're now built files at /og/<slug>.png; an old address gets the default image.
+/api/og /og-default.png 302

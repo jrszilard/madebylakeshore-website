@@ -1,0 +1,36 @@
+// fattamano on Cloudflare Workers: the static files from ./dist (almost every page; served before the Worker runs,
+// with public/_headers and the built _redirects), and the checkout pages and API routes Astro renders on request in
+// the Worker.
+//   Deploy:  scripts/deploy-cloudflare.sh (builds HEAD from a clean export, never the working tree, which holds
+//            .env.local)
+//   Logs:    npx wrangler tail fattamano
+// Settings are Worker secrets, never in this file: npx wrangler secret put <NAME> for STRIPE_SECRET_KEY,
+// STRIPE_WEBHOOK_SECRET, SANITY_WRITE_TOKEN, AGENTMAIL_API_KEY, AGENTMAIL_INBOX_ID and
+// FATTAMANO_ORDER_NOTIFICATION_TO (and, only to force where Stripe returns a customer,
+// FATTAMANO_CHECKOUT_RETURN_ORIGIN). process.env carries them at runtime (nodejs_compat, with a compatibility date
+// from 2025-04-01 on).
+// PUBLIC_STRIPE_PUBLISHABLE_KEY is read at build time instead: the deploy script passes it.
+// www.fattamano.com redirects here from its own Worker: workers/www-redirect/.
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "fattamano",
+  "main": "./dist/_worker.js/index.js",
+  "compatibility_date": "2026-01-14",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "binding": "ASSETS",
+    "directory": "./dist"
+  },
+  "vars": {
+    "PUBLIC_SANITY_PROJECT_ID": "pp3625pq",
+    "PUBLIC_SANITY_DATASET": "production"
+  },
+  "observability": {
+    "enabled": true
+  },
+  // Until the cutover the site is reached only at its workers.dev test address. At the cutover this becomes
+  // "workers_dev": false with "routes": [{ "pattern": "fattamano.com", "custom_domain": true }]: deploying that
+  // takes the bare domain's DNS over, so it's done only once its Vercel record is deleted and Justin says go.
+  "workers_dev": true,
+  "preview_urls": false
+}

@@ -3,8 +3,7 @@ import '../styles/global.css';
 import Navigation from '../components/Navigation.astro';
 import Footer from '../components/Footer.astro';
 import CartDrawer from '../components/cart/CartDrawer.tsx';
-import { sanityClient, queries } from '../lib/sanity';
-import type { FattamanoSettings } from '../lib/types';
+import { fetchSettings } from '../lib/sanity';
 
 type JsonLd = Record<string, unknown> | Array<Record<string, unknown>>;
 
@@ -25,16 +24,16 @@ const {
 // The free-US-shipping threshold is content (Sanity), so the cart nudge stays in
 // sync with the actual rate without code changes. Null-safe: if settings are
 // unavailable the drawer falls back to its generic "calculated at checkout" copy.
-const ftSettings = await sanityClient
-  .fetch<FattamanoSettings | null>(queries.fattamanoSettings)
-  .catch(() => null);
+const ftSettings = await fetchSettings().catch(() => null);
 const usZone = ftSettings?.shippingZones?.find((z) =>
   z.countryCodes?.some((c) => c.trim().toUpperCase() === 'US')
 );
 const freeShippingThresholdCents = usZone?.freeShippingThresholdCents ?? null;
 
 const siteTitle = title === 'Home' ? 'fattamano' : `${title} — fattamano`;
-const canonical = new URL(Astro.url.pathname, Astro.site).toString();
+// The path always starts with a single slash here. The 404 page is rendered for whatever was asked for, and a
+// path starting "//other.site/" would otherwise be read as an address on that site.
+const canonical = new URL(Astro.url.pathname.replace(/^\/+/, '/'), Astro.site).toString();
 const ogImage = ogImagePath
   ? new URL(ogImagePath, Astro.site).toString()
   : new URL('/og-default.png', Astro.site).toString();

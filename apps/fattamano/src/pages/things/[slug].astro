@@ -7,6 +7,7 @@ import { sanityClient, queries, urlFor } from '../../lib/sanity';
 import { formatPrice } from '../../lib/format';
 import type { FattamanoProduct, FattamanoSettings, SanityImageLike } from '../../lib/types';
 import { breadcrumbSchema, productSchema } from '../../lib/seo';
+import { productOgImagePath } from '../../lib/ogImage';
 import { getCampaignByRoute } from '../../lib/campaigns';
 
 export const prerender = true;
@@ -61,7 +62,8 @@ const metaTitle = full?.seo?.metaTitle || full?.title;
 const metaDescription =
   full?.seo?.metaDescription || full?.tagline || `${full?.title} — handmade by fattamano.`;
 
-const ogImagePath = `/api/og?title=${encodeURIComponent(full?.title || '')}&subtitle=${encodeURIComponent(full?.tagline || full?.category || '')}`;
+// Built alongside this page by src/pages/og/[slug].png.ts.
+const ogImagePath = productOgImagePath(product.slug.current);
 // Campaign membership comes from Sanity (fattamanoProduct.campaign) and resolves
 // through the registry. No more hardcoded slug lists.
 const campaign = full?.campaign ? getCampaignByRoute(`/${full.campaign}`) : undefined;

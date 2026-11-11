@@ -7,6 +7,7 @@ import { orderClient, orderDocumentId } from '../../lib/server/orderStore';
 import { queries } from '@lakeshore/shared-ui/sanity';
 import { normalizeCartItems, buildOrderLines, cartSubtotalCents, BadCartError } from '../../lib/commerce/validateCart';
 import { allowedCountries } from '../../lib/commerce/shipping';
+import { optionalServerEnv } from '../../lib/server/env';
 import type Stripe from 'stripe';
 import type { ProductRow, FattamanoSettings } from '../../lib/types';
 
@@ -30,8 +31,10 @@ function normalizeOrigin(value: string | undefined, label: string): string | nul
 }
 
 function checkoutReturnUrl(request: Request): string {
+  // Read per request: written as import.meta.env.X it was fixed when the site was built, and a Worker's
+  // settings don't exist then.
   const configuredOrigin = normalizeOrigin(
-    import.meta.env.FATTAMANO_CHECKOUT_RETURN_ORIGIN,
+    optionalServerEnv('FATTAMANO_CHECKOUT_RETURN_ORIGIN'),
     'FATTAMANO_CHECKOUT_RETURN_ORIGIN',
   );
   const requestOrigin = normalizeOrigin(request.url, 'request.url');

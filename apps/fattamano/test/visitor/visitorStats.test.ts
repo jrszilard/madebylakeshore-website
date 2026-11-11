@@ -119,4 +119,29 @@ describe('deferWrite', () => {
     await Promise.resolve();
     warn.mockRestore();
   });
+
+  it("hands the write to the host's waitUntil, as a promise that can't reject", async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const waitUntil = vi.fn<(work: Promise<unknown>) => void>();
+    deferWrite(Promise.reject(new Error('sanity down')), waitUntil);
+    expect(waitUntil).toHaveBeenCalledOnce();
+    // Cloudflare logs an exception for a waitUntil promise that rejects; this one settles quietly.
+    await expect(waitUntil.mock.calls[0][0]).resolves.toBeUndefined();
+    expect(warn).toHaveBeenCalledOnce();
+    warn.mockRestore();
+  });
+
+  it('still lets the write run when waitUntil itself throws', async () => {
+    let done = false;
+    const work = Promise.resolve().then(() => {
+      done = true;
+    });
+    expect(() =>
+      deferWrite(work, () => {
+        throw new Error('no request context');
+      }),
+    ).not.toThrow();
+    await work;
+    expect(done).toBe(true);
+  });
 });

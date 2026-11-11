@@ -1,2 +1,5 @@
 .vercel
 .env*
+# wrangler dev keeps its local state here, and reads local secrets from .dev.vars
+.wrangler
+.dev.vars*

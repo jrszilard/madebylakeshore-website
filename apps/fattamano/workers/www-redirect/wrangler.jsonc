@@ -1,0 +1,14 @@
+// The redirect Worker for www.fattamano.com (index.js).
+//   Deploy:  scripts/deploy-cloudflare.sh www, at the cutover only: the custom domain takes www's DNS over from the
+//            Vercel record it points at now.
+{
+  "$schema": "../../node_modules/wrangler/config-schema.json",
+  "name": "fattamano-www-redirect",
+  "main": "./index.js",
+  "compatibility_date": "2026-01-14",
+  "workers_dev": false,
+  "preview_urls": false,
+  "routes": [
+    { "pattern": "www.fattamano.com", "custom_domain": true }
+  ]
+}

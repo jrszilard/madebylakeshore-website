@@ -1,3 +1,5 @@
+import { optionalServerEnv } from './env';
+
 export interface NotificationOrderItem {
   title: string;
   qty: number;
@@ -30,13 +32,13 @@ function money(cents: number, currency: string): string {
 }
 
 export function notificationConfig(env?: Record<string, string | undefined>): NotificationConfig {
-  const values = env ?? {
-    ...((typeof import.meta !== 'undefined' ? (import.meta as any).env : {}) as Record<string, string | undefined>),
-    ...(typeof process !== 'undefined' ? process.env : {}),
-  };
-  const apiKey = values.AGENTMAIL_API_KEY?.trim();
-  const inboxId = values.AGENTMAIL_INBOX_ID?.trim();
-  const to = values.FATTAMANO_ORDER_NOTIFICATION_TO?.trim();
+  // Each setting is asked for by name when an alert is sent (env.ts). This file used to read Astro's whole
+  // build-time settings object, and Astro copies into the bundle any setting whose name appears in a file that
+  // touches that object: a build made beside .env.local would have carried the AgentMail key inside the Worker.
+  const read = (name: string) => (env ? env[name] : optionalServerEnv(name))?.trim();
+  const apiKey = read('AGENTMAIL_API_KEY');
+  const inboxId = read('AGENTMAIL_INBOX_ID');
+  const to = read('FATTAMANO_ORDER_NOTIFICATION_TO');
   if (!apiKey || !inboxId || !to) {
     throw new Error(
       'Order notifications require AGENTMAIL_API_KEY, AGENTMAIL_INBOX_ID, and FATTAMANO_ORDER_NOTIFICATION_TO',

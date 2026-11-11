@@ -3,7 +3,9 @@ export const prerender = false;
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import CheckoutEmbed from '../../components/checkout/CheckoutEmbed.tsx';
 
-const publishableKey = import.meta.env.PUBLIC_STRIPE_PUBLISHABLE_KEY || '';
+// Only a publishable key may reach the page. (astro.config.mjs also refuses to build with any other kind.)
+const configuredKey = import.meta.env.PUBLIC_STRIPE_PUBLISHABLE_KEY || '';
+const publishableKey = /^pk_(live|test)_/.test(configuredKey) ? configuredKey : '';
 ---
 <BaseLayout title="checkout" description="Complete your fattamano order.">
   <section class="mx-auto max-w-5xl px-6 py-12">

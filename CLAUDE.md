@@ -2,15 +2,16 @@
 
 ## Project Overview
 
-This is the monorepo for **Lakeshore Studio**, a husband-and-wife consulting enterprise (Justin: data/AI, Wilma: design). It contains three Astro websites and a shared Sanity CMS.
+This is the monorepo for **Lakeshore Studio**, a husband-and-wife consulting enterprise (Justin: data/AI, Wilma: design). It contains four Astro websites and a shared Sanity CMS.
 
 ## Tech Stack
 
 - **Framework**: Astro 4 (hybrid SSR on madebylakeshore, static on others)
 - **UI**: React 18, Tailwind CSS 3
 - **CMS**: Sanity v5 (headless, GROQ queries)
-- **Deployment**: Vercel (serverless), except designandotherstories, which runs on Cloudflare Workers since the move of
-  2026-10-29 (`apps/designandotherstories/wrangler.jsonc`; deploy with `apps/designandotherstories/scripts/deploy-cloudflare.sh`)
+- **Deployment**: Vercel (serverless) for madebylakeshore and incubator. The two shops run on Cloudflare Workers:
+  designandotherstories since the move of 2026-10-29, fattamano since 2026-11. Each has a `wrangler.jsonc` and a
+  `scripts/deploy-cloudflare.sh` in its app folder (fattamano's notes: `apps/fattamano/DEPLOYMENT.md`)
 - **Package manager**: npm workspaces
 - **Language**: TypeScript
 
@@ -20,6 +21,7 @@ This is the monorepo for **Lakeshore Studio**, a husband-and-wife consulting ent
 apps/
   madebylakeshore/     # Main consulting site (madebylakeshore.com) - hybrid SSR
   designandotherstories/ # Wilma's design/art site and shop (Stripe) - hybrid SSR on Cloudflare Workers
+  fattamano/           # Wilma's satirical boutique (fattamano.com, Stripe) - mostly static, on Cloudflare Workers
   incubator/           # Experimental projects showcase - static
 packages/
   shared-ui/           # Shared Sanity client config and image URL builder
@@ -41,6 +43,7 @@ studio/                # Sanity Studio (content management)
 npm run dev:mbl       # madebylakeshore on default port
 npm run dev:daos      # designandotherstories on port 4322
 npm run dev:incubator # incubator on port 4323
+npm run dev:fattamano # fattamano on port 4324
 npm run dev:studio    # Sanity Studio
 ```
 

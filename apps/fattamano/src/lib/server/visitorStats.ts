@@ -1,5 +1,4 @@
 import { isbot } from 'isbot';
-import { waitUntil } from '@vercel/functions';
 import { sanityWriteClient, sanityWriteFetch } from './sanityWrite';
 
 export type VisitorKind = 'bot' | 'human';
@@ -84,18 +83,20 @@ export async function incrementStats(
   }
 }
 
-export function deferWrite(work: Promise<unknown>): void {
+/** The host's way to keep work running after the response is sent: on Cloudflare, the request's ctx.waitUntil. */
+export type WaitUntil = (work: Promise<unknown>) => void;
+
+export function deferWrite(work: Promise<unknown>, waitUntil?: WaitUntil): void {
   const safe = Promise.resolve(work).catch((err) => {
     console.warn('[visitorStats] deferred write failed', err);
   });
-  // waitUntil registers the write with the platform so it completes after the
-  // response flushes. On Vercel (request context present) this guarantees the
-  // write runs; with no context (local dev / tests) waitUntil is a no-op and
-  // `safe` -- already in flight -- runs as a detached, best-effort promise (the
-  // spec accepts occasional dropped writes). The try/catch is defensive in case
-  // a future @vercel/functions throws when the context is absent.
+  // On Cloudflare a promise nobody is waiting for can be cancelled as soon as the response is sent, so the write
+  // is handed to the request's waitUntil, which keeps the Worker alive until it settles. Without one (tests, a
+  // dev server without the Workers runtime) `safe` is already in flight and runs as a detached, best-effort
+  // promise (the spec accepts occasional dropped writes). The try/catch keeps a failing waitUntil from failing
+  // the request.
   try {
-    waitUntil(safe);
+    waitUntil?.(safe);
   } catch {
     void safe;
   }

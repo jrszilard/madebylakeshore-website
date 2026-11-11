@@ -1,12 +1,16 @@
 ---
+// Rendered by the Worker on each request, not built ahead. For a built 404 page, Astro answers an unknown address
+// by fetching /404.html from the site's own address, and a Worker's request to itself fails on Cloudflare
+// (error 1042 on workers.dev, 522 on a custom domain: withastro/astro#13932).
+export const prerender = false;
+
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { sanityClient, queries } from '../lib/sanity';
+import { fetchSettings } from '../lib/sanity';
 import type { RichTextBlock } from '../lib/types';
 import { fakeBusinessOfTheDay } from '../lib/campaigns';
 
-const settings = await sanityClient
-  .fetch<{ notFoundCopy?: RichTextBlock[] }>(queries.fattamanoSettings)
-  .catch(() => null);
+// The layout asks for the same settings: one read serves both, and every other 404 in the next minute.
+const settings = await fetchSettings<{ notFoundCopy?: RichTextBlock[] } | null>().catch(() => null);
 
 const blocks = settings?.notFoundCopy ?? [];
 const lostBusiness = fakeBusinessOfTheDay();

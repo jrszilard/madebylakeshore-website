@@ -46,6 +46,31 @@ describe('order notifications', () => {
     expect(() => notificationConfig({})).toThrow('AGENTMAIL_API_KEY');
   });
 
+  it('reads its three settings by name when an alert is sent, trimmed', () => {
+    const names = ['AGENTMAIL_API_KEY', 'AGENTMAIL_INBOX_ID', 'FATTAMANO_ORDER_NOTIFICATION_TO'] as const;
+    const before = names.map((name) => process.env[name]);
+    try {
+      process.env.AGENTMAIL_API_KEY = ' key-set-after-startup ';
+      process.env.AGENTMAIL_INBOX_ID = 'fattamano-orders@agentmail.to';
+      process.env.FATTAMANO_ORDER_NOTIFICATION_TO = 'order@fattamano.com\n';
+      expect(notificationConfig()).toEqual({
+        apiKey: 'key-set-after-startup',
+        inboxId: 'fattamano-orders@agentmail.to',
+        to: 'order@fattamano.com',
+      });
+      delete process.env.AGENTMAIL_INBOX_ID;
+      expect(() => notificationConfig()).toThrow('AGENTMAIL_INBOX_ID');
+    } finally {
+      names.forEach((name, i) => (before[i] === undefined ? delete process.env[name] : (process.env[name] = before[i])));
+    }
+  });
+
+  it("doesn't touch Astro's build-time settings object: Astro would copy the key into the bundle", async () => {
+    const { readFileSync } = await import('node:fs');
+    const source = readFileSync(new URL('../../src/lib/server/orderNotification.ts', import.meta.url), 'utf8');
+    expect(source).not.toMatch(/import\.meta/);
+  });
+
   it('builds an operational email without customer PII', () => {
     const email = buildOrderEmail(order);
     expect(email.subject).toBe('[TEST] New fattamano order — $11.00');

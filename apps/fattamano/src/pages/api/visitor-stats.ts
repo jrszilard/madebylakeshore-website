@@ -18,7 +18,7 @@ import {
  * for JS-free visitors). Same classification, cookie dedup, and deferred
  * write behavior the SSR homepage used to perform inline.
  */
-export const GET: APIRoute = async ({ request, cookies }) => {
+export const GET: APIRoute = async ({ request, cookies, locals }) => {
   const plan = planVisit(
     classifyVisitor(request.headers.get('user-agent')),
     cookies.has(VISITOR_COOKIE),
@@ -26,7 +26,10 @@ export const GET: APIRoute = async ({ request, cookies }) => {
 
   const readback = await readStats();
 
-  deferWrite(incrementStats(plan.increments));
+  // locals.runtime is Cloudflare's request context (the adapter provides it, in dev too). Its waitUntil keeps
+  // the Worker alive until the write lands; without it the write could be cut off once the response is sent.
+  const ctx = locals.runtime?.ctx;
+  deferWrite(incrementStats(plan.increments), ctx ? (work) => ctx.waitUntil(work) : undefined);
 
   if (plan.setHumanCookie) {
     cookies.set(VISITOR_COOKIE, '1', {

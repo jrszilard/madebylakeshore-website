@@ -2,12 +2,12 @@
 
 ## Production environment
 
-Server-only values:
+Server-only values, held as secrets of the Cloudflare Worker `fattamano` (see `DEPLOYMENT.md`):
 
 - `STRIPE_SECRET_KEY` — restricted Stripe key with Checkout Sessions write/read access.
 - `STRIPE_WEBHOOK_SECRET` — signing secret for the fattamano webhook endpoint.
 - `SANITY_WRITE_TOKEN` — token used for token-only order, stock, and aggregate-counter writes.
-- `AGENTMAIL_API_KEY` — server-only key injected by the Vercel AgentMail integration.
+- `AGENTMAIL_API_KEY` — server-only key for the AgentMail account that holds the sender inbox.
 - `AGENTMAIL_INBOX_ID` — dedicated sender inbox created for fattamano order alerts.
 - `FATTAMANO_ORDER_NOTIFICATION_TO` — Wilma's order-alert mailbox.
 

@@ -1,4 +1,5 @@
 import { createSanityClientWithConfig, queries } from '@lakeshore/shared-ui/sanity';
+import type { FattamanoSettings } from './types';
 
 // Get env var from either import.meta.env (Astro) or process.env (Vercel build)
 function getEnvVar(name: string, fallback = ''): string {
@@ -51,6 +52,25 @@ export const sanityClient = {
     }
   },
 };
+
+// How long one read of the shop's settings serves the pages rendered after it.
+export const SETTINGS_FRESH_MS = 60_000;
+let settingsRead: { at: number; value: unknown } | null = null;
+
+/**
+ * The shop's settings document, for rendering pages. One read serves every page rendered in the next minute: the
+ * layout and the 404 page both want it, and the Worker renders the 404 for every unknown address a scanner
+ * tries. Only the answer is kept, never the request for it (a Worker can't wait on another visit's request), and
+ * a failed read isn't kept at all.
+ *
+ * Checkout doesn't use this: it reads prices, stock and shipping rates fresh, through the write client.
+ */
+export async function fetchSettings<T = FattamanoSettings | null>(now: () => number = Date.now): Promise<T> {
+  if (settingsRead && now() - settingsRead.at < SETTINGS_FRESH_MS) return settingsRead.value as T;
+  const value = await sanityClient.fetch<T>(queries.fattamanoSettings);
+  settingsRead = { at: now(), value };
+  return value;
+}
 
 export function urlFor(source: any): SanityImageBuilder | null {
   try {
