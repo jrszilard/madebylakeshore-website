@@ -12,7 +12,11 @@ export default defineConfig({
     react()
   ],
   output: 'hybrid',
-  adapter: cloudflare({ imageService: 'compile' }),
+  // Never imageService: 'compile'. In this adapter it puts an open proxy at /_image (the story is in
+  // src/lib/server/noImageEndpoint.ts, which answers that route instead). The site uses none of Astro's image
+  // tools, so 'passthrough' loses nothing.
+  adapter: cloudflare({ imageService: 'passthrough' }),
+  image: { endpoint: './src/lib/server/noImageEndpoint.ts' },
   build: {
     assets: 'assets'
   },
